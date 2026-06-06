@@ -21,7 +21,7 @@ export default function Divisions() {
         "Interactive process simulation sandbox",
         "Web-native holographic plant model renders"
       ],
-      image: "/industrial_digitalization.png",
+      image: "/industrial_digitalization.webp",
       slug: "industrial-digitalization",
       accent: "var(--color-accent-blue)"
     },
@@ -34,7 +34,7 @@ export default function Divisions() {
         "Self-healing multi-hop telemetry networks",
         "10-year battery cell power management"
       ],
-      image: "/wireless_monitoring.png",
+      image: "/wireless_monitoring.webp",
       slug: "wireless-data-acquisition",
       accent: "var(--color-accent-orange)"
     },
@@ -47,7 +47,7 @@ export default function Divisions() {
         "Predictive Remaining Useful Life (RUL) index",
         "Early warning rotating machinery alarms"
       ],
-      image: "/predictive_intelligence.png",
+      image: "/predictive_intelligence.webp",
       slug: "ai-predictive-analytics",
       accent: "var(--color-accent-blue)"
     },
@@ -60,7 +60,7 @@ export default function Divisions() {
         "Rosenbauer CAFS vehicle cabin telemetry",
         "Inter-agency radio gateway bridging channels"
       ],
-      image: "/emergency_response.png",
+      image: "/emergency_response.webp",
       slug: "emergency-response-systems",
       accent: "var(--color-accent-red)"
     },
@@ -73,7 +73,7 @@ export default function Divisions() {
         "A60 thermal and marine fire isolation boundaries",
         "Automated toxic gas isolating HVAC dampers"
       ],
-      image: "/critical_infrastructure.png",
+      image: "/critical_infrastructure.webp",
       slug: "critical-infrastructure-protection",
       accent: "var(--color-accent-orange)"
     },
@@ -86,7 +86,7 @@ export default function Divisions() {
         "High-visibility Gorilla Glass touchscreens",
         "Enterprise Knox Mobile Device Management (MDM)"
       ],
-      image: "/hazardous_mobility.png",
+      image: "/hazardous_mobility.webp",
       slug: "explosion-proof-mobility",
       accent: "var(--color-accent-red)"
     }

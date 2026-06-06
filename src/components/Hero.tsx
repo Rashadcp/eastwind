@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from "react";
 
 const TOTAL_FRAMES = 113;
 
-// Helper to map index to PNG filenames, skipping the gap between 81 and 89
+// Helper to map index to WEBP filenames, skipping the gap between 81 and 89
 const getFrameUrl = (index: number) => {
   let fileNum = index + 1;
   if (fileNum >= 82) {
     fileNum = fileNum + 7; // Skip missing frames 82-88
   }
   const padNum = String(fileNum).padStart(5, "0");
-  return `/hero-frames/${padNum}.png`;
+  return `/hero-frames/${padNum}.webp`;
 };
 
 export default function Hero() {

@@ -27,7 +27,7 @@ export default function CaseStudies() {
       solution: "Deployed wireless telemetry and secure OT infrastructure.",
       result: "90% Cost Reduction",
       accent: "blue",
-      imageUrl: "/wireless_monitoring.png",
+      imageUrl: "/wireless_monitoring.webp",
       productUrl: "/products/mimes"
     },
     {
@@ -39,7 +39,7 @@ export default function CaseStudies() {
       solution: "Integrated real-time neural modeling to predict cavitation faults early.",
       result: "48-Hour Early Warning",
       accent: "blue",
-      imageUrl: "/predictive_intelligence.png",
+      imageUrl: "/predictive_intelligence.webp",
       productUrl: "/products/tridiagonal"
     },
     {
@@ -51,7 +51,7 @@ export default function CaseStudies() {
       solution: "Integrated vehicle fleets with CAFS and remote diagnostic links.",
       result: "40% Response Time Cut",
       accent: "orange",
-      imageUrl: "/emergency_response.png",
+      imageUrl: "/emergency_response.webp",
       productUrl: "/products/oneseven"
     }
   ];
@@ -72,7 +72,7 @@ export default function CaseStudies() {
       <div
         className="absolute inset-[-25px] bg-cover bg-center blur-[1px] saturate-200 opacity-45 z-0"
         style={{
-          backgroundImage: "url('/critical_infrastructure.png')",
+          backgroundImage: "url('/critical_infrastructure.webp')",
         }}
       />
       {/* Dark gradient overlay for content readability */}

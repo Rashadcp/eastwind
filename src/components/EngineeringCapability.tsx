@@ -18,7 +18,7 @@ export default function EngineeringCapability() {
       category: "Process Instrumentation Enclosures",
       valueProp: "Custom-designed shelters ensuring continuous analyzer performance in high-hazard zones.",
       metric: "Zone 1 ATEX Compliant",
-      imageUrl: "/analyzer_shelter.png",
+      imageUrl: "/analyzer_shelter.webp",
       accent: "blue"
     },
     {
@@ -26,7 +26,7 @@ export default function EngineeringCapability() {
       category: "Structural Safety Buildings",
       valueProp: "Personnel and control room protection engineered for extreme hydrocarbon explosion zones.",
       metric: "10 PSI Overpressure Rating",
-      imageUrl: "/blast_module.png",
+      imageUrl: "/blast_module.webp",
       accent: "orange"
     },
     {
@@ -34,7 +34,7 @@ export default function EngineeringCapability() {
       category: "Remote Substations Engineering",
       valueProp: "Pre-commissioned mobile E-House substations built to withstand hazardous desert operations.",
       metric: "HCIS SAF-01 Approved",
-      imageUrl: "/thermal_ehouse.png",
+      imageUrl: "/thermal_ehouse.webp",
       accent: "blue"
     },
     {
@@ -42,7 +42,7 @@ export default function EngineeringCapability() {
       category: "Critical Fleet Customization",
       valueProp: "Integrating CAFS, advanced telemetry, and safety loops into high-performance rescue trucks.",
       metric: "90% Response Time Reduction",
-      imageUrl: "/emergency_vehicle.png",
+      imageUrl: "/emergency_vehicle.webp",
       accent: "orange"
     }
   ];

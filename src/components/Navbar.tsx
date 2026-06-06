@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -18,12 +18,25 @@ export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<AccordionKey | null>(null);
+  const navRef = useRef<HTMLElement>(null);
   const [mobileAccordions, setMobileAccordions] = useState<Record<AccordionKey, boolean>>({
     products: false,
     applications: false,
     services: false,
     solutions: false,
   });
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const showTransparent = isHomepage && !isScrolled;
 
@@ -151,6 +164,7 @@ export default function Navbar() {
         <Link
           key={item.name}
           href={item.href}
+          onClick={() => setActiveDropdown(null)}
           className="group/item min-h-[34px] flex items-center justify-between gap-2.5 p-[7px_10px] rounded-xl text-slate-600 no-underline text-[0.78rem] font-bold leading-tight transition-all duration-160 hover:text-[#153b8b] hover:bg-slate-100 hover:translate-x-0.5"
         >
           <span>{item.name}</span>
@@ -203,7 +217,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="desktop-nav hidden min-[1160px]:flex items-center justify-center gap-1.5" aria-label="Primary navigation">
+        <nav ref={navRef} className="desktop-nav hidden min-[1160px]:flex items-center justify-center gap-1.5" aria-label="Primary navigation">
           <Link
             href="/"
             className={`nav-link px-3.5 py-1.75 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
@@ -225,13 +239,10 @@ export default function Navbar() {
             About
           </a>
 
-          <div
-            className="nav-dropdown"
-            onMouseEnter={() => setActiveDropdown("products")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
+          <div className="nav-dropdown">
             <button
               type="button"
+              onClick={() => setActiveDropdown(activeDropdown === "products" ? null : "products")}
               className={`nav-link-dropdown inline-flex items-center gap-1.25 px-3.5 py-1.75 text-[0.76rem] font-extrabold uppercase tracking-wider rounded-full transition-all duration-200 cursor-pointer ${
                 showTransparent
                   ? "text-white/90 hover:text-white hover:bg-white/10"
@@ -246,7 +257,7 @@ export default function Navbar() {
             </button>
 
             {activeDropdown === "products" && (
-              <div className="mega-dropdown-container absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 bg-white/98 border border-slate-200 rounded-[20px] shadow-2xl z-[150] backdrop-blur-lg p-5 grid grid-cols-[220px_1fr] gap-6 w-[min(840px,calc(100vw-64px))] before:content-[''] before:absolute before:-top-4.5 before:inset-x-0 before:h-4.5">
+              <div className="mega-dropdown-container absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 bg-white/98 border border-slate-200 rounded-[20px] shadow-2xl z-[150] backdrop-blur-lg p-5 grid grid-cols-[220px_1fr] gap-6 w-[min(840px,calc(100vw-64px))] before:content-[''] before:absolute before:-top-8 before:inset-x-0 before:h-8">
                 <div className="dropdown-feature min-h-full flex flex-col justify-end p-5 rounded-2xl bg-gradient-to-br from-[#102a5f] via-[#153b8b] to-[#c22026] text-white">
                   <span className="dropdown-kicker block text-white/70 text-[0.66rem] font-bold tracking-widest uppercase">Product Catalog</span>
                   <strong className="block my-2.5 text-[0.98rem] leading-[1.3] font-black">Safety equipment for high-risk industrial teams.</strong>
@@ -281,13 +292,10 @@ export default function Navbar() {
             Experience
           </a>
 
-          <div
-            className="nav-dropdown relative"
-            onMouseEnter={() => setActiveDropdown("applications")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
+          <div className="nav-dropdown relative">
             <button
               type="button"
+              onClick={() => setActiveDropdown(activeDropdown === "applications" ? null : "applications")}
               className={`nav-link-dropdown inline-flex items-center gap-1.25 px-3.5 py-1.75 text-[0.76rem] font-extrabold uppercase tracking-wider rounded-full transition-all duration-200 cursor-pointer ${
                 showTransparent
                   ? "text-white/90 hover:text-white hover:bg-white/10"
@@ -302,20 +310,17 @@ export default function Navbar() {
             </button>
 
             {activeDropdown === "applications" && (
-              <div className="dropdown-container absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 w-64 p-4.5 bg-white/98 border border-slate-200 rounded-[20px] shadow-2xl z-[150] backdrop-blur-lg before:content-[''] before:absolute before:-top-4.5 before:inset-x-0 before:h-4.5">
+              <div className="dropdown-container absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 w-64 p-4.5 bg-white/98 border border-slate-200 rounded-[20px] shadow-2xl z-[150] backdrop-blur-lg before:content-[''] before:absolute before:-top-8 before:inset-x-0 before:h-8">
                 <span className="dropdown-section-title block text-[#c22026] text-[0.66rem] font-bold tracking-widest uppercase mb-2.5">Industries</span>
                 {renderDropdownLinks(applicationsList)}
               </div>
             )}
           </div>
 
-          <div
-            className="nav-dropdown relative"
-            onMouseEnter={() => setActiveDropdown("services")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
+          <div className="nav-dropdown relative">
             <button
               type="button"
+              onClick={() => setActiveDropdown(activeDropdown === "services" ? null : "services")}
               className={`nav-link-dropdown inline-flex items-center gap-1.25 px-3.5 py-1.75 text-[0.76rem] font-extrabold uppercase tracking-wider rounded-full transition-all duration-200 cursor-pointer ${
                 showTransparent
                   ? "text-white/90 hover:text-white hover:bg-white/10"
@@ -330,20 +335,17 @@ export default function Navbar() {
             </button>
 
             {activeDropdown === "services" && (
-              <div className="dropdown-container absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 w-64 p-4.5 bg-white/98 border border-slate-200 rounded-[20px] shadow-2xl z-[150] backdrop-blur-lg before:content-[''] before:absolute before:-top-4.5 before:inset-x-0 before:h-4.5">
+              <div className="dropdown-container absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 w-64 p-4.5 bg-white/98 border border-slate-200 rounded-[20px] shadow-2xl z-[150] backdrop-blur-lg before:content-[''] before:absolute before:-top-8 before:inset-x-0 before:h-8">
                 <span className="dropdown-section-title block text-[#c22026] text-[0.66rem] font-bold tracking-widest uppercase mb-2.5">Support</span>
                 {renderDropdownLinks(servicesList)}
               </div>
             )}
           </div>
 
-          <div
-            className="nav-dropdown"
-            onMouseEnter={() => setActiveDropdown("solutions")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
+          <div className="nav-dropdown">
             <button
               type="button"
+              onClick={() => setActiveDropdown(activeDropdown === "solutions" ? null : "solutions")}
               className={`nav-link-dropdown inline-flex items-center gap-1.25 px-3.5 py-1.75 text-[0.76rem] font-extrabold uppercase tracking-wider rounded-full transition-all duration-200 cursor-pointer ${
                 showTransparent
                   ? "text-white/90 hover:text-white hover:bg-white/10"
@@ -358,7 +360,7 @@ export default function Navbar() {
             </button>
 
             {activeDropdown === "solutions" && (
-              <div className="mega-dropdown-container absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 bg-white/98 border border-slate-200 rounded-[20px] shadow-2xl z-[150] backdrop-blur-lg p-5 grid grid-cols-[220px_1fr] gap-6 w-[min(650px,calc(100vw-64px))] before:content-[''] before:absolute before:-top-4.5 before:inset-x-0 before:h-4.5">
+              <div className="mega-dropdown-container absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 bg-white/98 border border-slate-200 rounded-[20px] shadow-2xl z-[150] backdrop-blur-lg p-5 grid grid-cols-[220px_1fr] gap-6 w-[min(650px,calc(100vw-64px))] before:content-[''] before:absolute before:-top-8 before:inset-x-0 before:h-8">
                 <div className="dropdown-feature min-h-full flex flex-col justify-end p-5 rounded-xl bg-gradient-to-br from-[#102a5f] via-[#153b8b] to-[#c22026] text-white">
                   <span className="dropdown-kicker block text-white/70 text-[0.66rem] font-bold tracking-widest uppercase">Engineered Solutions</span>
                   <strong className="block my-2.5 text-[0.98rem] leading-[1.3] font-black">Packaged systems for critical operations.</strong>

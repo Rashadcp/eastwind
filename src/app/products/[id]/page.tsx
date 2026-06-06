@@ -45,7 +45,7 @@ const productsDb: Record<string, ProductDetailsData> = {
       "Enhanced crew safety by minimizing hazardous area visits"
     ],
     applications: ["Oil & Gas Refining", "Offshore Platforms", "Chemical Storage Terminals"],
-    imageUrl: "/wireless_monitoring.png"
+    imageUrl: "/wireless_monitoring.webp"
   },
   "xshielder": {
     title: "Xshielder OT Firewall",
@@ -73,7 +73,7 @@ const productsDb: Record<string, ProductDetailsData> = {
       "Ensured regulatory compliance with national OT security standards"
     ],
     applications: ["Power Substations", "Water Treatment Facilities", "Petrochemical Refineries", "Gas Separator Plants"],
-    imageUrl: "/hazardous_mobility.png"
+    imageUrl: "/hazardous_mobility.webp"
   },
   "tridiagonal": {
     title: "Tridiagonal AI Anomaly Engine",
@@ -101,7 +101,7 @@ const productsDb: Record<string, ProductDetailsData> = {
       "Minimized hardware stress by adjusting process rates before failures"
     ],
     applications: ["High-pressure Gas Compressors", "Pumping Stations", "Refinement Centrifuges", "Power Turbines"],
-    imageUrl: "/predictive_intelligence.png"
+    imageUrl: "/predictive_intelligence.webp"
   },
   "oneseven": {
     title: "One Seven CAFS Technology",
@@ -129,7 +129,7 @@ const productsDb: Record<string, ProductDetailsData> = {
       "Saves expensive refinery structures with rapid thermal cooling"
     ],
     applications: ["Refinery Tank Farms", "Helidecks", "Loading Gantry Protection", "Emergency Response Fleets"],
-    imageUrl: "/emergency_response.png"
+    imageUrl: "/emergency_response.webp"
   },
   "nardi": {
     title: "Nardi High-Pressure Compressors",
@@ -157,7 +157,7 @@ const productsDb: Record<string, ProductDetailsData> = {
       "Continuous runtime under ambient temperatures up to 55°C"
     ],
     applications: ["Toxic H2S Processing Units", "Safety Escape Refuges", "Marine Vessel Engine Rooms", "Fire Brigade Stations"],
-    imageUrl: "/hazardous_mobility.png"
+    imageUrl: "/hazardous_mobility.webp"
   },
   "tgr": {
     title: "TGR Structural Integrity Audit",
@@ -185,9 +185,45 @@ const productsDb: Record<string, ProductDetailsData> = {
       "Maintains HCIS SEC regulatory audit pass status continuously"
     ],
     applications: ["High-Security Borders", "Substation E-Houses", "Analyzer Shelter Protection", "Bulk Storage Tank Foundations"],
-    imageUrl: "/critical_infrastructure.png"
+    imageUrl: "/critical_infrastructure.webp"
   }
 };
+
+const validDynamicSlugs = [
+  "air-purified-respirators",
+  "breathing-air-compressor",
+  "calibration-gases",
+  "chemical-protective-suits",
+  "detergents-and-disinfectants",
+  "diving-equipments",
+  "drug-alcohol-monitoring",
+  "emergency-escape-breathing-device",
+  "gas-detection",
+  "personal-protection",
+  "self-contained-breathing-apparatus",
+  "thermal-imaging-camera",
+  "environmental-analysers",
+  "protective-eye-wears",
+  "helmets-for-fire-brigades",
+  "test-equipment-workshop-software",
+  "rescue-tool-kit",
+  "fire-service",
+  "marine",
+  "oil-and-gas",
+  "others",
+  "testing-maintenance",
+  "calibration",
+  "marine-instruments-repair",
+  "temporary-refuge-shelters",
+  "fire-simulators",
+  "breathing-air-cascade-systems",
+  "fire-gas-systems",
+  "diving-chambers",
+  "oxygen-boosters-breathing-air-supply",
+  "flow-metering-skids",
+  "chemical-injection-skids",
+  "hipps"
+];
 
 // Fallback dynamic generator for products in the navbar dropdown
 function getDynamicProductData(slug: string): ProductDetailsData | null {
@@ -196,43 +232,7 @@ function getDynamicProductData(slug: string): ProductDetailsData | null {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
-  const validSlugs = [
-    "air-purified-respirators",
-    "breathing-air-compressor",
-    "calibration-gases",
-    "chemical-protective-suits",
-    "detergents-and-disinfectants",
-    "diving-equipments",
-    "drug-alcohol-monitoring",
-    "emergency-escape-breathing-device",
-    "gas-detection",
-    "personal-protection",
-    "self-contained-breathing-apparatus",
-    "thermal-imaging-camera",
-    "environmental-analysers",
-    "protective-eye-wears",
-    "helmets-for-fire-brigades",
-    "test-equipment-workshop-software",
-    "rescue-tool-kit",
-    "fire-service",
-    "marine",
-    "oil-and-gas",
-    "others",
-    "testing-maintenance",
-    "calibration",
-    "marine-instruments-repair",
-    "temporary-refuge-shelters",
-    "fire-simulators",
-    "breathing-air-cascade-systems",
-    "fire-gas-systems",
-    "diving-chambers",
-    "oxygen-boosters-breathing-air-supply",
-    "flow-metering-skids",
-    "chemical-injection-skids",
-    "hipps"
-  ];
-
-  if (!validSlugs.includes(slug)) {
+  if (!validDynamicSlugs.includes(slug)) {
     return null;
   }
 
@@ -283,7 +283,7 @@ function getDynamicProductData(slug: string): ProductDetailsData | null {
   ];
 
   const applications = ["Hydrocarbon Processing", "Civil Defense & Fire Teams", "Industrial Refineries", "Marine Operations"];
-  const imageUrl = isBlue ? "/wireless_monitoring.png" : "/hazardous_mobility.png";
+  const imageUrl = isBlue ? "/wireless_monitoring.webp" : "/hazardous_mobility.webp";
 
   return {
     title,
@@ -302,14 +302,8 @@ function getDynamicProductData(slug: string): ProductDetailsData | null {
 }
 
 export async function generateStaticParams() {
-  return [
-    { id: "mimes" },
-    { id: "xshielder" },
-    { id: "tridiagonal" },
-    { id: "oneseven" },
-    { id: "nardi" },
-    { id: "tgr" }
-  ];
+  const coreSlugs = Object.keys(productsDb);
+  return [...coreSlugs, ...validDynamicSlugs].map((id) => ({ id }));
 }
 
 interface PageProps {
