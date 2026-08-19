@@ -37,6 +37,8 @@ export interface BrandItem {
   products: ProductItem[];
 }
 
+import { productsDb } from "@/data/productsData";
+
 function ProductsCatalogContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -45,16 +47,37 @@ function ProductsCatalogContent() {
   const initialSolution = searchParams.get("solution") || searchParams.get("category") || "All";
   const initialId = searchParams.get("id") || null;
 
-  const [products, setProducts] = useState<ProductItem[]>([]);
+  // Initialize with local productsDb so page and modals render in 0ms with zero loading screen
+  const [products, setProducts] = useState<ProductItem[]>(() => {
+    return productsDb.map((p: any) => ({
+      ...p,
+      brand: p.brand || "East Wind",
+      solutionName: p.category
+    }));
+  });
   const [brands, setBrands] = useState<BrandItem[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>(() => {
+    return Array.from(new Set(productsDb.map((p: any) => p.category).filter(Boolean)));
+  });
 
   const [selectedBrand, setSelectedBrand] = useState<string>(initialBrand);
   const [selectedCategory, setSelectedCategory] = useState<string>(initialSolution);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(() => {
+    if (initialId) {
+      const match = productsDb.find((p: any) => p.id === initialId || p.slug === initialId);
+      if (match) {
+        return {
+          ...match,
+          brand: match.brand || "East Wind",
+          solutionName: match.category
+        };
+      }
+    }
+    return null;
+  });
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Enquiry Form State inside Modal
   const [enquireName, setEnquireName] = useState<string>("");
@@ -65,12 +88,18 @@ function ProductsCatalogContent() {
   const [enquireSuccess, setEnquireSuccess] = useState<boolean>(false);
 
   useEffect(() => {
+    if (initialId && !selectedProduct) {
+      const match = products.find((p) => p.id === initialId || p.slug === initialId);
+      if (match) setSelectedProduct(match);
+    }
+  }, [initialId, products]);
+
+  useEffect(() => {
     async function loadData() {
-      setLoading(true);
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-        // 1. Fetch Brands & their products
+        // 1. Fetch Brands & their products in background
         const brandsRes = await fetch(`${baseUrl}/api/brands`);
         let allProds: ProductItem[] = [];
         let fetchedBrands: BrandItem[] = [];
@@ -106,21 +135,21 @@ function ProductsCatalogContent() {
           }
         }
 
-        setProducts(allProds);
+        if (allProds.length > 0) {
+          setProducts(allProds);
 
-        // Derive unique categories
-        const cats = Array.from(new Set(allProds.map((p) => p.category || p.solutionName).filter((c): c is string => Boolean(c))));
-        setCategories(cats);
+          // Derive unique categories
+          const cats = Array.from(new Set(allProds.map((p) => p.category || p.solutionName).filter((c): c is string => Boolean(c))));
+          setCategories(cats);
 
-        // Check if initialId was passed in query params
-        if (initialId) {
-          const match = allProds.find((p) => p.id === initialId);
-          if (match) setSelectedProduct(match);
+          // Check if initialId was passed in query params
+          if (initialId) {
+            const match = allProds.find((p) => p.id === initialId);
+            if (match) setSelectedProduct(match);
+          }
         }
       } catch (err) {
-        console.error("Failed to fetch products:", err);
-      } finally {
-        setLoading(false);
+        console.warn("Background product refresh warning:", err);
       }
     }
 
