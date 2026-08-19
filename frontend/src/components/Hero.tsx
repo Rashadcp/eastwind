@@ -17,7 +17,6 @@ const getFrameUrl = (index: number) => {
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const bannerImgRef = useRef<HTMLDivElement>(null);
   const frame1Ref = useRef<HTMLDivElement>(null);
   const frame2Ref = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
@@ -94,51 +93,35 @@ export default function Hero() {
     if (!ctx) return;
 
     const drawFrame = (progress: number) => {
-      // 1. Slide 1 (0% to 35%): Show fixed banner image
-      // 2. Transition (35% to 50%): Cross-fade fixed banner to 3D canvas animation
-      // 3. Slide 2 (35% to 100%): Scrub 85 frame 3D animation
-      if (bannerImgRef.current) {
-        const bannerOpacity = progress <= 0.35 ? 1 : Math.max(0, 1 - (progress - 0.35) / 0.15);
-        bannerImgRef.current.style.opacity = String(bannerOpacity);
+      const frameIndex = Math.min(
+        TOTAL_FRAMES - 1,
+        Math.max(0, Math.floor(progress * TOTAL_FRAMES))
+      );
+      
+      let img = images[frameIndex];
+      if (!img || !img.complete || img.naturalWidth === 0) {
+        img = images.find(im => im && im.complete && im.naturalWidth > 0) || images[0];
       }
 
-      if (canvasRef.current) {
-        const canvasOpacity = progress > 0.35 ? Math.min(1, (progress - 0.35) / 0.15) : 0;
-        canvasRef.current.style.opacity = String(canvasOpacity);
-      }
+      if (img && img.complete && img.naturalWidth > 0) {
+        const imgRatio = img.width / img.height;
+        const canvasRatio = canvas.width / canvas.height;
+        let drawWidth, drawHeight, drawX, drawY;
 
-      if (progress > 0.30) {
-        const slide2Progress = Math.min(1, (progress - 0.30) / 0.65);
-        const frameIndex = Math.min(
-          TOTAL_FRAMES - 1,
-          Math.max(0, Math.floor(slide2Progress * TOTAL_FRAMES))
-        );
-        
-        let img = images[frameIndex];
-        if (!img || !img.complete || img.naturalWidth === 0) {
-          img = images.find(im => im && im.complete && im.naturalWidth > 0) || images[0];
+        if (imgRatio > canvasRatio) {
+          drawHeight = canvas.height;
+          drawWidth = canvas.height * imgRatio;
+          drawX = (canvas.width - drawWidth) / 2;
+          drawY = 0;
+        } else {
+          drawWidth = canvas.width;
+          drawHeight = canvas.width / imgRatio;
+          drawX = 0;
+          drawY = (canvas.height - drawHeight) / 2;
         }
 
-        if (img && img.complete && img.naturalWidth > 0) {
-          const imgRatio = img.width / img.height;
-          const canvasRatio = canvas.width / canvas.height;
-          let drawWidth, drawHeight, drawX, drawY;
-
-          if (imgRatio > canvasRatio) {
-            drawHeight = canvas.height;
-            drawWidth = canvas.height * imgRatio;
-            drawX = (canvas.width - drawWidth) / 2;
-            drawY = 0;
-          } else {
-            drawWidth = canvas.width;
-            drawHeight = canvas.width / imgRatio;
-            drawX = 0;
-            drawY = (canvas.height - drawHeight) / 2;
-          }
-
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
       }
     };
 
@@ -193,24 +176,21 @@ export default function Hero() {
   }, [images]);
 
   return (
-    <div ref={containerRef} className="h-[200vh] relative bg-white w-full" id="hero">
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
-        {/* Slide 1 Fixed Banner Image */}
-        <div
-          ref={bannerImgRef}
-          className="absolute top-0 left-0 w-full h-full z-10 transition-opacity duration-300 pointer-events-none bg-[#08090c]"
-        >
-          <img
-            src="/hero section.png"
-            alt="Safety Arabia Hero Banner"
-            className="w-full h-full object-cover object-right-top sm:object-right"
-          />
-        </div>
-
-        {/* Slide 2 Canvas 3D Frame Animation */}
-        <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full object-cover z-10 bg-black opacity-0 transition-opacity duration-300" />
-        <div className="absolute inset-0 z-15 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(to bottom, rgba(0, 240, 255, 0.01) 0px, rgba(0, 240, 255, 0.01) 1px, transparent 1px, transparent 4px)" }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#08090c]/70 via-[#08090c]/20 to-[#08090c]/75 z-20 pointer-events-none" />
+    <div ref={containerRef} className="h-[200vh] relative bg-[#08090c] w-full" id="hero">
+      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#08090c]">
+        {/* Interactive 3D Frame Animation Canvas */}
+        <canvas 
+          ref={canvasRef} 
+          className="absolute top-0 left-0 w-full h-full object-cover z-10 bg-[#08090c]" 
+        />
+        
+        {/* Subtle Cyber Grid & Lighting Overlay */}
+        <div 
+          className="absolute inset-0 z-15 pointer-events-none" 
+          style={{ backgroundImage: "repeating-linear-gradient(to bottom, rgba(0, 240, 255, 0.012) 0px, rgba(0, 240, 255, 0.012) 1px, transparent 1px, transparent 4px)" }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#08090c] via-[#08090c]/70 to-transparent z-20 pointer-events-none w-full max-w-[65%]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#08090c]/80 via-transparent to-[#08090c]/90 z-20 pointer-events-none" />
 
         <div className="max-w-[1240px] w-full mx-auto h-full px-6 relative z-30 flex items-center">
           <div className="relative h-[70vh] w-full max-w-[680px] flex flex-col justify-center">
