@@ -242,27 +242,27 @@ export default function TechnologyEcosystem() {
       {/* Ambient background glows */}
       <div className="absolute top-1/4 left-10 w-[300px] h-[300px] rounded-full blur-[100px] opacity-[0.06] bg-blue-500 pointer-events-none transition-all duration-700" />
 
-      <div className="max-w-[1400px] mx-auto px-10 max-sm:px-5 w-full relative z-10">
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 w-full relative z-10">
         
         {/* Header Block */}
-        <div className="max-w-[780px] mb-14">
-          <span className="block mb-3.5 text-orange-600 uppercase font-mono text-[0.75rem] font-bold tracking-widest">
+        <div className="max-w-[700px] mb-8">
+          <span className="block mb-2 text-orange-600 uppercase font-mono text-[0.68rem] font-bold tracking-widest">
             Eastwind Portfolio
           </span>
-          <h2 className="text-[3rem] max-md:text-[2.2rem] mb-5 uppercase font-extrabold tracking-tight leading-none text-slate-900">
+          <h2 className="text-2xl sm:text-3xl lg:text-[2.2rem] mb-3 uppercase font-extrabold tracking-tight leading-tight text-slate-900">
             Eastwind Portfolio
           </h2>
-          <p className="text-[1.08rem] leading-relaxed m-0 font-medium text-slate-700">
+          <p className="text-xs sm:text-[0.88rem] leading-relaxed m-0 font-normal text-slate-600">
             Select a brand on the left to view its products showcasing with 3-second auto-slide animation.
           </p>
         </div>
 
         {/* 2-Column Sidebar Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(340px,0.35fr)_minmax(0,0.65fr)] gap-8.5 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(300px,0.32fr)_minmax(0,0.68fr)] gap-6 items-start">
           
           {/* ================= LEFT SIDE: SCROLLBAR BRAND SELECTION TABS ================= */}
           <aside
-            className="portfolio-selector p-4 border border-[#e2e6e3] rounded-[32px] shadow-md sticky top-28 z-10 max-lg:static max-lg:grid max-lg:grid-cols-2 max-lg:gap-2.5 max-sm:grid-cols-1 max-h-[calc(100vh-140px)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-orange-500 transition-colors"
+            className="portfolio-selector p-3 border border-[#e2e6e3] rounded-[24px] shadow-md sticky top-28 z-10 max-lg:static max-lg:grid max-lg:grid-cols-2 max-lg:gap-2 max-sm:grid-cols-1 max-h-[calc(100vh-140px)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-orange-500 transition-colors"
             style={{ scrollbarWidth: "thin", scrollbarColor: "#cbd5e1 #f1f5f9", backgroundColor: "#f2f4f2", borderColor: "#e2e6e3" }}
             aria-label="Brand selection tabs"
           >
@@ -273,15 +273,15 @@ export default function TechnologyEcosystem() {
                   key={brand.id}
                   type="button"
                   onClick={() => setActiveBrandId(brand.id)}
-                  className={`portfolio-selector-button w-full min-h-[76px] flex items-center justify-between gap-4 p-4 rounded-2xl cursor-pointer text-left transition-all duration-180 max-lg:mb-0 ${
+                  className={`portfolio-selector-button w-full min-h-[60px] flex items-center justify-between gap-3 p-3 rounded-xl cursor-pointer text-left transition-all duration-180 max-lg:mb-0 ${
                     isActive
                       ? "border border-slate-300 bg-white shadow-sm translate-y-0"
                       : "border border-transparent bg-transparent hover:bg-slate-200/50 hover:-translate-y-[1px]"
                   }`}
                 >
-                  <div className="flex items-center gap-4 min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
                     {brand.logoUrl && brand.logoUrl.trim() !== "" && (
-                      <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center p-1.5 shrink-0 shadow-sm">
+                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center p-1 shrink-0 shadow-xs">
                         <img 
                           src={formatImageUrl(brand.logoUrl)} 
                           alt={brand.name} 
@@ -294,7 +294,7 @@ export default function TechnologyEcosystem() {
                       </div>
                     )}
                     <div className="flex flex-col min-w-0">
-                      <span className={`block text-[1rem] font-extrabold tracking-normal ${
+                      <span className={`block text-[0.88rem] font-extrabold tracking-normal ${
                         isActive ? "text-slate-900 font-black" : "text-slate-700 font-bold"
                       }`}>
                         {brand.name}
@@ -303,7 +303,7 @@ export default function TechnologyEcosystem() {
                   </div>
                   <span
                     aria-hidden="true"
-                    className={`w-2.5 h-2.5 rounded-full ${
+                    className={`w-2 h-2 rounded-full ${
                       isActive ? "bg-orange-600" : "bg-slate-300"
                     }`}
                   />
@@ -315,7 +315,7 @@ export default function TechnologyEcosystem() {
           {/* ================= RIGHT SIDE: CARD WITH ONLY PRODUCT IMAGE & PRODUCT NAME ================= */}
           <div 
             style={{ backgroundColor: "#f2f4f2", borderColor: "#e2e6e3" }}
-            className="border border-[#e2e6e3] rounded-[32px] overflow-hidden p-6 max-sm:p-4 shadow-md"
+            className="border border-[#e2e6e3] rounded-[24px] overflow-hidden p-5 max-sm:p-4 shadow-md"
           >
             {/* White / Light Blue Shade Card Container */}
             <div className="product-visual min-h-[440px] max-sm:min-h-[340px] rounded-[28px] border border-[#e2e6e3] bg-gradient-to-br from-[#f8faf8] via-[#f2f4f2] to-[#eaeaea] relative overflow-hidden flex flex-col justify-between p-8 max-sm:p-6 shadow-sm text-slate-900">

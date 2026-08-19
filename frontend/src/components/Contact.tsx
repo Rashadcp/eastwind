@@ -131,7 +131,7 @@ export default function Contact() {
   return (
     <section
       id="contact-us"
-      className="relative w-full py-28 max-md:py-16 bg-transparent overflow-hidden"
+      className="relative w-full py-14 sm:py-16 bg-transparent overflow-hidden"
     >
       {/* Symmetrical backgrounds matching the rest of the light theme */}
       <div className="pointer-events-none absolute inset-0 z-0">
@@ -158,27 +158,27 @@ export default function Contact() {
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-[1360px] mx-auto px-8 max-sm:px-5">
+      <div className="relative z-10 w-full max-w-[1360px] mx-auto px-6 sm:px-10">
         
         {/* Section Header */}
-        <div className="mb-16 max-w-[800px]">
-          <span className="block text-[0.8rem] uppercase tracking-[0.25em] text-[#c22026] mb-4 font-bold">
+        <div className="mb-8 max-w-[700px]">
+          <span className="block text-[0.68rem] uppercase tracking-[0.25em] text-[#c22026] mb-2 font-bold font-mono">
             {homeContact.tagline}
           </span>
-          <h2 className="text-[3.2rem] max-sm:text-[2.4rem] text-slate-900 mb-5 uppercase tracking-tight font-extrabold leading-none">
+          <h2 className="text-2xl sm:text-3xl lg:text-[2.2rem] text-slate-900 mb-3 uppercase tracking-tight font-extrabold leading-tight">
             {homeContact.title}
           </h2>
-          <p className="text-[1.1rem] text-slate-600 leading-relaxed font-light">
+          <p className="text-xs sm:text-[0.88rem] text-slate-600 leading-relaxed font-normal">
             {homeContact.description}
           </p>
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
           {/* Left Column: Office details */}
           <div
-            className="lg:col-span-5 flex flex-col justify-between rounded-[28px] p-10 max-sm:p-7 relative overflow-hidden"
+            className="lg:col-span-5 flex flex-col justify-between rounded-[24px] p-6 sm:p-8 relative overflow-hidden"
             style={{
               background: "#f2f4f2",
               border: "1px solid #e2e6e3",

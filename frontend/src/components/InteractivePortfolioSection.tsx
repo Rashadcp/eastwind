@@ -125,22 +125,22 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
       <div className="absolute top-1/4 left-10 w-[300px] h-[300px] rounded-full blur-[100px] opacity-[0.05] pointer-events-none transition-all duration-700" style={{ backgroundColor: activeTone.base }} />
       <div className="absolute bottom-1/4 right-10 w-[350px] h-[350px] rounded-full blur-[120px] opacity-[0.04] pointer-events-none transition-all duration-700" style={{ backgroundColor: activeTone.accent }} />
 
-      <div className={`max-w-[1400px] mx-auto px-10 max-sm:px-5 w-full relative z-10 ${
+      <div className={`max-w-[1400px] mx-auto px-6 sm:px-10 w-full relative z-10 ${
         isFullHeight ? "flex flex-col flex-grow overflow-hidden" : ""
       }`}>
         {/* Header Block */}
-        <div className={`flex flex-col lg:flex-row lg:items-end justify-between gap-6 shrink-0 ${isFullHeight ? "mb-10" : "mb-14"}`}>
-          <div className="max-w-[780px]">
-            <span className="block mb-3.5 text-[var(--active-base)] uppercase font-mono text-[0.75rem] font-bold tracking-widest">
+        <div className={`flex flex-col lg:flex-row lg:items-end justify-between gap-4 shrink-0 ${isFullHeight ? "mb-6" : "mb-8"}`}>
+          <div className="max-w-[700px]">
+            <span className="block mb-2 text-[var(--active-base)] uppercase font-mono text-[0.68rem] font-bold tracking-widest">
               {sectionLabel}
             </span>
-            <h2 className={`text-[3rem] max-md:text-[2.2rem] mb-5 uppercase font-extrabold tracking-tight leading-none ${
+            <h2 className={`text-2xl sm:text-3xl lg:text-[2.2rem] mb-3 uppercase font-extrabold tracking-tight leading-tight ${
               isDark ? "text-white" : "text-slate-900"
             }`}>
               {sectionTitle}
             </h2>
-            <p className={`text-[1.08rem] leading-relaxed m-0 font-medium ${
-              isDark ? "text-slate-300" : "text-slate-700"
+            <p className={`text-xs sm:text-[0.88rem] leading-relaxed m-0 font-normal ${
+              isDark ? "text-slate-300" : "text-slate-600"
             }`}>
               {sectionDesc}
             </p>
@@ -156,10 +156,10 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
           customContent
         ) : hasSidebar ? (
           /* Standard 2-Column Sidebar tabs layout */
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(240px,0.3fr)_minmax(0,0.7fr)] gap-8.5 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(240px,0.3fr)_minmax(0,0.7fr)] gap-6 items-start">
             {/* Sidebar Selector buttons */}
             <aside
-              className="portfolio-selector spatial-panel p-4 sticky top-28 z-10 max-lg:static max-lg:grid max-lg:grid-cols-2 max-lg:gap-2.5 max-sm:grid-cols-1 max-h-[calc(100vh-140px)] overflow-y-auto scrollbar-thin"
+              className="portfolio-selector spatial-panel p-3 sticky top-28 z-10 max-lg:static max-lg:grid max-lg:grid-cols-2 max-lg:gap-2 max-sm:grid-cols-1 max-h-[calc(100vh-140px)] overflow-y-auto scrollbar-thin"
               aria-label="Selection tabs"
             >
               {items.map((product) => {
@@ -171,7 +171,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                     key={product.id}
                     type="button"
                     onClick={() => setActiveId(product.id)}
-                    className={`portfolio-selector-button w-full min-h-[68px] flex items-center justify-between gap-3.5 p-[15px_16px] rounded-2xl cursor-pointer text-left transition-all duration-180 max-lg:mb-0 ${
+                    className={`portfolio-selector-button w-full min-h-[58px] flex items-center justify-between gap-3 p-[10px_14px] rounded-xl cursor-pointer text-left transition-all duration-180 max-lg:mb-0 ${
                       isActive
                         ? "border border-slate-200 bg-white/70 shadow-sm translate-y-0"
                         : "border border-transparent bg-transparent hover:bg-slate-100/50 hover:-translate-y-[1px]"
@@ -183,12 +183,12 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                     aria-pressed={isActive}
                   >
                     <span>
-                      <span className={`block text-[0.92rem] font-extrabold tracking-normal ${
+                      <span className={`block text-[0.82rem] font-bold tracking-normal ${
                         isActive ? "text-slate-900 font-extrabold" : "text-slate-600"
                       }`}>
                         {product.name}
                       </span>
-                      <span className={`block mt-1.25 text-[0.72rem] font-bold ${
+                      <span className={`block mt-0.5 text-[0.68rem] font-medium ${
                         isActive ? "text-[var(--btn-border)] font-bold" : "text-slate-400"
                       }`}>
                         {product.category}
@@ -196,7 +196,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                     </span>
                     <span
                       aria-hidden="true"
-                      className={`w-2.5 h-2.5 rounded-full ${
+                      className={`w-2 h-2 rounded-full ${
                         isActive ? "bg-[var(--btn-base)]" : "bg-slate-300"
                       }`}
                       style={{
@@ -217,15 +217,15 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.24, ease: "easeOut" }}
-                  className="p-10.5 max-sm:p-6"
+                  className="p-6 sm:p-8"
                 >
                   {/* Product Header */}
-                  <div className="portfolio-panel-header flex justify-between items-start gap-6 mb-7.5 max-sm:flex-col">
+                  <div className="portfolio-panel-header flex justify-between items-start gap-4 mb-5 max-sm:flex-col">
                     <div>
-                      <h3 className="text-[clamp(2.25rem,5vw,4.8rem)] leading-[0.94] text-slate-900 m-0 mb-4.5 font-extrabold tracking-normal uppercase">
+                      <h3 className="text-xl sm:text-2xl lg:text-3xl leading-tight text-slate-900 m-0 mb-2 font-extrabold tracking-tight uppercase">
                         {activeProduct.name}
                       </h3>
-                      <span className="inline-flex items-center min-h-[34px] px-3.5 rounded-full bg-[var(--active-soft)] border border-[var(--active-accent)]/35 text-[var(--active-base)] text-[0.78rem] font-extrabold">
+                      <span className="inline-flex items-center min-h-[28px] px-3 rounded-full bg-[var(--active-soft)] border border-[var(--active-accent)]/35 text-[var(--active-base)] text-[0.7rem] font-bold">
                         {activeProduct.category}
                       </span>
                     </div>

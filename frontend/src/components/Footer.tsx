@@ -114,11 +114,11 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="w-full bg-white/80 backdrop-blur-3xl saturate-[160%] border-t border-white/90 rounded-none py-[100px] px-10 max-sm:px-5 relative overflow-hidden mt-0 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.85),0_-20px_50px_-15px_rgba(15,23,42,0.05)] z-10">
+    <footer className="w-full bg-white/80 backdrop-blur-3xl saturate-[160%] border-t border-white/90 rounded-none py-14 sm:py-16 px-6 sm:px-10 relative overflow-hidden mt-0 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.85),0_-20px_50px_-15px_rgba(15,23,42,0.05)] z-10">
       {/* High-Tech Industrial Grid Backdrop Overlay */}
       <div className="industrial-grid absolute inset-0 opacity-[0.02] pointer-events-none z-0" />
 
-      <div className="max-w-[1400px] mx-auto grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-[60px] lg:gap-0 mb-20 relative z-10">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-10 lg:gap-0 mb-12 relative z-10">
         
         {/* Column 1: Brand & Mission */}
         <div className="col-span-2 max-lg:col-span-1 lg:pr-[60px]">
