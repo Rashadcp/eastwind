@@ -17,10 +17,11 @@ const getFrameUrl = (index: number) => {
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const bannerImgRef = useRef<HTMLDivElement>(null);
   const frame1Ref = useRef<HTMLDivElement>(null);
   const frame2Ref = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
-  
+
   const [images, setImages] = useState<HTMLImageElement[]>([]);
 
   // Dynamic Captions State
@@ -61,27 +62,26 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    let isMounted = true;
+    const imgArray: HTMLImageElement[] = [];
     const preloadImages = async () => {
-      const promises = Array.from({ length: TOTAL_FRAMES }).map((_, index) => {
+      const firstImg = new Image();
+      firstImg.src = getFrameUrl(0);
+      imgArray[0] = firstImg;
+      setImages([firstImg]);
+
+      const promises = Array.from({ length: TOTAL_FRAMES - 1 }).map((_, index) => {
         return new Promise<HTMLImageElement>((resolve) => {
           const img = new Image();
-          img.src = getFrameUrl(index);
+          img.src = getFrameUrl(index + 1);
           img.onload = () => resolve(img);
           img.onerror = () => resolve(img);
         });
       });
 
       const loadedImages = await Promise.all(promises);
-      if (isMounted) {
-        setImages(loadedImages);
-      }
+      setImages([firstImg, ...loadedImages]);
     };
     preloadImages();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   useEffect(() => {
@@ -92,18 +92,30 @@ export default function Hero() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const START_FRAME = 50; // Start slide 2 animation from frame 50 (00051.webp)
+
     const drawFrame = (progress: number) => {
-      const frameIndex = Math.min(
-        TOTAL_FRAMES - 1,
-        Math.max(0, Math.floor(progress * TOTAL_FRAMES))
-      );
-      
-      let img = images[frameIndex];
-      if (!img || !img.complete || img.naturalWidth === 0) {
-        img = images.find(im => im && im.complete && im.naturalWidth > 0) || images[0];
+      // 1. Slide 1 (0% to 35%): Show fixed banner image
+      // 2. Transition (35% to 50%): Cross-fade fixed banner to 3D canvas animation
+      // 3. Slide 2 (35% to 100%): Scrub 3D animation starting from frame 50
+      if (bannerImgRef.current) {
+        const bannerOpacity = progress <= 0.35 ? 1 : Math.max(0, 1 - (progress - 0.35) / 0.15);
+        bannerImgRef.current.style.opacity = String(bannerOpacity);
       }
 
-      if (img && img.complete && img.naturalWidth > 0) {
+      if (canvasRef.current) {
+        const canvasOpacity = progress > 0.35 ? Math.min(1, (progress - 0.35) / 0.15) : 0;
+        canvasRef.current.style.opacity = String(canvasOpacity);
+      }
+
+      const slide2Progress = Math.max(0, Math.min(1, (progress - 0.30) / 0.65));
+      const frameIndex = Math.min(
+        TOTAL_FRAMES - 1,
+        START_FRAME + Math.floor(slide2Progress * (TOTAL_FRAMES - 1 - START_FRAME))
+      );
+
+      const img = images[frameIndex] || images[START_FRAME] || images[0];
+      if (img && img.complete) {
         const imgRatio = img.width / img.height;
         const canvasRatio = canvas.width / canvas.height;
         let drawWidth, drawHeight, drawX, drawY;
@@ -151,10 +163,10 @@ export default function Hero() {
 
       const rect = container.getBoundingClientRect();
       const scrollHeight = container.scrollHeight - window.innerHeight;
-      
+
       let progress = -rect.top / scrollHeight;
       progress = Math.max(0, Math.min(1, progress));
-      
+
       drawFrame(progress);
       updateDOM(progress);
     };
@@ -176,25 +188,28 @@ export default function Hero() {
   }, [images]);
 
   return (
-    <div ref={containerRef} className="h-[200vh] relative bg-[#08090c] w-full" id="hero">
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#08090c]">
-        {/* Interactive 3D Frame Animation Canvas */}
-        <canvas 
-          ref={canvasRef} 
-          className="absolute top-0 left-0 w-full h-full object-cover z-10 bg-[#08090c]" 
-        />
-        
-        {/* Subtle Cyber Grid & Lighting Overlay */}
-        <div 
-          className="absolute inset-0 z-15 pointer-events-none" 
-          style={{ backgroundImage: "repeating-linear-gradient(to bottom, rgba(0, 240, 255, 0.012) 0px, rgba(0, 240, 255, 0.012) 1px, transparent 1px, transparent 4px)" }} 
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#08090c] via-[#08090c]/70 to-transparent z-20 pointer-events-none w-full max-w-[65%]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#08090c]/80 via-transparent to-[#08090c]/90 z-20 pointer-events-none" />
+    <div ref={containerRef} className="h-[200vh] relative bg-white w-full" id="hero">
+      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
+        {/* Slide 1 Fixed Banner Image */}
+        <div
+          ref={bannerImgRef}
+          className="absolute top-0 left-0 w-full h-full z-10 transition-opacity duration-300 pointer-events-none bg-[#08090c]"
+        >
+          <img
+            src="/hero section.png"
+            alt="Safety Arabia Hero Banner"
+            className="w-full h-full object-cover object-right-top sm:object-right"
+          />
+        </div>
+
+        {/* Slide 2 Canvas 3D Frame Animation */}
+        <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full object-cover z-10 bg-black opacity-0 transition-opacity duration-300" />
+        <div className="absolute inset-0 z-15 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(to bottom, rgba(0, 240, 255, 0.01) 0px, rgba(0, 240, 255, 0.01) 1px, transparent 1px, transparent 4px)" }} />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#08090c]/70 via-[#08090c]/20 to-[#08090c]/75 z-20 pointer-events-none" />
 
         <div className="max-w-[1240px] w-full mx-auto h-full px-6 relative z-30 flex items-center">
           <div className="relative h-[70vh] w-full max-w-[680px] flex flex-col justify-center">
-            
+
             <div ref={frame1Ref} className="absolute top-1/2 left-0 w-full" style={{ opacity: 1, transform: "translate3d(0, -50%, 0)", pointerEvents: "auto" }}>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/15 border border-amber-500/30 text-amber-500 text-[0.7rem] font-mono font-bold uppercase tracking-widest mb-6">{slide1Tagline}</div>
               <h1 className="text-[3.5rem] max-md:text-[2.8rem] max-sm:text-[2.1rem] font-bold text-white mb-6 leading-none uppercase tracking-tight">{slide1Title}</h1>
