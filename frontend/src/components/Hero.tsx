@@ -207,33 +207,35 @@ export default function Hero() {
         <div className="absolute inset-0 z-15 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(to bottom, rgba(0, 240, 255, 0.01) 0px, rgba(0, 240, 255, 0.01) 1px, transparent 1px, transparent 4px)" }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#08090c]/70 via-[#08090c]/20 to-[#08090c]/75 z-20 pointer-events-none" />
 
-        <div className="max-w-[1240px] w-full mx-auto h-full px-6 relative z-30 flex items-center">
-          <div className="relative h-[70vh] w-full max-w-[680px] flex flex-col justify-center">
+        <div className="max-w-[1240px] w-full mx-auto h-full px-6 sm:px-8 lg:px-12 relative z-30 flex items-center">
+          <div className="relative h-[65vh] w-full max-w-[540px] lg:max-w-[580px] flex flex-col justify-center">
 
             <div ref={frame1Ref} className="absolute top-1/2 left-0 w-full" style={{ opacity: 1, transform: "translate3d(0, -50%, 0)", pointerEvents: "auto" }}>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/15 border border-amber-500/30 text-amber-500 text-[0.7rem] font-mono font-bold uppercase tracking-widest mb-6">{slide1Tagline}</div>
-              <h1 className="text-[3.5rem] max-md:text-[2.8rem] max-sm:text-[2.1rem] font-bold text-white mb-6 leading-none uppercase tracking-tight">{slide1Title}</h1>
-              <p className="text-[1.05rem] text-slate-200 mb-10 max-w-[540px] leading-relaxed">{slide1Desc}</p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a href="#solutions" className="btn-primary">{slide1Btn1Text}</a>
-                <a href="#solutions" className="btn-secondary text-white border-white/40 hover:border-white hover:bg-white/10">{slide1Btn2Text}</a>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[0.65rem] font-mono font-bold uppercase tracking-wider rounded-md mb-3.5 backdrop-blur-sm">{slide1Tagline}</div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.35rem] font-extrabold text-white mb-3.5 leading-[1.15] tracking-tight uppercase">{slide1Title}</h1>
+              <p className="text-xs sm:text-[0.875rem] text-slate-300 mb-6 max-w-[460px] leading-relaxed line-clamp-4 md:line-clamp-none font-normal">{slide1Desc}</p>
+              <div className="flex flex-wrap items-center gap-3">
+                <a href="#solutions" className="btn-primary !py-2.5 !px-6 !text-[0.72rem] shadow-md">{slide1Btn1Text}</a>
+                <a href="#solutions" className="btn-secondary !py-2.5 !px-6 !text-[0.72rem] text-white border-white/30 hover:border-white hover:bg-white/10">{slide1Btn2Text}</a>
               </div>
             </div>
 
             <div ref={frame2Ref} className="absolute top-1/2 left-0 w-full" style={{ opacity: 0, transform: "translate3d(0, -50%, 0)", pointerEvents: "none" }}>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[0.7rem] font-mono font-bold uppercase tracking-widest mb-6">{slide2Tagline}</div>
-              <h2 className="text-[3.5rem] max-md:text-[2.6rem] max-sm:text-[2.0rem] font-bold text-white mb-6 leading-none uppercase tracking-tight">{slide2Title}</h2>
-              <p className="text-[1.05rem] text-slate-200 mb-10 max-w-[540px] leading-relaxed">{slide2Desc}</p>
-              <a href="#solutions" className="btn-primary">{slide2Btn1Text}</a>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[0.65rem] font-mono font-bold uppercase tracking-wider rounded-md mb-3.5 backdrop-blur-sm">{slide2Tagline}</div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.35rem] font-extrabold text-white mb-3.5 leading-[1.15] tracking-tight uppercase">{slide2Title}</h2>
+              <p className="text-xs sm:text-[0.875rem] text-slate-300 mb-6 max-w-[460px] leading-relaxed line-clamp-4 md:line-clamp-none font-normal">{slide2Desc}</p>
+              <div>
+                <a href="#solutions" className="btn-primary !py-2.5 !px-6 !text-[0.72rem] shadow-md">{slide2Btn1Text}</a>
+              </div>
             </div>
 
           </div>
         </div>
 
-        <div ref={indicatorRef} className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-40 transition-opacity duration-300 pointer-events-none">
-          <span className="font-mono text-[0.65rem] uppercase text-white/60 tracking-widest">Scroll to explore model</span>
-          <div className="w-5 h-9 rounded-[10px] border-2 border-white/40 relative">
-            <div className="w-1 h-2 bg-sky-400 rounded-[2px] absolute top-1.5 left-1/2 -translate-x-1/2 animate-[scrollMouse_1.5s_infinite]" />
+        <div ref={indicatorRef} className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-40 transition-opacity duration-300 pointer-events-none">
+          <span className="font-mono text-[0.6rem] uppercase text-white/50 tracking-widest">Scroll to explore</span>
+          <div className="w-4 h-7 rounded-[8px] border border-white/30 relative">
+            <div className="w-0.5 h-1.5 bg-sky-400 rounded-[1px] absolute top-1 left-1/2 -translate-x-1/2 animate-[scrollMouse_1.5s_infinite]" />
           </div>
         </div>
       </div>
