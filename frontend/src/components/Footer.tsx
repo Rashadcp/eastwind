@@ -135,20 +135,6 @@ export default function Footer() {
           >
             {footer.tagline}
           </p>
-          {footer.badgeText && (
-            <div className="flex gap-4">
-              <span 
-                className="inline-flex items-center gap-2.5 text-[0.72rem] font-bold tracking-wider border border-slate-200/50 py-2.5 px-4 bg-white/95 rounded-full text-slate-800 shadow-sm transition-all duration-300 hover:shadow-md hover:border-slate-300"
-                style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c22026] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#c22026]"></span>
-                </span>
-                {footer.badgeText}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Column 2: Dynamic Solutions Navigation Links */}
