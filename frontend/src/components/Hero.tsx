@@ -62,26 +62,27 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    const imgArray: HTMLImageElement[] = [];
+    let isMounted = true;
     const preloadImages = async () => {
-      const firstImg = new Image();
-      firstImg.src = getFrameUrl(0);
-      imgArray[0] = firstImg;
-      setImages([firstImg]);
-
-      const promises = Array.from({ length: TOTAL_FRAMES - 1 }).map((_, index) => {
+      const promises = Array.from({ length: TOTAL_FRAMES }).map((_, index) => {
         return new Promise<HTMLImageElement>((resolve) => {
           const img = new Image();
-          img.src = getFrameUrl(index + 1);
+          img.src = getFrameUrl(index);
           img.onload = () => resolve(img);
           img.onerror = () => resolve(img);
         });
       });
 
       const loadedImages = await Promise.all(promises);
-      setImages([firstImg, ...loadedImages]);
+      if (isMounted) {
+        setImages(loadedImages);
+      }
     };
     preloadImages();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -110,11 +111,15 @@ export default function Hero() {
         const slide2Progress = Math.min(1, (progress - 0.30) / 0.65);
         const frameIndex = Math.min(
           TOTAL_FRAMES - 1,
-          Math.floor(slide2Progress * TOTAL_FRAMES)
+          Math.max(0, Math.floor(slide2Progress * TOTAL_FRAMES))
         );
         
-        const img = images[frameIndex] || images[0];
-        if (img && img.complete) {
+        let img = images[frameIndex];
+        if (!img || !img.complete || img.naturalWidth === 0) {
+          img = images.find(im => im && im.complete && im.naturalWidth > 0) || images[0];
+        }
+
+        if (img && img.complete && img.naturalWidth > 0) {
           const imgRatio = img.width / img.height;
           const canvasRatio = canvas.width / canvas.height;
           let drawWidth, drawHeight, drawX, drawY;
