@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { Check } from "lucide-react";
 
 export interface BenefitItem {
   value: string;
@@ -291,7 +292,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                             key={feature}
                             className="min-h-[74px] flex items-center gap-3 p-4 border border-slate-200/60 rounded-2xl bg-white/40 text-slate-700 text-[0.9rem] font-bold"
                           >
-                            <span className="text-[var(--active-base)] font-black">✓</span>
+                            <Check className="w-4 h-4 text-[var(--active-base)] shrink-0 stroke-[3]" />
                             {feature}
                           </div>
                         ))}
@@ -332,7 +333,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                         </div>
                       </div>
 
-                      <div className="portfolio-actions flex gap-3 flex-wrap">
+                      <div className="portfolio-actions flex justify-center gap-3 flex-wrap">
                         {cta1OnClick && (
                           <button
                             type="button"
@@ -486,9 +487,6 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                                         className="premium-solution-tile group cursor-pointer"
                                       >
                                         <div className="flex items-center gap-3">
-                                          <span className="font-mono text-[0.75rem] font-extrabold text-[var(--active-base)]/50 group-hover:text-[var(--active-base)] transition-colors duration-200">
-                                            {(idx + 1).toString().padStart(2, '0')}
-                                          </span>
                                           <span className="text-[0.84rem] font-bold text-slate-800 group-hover:text-slate-950 transition-colors duration-200">
                                             {sol.name}
                                           </span>
@@ -514,7 +512,9 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                                       key={feature}
                                       className="flex items-center gap-2.5 text-slate-600 font-semibold"
                                     >
-                                      <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[var(--active-soft)] text-[var(--active-base)] text-[0.72rem] shrink-0 font-bold">✓</span>
+                                      <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[var(--active-soft)] text-[var(--active-base)] shrink-0">
+                                        <Check className="w-3 h-3 stroke-[3]" />
+                                      </span>
                                       <span className="text-[0.82rem]">{feature}</span>
                                     </div>
                                   ))}
@@ -570,7 +570,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                             )}
 
                             {/* Action Buttons */}
-                            <div className="portfolio-actions flex gap-3 flex-wrap mt-2">
+                            <div className="portfolio-actions flex justify-center gap-3 flex-wrap mt-2">
                               {cta1OnClick && (
                                 <button
                                   type="button"
@@ -684,16 +684,13 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                             renderSolutions(activeProduct)
                           ) : (
                             <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4">
-                               {activeProduct.solutions.map((sol, idx) => (
+                               {activeProduct.solutions.map((sol) => (
                                 <Link
                                   key={sol.name}
                                   href={sol.href}
                                   className="premium-solution-tile group cursor-pointer"
                                 >
                                   <div className="flex items-center gap-3.5">
-                                    <span className="font-mono text-[0.75rem] font-extrabold text-[var(--active-base)]/50 group-hover:text-[var(--active-base)] transition-colors duration-200">
-                                      {(idx + 1).toString().padStart(2, '0')}
-                                    </span>
                                     <span className="text-[0.88rem] font-bold text-slate-800 group-hover:text-slate-950 transition-colors duration-200 leading-tight">
                                       {sol.name}
                                     </span>
@@ -722,7 +719,9 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                                 key={feature}
                                 className="flex items-center gap-2.5 text-slate-600 font-semibold"
                                 >
-                                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[var(--active-soft)] text-[var(--active-base)] text-[0.72rem] shrink-0 font-bold">✓</span>
+                                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[var(--active-soft)] text-[var(--active-base)] shrink-0">
+                                  <Check className="w-3 h-3 stroke-[3]" />
+                                </span>
                                 <span className={isFullHeight ? "text-[0.82rem]" : "text-[0.88rem]"}>{feature}</span>
                               </div>
                             ))}
@@ -784,7 +783,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                       )}
 
                       {/* Actions */}
-                      <div className={`portfolio-actions flex gap-3 flex-wrap ${isFullHeight ? "mt-0.5" : ""}`}>
+                      <div className={`portfolio-actions flex justify-center gap-3 flex-wrap ${isFullHeight ? "mt-0.5" : ""}`}>
                         {cta1OnClick && (
                           <button
                             type="button"

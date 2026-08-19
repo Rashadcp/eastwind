@@ -2,15 +2,10 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Poppins } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
+import { Check, AlertCircle } from "lucide-react";
+import { cachedFetch } from "@/utils/apiCache";
 
 interface DropdownOption {
   value: string;
@@ -70,10 +65,9 @@ function EnquiryFormContent() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         
-        // Fetch enquiry settings
-        const settingsRes = await fetch(`${baseUrl}/api/contact-settings/enquiry_page`, { cache: "no-store" });
-        if (settingsRes.ok) {
-          const json = await settingsRes.json();
+        // Fetch enquiry settings with instant memory cache
+        const json = await cachedFetch<any>(`${baseUrl}/api/contact-settings/enquiry_page`, { fallback: null });
+        if (json) {
           setSettings({
             enquiryTagline: json.enquiryTagline || defaultEnquirySettings.enquiryTagline,
             enquiryTitle: json.enquiryTitle || defaultEnquirySettings.enquiryTitle,
@@ -85,10 +79,9 @@ function EnquiryFormContent() {
           });
         }
 
-        // Fetch solutions
-        const solRes = await fetch(`${baseUrl}/api/solutions`);
-        if (solRes.ok) {
-          const data = await solRes.json();
+        // Fetch solutions with instant memory cache
+        const data = await cachedFetch<any[]>(`${baseUrl}/api/solutions`, { fallback: [] });
+        if (Array.isArray(data) && data.length > 0) {
           setSolutions(data);
           
           const querySol = searchParams.get("solution");
@@ -144,8 +137,8 @@ function EnquiryFormContent() {
   if (submitSuccess) {
     return (
       <div className="bg-white border border-slate-200/80 p-12 max-md:p-8 max-sm:p-6 rounded-[32px] shadow-sm text-center space-y-6 max-w-xl mx-auto">
-        <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 text-2xl mx-auto animate-pulse">
-          ✓
+        <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 mx-auto">
+          <Check className="w-8 h-8 stroke-[3]" />
         </div>
         <div className="space-y-3">
           <h3 className="text-2xl font-extrabold text-slate-900 uppercase tracking-tight m-0">{settings.successTitle}</h3>
@@ -180,7 +173,8 @@ function EnquiryFormContent() {
 
       {error && (
         <div className="bg-rose-50 border border-rose-200 text-rose-600 p-4 rounded-2xl text-xs flex items-start gap-3">
-          🔒 <span className="leading-relaxed">{error}</span>
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+          <span className="leading-relaxed">{error}</span>
         </div>
       )}
 
@@ -315,7 +309,7 @@ export default function EnquiryPage() {
   return (
     <>
       <Navbar />
-      <main className={`${poppins.className} min-h-screen bg-slate-50 text-slate-800 antialiased pt-32 pb-20 w-full`}>
+      <main className="min-h-screen bg-slate-50 text-slate-800 antialiased pt-32 pb-20 w-full">
         <div className="max-w-[800px] mx-auto px-4">
           <Suspense fallback={
             <div className="py-24 text-center space-y-3 bg-white border border-slate-200 rounded-[32px]">

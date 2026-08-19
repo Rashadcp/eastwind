@@ -1,11 +1,9 @@
 // src/app/page.tsx
-"use client";
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import IndustrySolutions from "@/components/IndustrySolutions";
-import TechnologyEcosystem from "@/components/TechnologyEcosystem";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -28,9 +26,6 @@ export default function Home() {
 
         {/* 3. Premium Modular About Us Section */}
         <About />
-
-        {/* 5. Technology Ecosystem Portfolio Section */}
-        <TechnologyEcosystem />
 
         {/* 6. Modern Interactive Contact & Quote Section */}
         <Contact />

@@ -124,13 +124,6 @@ export default function SuccessStoriesSection() {
                 {/* 2. DATE, HEADING & CONTENT */}
                 <div className="p-7 space-y-3">
                   
-                  {/* DATE BADGE */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-mono font-bold text-orange-600 bg-orange-50 border border-orange-200 px-3 py-1 rounded-md">
-                      📅 {story.date || story.year || "2025"}
-                    </span>
-                  </div>
-
                   {/* HEADING */}
                   <h3 className="text-xl font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-orange-600 transition-colors">
                     {story.title}

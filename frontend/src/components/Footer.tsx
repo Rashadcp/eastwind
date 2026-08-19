@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatImageUrl } from "@/utils/image";
+import { cachedFetch } from "@/utils/apiCache";
 
 interface FooterLink {
   name: string;
@@ -61,10 +62,9 @@ export default function Footer() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-        // 1. Fetch dynamic contact settings and footer document
-        const res = await fetch(`${baseUrl}/api/contact-settings`);
-        if (res.ok) {
-          const list = await res.json();
+        // 1. Fetch dynamic contact settings and footer document with instant cache
+        const list = await cachedFetch<any[]>(`${baseUrl}/api/contact-settings`, { fallback: [] });
+        if (Array.isArray(list) && list.length > 0) {
           const footerDoc = list.find((item: any) => item.id === "footer");
           const contactDoc = list.find((item: any) => item.id === "contact_info");
 
@@ -72,15 +72,12 @@ export default function Footer() {
 
           // Attempt to map solutions links from /api/solutions if footer doc doesn't override them
           if (!footerDoc?.solutionsLinks || footerDoc.solutionsLinks.length === 0) {
-            const solutionsRes = await fetch(`${baseUrl}/api/solutions`);
-            if (solutionsRes.ok) {
-              const solData = await solutionsRes.json();
-              if (Array.isArray(solData) && solData.length > 0) {
-                solutionsResList = solData.slice(0, 5).map((sol: any) => ({
-                  name: sol.title || sol.name,
-                  href: `/solutions#${sol.id}`
-                }));
-              }
+            const solData = await cachedFetch<any[]>(`${baseUrl}/api/solutions`, { fallback: [] });
+            if (Array.isArray(solData) && solData.length > 0) {
+              solutionsResList = solData.slice(0, 5).map((sol: any) => ({
+                name: sol.title || sol.name,
+                href: `/solutions#${sol.id}`
+              }));
             }
           }
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatImageUrl } from "@/utils/image";
+import { Image as ImageIcon } from "lucide-react";
 
 interface MetricItem {
   value: string;
@@ -100,9 +101,9 @@ export default function About() {
                 className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105 select-none"
               />
             ) : (
-              <div className="w-full h-full min-h-[400px] flex flex-col items-center justify-center bg-slate-900 text-slate-400 p-6 text-center">
-                <span className="text-4xl mb-2">📷</span>
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
+              <div className="w-full h-full min-h-[400px] flex flex-col items-center justify-center bg-slate-900 text-slate-400 p-6 text-center space-y-2">
+                <ImageIcon className="w-10 h-10 text-slate-600" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
                   No Image Found
                 </span>
               </div>

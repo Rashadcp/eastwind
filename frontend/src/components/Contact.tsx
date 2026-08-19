@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Check } from "lucide-react";
 
 interface DropdownOption {
   value: string;
@@ -259,8 +260,8 @@ export default function Contact() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="h-full flex flex-col justify-center items-center text-center py-10"
                 >
-                  <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 text-3xl font-bold mb-5 shadow-xs">
-                    ✓
+                  <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mb-5 shadow-xs">
+                    <Check className="w-8 h-8 stroke-[3]" />
                   </div>
                   <h3 className="text-xl font-extrabold text-slate-900 uppercase tracking-tight mb-2">{homeContact.successTitle}</h3>
                   <p className="text-sm text-slate-500 leading-relaxed font-normal max-w-sm m-0">

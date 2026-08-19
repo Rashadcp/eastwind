@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Check, Cpu, ShieldAlert, Activity, Flame, Radio, Wrench, Layers } from "lucide-react";
 
 interface SolutionDetail {
   name: string;
@@ -159,7 +160,7 @@ const defaultPageConfig: SolutionsPageConfig = {
         "Process parameter optimization and predictive engineering analysis",
         "Data acquisition topologies facilitating rapid AI framework execution"
       ],
-      icon: "⚡"
+      icon: "cpu"
     },
     {
       title: "Tactical Response Integration",
@@ -170,7 +171,7 @@ const defaultPageConfig: SolutionsPageConfig = {
         "Rapid intervention vehicles (RIV) for tactical site access",
         "Amphibious extreme-terrain safety equipment and clinical units"
       ],
-      icon: "⚙️"
+      icon: "shield-alert"
     },
     {
       title: "Fire & Gas Detection Topologies",
@@ -181,7 +182,7 @@ const defaultPageConfig: SolutionsPageConfig = {
         "Multi-spectrum optical flame monitoring instruments",
         "Linear thermal cables and localized smoke detection arrays"
       ],
-      icon: "👁️"
+      icon: "activity"
     },
     {
       title: "Extinguishing & Lifecycle Simulation",
@@ -192,7 +193,7 @@ const defaultPageConfig: SolutionsPageConfig = {
         "High-capacity automated foam concentrate skid engineering",
         "Underground energy pipeline physical protection systems"
       ],
-      icon: "🛡️"
+      icon: "flame"
     },
     {
       title: "Industrial Wireless Environments",
@@ -203,7 +204,7 @@ const defaultPageConfig: SolutionsPageConfig = {
         "ATEX Zone 0 certified radio transmitter configurations",
         "Multi-hop WirelessHART & ISA100 structural mesh routing"
       ],
-      icon: "🛰️"
+      icon: "radio"
     },
     {
       title: "Specialised Lifecycles & Field Services",
@@ -214,7 +215,7 @@ const defaultPageConfig: SolutionsPageConfig = {
         "Operational operator certifications tailored to client locations",
         "Torque, pressure, thermal, and electrical field calibration loops"
       ],
-      icon: "🔬"
+      icon: "wrench"
     }
   ],
   partnersTagline: "Global Integration",
@@ -730,6 +731,13 @@ function SolutionsPageContent() {
                 />
               )}
             </button>
+
+            <Link
+              href="/products"
+              className="relative pb-3 font-extrabold tracking-tight transition-all duration-300 cursor-pointer text-[1.4rem] text-slate-400 hover:text-slate-700 no-underline"
+            >
+              Products
+            </Link>
           </div>
 
           <div className="border-b border-slate-200/60 pb-12 mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -820,9 +828,6 @@ function SolutionsPageContent() {
                       <span className="text-[10px] font-mono font-extrabold uppercase text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md">
                         {srv.category}
                       </span>
-                      <span className="text-[10px] font-mono font-bold text-slate-400">
-                        0{idx + 1}
-                      </span>
                     </div>
 
                     <h3 className="text-xl font-bold text-slate-900 leading-snug group-hover:text-emerald-700 transition-colors">
@@ -836,7 +841,7 @@ function SolutionsPageContent() {
                     <div className="pt-2 space-y-1.5 border-t border-slate-100">
                       {srv.items.map((item, i) => (
                         <div key={i} className="flex items-center gap-2 text-xs text-slate-700 font-medium">
-                          <span className="text-emerald-600 font-bold">✓</span>
+                          <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 stroke-[2.5]" />
                           <span>{item}</span>
                         </div>
                       ))}
@@ -865,9 +870,6 @@ function SolutionsPageContent() {
                   className="group relative p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-slate-300 transition-all duration-300 flex items-center justify-between no-underline text-inherit cursor-pointer"
                 >
                   <div className="flex items-center gap-4 min-w-0">
-                    <span className="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-[#c22026] text-xs font-mono font-bold shrink-0">
-                      0{idx + 1}
-                    </span>
                     <div className="min-w-0">
                       <h3 className="text-base font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-[#1e3e8f] transition-colors m-0 truncate">
                         {app.name}
@@ -1029,7 +1031,17 @@ function SolutionsPageContent() {
                   <div className="space-y-5">
                     <div className="flex items-center justify-between border-b border-slate-200/60 pb-4">
                       <div className="w-9 h-9 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform duration-300">
-                        {portfolio.icon || "⚡"}
+                        {(() => {
+                          const t = (portfolio.title || "").toLowerCase();
+                          const ic = (portfolio.icon || "").toLowerCase();
+                          if (t.includes("ai") || t.includes("data") || ic === "cpu" || ic === "⚡") return <Cpu className="w-4 h-4 text-blue-600" />;
+                          if (t.includes("tactical") || t.includes("response") || ic === "shield-alert" || ic === "⚙️") return <ShieldAlert className="w-4 h-4 text-orange-600" />;
+                          if (t.includes("detection") || t.includes("gas") || ic === "activity" || ic === "👁️") return <Activity className="w-4 h-4 text-emerald-600" />;
+                          if (t.includes("extinguishing") || t.includes("simulation") || ic === "flame" || ic === "🛡️") return <Flame className="w-4 h-4 text-red-600" />;
+                          if (t.includes("wireless") || ic === "radio" || ic === "🛰️") return <Radio className="w-4 h-4 text-indigo-600" />;
+                          if (t.includes("field") || t.includes("lifecycle") || ic === "wrench" || ic === "🔬") return <Wrench className="w-4 h-4 text-purple-600" />;
+                          return <Layers className="w-4 h-4 text-slate-700" />;
+                        })()}
                       </div>
                     </div>
 

@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
+import compression from "compression";
 import { CORS_ORIGIN, UPLOAD_DIR } from "./config.js";
 
 // MVC Middleware imports
@@ -25,6 +27,10 @@ const app = express();
 
 // 1. Logger (executes first for all routes)
 app.use(requestLogger);
+
+// Security & Optimization
+app.use(helmet({ crossOriginResourcePolicy: false })); // allow cross-origin images for frontend
+app.use(compression());
 
 // 2. CORS and Body Parsing
 app.use(cors({

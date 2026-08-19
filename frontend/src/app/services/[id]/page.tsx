@@ -1,15 +1,7 @@
-// src/app/services/[id]/page.tsx
-
+import { Metadata } from "next";
 import Link from "next/link";
-import { Poppins } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
 
 export const dynamicParams = true;
 
@@ -301,29 +293,63 @@ export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services`, {
+      next: { revalidate: 60 }
+    });
     if (!res.ok) return [];
     const list = await res.json();
     return list.map((ser: any) => ({
       id: ser.id,
     }));
   } catch (error) {
-    console.error("Failed to generate static params for services:", error);
     return [];
   }
 }
 
-interface PageProps {
+type Props = {
   params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+
+  let data: ServiceData | null = null;
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services/${id}`, {
+      next: { revalidate: 60 }
+    });
+    if (res.ok) {
+      data = await res.json();
+    }
+  } catch (error) {
+    // fallback
+  }
+
+  const title = data ? `${data.title} | Engineering Services | Eastwind Arabia` : "Engineering Service | Eastwind Arabia";
+  const description = data ? data.overview.slice(0, 160) : "Specialized industrial engineering, commissioning, calibration, and safety services.";
+
+  return {
+    title,
+    description,
+    keywords: data ? [data.title, data.category, "Safety Engineering Services KSA", "HCIS calibration", "East Wind Safety"] : [],
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+    alternates: {
+      canonical: `https://eastwindsafety.com/services/${id}`,
+    },
+  };
 }
 
-export default async function ServiceDetailPage({ params }: PageProps) {
+export default async function ServiceDetailPage({ params }: Props) {
   const { id } = await params;
   
   let data: ServiceData | null = null;
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services/${id}`, {
-      cache: "no-store"
+      next: { revalidate: 60 }
     });
     if (res.ok) {
       data = await res.json();
@@ -343,7 +369,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
   return (
     <>
       <Navbar />
-      <main className={`${poppins.className} min-h-screen bg-white text-slate-800 antialiased flex flex-col w-full overflow-x-hidden`}>
+      <main className="min-h-screen bg-white text-slate-800 antialiased flex flex-col w-full overflow-x-hidden">
 
         {/* Hero Row */}
         <div className="w-full bg-slate-950 pt-[200px] pb-24 flex items-center border-b border-slate-900 relative">
@@ -393,7 +419,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
               Service Scope
             </span>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {data.capabilities.map((cap, i) => (
+              {data.capabilities.map((cap) => (
                 <div
                   key={cap.title}
                   className="relative p-8 rounded-2xl border border-slate-200/80 bg-white overflow-hidden"
@@ -405,9 +431,6 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                     className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-2xl"
                     style={{ background: `linear-gradient(180deg, ${data.accentHex} 0%, ${data.accentHex}44 100%)` }}
                   />
-                  <span className="text-[0.65rem] font-mono font-bold tracking-widest block mb-2" style={{ color: `${data.accentHex}80` }}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
                   <h3 className="text-[1.05rem] font-bold text-slate-900 mb-2 leading-snug">{cap.title}</h3>
                   <p className="text-[0.88rem] text-slate-500 leading-relaxed font-light m-0">{cap.body}</p>
                 </div>

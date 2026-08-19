@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { cachedFetch } from "@/utils/apiCache";
 
 const TOTAL_FRAMES = 85;
 
@@ -24,25 +25,24 @@ export default function Hero() {
 
   const [images, setImages] = useState<HTMLImageElement[]>([]);
 
-  // Dynamic Captions State
-  const [slide1Tagline, setSlide1Tagline] = useState<string>("Safety Arabia Infrastructure");
-  const [slide1Title, setSlide1Title] = useState<string>("Fusing Industry AI & Critical Safety");
-  const [slide1Desc, setSlide1Desc] = useState<string>("We engineer intelligent, cyber-physical safety systems. From explosion-proof IIoT mobility to predictive threat analytics, we safeguard heavy industrial infrastructure.");
-  const [slide1Btn1Text, setSlide1Btn1Text] = useState<string>("Operations Center");
-  const [slide1Btn2Text, setSlide1Btn2Text] = useState<string>("Our Capabilities");
+  // Dynamic Captions State (Loaded purely from backend CMS)
+  const [slide1Tagline, setSlide1Tagline] = useState<string>("");
+  const [slide1Title, setSlide1Title] = useState<string>("");
+  const [slide1Desc, setSlide1Desc] = useState<string>("");
+  const [slide1Btn1Text, setSlide1Btn1Text] = useState<string>("");
+  const [slide1Btn2Text, setSlide1Btn2Text] = useState<string>("");
 
-  const [slide2Tagline, setSlide2Tagline] = useState<string>("IIoT Data Telemetry Loops");
-  const [slide2Title, setSlide2Title] = useState<string>("Real-time Edge Acquisition");
-  const [slide2Desc, setSlide2Desc] = useState<string>("Deploying intrinsically safe wireless sensor webs inside explosive gas zones. Fusing critical network monitoring architecture protocols into a unified digital operations environment.");
-  const [slide2Btn1Text, setSlide2Btn1Text] = useState<string>("Explore MIMES Wireless");
+  const [slide2Tagline, setSlide2Tagline] = useState<string>("");
+  const [slide2Title, setSlide2Title] = useState<string>("");
+  const [slide2Desc, setSlide2Desc] = useState<string>("");
+  const [slide2Btn1Text, setSlide2Btn1Text] = useState<string>("");
 
   useEffect(() => {
     async function loadHeroData() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${baseUrl}/api/hero`);
-        if (res.ok) {
-          const data = await res.json();
+        const data = await cachedFetch<any>(`${baseUrl}/api/hero`, { fallback: null });
+        if (data) {
           if (data.slide1Tagline) setSlide1Tagline(data.slide1Tagline);
           if (data.slide1Title) setSlide1Title(data.slide1Title);
           if (data.slide1Desc) setSlide1Desc(data.slide1Desc);
@@ -62,31 +62,60 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    const imgArray: HTMLImageElement[] = [];
-    const preloadImages = async () => {
-      const firstImg = new Image();
-      firstImg.src = getFrameUrl(0);
-      imgArray[0] = firstImg;
-      setImages([firstImg]);
+    let isCancelled = false;
+    const loadedMap: HTMLImageElement[] = [];
 
-      const promises = Array.from({ length: TOTAL_FRAMES - 1 }).map((_, index) => {
-        return new Promise<HTMLImageElement>((resolve) => {
+    // Preload starting frame 50 immediately for instant transition
+    const startImg = new Image();
+    startImg.src = getFrameUrl(50);
+    loadedMap[50] = startImg;
+    setImages([...loadedMap]);
+
+    // Stream the remaining active animation frames (51 to 84) progressively in idle time
+    const loadRemainingFrames = () => {
+      const activeFrameIndices: number[] = [];
+      for (let i = 51; i < TOTAL_FRAMES; i++) {
+        activeFrameIndices.push(i);
+      }
+
+      let currentIndex = 0;
+      function loadNextBatch() {
+        if (isCancelled || currentIndex >= activeFrameIndices.length) return;
+        const batch = activeFrameIndices.slice(currentIndex, currentIndex + 4);
+        currentIndex += 4;
+
+        batch.forEach((idx) => {
           const img = new Image();
-          img.src = getFrameUrl(index + 1);
-          img.onload = () => resolve(img);
-          img.onerror = () => resolve(img);
+          img.src = getFrameUrl(idx);
+          img.onload = () => {
+            if (!isCancelled) {
+              loadedMap[idx] = img;
+              setImages([...loadedMap]);
+            }
+          };
         });
-      });
 
-      const loadedImages = await Promise.all(promises);
-      setImages([firstImg, ...loadedImages]);
+        if (currentIndex < activeFrameIndices.length) {
+          if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+            (window as any).requestIdleCallback(() => loadNextBatch(), { timeout: 1000 });
+          } else {
+            setTimeout(loadNextBatch, 80);
+          }
+        }
+      }
+
+      // Start streaming shortly after initial render
+      setTimeout(loadNextBatch, 300);
     };
-    preloadImages();
+
+    loadRemainingFrames();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   useEffect(() => {
-    if (images.length === 0) return;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -114,7 +143,7 @@ export default function Hero() {
         START_FRAME + Math.floor(slide2Progress * (TOTAL_FRAMES - 1 - START_FRAME))
       );
 
-      const img = images[frameIndex] || images[START_FRAME] || images[0];
+      const img = images[frameIndex] || images[START_FRAME];
       if (img && img.complete) {
         const imgRatio = img.width / img.height;
         const canvasRatio = canvas.width / canvas.height;
@@ -158,22 +187,22 @@ export default function Hero() {
     };
 
     const handleScroll = () => {
-      const container = containerRef.current;
-      if (!container) return;
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const scrollableHeight = rect.height - window.innerHeight;
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(1, scrolled / scrollableHeight));
 
-      const rect = container.getBoundingClientRect();
-      const scrollHeight = container.scrollHeight - window.innerHeight;
-
-      let progress = -rect.top / scrollHeight;
-      progress = Math.max(0, Math.min(1, progress));
-
-      drawFrame(progress);
-      updateDOM(progress);
+      requestAnimationFrame(() => {
+        drawFrame(progress);
+        updateDOM(progress);
+      });
     };
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      if (!canvasRef.current) return;
+      canvasRef.current.width = window.innerWidth;
+      canvasRef.current.height = window.innerHeight;
       handleScroll();
     };
 
@@ -196,7 +225,7 @@ export default function Hero() {
           className="absolute top-0 left-0 w-full h-full z-10 transition-opacity duration-300 pointer-events-none bg-[#08090c]"
         >
           <img
-            src="/hero section.png"
+            src="/hero-section.webp"
             alt="Safety Arabia Hero Banner"
             className="w-full h-full object-cover object-right-top sm:object-right"
           />
@@ -211,22 +240,58 @@ export default function Hero() {
           <div className="relative h-[68vh] w-full max-w-[600px] lg:max-w-[640px] flex flex-col justify-center">
 
             <div ref={frame1Ref} className="absolute top-1/2 left-0 w-full" style={{ opacity: 1, transform: "translate3d(0, -50%, 0)", pointerEvents: "auto" }}>
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[0.72rem] font-mono font-bold uppercase tracking-wider rounded-md mb-4 backdrop-blur-sm">{slide1Tagline}</div>
-              <h1 className="text-3xl sm:text-4xl md:text-[2.65rem] lg:text-[2.85rem] font-extrabold text-white mb-4 leading-[1.12] tracking-tight uppercase">{slide1Title}</h1>
-              <p className="text-sm sm:text-[0.98rem] text-slate-200 mb-8 max-w-[520px] leading-relaxed font-normal">{slide1Desc}</p>
+              {slide1Tagline && (
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[0.72rem] font-mono font-bold uppercase tracking-wider rounded-md mb-4 backdrop-blur-sm">
+                  {slide1Tagline}
+                </div>
+              )}
+              {slide1Title && (
+                <h1 className="text-3xl sm:text-4xl md:text-[2.65rem] lg:text-[2.85rem] font-extrabold text-white mb-4 leading-[1.12] tracking-tight uppercase">
+                  {slide1Title}
+                </h1>
+              )}
+              {slide1Desc && (
+                <p className="text-sm sm:text-[0.98rem] text-slate-200 mb-8 max-w-[520px] leading-relaxed font-normal">
+                  {slide1Desc}
+                </p>
+              )}
               <div className="flex flex-wrap items-center gap-3.5">
-                <a href="#solutions" className="btn-primary !py-3 !px-7 !text-[0.78rem] shadow-lg">{slide1Btn1Text}</a>
-                <a href="#solutions" className="btn-secondary !py-3 !px-7 !text-[0.78rem] text-white border-white/35 hover:border-white hover:bg-white/10">{slide1Btn2Text}</a>
+                {slide1Btn1Text && (
+                  <a href="#solutions" className="btn-primary !py-3 !px-7 !text-[0.78rem] shadow-lg">
+                    {slide1Btn1Text}
+                  </a>
+                )}
+                {slide1Btn2Text && (
+                  <a href="#solutions" className="btn-secondary !py-3 !px-7 !text-[0.78rem] text-white border-white/35 hover:border-white hover:bg-white/10">
+                    {slide1Btn2Text}
+                  </a>
+                )}
               </div>
             </div>
 
             <div ref={frame2Ref} className="absolute top-1/2 left-0 w-full" style={{ opacity: 0, transform: "translate3d(0, -50%, 0)", pointerEvents: "none" }}>
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[0.72rem] font-mono font-bold uppercase tracking-wider rounded-md mb-4 backdrop-blur-sm">{slide2Tagline}</div>
-              <h2 className="text-3xl sm:text-4xl md:text-[2.65rem] lg:text-[2.85rem] font-extrabold text-white mb-4 leading-[1.12] tracking-tight uppercase">{slide2Title}</h2>
-              <p className="text-sm sm:text-[0.98rem] text-slate-200 mb-8 max-w-[520px] leading-relaxed font-normal">{slide2Desc}</p>
-              <div>
-                <a href="#solutions" className="btn-primary !py-3 !px-7 !text-[0.78rem] shadow-lg">{slide2Btn1Text}</a>
-              </div>
+              {slide2Tagline && (
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[0.72rem] font-mono font-bold uppercase tracking-wider rounded-md mb-4 backdrop-blur-sm">
+                  {slide2Tagline}
+                </div>
+              )}
+              {slide2Title && (
+                <h2 className="text-3xl sm:text-4xl md:text-[2.65rem] lg:text-[2.85rem] font-extrabold text-white mb-4 leading-[1.12] tracking-tight uppercase">
+                  {slide2Title}
+                </h2>
+              )}
+              {slide2Desc && (
+                <p className="text-sm sm:text-[0.98rem] text-slate-200 mb-8 max-w-[520px] leading-relaxed font-normal">
+                  {slide2Desc}
+                </p>
+              )}
+              {slide2Btn1Text && (
+                <div>
+                  <a href="#solutions" className="btn-primary !py-3 !px-7 !text-[0.78rem] shadow-lg">
+                    {slide2Btn1Text}
+                  </a>
+                </div>
+              )}
             </div>
 
           </div>

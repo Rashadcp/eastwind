@@ -3,15 +3,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Poppins } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
+import { Check } from "lucide-react";
 
 interface DropdownOption {
   value: string;
@@ -145,7 +139,7 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-      <main className={`${poppins.className} min-h-screen bg-white text-slate-800 antialiased flex flex-col w-full overflow-x-hidden`}>
+      <main className="min-h-screen bg-white text-slate-800 antialiased flex flex-col w-full overflow-x-hidden">
         
         {/* ── SECTION 1: BRIGHT INDUSTRIAL SPLASH HERO BANNER ── */}
         <div className="relative w-full overflow-hidden bg-slate-950 min-h-[50vh] pt-[250px] pb-32 flex items-center z-10 border-b border-slate-900 shrink-0">
@@ -252,7 +246,9 @@ export default function ContactPage() {
             <div className="lg:col-span-7 bg-[#f8fafc] border border-slate-200/60 p-8 md:p-10 rounded-2xl shadow-2xs">
               {submitted ? (
                 <div className="py-12 text-center space-y-4">
-                  <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto text-xl font-bold">✓</div>
+                  <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto shadow-xs">
+                    <Check className="w-6 h-6 stroke-[3]" />
+                  </div>
                   <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wide m-0">{contactPage.successTitle}</h3>
                   <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed m-0 font-light">
                     {contactPage.successMessage}

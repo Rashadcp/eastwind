@@ -10,7 +10,10 @@ async function startServer() {
     }
     
     console.log("Connecting to MongoDB Atlas Cluster...");
-    await mongoose.connect(MONGO_URI);
+    await mongoose.connect(MONGO_URI, {
+      maxPoolSize: 50, // Optimize for concurrent requests
+      serverSelectionTimeoutMS: 5000, 
+    });
     console.log("MongoDB connected successfully!");
 
     // Run database verification and seeding

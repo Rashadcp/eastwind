@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import InteractivePortfolioSection, { PortfolioItem } from "./InteractivePortfolioSection";
 import { productsDb } from "@/data/productsData";
+import { Layers } from "lucide-react";
 
 interface IndustryItem extends PortfolioItem {
   num: string;
@@ -564,17 +565,6 @@ function SolutionCards({ activeItem }: { activeItem: IndustryItem }) {
               {/* ── Card content ── */}
               <div className="flex items-start justify-between gap-2.5 relative z-10">
                 <div className="flex flex-col gap-[5px]">
-                  {/* Sequence index */}
-                  <span
-                    className="text-[9px] font-mono font-bold tracking-[0.20em]"
-                    style={{
-                      color: isHovered ? activeItem.accent : "rgba(148,163,184,0.65)",
-                      transition: "color 260ms ease",
-                    }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-
                   {/* Solution name */}
                   <h4
                     className="text-[13.5px] font-bold tracking-tight leading-snug m-0"
@@ -689,9 +679,6 @@ function SolutionCards({ activeItem }: { activeItem: IndustryItem }) {
                     className="group p-4 bg-slate-50/50 hover:bg-white border border-slate-200/60 hover:border-slate-300 rounded-2xl flex items-center justify-between transition-all hover:-translate-y-0.5 hover:shadow-sm"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-mono font-bold text-slate-400">
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
                       <span className="text-[13.5px] font-bold text-slate-700 group-hover:text-slate-900 transition-colors">
                         {solution.name}
                       </span>
@@ -960,15 +947,15 @@ export default function IndustrySolutions() {
 
   const applicationsGrid = (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
-      {applicationsList.map((app, idx) => (
+      {applicationsList.map((app) => (
         <Link
           key={app.id}
           href={app.href}
           className="group relative p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-slate-300 transition-all duration-300 flex items-center justify-between no-underline text-inherit cursor-pointer"
         >
           <div className="flex items-center gap-4 min-w-0">
-            <span className="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-[#c22026] text-xs font-mono font-bold shrink-0">
-              0{idx + 1}
+            <span className="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-[#c22026] shrink-0">
+              <Layers className="w-5 h-5" />
             </span>
             <div className="min-w-0">
               <h3 className="text-base font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-[#1e3e8f] transition-colors m-0 truncate">
@@ -1005,8 +992,6 @@ export default function IndustrySolutions() {
       isDark={false}
       cta1Label="Request Consultation"
       cta1OnClick={handleScrollToContact}
-      cta2Label="Speak to Specialist"
-      cta2OnClick={handleScrollToContact}
       renderVisual={(item, tone, state) => (
         <TelemetryHubVisual
           activeId={state.activeId}

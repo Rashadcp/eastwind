@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { formatImageUrl } from "@/utils/image";
 import { productsDb } from "@/data/productsData";
+import { cachedFetch } from "@/utils/apiCache";
 
 type AccordionKey = "applications" | "services" | "solutions";
 
@@ -120,33 +121,21 @@ export default function Navbar() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         
-        // 1. Fetch products catalog (with 1.5s timeout signal + static fallback)
-        let productsCatalog: any[] = [];
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 1500);
-          const prodsRes = await fetch(`${baseUrl}/api/products`, { cache: "no-store", signal: controller.signal });
-          clearTimeout(timeoutId);
-          if (prodsRes.ok) {
-            productsCatalog = await prodsRes.json();
-          }
-        } catch (e) {
-          console.warn("Failed or timed out fetching products catalog for navbar:", e);
-        }
+        // 1. Fetch products catalog with instant memory cache & static fallback
+        let productsCatalog = await cachedFetch<any[]>(`${baseUrl}/api/products`, {
+          fallback: productsDb,
+        });
 
         if (!Array.isArray(productsCatalog) || productsCatalog.length === 0) {
           productsCatalog = productsDb;
         }
 
-        // 2. Fetch solutions page configuration (with 1.5s timeout signal)
-        try {
-          const controller2 = new AbortController();
-          const timeoutId2 = setTimeout(() => controller2.abort(), 1500);
-          const res = await fetch(`${baseUrl}/api/solutions-page`, { cache: "no-store", signal: controller2.signal });
-          clearTimeout(timeoutId2);
-          if (res.ok) {
-            const data = await res.json();
-          if (data && Array.isArray(data.industries) && data.industries.length > 0) {
+        // 2. Fetch solutions page configuration with instant memory cache
+        const data = await cachedFetch<any>(`${baseUrl}/api/solutions-page`, {
+          fallback: null,
+        });
+
+        if (data && Array.isArray(data.industries) && data.industries.length > 0) {
             const dynamicCategories: SolutionCategory[] = data.industries.map((ind: any) => {
               let catItems: SolutionItem[] = [];
 
@@ -225,10 +214,6 @@ export default function Navbar() {
 
             setCategoriesList(dynamicCategories);
           }
-        }
-        } catch (err2) {
-          console.warn("Failed or timed out fetching solutions-page for navbar:", err2);
-        }
       } catch (err) {
         console.warn("Failed to fetch dynamic navbar categories:", err);
       }

@@ -1,21 +1,13 @@
-// src/app/solutions/[id]/page.tsx
-
+import { Metadata } from "next";
 import Link from "next/link";
-import { Poppins } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Check } from "lucide-react";
 import ProductActions from "@/components/ProductActions";
 import MimesEcosystem from "@/components/MimesEcosystem";
 import SolutionImage from "@/components/SolutionImage";
 import { productsDb as hardwareDb, ProductItem, getProductImageUrl } from "@/data/productsData";
 import { formatImageUrl } from "@/utils/image";
-
-// Initialize Poppins font for clean corporate presentation
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
 
 // Force Next.js to strictly stick to pre-rendered pages (Required for output: 'export')
 export const dynamicParams = true;
@@ -410,51 +402,110 @@ export function getDynamicProductData(slug: string): ProductDetailsData | null {
   };
 }
 
-export const dynamic = "force-dynamic";
-
 function getSolutionImageUrl(imageUrl: string): string {
   return formatImageUrl(imageUrl);
 }
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions`, {
+      next: { revalidate: 60 }
+    });
     if (!res.ok) return [];
     const list = await res.json();
     return list.map((sol: any) => ({
       id: sol.id,
     }));
   } catch (error) {
-    console.error("Failed to generate static params for solutions:", error);
     return [];
   }
 }
 
-interface PageProps {
+type Props = {
   params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const slug = id || "";
+
+  let product: ProductDetailsData | null = null;
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions/${slug}`, {
+      next: { revalidate: 60 }
+    });
+    if (res.ok) {
+      product = await res.json();
+    }
+  } catch (error) {
+    // fallback
+  }
+
+  if (!product) {
+    product = getDynamicProductData(slug);
+  }
+
+  const title = product ? `${product.title} | Safety Solutions | Eastwind Energy Arabia` : "Safety Solution | Eastwind Energy Arabia";
+  const description = product ? product.description.slice(0, 160) : "Certified high-compliance safety systems engineered for harsh atmospheres.";
+  const imageUrl = product?.imageUrl || "/wireless_monitoring.webp";
+
+  return {
+    title,
+    description,
+    keywords: product ? [
+      product.title,
+      product.subLabel,
+      "Saudi Arabia industrial safety",
+      "ATEX Zone 1 compliance",
+      "HCIS SAF safety solutions",
+      "East Wind Safety",
+    ] : [],
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [
+        {
+          url: imageUrl.startsWith("http")
+            ? imageUrl
+            : `https://eastwindsafety.com${imageUrl}`,
+          width: 800,
+          height: 600,
+          alt: product?.title || "Safety Solution",
+        },
+      ],
+    },
+    alternates: {
+      canonical: `https://eastwindsafety.com/solutions/${slug}`,
+    },
+  };
 }
 
-export default async function ProductDetailPage({ params }: PageProps) {
+export default async function ProductDetailPage({ params }: Props) {
   const { id } = await params;
   const slug = id || "";
   
   let product: ProductDetailsData | null = null;
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions/${slug}`, {
-      cache: "no-store"
+      next: { revalidate: 60 }
     });
     if (res.ok) {
       product = await res.json();
     }
   } catch (error) {
-    console.error(`Failed to fetch solution ${slug}:`, error);
+    // fallback
+  }
+
+  if (!product) {
+    product = getDynamicProductData(slug);
   }
 
   if (!product) {
     return (
       <>
         <Navbar />
-        <div className={`${poppins.className} py-32 px-4 sm:px-6 lg:px-8 min-h-[70vh] bg-slate-50 flex flex-col items-center justify-center antialiased w-full`}>
+        <div className="py-32 px-4 sm:px-6 lg:px-8 min-h-[70vh] bg-slate-50 flex flex-col items-center justify-center antialiased w-full">
           <div className="max-w-md w-full bg-white border border-slate-200 rounded-lg p-8 text-center shadow-xs mx-auto">
             <h1 className="text-xl font-bold text-slate-900 mb-2">System Entry Not Found</h1>
             <p className="text-sm text-slate-500 mb-6">The requested system parameter profile could not be retrieved from active nodes.</p>
@@ -531,7 +582,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
     <>
       <Navbar />
       
-      <main className={`${poppins.className} min-h-screen bg-white text-slate-800 antialiased pt-24 w-full overflow-x-hidden`}>
+      <main className="min-h-screen bg-white text-slate-800 antialiased pt-24 w-full overflow-x-hidden">
         
         {/* ── SECTION 1: ELEGANT HERO COVER ── */}
         <section className="bg-slate-50 border-b border-slate-200/60 py-16 md:py-20 w-full">
@@ -640,8 +691,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 w-full">
               {product.features.map((feature, idx) => (
                 <div key={idx} className="bg-white border border-slate-200 p-5 sm:p-6 rounded-xl shadow-3xs flex items-start gap-4 hover:border-slate-300 transition-colors w-full">
-                  <span className="w-8 h-8 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center font-mono text-xs text-slate-400 font-bold shrink-0">
-                    {idx + 1}
+                  <span className="w-8 h-8 rounded-full bg-blue-50/80 border border-blue-100 flex items-center justify-center text-[#1e3e8f] shrink-0">
+                    <Check className="w-4 h-4" />
                   </span>
                   <p className="text-sm font-semibold text-slate-800 m-0 pt-1 leading-relaxed">{feature}</p>
                 </div>
@@ -773,8 +824,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                 {product.benefits.map((benefit, idx) => (
                   <div key={idx} className="p-5 bg-white border border-slate-200 rounded-xl flex items-start gap-4 w-full">
-                    <div className="w-5 h-5 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-400 shrink-0 mt-0.5 shadow-3xs">
-                      ✓
+                    <div className="w-5 h-5 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 shrink-0 mt-0.5 shadow-3xs">
+                      <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                     <p className="text-xs md:text-sm text-slate-600 font-semibold m-0 leading-relaxed">
                       {benefit}

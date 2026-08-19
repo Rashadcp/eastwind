@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -145,42 +142,38 @@ const defaultData: AboutPageData = {
   ctaButtonText: "Consult an Engineer"
 };
 
-export default function AboutPage() {
-  const [data, setData] = useState<AboutPageData>(defaultData);
+export default async function AboutPage() {
+  let data: AboutPageData = defaultData;
 
-  useEffect(() => {
-    const fetchAboutPage = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${baseUrl}/api/about/about_page`, { cache: "no-store" });
-        if (res.ok) {
-          const json = await res.json();
-          setData({
-            heroBgImage: json.heroBgImage || defaultData.heroBgImage,
-            heroTagline: json.heroTagline || defaultData.heroTagline,
-            heroTitle: json.heroTitle || defaultData.heroTitle,
-            heroDescription: json.heroDescription || defaultData.heroDescription,
-            mandateBadge: json.mandateBadge || defaultData.mandateBadge,
-            mandateTitle: json.mandateTitle || defaultData.mandateTitle,
-            mandateParagraph1: json.mandateParagraph1 || defaultData.mandateParagraph1,
-            mandateParagraph2: json.mandateParagraph2 || defaultData.mandateParagraph2,
-            facilityImage: json.facilityImage || defaultData.facilityImage,
-            facilityCode: json.facilityCode || defaultData.facilityCode,
-            positioning: json.positioning && json.positioning.length > 0 ? json.positioning : defaultData.positioning,
-            metrics: json.metrics && json.metrics.length > 0 ? json.metrics : defaultData.metrics,
-            disciplines: json.disciplines && json.disciplines.length > 0 ? json.disciplines : defaultData.disciplines,
-            ctaTitle: json.ctaTitle || defaultData.ctaTitle,
-            ctaDescription: json.ctaDescription || defaultData.ctaDescription,
-            ctaButtonText: json.ctaButtonText || defaultData.ctaButtonText,
-          });
-        }
-      } catch (err) {
-        console.error("Failed to fetch dynamic about page content:", err);
-      }
-    };
-
-    fetchAboutPage();
-  }, []);
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const res = await fetch(`${baseUrl}/api/about/about_page`, {
+      next: { revalidate: 60 }
+    });
+    if (res.ok) {
+      const json = await res.json();
+      data = {
+        heroBgImage: json.heroBgImage || defaultData.heroBgImage,
+        heroTagline: json.heroTagline || defaultData.heroTagline,
+        heroTitle: json.heroTitle || defaultData.heroTitle,
+        heroDescription: json.heroDescription || defaultData.heroDescription,
+        mandateBadge: json.mandateBadge || defaultData.mandateBadge,
+        mandateTitle: json.mandateTitle || defaultData.mandateTitle,
+        mandateParagraph1: json.mandateParagraph1 || defaultData.mandateParagraph1,
+        mandateParagraph2: json.mandateParagraph2 || defaultData.mandateParagraph2,
+        facilityImage: json.facilityImage || defaultData.facilityImage,
+        facilityCode: json.facilityCode || defaultData.facilityCode,
+        positioning: json.positioning && json.positioning.length > 0 ? json.positioning : defaultData.positioning,
+        metrics: json.metrics && json.metrics.length > 0 ? json.metrics : defaultData.metrics,
+        disciplines: json.disciplines && json.disciplines.length > 0 ? json.disciplines : defaultData.disciplines,
+        ctaTitle: json.ctaTitle || defaultData.ctaTitle,
+        ctaDescription: json.ctaDescription || defaultData.ctaDescription,
+        ctaButtonText: json.ctaButtonText || defaultData.ctaButtonText,
+      };
+    }
+  } catch (err) {
+    console.error("Failed to fetch dynamic about page content:", err);
+  }
 
   return (
     <>
@@ -339,9 +332,6 @@ export default function AboutPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
                       </div>
-                      <span className="font-mono text-[9px] text-slate-400 font-bold">
-                        ENG.0{idx + 1}
-                      </span>
                     </div>
                     
                     <h4 className="text-[0.88rem] font-bold text-slate-900 uppercase tracking-tight mb-2.5 transition-colors duration-300" style={{ color: disc.accent }}>
