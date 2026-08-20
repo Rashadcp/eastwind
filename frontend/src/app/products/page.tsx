@@ -914,7 +914,7 @@ function ProductsCatalogContent() {
                       <Settings className="w-3.5 h-3.5 text-slate-500" />
                       <span>Technical Specifications</span>
                     </h3>
-                    <div className="border border-slate-200 rounded-xl overflow-hidden text-xs">
+                    <div className="border border-slate-200 rounded-xl overflow-x-auto text-xs">
                       <table className="w-full text-left border-collapse">
                         <tbody>
                           {(selectedProduct.specifications || [

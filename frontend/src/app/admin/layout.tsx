@@ -14,6 +14,12 @@ export default function AdminLayout({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string>("Admin");
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
+
+  // Close mobile sidebar on route navigation
+  useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [pathname]);
 
   // Global fetch interceptor to catch any 401 Unauthorized API responses
   useEffect(() => {
@@ -384,18 +390,40 @@ export default function AdminLayout({
         }
       ` }} />
       
+      {/* Mobile Sidebar Overlay Backdrop */}
+      {mobileSidebarOpen && (
+        <div
+          onClick={() => setMobileSidebarOpen(false)}
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 md:hidden"
+        />
+      )}
+
       {/* 1. Sidebar Nav */}
-      <aside className="w-64 bg-white border-r border-slate-200/60 flex flex-col justify-between flex-shrink-0 h-screen select-none overflow-hidden">
+      <aside className={`fixed inset-y-0 left-0 z-50 md:relative md:translate-x-0 w-64 bg-white border-r border-slate-200/60 flex flex-col justify-between flex-shrink-0 h-screen select-none overflow-hidden transition-transform duration-300 ${
+        mobileSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:translate-x-0"
+      }`}>
         <div className="flex flex-col flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-orange-500">
           {/* Brand header */}
-          <div className="h-20 flex items-center px-6 border-b border-slate-200/60 gap-3 shrink-0 sticky top-0 bg-white z-10">
-            <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center font-bold text-white text-md">
-              EW
+          <div className="h-20 flex items-center justify-between px-6 border-b border-slate-200/60 shrink-0 sticky top-0 bg-white z-10">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center font-bold text-white text-md">
+                EW
+              </div>
+              <div>
+                <span className="font-bold text-sm text-slate-800 block">Eastwind</span>
+                <span className="text-xs text-slate-550 block">Admin Console</span>
+              </div>
             </div>
-            <div>
-              <span className="font-bold text-sm text-slate-800 block">Eastwind</span>
-              <span className="text-xs text-slate-550 block">Admin Console</span>
-            </div>
+            {/* Close button for mobile */}
+            <button
+              type="button"
+              onClick={() => setMobileSidebarOpen(false)}
+              className="p-1.5 text-slate-400 hover:text-slate-700 md:hidden rounded-lg hover:bg-slate-100"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
           {/* Navigation Links */}
@@ -445,32 +473,45 @@ export default function AdminLayout({
       </aside>
 
       {/* 2. Main Content Frame */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
+      <main className="flex-1 flex flex-col h-screen overflow-hidden relative min-w-0">
         {/* Top bar header */}
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200/60 px-8 flex items-center justify-between flex-shrink-0 z-20">
-          <div className="flex flex-col">
-            <h1 className="text-lg font-semibold text-slate-800 m-0">
-              {navLinks.find((l) => l.href === pathname)?.name || "Dashboard"}
-            </h1>
-            <span className="text-xs text-slate-500 mt-0.5">
-              Dammam Operations Command Center
-            </span>
+        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200/60 px-4 sm:px-8 flex items-center justify-between flex-shrink-0 z-20">
+          <div className="flex items-center gap-3">
+            {/* Hamburger Button for mobile */}
+            <button
+              type="button"
+              onClick={() => setMobileSidebarOpen(true)}
+              className="p-2 -ml-1 text-slate-600 hover:text-slate-900 md:hidden rounded-lg hover:bg-slate-100"
+              aria-label="Open navigation sidebar"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <div className="flex flex-col">
+              <h1 className="text-base sm:text-lg font-semibold text-slate-800 m-0 truncate max-w-[200px] sm:max-w-none">
+                {navLinks.find((l) => l.href === pathname)?.name || "Dashboard"}
+              </h1>
+              <span className="text-[10px] sm:text-xs text-slate-500 mt-0.5 hidden xs:block">
+                Dammam Operations Command Center
+              </span>
+            </div>
           </div>
 
           <Link
             href="/"
             target="_blank"
-            className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-orange-600 transition-colors no-underline"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-slate-500 hover:text-orange-600 transition-colors no-underline whitespace-nowrap"
           >
-            Visit Live Site
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <span>Visit Live Site</span>
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 00-2 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
           </Link>
         </header>
 
         {/* Dynamic page container */}
-        <div className="flex-1 overflow-y-auto p-8 bg-slate-50 relative w-full">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-slate-50 relative w-full">
           <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
           <div className="relative max-w-7xl mx-auto w-full admin-light-theme">
             {children}
