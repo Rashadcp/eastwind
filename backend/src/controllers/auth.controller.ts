@@ -37,60 +37,11 @@ export class AuthController {
         return;
       }
 
-      // Generate 6-digit verification code
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = Date.now() + 5 * 60 * 1000; // Code valid for 5 minutes
-
-      // Store OTP in cache
-      otpCache.set(username, { otp, username, expiresAt });
-
-      // Setup SMTP transporter reading configurations
-      const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST || "smtp.gmail.com",
-        port: Number(process.env.EMAIL_PORT) || 587,
-        secure: process.env.EMAIL_SECURE === "true",
-        auth: {
-          user: process.env.EMAIL_USER || "",
-          pass: process.env.EMAIL_PASS || "",
-        },
-      });
-
-      const mailOptions = {
-        from: `"Eastwind Safety Console" <${process.env.EMAIL_USER || "no-reply@eastwindsafety.com"}>`,
-        to: "harik2021a@gmail.com",
-        subject: "Eastwind Administrative Portal - Secure OTP Verification Code",
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px;">
-            <h2 style="color: #ea580c; text-align: center; text-transform: uppercase;">Eastwind Safety</h2>
-            <hr style="border: none; border-top: 1px solid #cbd5e1; margin: 20px 0;" />
-            <p>Hello Administrator,</p>
-            <p>You have successfully entered valid authentication credentials for the Eastwind Admin Console.</p>
-            <p>Use the following 6-digit OTP verification code to complete your login session:</p>
-            <div style="background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 4px; color: #0f172a; margin: 20px 0;">
-              ${otp}
-            </div>
-            <p style="color: #64748b; font-size: 11px;">This verification code is active for 5 minutes. If you did not request this login attempt, please change your password immediately.</p>
-          </div>
-        `,
-      };
-
-      // Dispatch mail asynchronously in background
-      transporter.sendMail(mailOptions)
-        .then((info) => {
-          console.log(`[SMTP Mail] OTP email sent successfully to harik2021a@gmail.com. Message ID: ${info.messageId}`);
-        })
-        .catch((err) => {
-          console.error("[SMTP Mail Error] Failed to send OTP email:", err);
-        });
-
-      // Always print verification code to terminal console for test validation convenience
-      console.log(`\n==================================================`);
-      console.log(`[DEMO VERIFICATION CODE]`);
-      console.log(`OTP Code: ${otp}`);
-      console.log(`Target Email: harik2021a@gmail.com`);
-      console.log(`==================================================\n`);
-
-      res.json({ otpRequired: true, username: admin.username });
+      // Generate final JWT token directly (valid for 8 hours, OTP bypassed)
+      const token = jwt.sign({ username: admin.username }, JWT_SECRET, { expiresIn: "8h" });
+      
+      console.log(`[AUTH] Admin '${username}' logged in successfully (OTP bypassed).`);
+      res.json({ token, username: admin.username });
     } catch (error) {
       next(error);
     }
