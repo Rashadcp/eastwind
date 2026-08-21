@@ -25,7 +25,7 @@ const baseDir = fs.existsSync(path.resolve(process.cwd(), "database.json"))
   ? process.cwd()
   : path.resolve(__dirname, "..");
 
-export const PORT = process.env.PORT || 5000;
+export const PORT = process.env.PORT || 5100;
 export const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 export const DB_FILE = path.resolve(baseDir, "database.json");
 export const UPLOAD_DIR = path.resolve(baseDir, "uploads");
