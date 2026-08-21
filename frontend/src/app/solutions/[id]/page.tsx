@@ -9,7 +9,8 @@ import SolutionImage from "@/components/SolutionImage";
 import { productsDb as hardwareDb, ProductItem, getProductImageUrl } from "@/data/productsData";
 import { formatImageUrl } from "@/utils/image";
 
-// Force Next.js to strictly stick to pre-rendered pages (Required for output: 'export')
+// Force dynamic rendering to support real-time data fetching
+export const dynamic = "force-dynamic";
 export const dynamicParams = true;
 
 interface ProductDetailsData {
@@ -527,7 +528,7 @@ export default async function ProductDetailPage({ params }: Props) {
   let productsList: ProductItem[] = [];
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/products`, {
-      cache: "no-store"
+      next: { revalidate: 60 }
     });
     if (res.ok) {
       productsList = await res.json();

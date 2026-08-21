@@ -24,6 +24,8 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
+export const dynamic = "force-dynamic";
+
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 // 1. Fetch Product with backend API + static productsDb fallback
