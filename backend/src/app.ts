@@ -50,20 +50,29 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
-// 4. API Routes
-app.use("/api/products", productsRouter);
-app.use("/api/solutions", solutionsRouter);
-app.use("/api/applications", applicationsRouter);
-app.use("/api/services", servicesRouter);
-app.use("/api/about", aboutRouter);
-app.use("/api/contact-settings", contactSettingsRouter);
-app.use("/api/solutions-page", solutionsPageRouter);
-app.use("/api/brands", brandsRouter);
-app.use("/api/success-stories", successStoriesRouter);
-app.use("/api/hero", heroRouter);
-app.use("/api/upload", uploadRouter);
-app.use("/api/auth", authRouter);
+// 4. API Routes (Support both /api/* and direct /* prefix for flexible Nginx reverse proxy configs)
+const routes: [string, any][] = [
+  ["products", productsRouter],
+  ["solutions", solutionsRouter],
+  ["applications", applicationsRouter],
+  ["services", servicesRouter],
+  ["about", aboutRouter],
+  ["contact-settings", contactSettingsRouter],
+  ["solutions-page", solutionsPageRouter],
+  ["brands", brandsRouter],
+  ["success-stories", successStoriesRouter],
+  ["hero", heroRouter],
+  ["upload", uploadRouter],
+  ["auth", authRouter],
+];
+
+routes.forEach(([path, router]) => {
+  app.use(`/api/${path}`, router);
+  app.use(`/${path}`, router);
+});
+
 app.post("/api/enquiry", EnquiryController.submitEnquiry);
+app.post("/enquiry", EnquiryController.submitEnquiry);
 
 // 5. Fallback 404 handler
 app.use((req, res, next) => {
