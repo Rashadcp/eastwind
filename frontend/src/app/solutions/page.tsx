@@ -7,6 +7,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Check, Cpu, ShieldAlert, Activity, Flame, Radio, Wrench, Layers } from "lucide-react";
+import { formatImageUrl } from "@/utils/image";
 
 interface SolutionDetail {
   name: string;
@@ -647,8 +648,11 @@ function SolutionsPageContent() {
         {/* Dynamic Hero Section */}
         <section className="relative pt-[220px] pb-[160px] overflow-hidden border-b border-white/5 min-h-[600px] flex items-center bg-slate-950 w-full z-10">
           <img
-            src={pageConfig.heroBgImage}
+            src={formatImageUrl(pageConfig.heroBgImage, "/application.png")}
             alt={pageConfig.heroTitle}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = "/application.png";
+            }}
             className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none brightness-[0.85] scale-101 z-0"
           />
 
@@ -928,8 +932,11 @@ function SolutionsPageContent() {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-transparent to-transparent z-10" />
                   <div className="absolute inset-0 border border-slate-200/40 z-20 pointer-events-none m-2 rounded-lg" />
                   <img
-                    src={activeIndustry.image}
+                    src={formatImageUrl(activeIndustry.image, "/products/default-fire-fighting-rescue.png")}
                     alt={activeIndustry.name}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "/products/default-fire-fighting-rescue.png";
+                    }}
                     className="w-full h-full object-cover filter contrast-[1.02] brightness-100 group-hover:scale-103 transition-all duration-[1200ms] ease-out rounded-lg"
                   />
                   <div 
@@ -1139,7 +1146,7 @@ function SolutionsPageContent() {
                 const customLogo = typeof partner === "object" ? partner?.logo || partner?.image : null;
                 const cleanKey = name.toLowerCase().trim();
                 
-                const logoSrc = customLogo || (
+                const logoSrc = (customLogo ? formatImageUrl(customLogo, "") : null) || (
                   cleanKey.includes("dräg") || cleanKey.includes("draeg") ? "/brands/draeger.png" :
                   cleanKey.includes("one seven") ? "/brands/oneseven.png" :
                   cleanKey.includes("xshield") ? "/brands/xshielder.png" :

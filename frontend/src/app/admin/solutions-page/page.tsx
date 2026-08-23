@@ -41,44 +41,52 @@ export default function AdminSolutionsPage() {
   const [industriesDesc, setIndustriesDesc] = useState<string>("Industrial sectors feature highly specific chemical, thermal, and spatial risks. We build multi-layered mitigation loops engineered to perform reliably inside harsh conditions.");
   const [industries, setIndustries] = useState<IndustryItem[]>([
     {
-      id: "oil-gas",
-      name: "Oil & Gas",
-      riskKicker: "HAZARDOUS ATMOSPHERE | ATEX ZONE 0 & ZONE 1",
+      id: "civil-defence",
+      name: "Civil Defence",
+      riskKicker: "Metropolitan Safety Infrastructure & Emergency Response",
+      accent: "#991b1b",
+      image: "/products/default-fire-fighting-rescue.png",
+      description: "Equipping civil defence authorities with rapid intervention vehicles, CAFS fire suppression, and SCBA breathing protection systems."
+    },
+    {
+      id: "smart-industrial-facilities",
+      name: "Smart Industrial Facilities",
+      riskKicker: "Automated Facility Health & Process Reliability",
       accent: "#c22026",
-      image: "/predictive_intelligence.webp",
-      description: "Securing petrochemical extraction, transport infrastructure, and downstream refining loops through intrinsically safe telemetry, explosion isolation, and toxic gas environment management."
+      image: "/products/default-process-instrumentation.png",
+      description: "Deploying enterprise digital twins, automated AI permit tracking, and wireless acoustic leak sensors inside petrochemical plants."
     },
     {
-      id: "petrochemical",
-      name: "Petrochemicals",
-      riskKicker: "PROCESS HAZARD CONTROL | ZONE 1 & ZONE 2",
-      accent: "#f59e0b",
-      image: "/industrial_digitalization.webp",
-      description: "Optimising downstream chemical refining ecosystems with real-time Physics-Informed ML, predictive anomaly diagnostics, and high-fidelity wireless telemetry layers."
-    },
-    {
-      id: "civil-defense",
-      name: "Civil Defense",
-      riskKicker: "TACTICAL EMERGENCY INCIDENT COMMAND",
-      accent: "#ef4444",
-      image: "/emergency_vehicle.webp",
-      description: "Equipping public safety, civil protection, and regional defense forces with heavy tactical command apparatus, specialized life-support vehicles, and optimized foam suppression networks."
-    },
-    {
-      id: "marine",
-      name: "Marine & Offshore",
-      riskKicker: "OFFSHORE ARCHITECTURE | ABS & DNV COMPLIANT",
+      id: "oil-and-gas",
+      name: "Oil and Gas",
+      riskKicker: "Intelligent Hydrocarbon Operations & Wireless Gas Detection",
       accent: "#1e3e8f",
-      image: "/thermal_ehouse.webp",
-      description: "Providing deepwater infrastructure defense, automated hull breach stabilization tracking, and extreme salt-atmosphere corrosive protection systems."
+      image: "/products/default-wireless-gas-detection.png",
+      description: "Integrated hydrocarbon safety, intrinsic ISA 100 wireless gas detection, temporary refuge chambers, and tank farm fire fighting."
     },
     {
-      id: "utility-power",
-      name: "Utility & Power",
-      riskKicker: "CRITICAL GRID SAFETY MARGIN | IEEE & IEC CERTIFIED",
-      accent: "#10b981",
-      image: "/wireless_monitoring.webp",
-      description: "Hardening continental power distribution grids, high-output electrical substations, and water transformation architectures through high-noise immune telemetry and physical containment monitoring."
+      id: "marine-operations",
+      name: "Marine Operations",
+      riskKicker: "Harsh Deepwater Infrastructure Resilience & Damage Control",
+      accent: "#b45309",
+      image: "/products/default-explosion-proof-products.png",
+      description: "Offshore platform and vessel safety, emergency damage control kits, hull breach shoring, and breathing air cascades."
+    },
+    {
+      id: "utilities-and-power",
+      name: "Utilities and Power",
+      riskKicker: "Critical Grid Asset Safeguarding & Thermal Monitoring",
+      accent: "#1e3e8f",
+      image: "/products/default-process-instrumentation.png",
+      description: "Securing electrical substations, gas pipelines, and SWAS water sampling systems with automated thermal monitoring."
+    },
+    {
+      id: "defence-and-border-security",
+      name: "Defence and Border Security",
+      riskKicker: "National Level Security & Blast-Resistant Modules",
+      accent: "#b45309",
+      image: "/products/default-respiratory-protection.png",
+      description: "High-grade perimeter defense, secure wireless telemetry backbones, and blast-resistant modular security offices."
     }
   ]);
 

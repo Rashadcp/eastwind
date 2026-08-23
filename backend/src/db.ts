@@ -30,6 +30,15 @@ export interface ISolution extends Document {
   benefits: string[];
   applications: string[];
   imageUrl: string;
+  integrationTagline?: string;
+  integrationTitle?: string;
+  integrationDescription?: string;
+  integrationSteps?: {
+    stepNumber: string;
+    title: string;
+    description: string;
+    phase: string;
+  }[];
 }
 
 export interface IApplication extends Document {
@@ -139,6 +148,7 @@ export interface ISolutionPage extends Document {
     accent: string;
     image: string;
     description: string;
+    items?: any[];
   }[];
   capabilitiesTagline?: string;
   capabilitiesTitle?: string;
@@ -228,7 +238,16 @@ const SolutionSchema = new Schema<ISolution>({
   specs: [{ label: String, value: String }],
   benefits: { type: [String], default: [] },
   applications: { type: [String], default: [] },
-  imageUrl: { type: String, default: "" }
+  imageUrl: { type: String, default: "" },
+  integrationTagline: { type: String, default: "Lifecycle Sequence" },
+  integrationTitle: { type: String, default: "The Integration Process" },
+  integrationDescription: { type: String, default: "We translate abstract regulatory mandates into continuous physical and operational resilience across your installations." },
+  integrationSteps: [{
+    stepNumber: String,
+    title: String,
+    description: String,
+    phase: String
+  }]
 });
 
 const ApplicationSchema = new Schema<IApplication>({
@@ -337,7 +356,8 @@ const SolutionPageSchema = new Schema<ISolutionPage>({
     riskKicker: String,
     accent: String,
     image: String,
-    description: String
+    description: String,
+    items: { type: Schema.Types.Mixed, default: [] }
   }],
   capabilitiesTagline: { type: String },
   capabilitiesTitle: { type: String },

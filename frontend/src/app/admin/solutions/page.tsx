@@ -17,6 +17,15 @@ interface SolutionItem {
   benefits: string[];
   applications: string[];
   imageUrl: string;
+  integrationTagline?: string;
+  integrationTitle?: string;
+  integrationDescription?: string;
+  integrationSteps?: {
+    stepNumber: string;
+    title: string;
+    description: string;
+    phase: string;
+  }[];
 }
 
 interface IndustryItem {
@@ -61,6 +70,31 @@ export default function UnifiedAdminSolutionsPage() {
   const [formImageUrl, setFormImageUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
 
+  // Integration Process Form State
+  const [formIntegrationTagline, setFormIntegrationTagline] = useState<string>("Lifecycle Sequence");
+  const [formIntegrationTitle, setFormIntegrationTitle] = useState<string>("The Integration Process");
+  const [formIntegrationDescription, setFormIntegrationDescription] = useState<string>("We translate abstract regulatory mandates into continuous physical and operational resilience across your installations.");
+  const [formIntegrationSteps, setFormIntegrationSteps] = useState<{ stepNumber: string; title: string; description: string; phase: string }[]>([
+    {
+      stepNumber: "01",
+      title: "Environment Evaluation",
+      description: "Industrial fields map out distinct exposure metrics. We isolate localized volatile gas indicators and ambient temperature boundaries to define system protections accurately.",
+      phase: "Initial Assessment"
+    },
+    {
+      stepNumber: "02",
+      title: "Custom Infrastructure Integration",
+      description: "Our professional systems represent the pinnacle of industrial safety engineering. We work directly with leading global safety brands to design, supply, install and calibrate instrumentation loops.",
+      phase: "System Deployment"
+    },
+    {
+      stepNumber: "03",
+      title: "Lower Total Cost of Ownership",
+      description: "By linking engineering hardware loops directly into active plant automation networks, our platforms consistently maintain safety thresholds while lowering total cost of ownership.",
+      phase: "Operations and Support"
+    }
+  ]);
+
   // TAB 2: DEDICATED /SOLUTIONS PAGE LAYOUT & BANNERS STATE
   const [heroBgImage, setHeroBgImage] = useState<string>("/application.png");
   const [heroTagline, setHeroTagline] = useState<string>("ENGINEERED SAFETY & INDUSTRIAL INFRASTRUCTURE");
@@ -71,44 +105,52 @@ export default function UnifiedAdminSolutionsPage() {
   const [industriesDesc, setIndustriesDesc] = useState<string>("Industrial sectors feature highly specific chemical, thermal, and spatial risks.");
   const [industries, setIndustries] = useState<IndustryItem[]>([
     {
-      id: "oil-gas",
-      name: "Oil & Gas",
-      riskKicker: "HAZARDOUS ATMOSPHERE | ATEX ZONE 0 & ZONE 1",
+      id: "civil-defence",
+      name: "Civil Defence",
+      riskKicker: "Metropolitan Safety Infrastructure & Emergency Response",
+      accent: "#991b1b",
+      image: "/products/default-fire-fighting-rescue.png",
+      description: "Equipping civil defence authorities with rapid intervention vehicles, CAFS fire suppression, and SCBA breathing protection systems."
+    },
+    {
+      id: "smart-industrial-facilities",
+      name: "Smart Industrial Facilities",
+      riskKicker: "Automated Facility Health & Process Reliability",
       accent: "#c22026",
-      image: "/predictive_intelligence.webp",
-      description: "Securing petrochemical extraction, transport infrastructure, and downstream refining loops."
+      image: "/products/default-process-instrumentation.png",
+      description: "Deploying enterprise digital twins, automated AI permit tracking, and wireless acoustic leak sensors inside petrochemical plants."
     },
     {
-      id: "petrochemical",
-      name: "Petrochemicals",
-      riskKicker: "PROCESS HAZARD CONTROL | ZONE 1 & ZONE 2",
-      accent: "#f59e0b",
-      image: "/industrial_digitalization.webp",
-      description: "Optimising downstream chemical refining ecosystems with real-time ML and telemetry."
-    },
-    {
-      id: "civil-defense",
-      name: "Civil Defense",
-      riskKicker: "TACTICAL EMERGENCY INCIDENT COMMAND",
-      accent: "#ef4444",
-      image: "/emergency_vehicle.webp",
-      description: "Equipping public safety, civil protection, and regional defense forces."
-    },
-    {
-      id: "marine",
-      name: "Marine & Offshore",
-      riskKicker: "OFFSHORE ARCHITECTURE | ABS & DNV COMPLIANT",
+      id: "oil-and-gas",
+      name: "Oil and Gas",
+      riskKicker: "Intelligent Hydrocarbon Operations & Wireless Gas Detection",
       accent: "#1e3e8f",
-      image: "/thermal_ehouse.webp",
-      description: "Providing deepwater infrastructure defense and automated hull breach tracking."
+      image: "/products/default-wireless-gas-detection.png",
+      description: "Integrated hydrocarbon safety, intrinsic ISA 100 wireless gas detection, temporary refuge chambers, and tank farm fire fighting."
     },
     {
-      id: "utility-power",
-      name: "Utility & Power",
-      riskKicker: "CRITICAL GRID SAFETY MARGIN | IEEE & IEC CERTIFIED",
-      accent: "#10b981",
-      image: "/wireless_monitoring.webp",
-      description: "Hardening continental power distribution grids and substations."
+      id: "marine-operations",
+      name: "Marine Operations",
+      riskKicker: "Harsh Deepwater Infrastructure Resilience & Damage Control",
+      accent: "#b45309",
+      image: "/products/default-explosion-proof-products.png",
+      description: "Offshore platform and vessel safety, emergency damage control kits, hull breach shoring, and breathing air cascades."
+    },
+    {
+      id: "utilities-and-power",
+      name: "Utilities and Power",
+      riskKicker: "Critical Grid Asset Safeguarding & Thermal Monitoring",
+      accent: "#1e3e8f",
+      image: "/products/default-process-instrumentation.png",
+      description: "Securing electrical substations, gas pipelines, and SWAS water sampling systems with automated thermal monitoring."
+    },
+    {
+      id: "defence-and-border-security",
+      name: "Defence and Border Security",
+      riskKicker: "National Level Security & Blast-Resistant Modules",
+      accent: "#b45309",
+      image: "/products/default-respiratory-protection.png",
+      description: "High-grade perimeter defense, secure wireless telemetry backbones, and blast-resistant modular security offices."
     }
   ]);
 
@@ -233,6 +275,29 @@ export default function UnifiedAdminSolutionsPage() {
     setFormDescription("");
     setFormDetailedContent("");
     setFormImageUrl("/predictive_intelligence.webp");
+    setFormIntegrationTagline("Lifecycle Sequence");
+    setFormIntegrationTitle("The Integration Process");
+    setFormIntegrationDescription("We translate abstract regulatory mandates into continuous physical and operational resilience across your installations.");
+    setFormIntegrationSteps([
+      {
+        stepNumber: "01",
+        title: "Environment Evaluation",
+        description: "Industrial fields map out distinct exposure metrics. We isolate localized volatile gas indicators and ambient temperature boundaries to define system protections accurately.",
+        phase: "Initial Assessment"
+      },
+      {
+        stepNumber: "02",
+        title: "Custom Infrastructure Integration",
+        description: "Our professional systems represent the pinnacle of industrial safety engineering. We work directly with leading global safety brands to design, supply, install and calibrate instrumentation loops.",
+        phase: "System Deployment"
+      },
+      {
+        stepNumber: "03",
+        title: "Lower Total Cost of Ownership",
+        description: "By linking engineering hardware loops directly into active plant automation networks, our platforms consistently maintain safety thresholds while lowering total cost of ownership.",
+        phase: "Operations and Support"
+      }
+    ]);
     setShowModal(true);
   };
 
@@ -247,6 +312,33 @@ export default function UnifiedAdminSolutionsPage() {
     setFormDescription(item.description || "");
     setFormDetailedContent(item.detailedContent || "");
     setFormImageUrl(item.imageUrl || "/predictive_intelligence.webp");
+    setFormIntegrationTagline(item.integrationTagline || "Lifecycle Sequence");
+    setFormIntegrationTitle(item.integrationTitle || "The Integration Process");
+    setFormIntegrationDescription(item.integrationDescription || "We translate abstract regulatory mandates into continuous physical and operational resilience across your installations.");
+    setFormIntegrationSteps(
+      item.integrationSteps && item.integrationSteps.length > 0
+        ? item.integrationSteps
+        : [
+            {
+              stepNumber: "01",
+              title: "Environment Evaluation",
+              description: "Industrial fields map out distinct exposure metrics. We isolate localized volatile gas indicators and ambient temperature boundaries to define system protections accurately.",
+              phase: "Initial Assessment"
+            },
+            {
+              stepNumber: "02",
+              title: "Custom Infrastructure Integration",
+              description: item.detailedContent || "Our professional systems represent the pinnacle of industrial safety engineering. We work directly with leading global safety brands to design, supply, install and calibrate instrumentation loops.",
+              phase: "System Deployment"
+            },
+            {
+              stepNumber: "03",
+              title: "Lower Total Cost of Ownership",
+              description: "By linking engineering hardware loops directly into active plant automation networks, our platforms consistently maintain safety thresholds while lowering total cost of ownership.",
+              phase: "Operations and Support"
+            }
+          ]
+    );
     setShowModal(true);
   };
 
@@ -264,6 +356,8 @@ export default function UnifiedAdminSolutionsPage() {
       const token = localStorage.getItem("admin_token");
       const generatedId = formId || formTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
+      const cleanImageUrl = await sanitizeImage(formImageUrl.trim(), token, baseUrl);
+
       const payload = {
         id: generatedId,
         title: formTitle.trim(),
@@ -272,7 +366,11 @@ export default function UnifiedAdminSolutionsPage() {
         accent: formAccent,
         description: formDescription.trim(),
         detailedContent: formDetailedContent.trim(),
-        imageUrl: formImageUrl.trim()
+        imageUrl: cleanImageUrl,
+        integrationTagline: formIntegrationTagline.trim(),
+        integrationTitle: formIntegrationTitle.trim(),
+        integrationDescription: formIntegrationDescription.trim(),
+        integrationSteps: formIntegrationSteps
       };
 
       const url = isEdit ? `${baseUrl}/api/solutions/${generatedId}` : `${baseUrl}/api/solutions`;
@@ -1191,6 +1289,107 @@ export default function UnifiedAdminSolutionsPage() {
                 <textarea rows={4} value={formDetailedContent} onChange={(e) => setFormDetailedContent(e.target.value)} placeholder="Detailed technical specifications content..." className="w-full p-2.5 border rounded-lg" />
               </div>
 
+              {/* Integration Process / Lifecycle Sequence Section */}
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
+                <div className="border-b border-slate-200 pb-2">
+                  <h3 className="font-extrabold text-slate-800 text-sm uppercase tracking-wide">
+                    Lifecycle Sequence / The Integration Process
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    Configure the 3-step integration sequence shown on this solution's public page.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Section Tagline</label>
+                    <input
+                      type="text"
+                      value={formIntegrationTagline}
+                      onChange={(e) => setFormIntegrationTagline(e.target.value)}
+                      placeholder="e.g. Lifecycle Sequence"
+                      className="w-full p-2 border rounded-lg bg-white font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Section Title</label>
+                    <input
+                      type="text"
+                      value={formIntegrationTitle}
+                      onChange={(e) => setFormIntegrationTitle(e.target.value)}
+                      placeholder="e.g. The Integration Process"
+                      className="w-full p-2 border rounded-lg bg-white font-bold"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Section Subtitle / Description</label>
+                  <textarea
+                    rows={2}
+                    value={formIntegrationDescription}
+                    onChange={(e) => setFormIntegrationDescription(e.target.value)}
+                    placeholder="Brief description of the integration workflow..."
+                    className="w-full p-2 border rounded-lg bg-white"
+                  />
+                </div>
+
+                {/* The 3 Lifecycle Sequence Steps */}
+                <div className="space-y-3 pt-2">
+                  <span className="block font-bold text-slate-700 text-xs">Process Steps (01, 02, 03)</span>
+                  {formIntegrationSteps.map((step, sIdx) => (
+                    <div key={sIdx} className="p-3 bg-white border border-slate-200 rounded-lg space-y-2 shadow-2xs">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={step.stepNumber || `0${sIdx + 1}`}
+                          onChange={(e) => {
+                            const updated = [...formIntegrationSteps];
+                            updated[sIdx].stepNumber = e.target.value;
+                            setFormIntegrationSteps(updated);
+                          }}
+                          className="w-14 p-1.5 border rounded font-mono font-bold text-center text-xs"
+                          placeholder={`0${sIdx + 1}`}
+                        />
+                        <input
+                          type="text"
+                          value={step.title}
+                          onChange={(e) => {
+                            const updated = [...formIntegrationSteps];
+                            updated[sIdx].title = e.target.value;
+                            setFormIntegrationSteps(updated);
+                          }}
+                          className="flex-1 p-1.5 border rounded font-bold text-xs"
+                          placeholder={`Step ${sIdx + 1} Title`}
+                        />
+                        <input
+                          type="text"
+                          value={step.phase}
+                          onChange={(e) => {
+                            const updated = [...formIntegrationSteps];
+                            updated[sIdx].phase = e.target.value;
+                            setFormIntegrationSteps(updated);
+                          }}
+                          className="w-36 p-1.5 border rounded font-mono text-[10px] uppercase text-slate-600"
+                          placeholder="e.g. Initial Assessment"
+                        />
+                      </div>
+                      <textarea
+                        rows={2}
+                        value={step.description}
+                        onChange={(e) => {
+                          const updated = [...formIntegrationSteps];
+                          updated[sIdx].description = e.target.value;
+                          setFormIntegrationSteps(updated);
+                        }}
+                        className="w-full p-1.5 border rounded text-xs"
+                        placeholder={`Detailed description for Step ${sIdx + 1}...`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
                 <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-slate-100 font-bold text-xs rounded-lg cursor-pointer">Cancel</button>
                 <button type="submit" className="px-5 py-2 bg-orange-600 text-white font-bold text-xs rounded-lg shadow-md cursor-pointer">{isEdit ? "Save Solution Item & Photo" : "Create Solution Item"}</button>
@@ -1260,6 +1459,39 @@ export default function UnifiedAdminSolutionsPage() {
                 <p className="text-slate-600 leading-relaxed font-normal whitespace-pre-wrap">{viewItem.detailedContent}</p>
               </div>
             )}
+
+            {/* Integration Process Preview in View Modal */}
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-3">
+              <div className="border-b border-slate-200 pb-1.5">
+                <span className="text-[10px] font-mono uppercase font-bold text-slate-400">
+                  {viewItem.integrationTagline || "Lifecycle Sequence"}
+                </span>
+                <h4 className="text-sm font-bold text-slate-800">
+                  {viewItem.integrationTitle || "The Integration Process"}
+                </h4>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  {viewItem.integrationDescription || "We translate abstract regulatory mandates into continuous physical and operational resilience across your installations."}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {(viewItem.integrationSteps && viewItem.integrationSteps.length > 0
+                  ? viewItem.integrationSteps
+                  : [
+                      { stepNumber: "01", title: "Environment Evaluation", description: "Industrial fields map out distinct exposure metrics.", phase: "Initial Assessment" },
+                      { stepNumber: "02", title: "Custom Infrastructure Integration", description: viewItem.detailedContent || "Our professional systems represent the pinnacle of industrial safety.", phase: "System Deployment" },
+                      { stepNumber: "03", title: "Lower Total Cost of Ownership", description: "By linking engineering hardware loops directly into active plant automation networks.", phase: "Operations and Support" }
+                    ]
+                ).map((st, i) => (
+                  <div key={i} className="bg-white p-2.5 rounded-lg border border-slate-200 space-y-1">
+                    <span className="font-mono font-bold text-slate-400 text-xs">{st.stepNumber || `0${i + 1}`}</span>
+                    <h5 className="font-bold text-slate-800 text-[11px] leading-tight">{st.title}</h5>
+                    <p className="text-[10px] text-slate-500 line-clamp-3">{st.description}</p>
+                    <span className="block text-[9px] font-mono uppercase text-orange-600 font-bold pt-1 border-t border-slate-100">{st.phase}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             {/* Sticky Footer Close Control */}
             <div className="sticky bottom-0 bg-white/95 backdrop-blur-md pt-3 pb-1 border-t border-slate-100 flex justify-end z-20">

@@ -472,8 +472,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                             {/* Custom Solutions or Key Features */}
                             {product.solutions ? (
                               <div>
-                                <h4 className="text-[0.72rem] text-slate-400 font-mono tracking-widest uppercase mb-3 flex items-center gap-1.5">
-                                  <span className="w-1.5 h-1.5 bg-[var(--active-base)] rounded-full shrink-0" />
+                                <h4 className="text-[0.72rem] text-slate-400 font-mono tracking-widest uppercase mb-3 flex items-center">
                                   Tailored Operations & Solutions
                                 </h4>
                                 {renderSolutions ? (
@@ -676,8 +675,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                       {activeProduct.solutions ? (
                         /* Solutions List Grid */
                         <div>
-                          <h4 className={`text-slate-500 font-mono text-[0.72rem] tracking-widest uppercase m-0 flex items-center gap-2 ${isFullHeight ? "mb-2" : "mb-3.5"}`}>
-                            <span className="w-1.5 h-1.5 bg-[var(--active-base)] rounded-sm" />
+                          <h4 className={`text-slate-500 font-mono text-[0.72rem] tracking-widest uppercase m-0 flex items-center ${isFullHeight ? "mb-2" : "mb-3.5"}`}>
                             Tailored Operations & Solutions
                           </h4>
                           {renderSolutions ? (

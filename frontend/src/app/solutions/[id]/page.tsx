@@ -26,6 +26,15 @@ interface ProductDetailsData {
   benefits: string[];
   applications: string[];
   imageUrl: string;
+  integrationTagline?: string;
+  integrationTitle?: string;
+  integrationDescription?: string;
+  integrationSteps?: {
+    stepNumber: string;
+    title: string;
+    description: string;
+    phase: string;
+  }[];
 }
 
 export const solutionsDb: Record<string, ProductDetailsData> = {
@@ -622,62 +631,95 @@ export default async function ProductDetailPage({ params }: Props) {
         </section>
 
         {/* ── SECTION 2: THE INTEGRATION STORYBOARD ── */}
-        <section className="py-16 md:py-24 w-full">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-slate-100 pb-6 w-full">
-              <div className="space-y-1.5">
-                <span className="text-xs font-bold tracking-[0.15em] uppercase text-slate-400 block">Lifecycle Sequence</span>
-                <h2 className="text-2xl font-bold text-slate-900 uppercase tracking-tight">The Integration Process</h2>
-              </div>
-              <p className="text-sm text-slate-500 max-w-md leading-relaxed">
-                We translate abstract regulatory mandates into continuous physical and operational resilience across your installations.
-              </p>
-            </div>
+        {(() => {
+          const integrationTagline = product.integrationTagline || "Lifecycle Sequence";
+          const integrationTitle = product.integrationTitle || "The Integration Process";
+          const integrationDescription = product.integrationDescription || "We translate abstract regulatory mandates into continuous physical and operational resilience across your installations.";
+          const integrationSteps = (product.integrationSteps && product.integrationSteps.length > 0)
+            ? product.integrationSteps
+            : [
+                {
+                  stepNumber: "01",
+                  title: "Environment Evaluation",
+                  description: "Industrial fields map out distinct exposure metrics. We isolate localized volatile gas indicators and ambient temperature boundaries to define system protections accurately.",
+                  phase: "Initial Assessment"
+                },
+                {
+                  stepNumber: "02",
+                  title: "Custom Infrastructure Integration",
+                  description: product.detailedContent || "Our professional systems represent the pinnacle of industrial safety engineering. We work directly with leading global safety brands to design, supply, install and calibrate instrumentation loops.",
+                  phase: "System Deployment"
+                },
+                {
+                  stepNumber: "03",
+                  title: "Lower Total Cost of Ownership",
+                  description: "By linking engineering hardware loops directly into active plant automation networks, our platforms consistently maintain safety thresholds while lowering total cost of ownership.",
+                  phase: "Operations and Support"
+                }
+              ];
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 w-full items-stretch">
-              
-              <div className="bg-slate-50 border border-slate-200 p-6 md:p-8 rounded-2xl space-y-4 flex flex-col justify-between w-full">
-                <div className="space-y-3">
-                  <span className="text-3xl font-extrabold block tracking-tight text-slate-200 font-mono">01</span>
-                  <h3 className="text-md font-bold text-slate-900 uppercase tracking-wide">Environment Evaluation</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed font-normal">
-                    Industrial fields map out distinct exposure metrics. We isolate localized volatile gas indicators and ambient temperature boundaries to define system protections accurately.
+          return (
+            <section className="py-16 md:py-24 w-full">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-slate-100 pb-6 w-full">
+                  <div className="space-y-1.5">
+                    <span className="text-xs font-bold tracking-[0.15em] uppercase text-slate-400 block">{integrationTagline}</span>
+                    <h2 className="text-2xl font-bold text-slate-900 uppercase tracking-tight">{integrationTitle}</h2>
+                  </div>
+                  <p className="text-sm text-slate-500 max-w-md leading-relaxed">
+                    {integrationDescription}
                   </p>
                 </div>
-                <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 pt-3 border-t border-slate-200/40">
-                  Initial Assessment
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 w-full items-stretch">
+                  {integrationSteps.map((step, idx) => {
+                    const isHighlight = idx === 1;
+                    return (
+                      <div
+                        key={idx}
+                        className={
+                          isHighlight
+                            ? "bg-white border-2 p-6 md:p-8 rounded-2xl space-y-4 flex flex-col justify-between shadow-md relative w-full"
+                            : "bg-slate-50 border border-slate-200 p-6 md:p-8 rounded-2xl space-y-4 flex flex-col justify-between w-full"
+                        }
+                        style={isHighlight ? { borderColor: brandColor } : undefined}
+                      >
+                        <div className="space-y-3">
+                          <span
+                            className="text-3xl lg:text-4xl font-extrabold block tracking-tight font-mono"
+                            style={isHighlight ? { color: brandLightBg } : { color: "#cbd5e1" }}
+                          >
+                            {step.stepNumber || `0${idx + 1}`}
+                          </span>
+                          <h3 className="text-md font-bold text-slate-900 uppercase tracking-wide">{step.title}</h3>
+                          <p
+                            className={
+                              isHighlight
+                                ? "text-xs text-slate-600 leading-relaxed font-normal"
+                                : "text-xs text-slate-500 leading-relaxed font-normal"
+                            }
+                          >
+                            {step.description}
+                          </p>
+                        </div>
+                        <div
+                          className="text-[10px] font-mono uppercase tracking-wider pt-3 border-t"
+                          style={
+                            isHighlight
+                              ? { color: brandColor, borderColor: "rgba(241,245,249,1)", fontWeight: "bold" }
+                              : { color: "#94a3b8", borderColor: "rgba(226,232,240,0.4)" }
+                          }
+                        >
+                          {step.phase}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-
-              <div className="bg-white border-2 p-6 md:p-8 rounded-2xl space-y-4 flex flex-col justify-between shadow-md relative w-full" style={{ borderColor: brandColor }}>
-                <div className="space-y-3">
-                  <span className="text-4xl font-extrabold block tracking-tight font-mono" style={{ color: brandLightBg }}>02</span>
-                  <h3 className="text-md font-bold text-slate-900 uppercase tracking-wide">Custom Infrastructure Integration</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                    {product.detailedContent}
-                  </p>
-                </div>
-                <div className="text-[10px] font-mono uppercase tracking-wider font-bold pt-3 border-t border-slate-100" style={{ color: brandColor }}>
-                  System Deployment
-                </div>
-              </div>
-
-              <div className="bg-slate-50 border border-slate-200 p-6 md:p-8 rounded-2xl space-y-4 flex flex-col justify-between w-full">
-                <div className="space-y-3">
-                  <span className="text-3xl font-extrabold block tracking-tight text-slate-200 font-mono">03</span>
-                  <h3 className="text-md font-bold text-slate-900 uppercase tracking-wide">Lower Total Cost of Ownership</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed font-normal">
-                    By linking engineering hardware loops directly into active plant automation networks, our platforms consistently maintain safety thresholds while lowering total cost of ownership.
-                  </p>
-                </div>
-                <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 pt-3 border-t border-slate-200/40 font-semibold">
-                  Operations and Support
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
+            </section>
+          );
+        })()}
         
         {slug === "mimes" && <MimesEcosystem />}
 

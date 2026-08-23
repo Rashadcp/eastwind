@@ -477,7 +477,7 @@ function SolutionCards({ activeItem }: { activeItem: IndustryItem }) {
   }, [showMoreModal]);
 
   const solutions = activeItem.solutions || [];
-  const displaySolutions = solutions.slice(0, 6);
+  const displaySolutions = solutions;
 
   return (
     <div className="w-full h-full py-2 px-1 max-sm:px-0">
@@ -623,21 +623,6 @@ function SolutionCards({ activeItem }: { activeItem: IndustryItem }) {
           );
         })}
       </div>
-      {solutions.length > 6 && (
-        <div className="flex justify-center mt-6">
-          <button
-            type="button"
-            onClick={() => setShowMoreModal(true)}
-            style={{
-              borderColor: activeItem.accentBorder,
-              color: activeItem.accent,
-            }}
-            className="py-2.5 px-6 rounded-full border bg-white hover:bg-slate-50/50 text-[11px] font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-sm hover:shadow active:scale-95 flex items-center gap-1.5"
-          >
-            + More Solutions ({solutions.length - 6} more)
-          </button>
-        </div>
-      )}
 
       {/* Solutions List Overlay Modal rendered via Portal to break stacking contexts */}
       {showMoreModal && isMounted && createPortal(
