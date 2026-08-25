@@ -48,11 +48,11 @@ export function extractAndSaveBase64(value: any, prefix = "img"): any {
       .resize({ width: 1920, withoutEnlargement: true })
       .webp({ quality: 82 })
       .toBuffer()
-      .then((compressedBuffer) => {
+      .then((compressedBuffer: Buffer) => {
         fs.writeFileSync(filePath, compressedBuffer);
         console.log(`[Auto-Extracted & Compressed] Saved ${filename} (${(compressedBuffer.length / 1024).toFixed(1)} KB)`);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error("[Sharp Compression Fallback]", err);
         fs.writeFileSync(filePath, buffer);
       });
