@@ -401,9 +401,11 @@ export default function AdminServicesPage() {
               </h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/5 text-slate-400 hover:text-white cursor-pointer"
+                className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/5 text-slate-400 hover:text-white cursor-pointer transition-colors"
               >
-                ✕
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 
@@ -609,9 +611,11 @@ export default function AdminServicesPage() {
                       <button
                         type="button"
                         onClick={() => removeMetric(idx)}
-                        className="absolute right-3 top-3 text-[10px] text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity border-none bg-transparent cursor-pointer font-bold"
+                        className="absolute right-3 top-3 text-[10px] text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity border-none bg-transparent cursor-pointer font-bold p-1 rounded hover:bg-rose-500/10"
                       >
-                        ✕
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                       </button>
                       <span className="text-xl font-extrabold tracking-tight" style={{ color: formAccentHex }}>{item.value}</span>
                       <span className="text-[9px] font-mono text-slate-450 block uppercase tracking-wider leading-relaxed">{item.label}</span>
@@ -648,7 +652,9 @@ export default function AdminServicesPage() {
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-slate-950 border border-white/10 p-8 rounded-3xl w-full max-w-md text-center space-y-6">
             <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-500 text-lg mx-auto">
-              ⚠️
+              <svg className="w-6 h-6 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-bold text-white uppercase tracking-tight m-0">Confirm Node Deletion</h3>
@@ -688,7 +694,9 @@ export default function AdminServicesPage() {
                 onClick={() => setViewItem(null)}
                 className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-400 hover:text-slate-700 cursor-pointer transition-colors"
               >
-                ✕
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 

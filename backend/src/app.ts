@@ -50,6 +50,8 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
+import { cacheMiddleware } from "./utils/cache.js";
+
 // 4. API Routes (Support both /api/* and direct /* prefix for flexible Nginx reverse proxy configs)
 const routes: [string, any][] = [
   ["products", productsRouter],
@@ -62,14 +64,19 @@ const routes: [string, any][] = [
   ["brands", brandsRouter],
   ["success-stories", successStoriesRouter],
   ["hero", heroRouter],
-  ["upload", uploadRouter],
-  ["auth", authRouter],
 ];
 
+// Add cache middleware to resource routes
 routes.forEach(([path, router]) => {
-  app.use(`/api/${path}`, router);
-  app.use(`/${path}`, router);
+  app.use(`/api/${path}`, cacheMiddleware(), router);
+  app.use(`/${path}`, cacheMiddleware(), router);
 });
+
+// Non-cached auth and upload routes
+app.use("/api/upload", uploadRouter);
+app.use("/upload", uploadRouter);
+app.use("/api/auth", authRouter);
+app.use("/auth", authRouter);
 
 app.post("/api/enquiry", EnquiryController.submitEnquiry);
 app.post("/enquiry", EnquiryController.submitEnquiry);

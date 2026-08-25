@@ -265,12 +265,18 @@ export default function AdminFooterPage() {
       {/* Notifications */}
       {error && (
         <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-2xl text-xs flex items-center gap-2">
-          <span>⚠️ {error}</span>
+          <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span>{error}</span>
         </div>
       )}
       {success && (
         <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-2xl text-xs flex items-center gap-2">
-          <span>✓ {success}</span>
+          <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <span>{success}</span>
         </div>
       )}
 
@@ -377,9 +383,12 @@ export default function AdminFooterPage() {
                   <button
                     type="button"
                     onClick={() => handleRemoveSolLink(idx)}
-                    className="px-2.5 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold rounded-lg shrink-0"
+                    className="p-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg shrink-0 transition-colors"
+                    title="Remove Link"
                   >
-                    🗑️
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                   </button>
                 </div>
               ))}
@@ -405,9 +414,12 @@ export default function AdminFooterPage() {
                 type="button"
                 onClick={handleAddSolLink}
                 style={{ color: "#ffffff" }}
-                className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#152e6f] !text-white text-xs font-extrabold rounded-xl shrink-0 cursor-pointer shadow-sm active:scale-95 transition-all flex items-center gap-1"
+                className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#152e6f] !text-white text-xs font-extrabold rounded-xl shrink-0 cursor-pointer shadow-sm active:scale-95 transition-all flex items-center gap-1.5"
               >
-                <span style={{ color: "#ffffff" }}>➕ Add Link</span>
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Add Link</span>
               </button>
             </div>
           </div>
@@ -536,9 +548,12 @@ export default function AdminFooterPage() {
                   <button
                     type="button"
                     onClick={() => handleRemoveBtmLink(idx)}
-                    className="px-2.5 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold rounded-lg shrink-0"
+                    className="p-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg shrink-0 transition-colors"
+                    title="Remove Link"
                   >
-                    🗑️
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                   </button>
                 </div>
               ))}
@@ -563,9 +578,12 @@ export default function AdminFooterPage() {
                 type="button"
                 onClick={handleAddBtmLink}
                 style={{ color: "#ffffff" }}
-                className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#152e6f] !text-white text-xs font-extrabold rounded-xl shrink-0 cursor-pointer shadow-sm active:scale-95 transition-all flex items-center gap-1"
+                className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#152e6f] !text-white text-xs font-extrabold rounded-xl shrink-0 cursor-pointer shadow-sm active:scale-95 transition-all flex items-center gap-1.5"
               >
-                <span style={{ color: "#ffffff" }}>➕ Add Link</span>
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Add Link</span>
               </button>
             </div>
           </div>
@@ -576,9 +594,12 @@ export default function AdminFooterPage() {
           <button
             type="submit"
             disabled={saving}
-            className="py-3.5 px-8 bg-orange-600 hover:bg-orange-700 text-white text-xs font-extrabold uppercase tracking-wider rounded-2xl shadow-lg shadow-orange-600/20 cursor-pointer disabled:opacity-50 transition-all"
+            className="py-3.5 px-8 bg-orange-600 hover:bg-orange-700 text-white text-xs font-extrabold uppercase tracking-wider rounded-2xl shadow-lg shadow-orange-600/20 cursor-pointer disabled:opacity-50 transition-all flex items-center gap-2"
           >
-            {saving ? "Saving Changes..." : "✓ Save Footer Configuration"}
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{saving ? "Saving Changes..." : "Save Footer Configuration"}</span>
           </button>
         </div>
       </form>

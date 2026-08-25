@@ -1,12 +1,15 @@
 import { AboutContent, IAboutContent } from "../db.js";
+import { sanitizeObjectImages } from "../utils/imageStorage.js";
+import { invalidateCache } from "../utils/cache.js";
 
 export class AboutModel {
   static async getAll(): Promise<IAboutContent[]> {
-    return await AboutContent.find({}).exec();
+    const docs = await AboutContent.find({}).lean().exec();
+    return (docs as unknown) as IAboutContent[];
   }
 
   static async getBySection(id: string): Promise<IAboutContent | null> {
-    let item = await AboutContent.findOne({ id }).exec();
+    let item = await AboutContent.findOne({ id }).lean().exec();
     if (!item && id === "home") {
       item = await AboutContent.findOneAndUpdate(
         { id: "home" },
@@ -38,16 +41,19 @@ export class AboutModel {
           ]
         },
         { new: true, upsert: true }
-      ).exec();
+      ).lean().exec();
     }
-    return item;
+    return (item as unknown) as IAboutContent | null;
   }
 
   static async upsertSection(id: string, data: Partial<IAboutContent>): Promise<IAboutContent> {
-    return await AboutContent.findOneAndUpdate(
+    const sanitized = sanitizeObjectImages(data, `about_${id}`);
+    const doc = await AboutContent.findOneAndUpdate(
       { id },
-      { ...data, id },
+      { ...sanitized, id },
       { new: true, upsert: true }
-    ).exec();
+    ).lean().exec();
+    invalidateCache("about");
+    return (doc as unknown) as IAboutContent;
   }
 }

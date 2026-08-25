@@ -1,29 +1,13 @@
 import { Router } from "express";
 import multer from "multer";
-import fs from "fs";
 import path from "path";
-import { UPLOAD_DIR } from "../config.js";
 import { UploadController } from "../controllers/upload.controller.js";
 import { requireAdmin } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-// Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
-// Multer storage configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, UPLOAD_DIR);
-  },
-  filename: (req, file, cb) => {
-    const timestamp = Date.now();
-    const cleanName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, "_");
-    cb(null, `${timestamp}-${cleanName}`);
-  }
-});
+// In-memory buffer for Sharp image processing
+const storage = multer.memoryStorage();
 
 // Support PNG, JPG, JPEG, WEBP, GIF, SVG images up to 25MB
 const upload = multer({

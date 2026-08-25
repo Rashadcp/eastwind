@@ -1,44 +1,33 @@
 import { Product, IProduct } from "../db.js";
-
-import fs from "fs";
-import path from "path";
+import { sanitizeObjectImages } from "../utils/imageStorage.js";
+import { invalidateCache } from "../utils/cache.js";
 
 export class ProductModel {
-  static async getAll(): Promise<IProduct[]> {
-    let items = await Product.find({}).exec();
-    if (!items || items.length < 30) {
-      try {
-        const dbPath = path.join(process.cwd(), "database.json");
-        if (fs.existsSync(dbPath)) {
-          const raw = fs.readFileSync(dbPath, "utf-8");
-          const seed = JSON.parse(raw);
-          if (seed && Array.isArray(seed.products) && seed.products.length > 0) {
-            for (const p of seed.products) {
-              await Product.findOneAndUpdate({ id: p.id }, p, { upsert: true, new: true });
-            }
-            items = await Product.find({}).exec();
-          }
-        }
-      } catch (e) {
-        console.warn("Product seed sync warning:", e);
-      }
-    }
-    return items;
+  static async getAll(): Promise<any[]> {
+    return await Product.find({}).lean().exec();
   }
 
-  static async getById(id: string): Promise<IProduct | null> {
-    return await Product.findOne({ id }).exec();
+  static async getById(id: string): Promise<any | null> {
+    return await Product.findOne({ id }).lean().exec();
   }
 
-  static async create(data: Partial<IProduct>): Promise<IProduct> {
-    return await Product.create(data);
+  static async create(data: Partial<IProduct>): Promise<any> {
+    const sanitized = sanitizeObjectImages(data, data.id || "prod");
+    const doc = await Product.create(sanitized);
+    invalidateCache("product");
+    return doc;
   }
 
-  static async update(id: string, updates: Partial<IProduct>): Promise<IProduct | null> {
-    return await Product.findOneAndUpdate({ id }, updates, { new: true }).exec();
+  static async update(id: string, updates: Partial<IProduct>): Promise<any | null> {
+    const sanitized = sanitizeObjectImages(updates, id);
+    const doc = await Product.findOneAndUpdate({ id }, sanitized, { new: true }).lean().exec();
+    invalidateCache("product");
+    return doc;
   }
 
-  static async delete(id: string): Promise<IProduct | null> {
-    return await Product.findOneAndDelete({ id }).exec();
+  static async delete(id: string): Promise<any | null> {
+    const doc = await Product.findOneAndDelete({ id }).lean().exec();
+    invalidateCache("product");
+    return doc;
   }
 }

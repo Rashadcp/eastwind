@@ -266,14 +266,32 @@ export default function AdminSuccessStoriesPage() {
       {/* Alert Notifications */}
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-xl flex justify-between items-center">
-          <span>⚠️ {error}</span>
-          <button onClick={() => setError(null)} className="text-red-500 hover:text-red-800">✕</button>
+          <div className="flex items-center gap-2">
+            <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>{error}</span>
+          </div>
+          <button onClick={() => setError(null)} className="p-1 text-red-500 hover:text-red-800 rounded-lg hover:bg-red-100 transition-colors">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
       {success && (
         <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-xl flex justify-between items-center">
-          <span>✅ {success}</span>
-          <button onClick={() => setSuccess(null)} className="text-emerald-500 hover:text-emerald-800">✕</button>
+          <div className="flex items-center gap-2">
+            <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{success}</span>
+          </div>
+          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-500 hover:text-emerald-800 rounded-lg hover:bg-emerald-100 transition-colors">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
 
@@ -316,8 +334,11 @@ export default function AdminSuccessStoriesPage() {
                   </span>
                 </div>
                 <div className="absolute top-3 right-3">
-                  <span className="text-[10px] font-mono font-bold text-slate-700 bg-white/95 backdrop-blur-md px-2 py-1 rounded-md shadow-sm">
-                    📅 {story.year || "2025"}
+                  <span className="text-[10px] font-mono font-bold text-slate-700 bg-white/95 backdrop-blur-md px-2 py-1 rounded-md shadow-sm flex items-center gap-1">
+                    <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    {story.year || "2025"}
                   </span>
                 </div>
               </div>
@@ -377,7 +398,11 @@ export default function AdminSuccessStoriesPage() {
               <h2 className="text-lg font-bold text-slate-800">
                 {isEdit ? "Edit Success Story Case Study" : "Add New Success Story"}
               </h2>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
+              <button onClick={() => setShowModal(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
             <form onSubmit={handleSaveStory} className="space-y-4 text-xs">
@@ -529,7 +554,11 @@ export default function AdminSuccessStoriesPage() {
                   {formResults.map((res, i) => (
                     <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg font-mono">
                       <strong>{res.label}:</strong> <span className="text-orange-600">{res.value}</span>
-                      <button type="button" onClick={() => handleRemoveResultMetric(i)} className="text-red-500 font-bold ml-1">✕</button>
+                      <button type="button" onClick={() => handleRemoveResultMetric(i)} className="text-red-500 hover:text-red-700 font-bold ml-1 p-0.5 rounded hover:bg-red-50">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
                     </span>
                   ))}
                 </div>
@@ -564,7 +593,11 @@ export default function AdminSuccessStoriesPage() {
               <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded">
                 {viewStory.category} ({viewStory.year || "2025"})
               </span>
-              <button onClick={() => setViewStory(null)} className="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
+              <button onClick={() => setViewStory(null)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
             {/* IMAGE BANNER IN MODAL (WHOLE IMAGE UNCROPPED) */}

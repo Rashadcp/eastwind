@@ -1,4 +1,6 @@
 import { SolutionPage, ISolutionPage } from "../db.js";
+import { sanitizeObjectImages } from "../utils/imageStorage.js";
+import { invalidateCache } from "../utils/cache.js";
 
 const DEFAULT_INDUSTRIES = [
   {
@@ -52,9 +54,13 @@ const DEFAULT_INDUSTRIES = [
 ];
 
 export class SolutionPageModel {
+  /**
+   * Fetch the solution page configuration.
+   * Creates initial defaults ONLY if the record does not exist in the database.
+   */
   static async get(): Promise<ISolutionPage | null> {
-    let doc = await SolutionPage.findOne({ id: "solutions_page" }).exec();
-    if (!doc || !doc.industries || doc.industries.length < 6) {
+    let doc = await SolutionPage.findOne({ id: "solutions_page" }).lean().exec();
+    if (!doc) {
       doc = await SolutionPage.findOneAndUpdate(
         { id: "solutions_page" },
         {
@@ -69,16 +75,23 @@ export class SolutionPageModel {
           industries: DEFAULT_INDUSTRIES
         },
         { new: true, upsert: true }
-      ).exec();
+      ).lean().exec();
     }
-    return doc;
+    return (doc as unknown) as ISolutionPage | null;
   }
 
-  static async update(data: Partial<ISolutionPage>): Promise<ISolutionPage> {
-    return await SolutionPage.findOneAndUpdate(
+  /**
+   * Update solution page configuration.
+   * Auto-extracts any base64 images and invalidates cache.
+   */
+  static async update(data: Partial<ISolutionPage>): Promise<ISolutionPage | null> {
+    const sanitized = sanitizeObjectImages(data, "solutions_page");
+    const doc = await SolutionPage.findOneAndUpdate(
       { id: "solutions_page" },
-      { ...data, id: "solutions_page" },
+      { ...sanitized, id: "solutions_page" },
       { new: true, upsert: true }
-    ).exec();
+    ).lean().exec();
+    invalidateCache("solutions-page");
+    return (doc as unknown) as ISolutionPage | null;
   }
 }
