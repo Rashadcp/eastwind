@@ -2,11 +2,21 @@ import { Request, Response, NextFunction } from "express";
 
 interface CacheEntry {
   data: any;
-  timestamp: number;
+  expiresAt: number;
 }
 
 const memoryCache = new Map<string, CacheEntry>();
 const DEFAULT_TTL_MS = 60 * 1000; // 60 seconds TTL
+
+// Background cleanup interval to prevent memory leaks (runs every 5 minutes)
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of memoryCache.entries()) {
+    if (now > entry.expiresAt) {
+      memoryCache.delete(key);
+    }
+  }
+}, 5 * 60 * 1000).unref(); // .unref() prevents this timer from blocking Node from exiting
 
 /**
  * Express middleware to cache GET requests in-memory.
@@ -21,7 +31,7 @@ export function cacheMiddleware(ttlMs = DEFAULT_TTL_MS) {
     const key = req.originalUrl || req.url;
     const cached = memoryCache.get(key);
 
-    if (cached && Date.now() - cached.timestamp < ttlMs) {
+    if (cached && Date.now() < cached.expiresAt) {
       res.setHeader("X-Cache", "HIT");
       res.setHeader("Cache-Control", "public, max-age=30, stale-while-revalidate=60");
       res.json(cached.data);
@@ -32,7 +42,7 @@ export function cacheMiddleware(ttlMs = DEFAULT_TTL_MS) {
     const originalJson = res.json.bind(res);
     res.json = ((body: any) => {
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        memoryCache.set(key, { data: body, timestamp: Date.now() });
+        memoryCache.set(key, { data: body, expiresAt: Date.now() + ttlMs });
       }
       res.setHeader("X-Cache", "MISS");
       res.setHeader("Cache-Control", "public, max-age=30, stale-while-revalidate=60");
