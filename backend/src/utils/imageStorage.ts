@@ -3,6 +3,9 @@ import path from "path";
 import sharp from "sharp";
 import { UPLOAD_DIR } from "../config.js";
 
+// Limit libvips to 1 thread to prevent 100% CPU spikes in production
+sharp.concurrency(1);
+
 /**
  * Automatically detects and extracts base64 data URIs into compressed static files on disk.
  * Returns the public URL (/uploads/filename.ext) or the original string if not base64.

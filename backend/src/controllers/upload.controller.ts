@@ -4,6 +4,9 @@ import path from "path";
 import sharp from "sharp";
 import { UPLOAD_DIR } from "../config.js";
 
+// Limit libvips to 1 thread to prevent 100% CPU spikes in production
+sharp.concurrency(1);
+
 export class UploadController {
   static async handleUpload(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
