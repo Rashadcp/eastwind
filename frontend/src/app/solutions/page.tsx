@@ -638,6 +638,18 @@ function SolutionsPageContent() {
     loadData();
   }, [urlCat]);
 
+  // Preload all industry tab images in background so tab switching is 100% instant (0ms delay)
+  useEffect(() => {
+    if (pageConfig.industries && pageConfig.industries.length > 0) {
+      pageConfig.industries.forEach((ind) => {
+        if (ind.image) {
+          const img = new Image();
+          img.src = formatImageUrl(ind.image, "/products/default-fire-fighting-rescue.png");
+        }
+      });
+    }
+  }, [pageConfig.industries]);
+
   const activeIndustry = pageConfig.industries.find((ind) => ind.id === activeTab) || pageConfig.industries[0] || defaultPageConfig.industries[0];
 
   const activeIndustrySolutions = solutionsList.filter((sol) => {
@@ -985,10 +997,10 @@ function SolutionsPageContent() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndustry.id}
-              initial={{ opacity: 0, scale: 0.98, y: 10 }}
+              initial={{ opacity: 0, scale: 0.99, y: 6 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98, y: -10 }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
+              exit={{ opacity: 0, scale: 0.99, y: -6 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
               className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
             >
               
@@ -1002,6 +1014,9 @@ function SolutionsPageContent() {
                   <img
                     src={formatImageUrl(activeIndustry.image, "/products/default-fire-fighting-rescue.png")}
                     alt={activeIndustry.name}
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src = "/products/default-fire-fighting-rescue.png";
                     }}
@@ -1115,6 +1130,8 @@ function SolutionsPageContent() {
                               <img
                                 src={formatImageUrl(item.imageUrl)}
                                 alt={item.title}
+                                loading="lazy"
+                                decoding="async"
                                 onError={(e) => {
                                   (e.currentTarget as HTMLImageElement).src = "/products/default-fire-fighting-rescue.png";
                                 }}

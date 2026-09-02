@@ -29,6 +29,24 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/uploads/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/api/uploads/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, immutable",
+          },
+        ],
+      },
     ];
   },
   async rewrites() {
