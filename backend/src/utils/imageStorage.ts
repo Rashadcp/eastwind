@@ -43,10 +43,10 @@ export function extractAndSaveBase64(value: any, prefix = "img"): any {
     const filename = `${cleanPrefix}_${uniqueId}.webp`;
     const filePath = path.join(UPLOAD_DIR, filename);
 
-    // Run Sharp synchronously / asynchronously
+    // Run Sharp with high visual fidelity settings
     sharp(buffer)
-      .resize({ width: 1920, withoutEnlargement: true })
-      .webp({ quality: 82 })
+      .resize({ width: 2048, height: 2048, fit: "inside", withoutEnlargement: true })
+      .webp({ quality: 86, effort: 6, smartSubsample: true })
       .toBuffer()
       .then((compressedBuffer: Buffer) => {
         fs.writeFileSync(filePath, compressedBuffer);

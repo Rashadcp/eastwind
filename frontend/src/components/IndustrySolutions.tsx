@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import InteractivePortfolioSection, { PortfolioItem } from "./InteractivePortfolioSection";
 import { productsDb } from "@/data/productsData";
 import { Layers } from "lucide-react";
@@ -33,7 +34,7 @@ const initialIndustries: IndustryItem[] = [
     accentBorder: "rgba(30,62,143,0.22)",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-11-7-11S5 10.7 5 15a7 7 0 0 0 7 7z" />
+        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
       </svg>
     ),
     solutions: [
@@ -60,8 +61,10 @@ const initialIndustries: IndustryItem[] = [
     accentLight: "rgba(180,83,9,0.06)",
     accentBorder: "rgba(180,83,9,0.22)",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 20h20M6 20v-8h12v8M12 12V4h6v8M4 20l4-4M20 20l-4-4" />
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="5" r="3" />
+        <line x1="12" y1="8" x2="12" y2="21" />
+        <path d="M5 12H2a10 10 0 0 0 20 0h-3" />
       </svg>
     ),
     solutions: [
@@ -89,7 +92,7 @@ const initialIndustries: IndustryItem[] = [
     accentBorder: "rgba(30,62,143,0.22)",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
       </svg>
     ),
     solutions: [
@@ -141,7 +144,11 @@ const initialIndustries: IndustryItem[] = [
     accentBorder: "rgba(153,27,27,0.22)",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+        <path d="M7 12a5 5 0 0 1 10 0v4H7v-4z" />
+        <path d="M5 20h14" />
+        <path d="M12 4V2" />
+        <path d="m4.93 4.93 1.41 1.41" />
+        <path d="m17.66 6.34 1.41-1.41" />
       </svg>
     ),
     solutions: [
@@ -168,7 +175,10 @@ const initialIndustries: IndustryItem[] = [
     accentBorder: "rgba(153,27,27,0.22)",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 21H2V3l7 4v3l7-4v3l6-4v18z M17 14h2v2h-2z M12 14h2v2h-2z M7 14h2v2h-2z" />
+        <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
+        <path d="M17 18h1" />
+        <path d="M12 18h1" />
+        <path d="M7 18h1" />
       </svg>
     ),
     solutions: [
@@ -182,6 +192,94 @@ const initialIndustries: IndustryItem[] = [
   },
 ];
 
+export function getSolutionPageHref(idOrSlug: string, name?: string): string {
+  const str = `${idOrSlug || ""} ${name || ""}`.toLowerCase();
+  if (str.includes("civil") || str.includes("rescue") || str.includes("fire")) {
+    return "/solutions?cat=civil-defence#industry-solutions";
+  }
+  if (str.includes("smart") || str.includes("facility") || str.includes("facilities") || str.includes("factory") || str.includes("petro")) {
+    return "/solutions?cat=smart-industrial-facilities#industry-solutions";
+  }
+  if (str.includes("oil") || str.includes("gas") || str.includes("hydrocarbon")) {
+    return "/solutions?cat=oil-and-gas#industry-solutions";
+  }
+  if (str.includes("marine") || str.includes("offshore") || str.includes("deepwater") || str.includes("vessel")) {
+    return "/solutions?cat=marine-operations#industry-solutions";
+  }
+  if (str.includes("util") || str.includes("power") || str.includes("grid")) {
+    return "/solutions?cat=utilities-and-power#industry-solutions";
+  }
+  if (str.includes("border") || str.includes("defen") || str.includes("military") || str.includes("security")) {
+    return "/solutions?cat=defence-and-border-security#industry-solutions";
+  }
+  return `/solutions?cat=${encodeURIComponent(idOrSlug)}#industry-solutions`;
+}
+
+export function getProperSectorIcon(id: string, name?: string): React.ReactNode {
+  const str = `${id || ""} ${name || ""}`.toLowerCase();
+
+  // 1. Utilities and Power -> Lightning Bolt (Energy/Substation/Grid)
+  if (str.includes("util") || str.includes("power") || str.includes("grid") || str.includes("electric")) {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+    );
+  }
+
+  // 2. Defence and Border Security -> Military Shield (National defense/Perimeter)
+  if (str.includes("border") || (str.includes("defen") && !str.includes("civil")) || str.includes("military") || str.includes("security")) {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    );
+  }
+
+  // 3. Civil Defence -> Emergency Siren / Beacon (Municipal fire & rescue)
+  if (str.includes("civil") || str.includes("rescue") || str.includes("emergency") || str.includes("fire")) {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M7 12a5 5 0 0 1 10 0v4H7v-4z" />
+        <path d="M5 20h14" />
+        <path d="M12 4V2" />
+        <path d="m4.93 4.93 1.41 1.41" />
+        <path d="m17.66 6.34 1.41-1.41" />
+      </svg>
+    );
+  }
+
+  // 4. Marine Operations -> Marine Anchor (Offshore/Vessels/Platforms)
+  if (str.includes("marine") || str.includes("offshore") || str.includes("vessel") || str.includes("sea") || str.includes("ocean")) {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="5" r="3" />
+        <line x1="12" y1="8" x2="12" y2="21" />
+        <path d="M5 12H2a10 10 0 0 0 20 0h-3" />
+      </svg>
+    );
+  }
+
+  // 5. Smart Industrial Facilities -> Industrial Factory (Smart Plants/Twins)
+  if (str.includes("facility") || str.includes("facilities") || str.includes("factory") || str.includes("petro") || str.includes("smart")) {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
+        <path d="M17 18h1" />
+        <path d="M12 18h1" />
+        <path d="M7 18h1" />
+      </svg>
+    );
+  }
+
+  // 6. Oil and Gas (Default fallback) -> Flame/Hydrocarbon burner
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+    </svg>
+  );
+}
+
 // ─── Telemetry Hub Visual ────────────────────────────────────────────────────
 
 function TelemetryHubVisual({
@@ -193,6 +291,7 @@ function TelemetryHubVisual({
   setActiveId: (id: string) => void;
   items: PortfolioItem[];
 }) {
+  const router = useRouter();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const nodeCoords = [
@@ -206,7 +305,7 @@ function TelemetryHubVisual({
 
   return (
     <div
-      className="relative w-full h-full flex justify-center items-center rounded-[24px] overflow-hidden min-h-[190px]"
+      className="relative w-full h-full flex flex-col justify-between items-center rounded-[20px] sm:rounded-[28px] overflow-hidden p-3 sm:p-5"
       style={{
         background: "linear-gradient(150deg, #ffffff 0%, #f4f7fd 50%, #edf1fa 100%)",
         border: "1px solid rgba(255,255,255,0.95)",
@@ -234,15 +333,15 @@ function TelemetryHubVisual({
 
       {/* Top accent rule */}
       <div
-        className="absolute top-0 left-0 right-0 h-[2px] rounded-t-[24px]"
+        className="absolute top-0 left-0 right-0 h-[2px] rounded-t-[28px]"
         style={{
           background:
             "linear-gradient(90deg, transparent 10%, rgba(30,62,143,0.25) 40%, rgba(180,83,9,0.18) 70%, transparent 90%)",
         }}
       />
 
-      <div className="relative w-full max-w-[780px] aspect-[800/370] h-auto p-2">
-        <svg viewBox="-100 95 800 370" className="w-full h-full overflow-visible">
+      <div className="relative w-full max-w-[1040px] flex-grow flex items-center justify-center min-h-0 py-1">
+        <svg viewBox="-140 70 880 430" className="w-full h-full max-h-[calc(100dvh-270px)] object-contain overflow-visible select-none">
           <defs>
             <radialGradient id="hubGradientPremium" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#ffffff" />
@@ -304,32 +403,108 @@ function TelemetryHubVisual({
             );
           })}
 
-          {/* Hub outer pulse ring */}
-          <circle cx="300" cy="280" r="72" fill="none" stroke="url(#hubRingGrad)" strokeWidth="1.5" />
-          {/* Hub backdrop rings */}
-          <circle cx="300" cy="280" r="66" fill="rgba(255,255,255,0.55)" stroke="rgba(30,62,143,0.06)" strokeWidth="1" />
-          <circle cx="300" cy="280" r="58"
-            fill="url(#hubGradientPremium)"
-            stroke="rgba(30,62,143,0.18)"
-            strokeWidth="1.5"
-            filter="url(#hubShadowPremium)"
-          />
-          {/* Hub inner accent ring */}
-          <circle cx="300" cy="280" r="52" fill="none" stroke="rgba(30,62,143,0.07)" strokeWidth="1" strokeDasharray="3 5" />
-
-          {/* Hub label */}
-          <text
-            x="300"
-            y="285"
-            textAnchor="middle"
-            fontSize="14"
-            fontFamily="var(--font-sans), sans-serif"
-            fontWeight="900"
-            letterSpacing="3"
-            fill="#1e3e8f"
+          {/* Hub center interactive trigger */}
+          <g
+            className="cursor-pointer group"
+            onClick={() => router.push("/solutions")}
           >
-            SOLUTIONS
-          </text>
+            {/* Hub outer pulse ring */}
+            <circle cx="300" cy="280" r="72" fill="none" stroke="url(#hubRingGrad)" strokeWidth="1.5" />
+            {/* Hub backdrop rings */}
+            <circle cx="300" cy="280" r="66" fill="rgba(255,255,255,0.55)" stroke="rgba(30,62,143,0.06)" strokeWidth="1" />
+            <circle cx="300" cy="280" r="58"
+              fill="url(#hubGradientPremium)"
+              stroke="rgba(30,62,143,0.18)"
+              strokeWidth="1.5"
+              filter="url(#hubShadowPremium)"
+              className="transition-transform duration-300 group-hover:scale-105 origin-[300px_280px]"
+            />
+            {/* Hub inner accent ring */}
+            <circle cx="300" cy="280" r="52" fill="none" stroke="rgba(30,62,143,0.07)" strokeWidth="1" strokeDasharray="3 5" />
+
+            {/* Hub label */}
+            <text
+              x="300"
+              y="285"
+              textAnchor="middle"
+              fontSize="14"
+              fontFamily="var(--font-sans), sans-serif"
+              fontWeight="900"
+              letterSpacing="3"
+              fill="#1e3e8f"
+            >
+              SOLUTIONS
+            </text>
+          </g>
+
+          {/* Node SVG Labels: Responsive across all screen sizes (Mobile, Tablet, Laptop, Mac) */}
+          {items.map((indItem, idx) => {
+            const ind = indItem as IndustryItem;
+            const lit = activeId === ind.id || hoveredId === ind.id;
+            const coords = nodeCoords[idx];
+            
+            let lx = coords.x;
+            let ly = coords.y;
+            let anchor: "start" | "middle" | "end" = "middle";
+
+            switch (idx) {
+              case 0:
+                lx = coords.x + 36;
+                ly = coords.y + 5;
+                anchor = "start";
+                break;
+              case 1:
+                lx = coords.x;
+                ly = coords.y + 44;
+                anchor = "middle";
+                break;
+              case 2:
+                lx = coords.x;
+                ly = coords.y + 44;
+                anchor = "middle";
+                break;
+              case 3:
+                lx = coords.x - 36;
+                ly = coords.y + 5;
+                anchor = "end";
+                break;
+              case 4:
+                lx = coords.x;
+                ly = coords.y - 34;
+                anchor = "middle";
+                break;
+              case 5:
+                lx = coords.x;
+                ly = coords.y - 34;
+                anchor = "middle";
+                break;
+            }
+
+            return (
+              <text
+                key={`svg-label-${ind.id}`}
+                x={lx}
+                y={ly}
+                textAnchor={anchor}
+                fill={lit ? ind.accent : "#334155"}
+                fontSize={lit ? "13.5" : "12"}
+                fontFamily="var(--font-sans), sans-serif"
+                fontWeight={lit ? "800" : "700"}
+                className="cursor-pointer select-none transition-all duration-300"
+                onClick={() => {
+                  setActiveId(ind.id);
+                  router.push(getSolutionPageHref(ind.id, ind.name));
+                }}
+                onMouseEnter={() => {
+                  setActiveId(ind.id);
+                  setHoveredId(ind.id);
+                }}
+                onMouseLeave={() => setHoveredId(null)}
+              >
+                {ind.name}
+              </text>
+            );
+          })}
 
           {/* Node circles */}
           {items.map((indItem, idx) => {
@@ -339,8 +514,14 @@ function TelemetryHubVisual({
             return (
               <g
                 key={`node-${ind.id}`}
-                onClick={() => setActiveId(ind.id)}
-                onMouseEnter={() => setHoveredId(ind.id)}
+                onClick={() => {
+                  setActiveId(ind.id);
+                  router.push(getSolutionPageHref(ind.id, ind.name));
+                }}
+                onMouseEnter={() => {
+                  setActiveId(ind.id);
+                  setHoveredId(ind.id);
+                }}
                 onMouseLeave={() => setHoveredId(null)}
                 className="cursor-pointer"
               >
@@ -394,52 +575,18 @@ function TelemetryHubVisual({
 
                 {/* Icon */}
                 <g
-                  transform={`translate(${coords.x - 9}, ${coords.y - 9})`}
+                  transform={`translate(${coords.x - 10}, ${coords.y - 10})`}
                   style={{
                     color: lit ? ind.accent : "#000000",
                     transition: "color 300ms",
                   }}
                 >
-                  {ind.icon}
+                  {getProperSectorIcon(ind.id, ind.name)}
                 </g>
               </g>
             );
           })}
         </svg>
-
-        {/* Node labels */}
-        <div className="absolute inset-0 pointer-events-none select-none hidden md:block">
-          {items.map((indItem, idx) => {
-            const ind = indItem as IndustryItem;
-            const lit = activeId === ind.id || hoveredId === ind.id;
-
-            let labelStyle: React.CSSProperties = {};
-            switch (idx) {
-              case 0: labelStyle = { left: "calc(77.5% + 28px)", top: "50%", transform: "translateY(-50%)", textAlign: "left" }; break;
-              case 1: labelStyle = { left: "calc(63.75% + 18px)", top: "calc(80.5% + 10px)", textAlign: "left" }; break;
-              case 2: labelStyle = { right: "calc(100% - 36.25% + 18px)", top: "calc(80.5% + 10px)", textAlign: "right" }; break;
-              case 3: labelStyle = { right: "calc(100% - 22.5% + 28px)", top: "50%", transform: "translateY(-50%)", textAlign: "right" }; break;
-              case 4: labelStyle = { right: "calc(100% - 36.25% + 18px)", bottom: "calc(100% - 19.5% + 10px)", textAlign: "right" }; break;
-              case 5: labelStyle = { left: "calc(63.75% + 18px)", bottom: "calc(100% - 19.5% + 10px)", textAlign: "left" }; break;
-            }
-            return (
-              <div
-                key={`label-${ind.id}`}
-                style={{
-                  ...labelStyle,
-                  color: lit ? ind.accent : "rgba(71,85,105,0.78)",
-                  transition: "color 300ms",
-                }}
-                className="absolute pointer-events-auto cursor-pointer font-sans tracking-tight leading-tight max-w-[130px] text-[0.85rem] font-bold"
-                onClick={() => setActiveId(ind.id)}
-                onMouseEnter={() => setHoveredId(ind.id)}
-                onMouseLeave={() => setHoveredId(null)}
-              >
-                {ind.name}
-              </div>
-            );
-          })}
-        </div>
       </div>
     </div>
   );
@@ -787,7 +934,7 @@ export default function IndustrySolutions() {
         let productsCatalog: any[] = [];
         try {
           const controller1 = new AbortController();
-          const timeoutId1 = setTimeout(() => controller1.abort(), 1500);
+          const timeoutId1 = setTimeout(() => controller1.abort(), 10000);
           const prodsRes = await fetch(`${baseUrl}/api/products`, { signal: controller1.signal });
           clearTimeout(timeoutId1);
           if (prodsRes.ok) {
@@ -802,7 +949,7 @@ export default function IndustrySolutions() {
 
         try {
           const controller2 = new AbortController();
-          const timeoutId2 = setTimeout(() => controller2.abort(), 1500);
+          const timeoutId2 = setTimeout(() => controller2.abort(), 10000);
           const solPageRes = await fetch(`${baseUrl}/api/solutions-page`, { signal: controller2.signal });
           clearTimeout(timeoutId2);
           if (solPageRes.ok) {
@@ -852,15 +999,24 @@ export default function IndustrySolutions() {
               // Extract custom items if added in admin
               let customLinks: { name: string; href: string }[] = [];
               if (Array.isArray(ind.items) && ind.items.length > 0) {
-                customLinks = ind.items.map((itemObj: any) => {
+                customLinks = ind.items.flatMap((itemObj: any) => {
                   if (typeof itemObj === "string") {
-                    return { name: itemObj, href: `/products` };
+                    return [{ name: itemObj, href: `/products` }];
                   }
-                  return { name: itemObj.name || itemObj.title || "Category Product", href: itemObj.href || `/products` };
+                  if (itemObj && Array.isArray(itemObj.items)) {
+                    return itemObj.items.map((it: string) => ({
+                      name: it,
+                      href: `/products`
+                    }));
+                  }
+                  if (itemObj && itemObj.name) {
+                    return [{ name: itemObj.name, href: itemObj.href || `/products` }];
+                  }
+                  return [];
                 });
               }
 
-              const allSolutions = [...solutionLinks, ...customLinks];
+              const allSolutions = customLinks.length > 0 ? customLinks : solutionLinks;
 
               // Find base initial item for styling/icons
               const base = initialIndustries[idx] || initialIndustries[0];
@@ -879,7 +1035,7 @@ export default function IndustrySolutions() {
                 accent: ind.accent || base.accent,
                 accentLight: `${ind.accent || base.accent}10`,
                 accentBorder: `${ind.accent || base.accent}40`,
-                icon: base.icon,
+                icon: getProperSectorIcon(ind.id, ind.name),
                 solutions: allSolutions.length > 0 ? allSolutions : base.solutions
               };
             });
@@ -931,19 +1087,19 @@ export default function IndustrySolutions() {
   );
 
   const applicationsGrid = (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 w-full flex-grow min-h-0 max-h-[calc(100dvh-220px)] overflow-y-auto p-1 sm:p-2">
       {applicationsList.map((app) => (
         <Link
           key={app.id}
           href={app.href}
-          className="group relative p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-slate-300 transition-all duration-300 flex items-center justify-between no-underline text-inherit cursor-pointer"
+          className="group relative p-4 sm:p-5 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-slate-300 transition-all duration-300 flex items-center justify-between no-underline text-inherit cursor-pointer"
         >
-          <div className="flex items-center gap-4 min-w-0">
-            <span className="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-[#c22026] shrink-0">
-              <Layers className="w-5 h-5" />
+          <div className="flex items-center gap-3.5 min-w-0">
+            <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-[#c22026] shrink-0">
+              <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
             </span>
             <div className="min-w-0">
-              <h3 className="text-base font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-[#1e3e8f] transition-colors m-0 truncate">
+              <h3 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-[#1e3e8f] transition-colors m-0 truncate">
                 {app.name}
               </h3>
               <p className="text-xs font-medium text-slate-400 m-0 mt-0.5 truncate">
@@ -952,7 +1108,7 @@ export default function IndustrySolutions() {
             </div>
           </div>
 
-          <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#1e3e8f] group-hover:text-white transition-all duration-300 text-xs font-bold shrink-0 ml-3">
+          <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#1e3e8f] group-hover:text-white transition-all duration-300 text-xs font-bold shrink-0 ml-2">
             →
           </span>
         </Link>
@@ -985,8 +1141,9 @@ export default function IndustrySolutions() {
         />
       )}
       hideSidebar={true}
-      isFullHeight={false}
+      isFullHeight={true}
       hideOverview={true}
+      hideDetailsPanel={true}
       renderSolutions={(activeItem: IndustryItem) => (
         <SolutionCards activeItem={activeItem} />
       )}

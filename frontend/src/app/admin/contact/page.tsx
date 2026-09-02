@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatImageUrl } from "@/utils/image";
 
 interface DropdownOption {
   value: string;
@@ -414,14 +415,19 @@ export default function AdminContactPage() {
 
           </div>
 
-          <div className="flex justify-end pt-2">
+          {/* Form Footer Action Bar */}
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save and publish updates to Office Addresses & Channels</span>
+            </div>
             <button
               type="button"
               disabled={saving}
               onClick={() => saveSection("contact_info", {
                 hqTitle, hqAddress, hubTitle, hubAddress, telephone, email, workingHours, gatewayText, gatewayStatus
               }, "Office Addresses & Channels")}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-xl shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Office Addresses Changes"}
             </button>
@@ -554,7 +560,12 @@ export default function AdminContactPage() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-2">
+          {/* Form Footer Action Bar */}
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save and publish updates to Home Contact Section</span>
+            </div>
             <button
               type="button"
               disabled={saving}
@@ -567,7 +578,7 @@ export default function AdminContactPage() {
                 successTitle: homeSuccessTitle,
                 successMessage: homeSuccessMessage,
               }, "Home Contact Section")}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-xl shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Home Contact Changes"}
             </button>
@@ -637,6 +648,21 @@ export default function AdminContactPage() {
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload File"}
                 </label>
               </div>
+
+              {/* Contact Hero Background Image Preview */}
+              {pageHeroBgImage && pageHeroBgImage.trim() !== "" && (
+                <div className="mt-3 w-fit max-w-xl rounded-xl border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                  <img
+                    src={formatImageUrl(pageHeroBgImage)}
+                    alt="Contact Hero Preview"
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      el.style.display = "none";
+                    }}
+                    className="h-44 sm:h-52 w-auto max-w-full rounded-lg object-contain block"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
@@ -746,7 +772,12 @@ export default function AdminContactPage() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-2">
+          {/* Form Footer Action Bar */}
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save and publish updates to Contact Page Settings</span>
+            </div>
             <button
               type="button"
               disabled={saving}
@@ -765,7 +796,7 @@ export default function AdminContactPage() {
                 successTitle: pageSuccessTitle,
                 successMessage: pageSuccessMessage,
               }, "Contact Page Settings")}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-xl shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Contact Page Changes"}
             </button>
@@ -898,7 +929,12 @@ export default function AdminContactPage() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-2">
+          {/* Form Footer Action Bar */}
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save and publish updates to Enquiry Page Settings</span>
+            </div>
             <button
               type="button"
               disabled={saving}
@@ -911,7 +947,7 @@ export default function AdminContactPage() {
                 successTitle: enquirySuccessTitle,
                 successMessage: enquirySuccessMessage,
               }, "Enquiry Page Settings")}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-xl shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Enquiry Page Changes"}
             </button>

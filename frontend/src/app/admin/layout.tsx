@@ -4,6 +4,72 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
+const ROUTE_LOCATION_MAP: Record<
+  string,
+  { path: string; label: string; description: string }
+> = {
+  "/admin": {
+    path: "/",
+    label: "Home Page",
+    description: "Controls main website overview, mission highlights, and operational stats",
+  },
+  "/admin/hero": {
+    path: "/",
+    label: "Home Hero",
+    description: "Edits homepage hero slider banners, titles, captions, and call-to-action buttons",
+  },
+  "/admin/products": {
+    path: "/products",
+    label: "Products Page",
+    description: "Edits product hardware inventory, technical specs, brochures, and photos",
+  },
+  "/admin/solutions": {
+    path: "/solutions",
+    label: "Solutions Page",
+    description: "Edits solutions catalog items, page banners, industry sectors, and integration workflows",
+  },
+  "/admin/solutions-page": {
+    path: "/solutions",
+    label: "Solutions Layout",
+    description: "Edits dedicated solutions landing page banners, sector matrices, and partner ecosystems",
+  },
+  "/admin/applications": {
+    path: "/applications",
+    label: "Applications Page",
+    description: "Edits sector applications, critical systems, and mission-readiness engineering",
+  },
+  "/admin/services": {
+    path: "/services",
+    label: "Services Page",
+    description: "Edits technical service lifecycle, maintenance protocols, and SLA offerings",
+  },
+  "/admin/about": {
+    path: "/about",
+    label: "About Page",
+    description: "Edits corporate overview, executive team, credentials, and homepage about section",
+  },
+  "/admin/contact": {
+    path: "/contact",
+    label: "Contact Page",
+    description: "Edits contact information, headquarters locations, email channels, and intake forms",
+  },
+  "/admin/footer": {
+    path: "/",
+    label: "Global Footer",
+    description: "Edits global website footer across all pages (links, compliance accreditations, corporate address)",
+  },
+  "/admin/brands": {
+    path: "/",
+    label: "Brand Partners",
+    description: "Edits technology partner brand logos displayed across the homepage and solutions",
+  },
+  "/admin/success-stories": {
+    path: "/about",
+    label: "Success Stories",
+    description: "Edits regional field case studies, deployment metrics, and engineering achievements",
+  },
+};
+
 export default function AdminLayout({
   children,
 }: {
@@ -15,6 +81,18 @@ export default function AdminLayout({
   const [loading, setLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string>("Admin");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
+  const [origin, setOrigin] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setOrigin(window.location.origin);
+    }
+  }, []);
+
+  const locationInfo = ROUTE_LOCATION_MAP[pathname];
+  const fullLiveUrl = locationInfo
+    ? `${origin || ""}${locationInfo.path === "/" ? "" : locationInfo.path}`
+    : origin;
 
   // Close mobile sidebar on route navigation
   useEffect(() => {
@@ -499,11 +577,11 @@ export default function AdminLayout({
           </div>
 
           <Link
-            href="/"
+            href={locationInfo ? locationInfo.path : "/"}
             target="_blank"
             className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-slate-500 hover:text-orange-600 transition-colors no-underline whitespace-nowrap"
           >
-            <span>Visit Live Site</span>
+            <span>{locationInfo && locationInfo.path !== "/" ? `Visit Live ${locationInfo.label}` : "Visit Live Site"}</span>
             <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 00-2 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
@@ -513,7 +591,53 @@ export default function AdminLayout({
         {/* Dynamic page container */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-slate-50 relative w-full">
           <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
-          <div className="relative max-w-7xl mx-auto w-full admin-light-theme">
+          <div className="relative max-w-7xl mx-auto w-full admin-light-theme space-y-6">
+            {/* Universal Website Location Banner across ALL admin pages */}
+            {locationInfo && (
+              <div className="p-4 bg-orange-50/90 border border-orange-200 rounded-2xl text-orange-950 text-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
+                <div className="flex items-start sm:items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-900 text-xs">Website Location:</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 bg-orange-100 px-2 py-0.5 rounded-md border border-orange-200/50">
+                        {locationInfo.label}
+                      </span>
+                    </div>
+                    <p className="text-slate-600 text-xs mt-0.5">
+                      {locationInfo.description} on{" "}
+                      <a
+                        href={locationInfo.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline font-bold text-orange-700 hover:text-orange-900 transition-colors"
+                        suppressHydrationWarning
+                      >
+                        {fullLiveUrl || locationInfo.path}
+                      </a>
+                    </p>
+                  </div>
+                </div>
+
+                <a
+                  href={locationInfo.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs shadow-xs hover:shadow-md transition-all shrink-0 self-start md:self-center cursor-pointer"
+                >
+                  <span>Open Live Page</span>
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 00-2 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+            )}
+
             {children}
           </div>
         </div>

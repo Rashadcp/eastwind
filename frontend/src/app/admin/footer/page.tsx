@@ -40,8 +40,7 @@ export default function AdminFooterPage() {
 
   const [bottomLinks, setBottomLinks] = useState<FooterLink[]>([
     { name: "Marine & Industrial Compliance", href: "/solutions" },
-    { name: "Privacy Policy", href: "/about" },
-    { name: "Admin Portal", href: "/admin/login" }
+    { name: "Privacy Policy", href: "/about" }
   ]);
 
   // Input states for adding new links
@@ -589,18 +588,23 @@ export default function AdminFooterPage() {
           </div>
         </div>
 
-        {/* SAVE BUTTON */}
-        <div className="pt-4 flex justify-end">
-          <button
-            type="submit"
-            disabled={saving}
-            className="py-3.5 px-8 bg-orange-600 hover:bg-orange-700 text-white text-xs font-extrabold uppercase tracking-wider rounded-2xl shadow-lg shadow-orange-600/20 cursor-pointer disabled:opacity-50 transition-all flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-            <span>{saving ? "Saving Changes..." : "Save Footer Configuration"}</span>
-          </button>
+        {/* STICKY SAVE BAR */}
+        <div className="sticky bottom-6 z-40 flex justify-end mt-8">
+          <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-orange-100 flex items-center gap-4">
+            <span className="text-xs text-slate-500 font-medium hidden sm:inline-block">
+              Remember to save your footer updates before leaving
+            </span>
+            <button
+              type="submit"
+              disabled={saving}
+              className="py-3.5 px-8 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg cursor-pointer disabled:opacity-50 transition-all flex items-center gap-2 hover:-translate-y-0.5"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{saving ? "Saving Changes..." : "Save Footer Configuration"}</span>
+            </button>
+          </div>
         </div>
       </form>
     </div>

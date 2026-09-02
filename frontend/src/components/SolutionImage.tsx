@@ -28,7 +28,7 @@ export default function SolutionImage({ imageUrl, title }: SolutionImageProps) {
       src={formattedUrl}
       alt={title}
       onError={() => setHasError(true)}
-      className="w-full h-full max-h-full max-w-full block rounded-xl object-contain filter contrast-102"
+      className="w-full h-full object-cover filter contrast-102 transition-transform duration-700 hover:scale-105"
     />
   );
 }

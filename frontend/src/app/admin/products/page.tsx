@@ -493,7 +493,8 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Modal Scroll Content */}
-            <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-8 space-y-6">
+            <div className="flex-1 overflow-y-auto p-8">
+              <form id="product-form" onSubmit={handleSave} className="space-y-6">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* ID input */}
@@ -719,24 +720,26 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              {/* Form submit/cancel */}
-              <div className="pt-6 border-t border-white/5 flex justify-end gap-3 flex-shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="px-6 py-3 rounded-full text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-8 py-3 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
-                >
-                  {isEdit ? "Update Catalog Node" : "Save Catalog Node"}
-                </button>
-              </div>
+              </form>
+            </div>
 
-            </form>
+            {/* Modal Fixed Footer */}
+            <div className="py-4 px-8 border-t border-white/5 flex justify-end gap-3 flex-shrink-0 bg-slate-950">
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="px-6 py-2.5 rounded-full text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                form="product-form"
+                className="px-8 py-2.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
+              >
+                {isEdit ? "Update Catalog Node" : "Save Catalog Node"}
+              </button>
+            </div>
 
           </div>
         </div>
@@ -906,7 +909,7 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 rounded-full bg-slate-850 text-white hover:bg-slate-700 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all"
+                className="px-6 py-2.5 rounded-full bg-sky-600 text-white hover:bg-sky-500 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-sky-600/10"
               >
                 Close View
               </button>

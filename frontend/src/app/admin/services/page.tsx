@@ -247,7 +247,7 @@ export default function AdminServicesPage() {
       <div className="flex justify-between items-center w-full">
         <div>
           <h2 className="text-xl font-bold uppercase tracking-tight m-0 text-white">Consultancy Services</h2>
-          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">Manage safety consultancy programs and rays tracking audit scopes</p>
+          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">Manage safety consultancy programs, audit scopes, and deliverables</p>
         </div>
         <button
           onClick={handleOpenCreate}
@@ -256,7 +256,7 @@ export default function AdminServicesPage() {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          Add Service Node
+          Add New Service
         </button>
       </div>
 
@@ -297,7 +297,7 @@ export default function AdminServicesPage() {
           </div>
         ) : services.length === 0 ? (
           <div className="py-20 text-center text-slate-400 text-xs font-medium">
-            No consultancy services registered. Click &quot;Add Service Node&quot; to begin.
+            No consultancy services found. Click &quot;Add New Service&quot; to begin.
           </div>
         ) : (
           <div className="overflow-x-auto w-full">
@@ -397,7 +397,7 @@ export default function AdminServicesPage() {
             {/* Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-white/5 flex-shrink-0">
               <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
-                {isEdit ? `Configure Service: ${formId}` : "Create Service Node"}
+                {isEdit ? `Edit Service: ${formId}` : "Create New Service"}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
@@ -410,7 +410,8 @@ export default function AdminServicesPage() {
             </div>
 
             {/* Scrollable Form Content */}
-            <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-8 space-y-6">
+            <div className="flex-1 overflow-y-auto p-8">
+              <form id="service-form" onSubmit={handleSave} className="space-y-6">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
@@ -624,24 +625,26 @@ export default function AdminServicesPage() {
                 </div>
               </div>
 
-              {/* Form submit/cancel */}
-              <div className="pt-6 border-t border-white/5 flex justify-end gap-3 flex-shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="px-6 py-3 rounded-full text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-8 py-3 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
-                >
-                  {isEdit ? "Update Service" : "Save Service"}
-                </button>
-              </div>
+              </form>
+            </div>
 
-            </form>
+            {/* Fixed Footer */}
+            <div className="py-4 px-8 border-t border-white/5 flex justify-end gap-3 flex-shrink-0 bg-slate-950">
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="px-6 py-2.5 rounded-full text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                form="service-form"
+                className="px-8 py-2.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
+              >
+                {isEdit ? "Update Service" : "Save Service"}
+              </button>
+            </div>
 
           </div>
         </div>
@@ -657,9 +660,9 @@ export default function AdminServicesPage() {
               </svg>
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-bold text-white uppercase tracking-tight m-0">Confirm Node Deletion</h3>
+              <h3 className="text-lg font-bold text-white uppercase tracking-tight m-0">Confirm Delete Service</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-light m-0">
-                Are you sure you want to permanently delete consultancy service `{deleteTarget}`? This edits the live directory immediately.
+                Are you sure you want to permanently delete service `{deleteTarget}`? This action cannot be undone.
               </p>
             </div>
             <div className="flex justify-center gap-3">
@@ -667,13 +670,13 @@ export default function AdminServicesPage() {
                 onClick={() => setDeleteTarget(null)}
                 className="px-5 py-2.5 rounded-full border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
-                Abort
+                Cancel
               </button>
               <button
                 onClick={handleDelete}
                 className="px-7 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
-                Delete Node
+                Delete Service
               </button>
             </div>
           </div>
@@ -688,7 +691,7 @@ export default function AdminServicesPage() {
             {/* Modal Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-slate-100 flex-shrink-0">
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
-                Service Details Node: {viewItem.id}
+                Service Details: {viewItem.title || viewItem.id}
               </h3>
               <button
                 onClick={() => setViewItem(null)}
@@ -804,7 +807,7 @@ export default function AdminServicesPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 rounded-full bg-slate-850 text-white hover:bg-slate-700 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all"
+                className="px-6 py-2.5 rounded-full bg-sky-600 text-white hover:bg-sky-500 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-sky-600/10"
               >
                 Close View
               </button>

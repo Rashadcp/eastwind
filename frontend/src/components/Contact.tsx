@@ -132,7 +132,7 @@ export default function Contact() {
   return (
     <section
       id="contact-us"
-      className="relative w-full py-14 sm:py-16 bg-transparent overflow-hidden"
+      className="relative w-full min-h-[100dvh] flex flex-col justify-center py-14 sm:py-16 bg-transparent overflow-hidden"
     >
       {/* Symmetrical backgrounds matching the rest of the light theme */}
       <div className="pointer-events-none absolute inset-0 z-0">

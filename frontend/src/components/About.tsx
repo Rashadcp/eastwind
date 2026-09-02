@@ -88,7 +88,7 @@ export default function About() {
       <div className="industrial-grid absolute inset-0 opacity-[0.02] pointer-events-none z-0" />
 
       {/* Responsive Documentary Column Grid Layout */}
-      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-10 max-sm:px-5 grid grid-cols-1 lg:grid-cols-12 gap-12 max-md:gap-6 items-stretch">
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-10 max-sm:px-5 grid grid-cols-1 lg:grid-cols-12 gap-12 max-md:gap-6 items-center">
         
         {/* LEFT COLUMN: Premium Documentary Splash Visual */}
         <div className="lg:col-span-5 flex flex-col relative group">

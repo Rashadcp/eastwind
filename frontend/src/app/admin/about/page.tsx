@@ -402,27 +402,38 @@ export default function AdminAboutPage() {
           </p>
         </div>
 
-        {/* Tab Selector Buttons */}
-        <div className="flex items-center gap-2 bg-slate-200/60 p-1.5 rounded-xl self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
+          {/* Tab Selector Buttons */}
+          <div className="flex items-center gap-1.5 bg-slate-200/60 p-1.5 rounded-xl">
+            <button
+              onClick={() => { setActiveTab("home"); clearMessages(); }}
+              className={`px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "home"
+                  ? "bg-white text-orange-600 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Home Page About Section
+            </button>
+            <button
+              onClick={() => { setActiveTab("about_page"); clearMessages(); }}
+              className={`px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "about_page"
+                  ? "bg-white text-orange-600 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Dedicated About Page
+            </button>
+          </div>
+
           <button
-            onClick={() => { setActiveTab("home"); clearMessages(); }}
-            className={`px-5 py-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "home"
-                ? "bg-white text-orange-600 shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
+            type="button"
+            onClick={activeTab === "home" ? handleSaveHome : handleSaveAboutPage}
+            disabled={saving}
+            className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0"
           >
-            Home Page About Section
-          </button>
-          <button
-            onClick={() => { setActiveTab("about_page"); clearMessages(); }}
-            className={`px-5 py-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "about_page"
-                ? "bg-white text-orange-600 shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Dedicated About Page
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>
@@ -503,35 +514,20 @@ export default function AdminAboutPage() {
                     {uploadingField === "homeImage" ? "Uploading..." : "Upload File"}
                   </label>
                 </div>
-
                 {/* Live Image Preview Container */}
-                <div className="mt-3 relative w-full h-44 rounded-xl border border-slate-200 bg-slate-900 overflow-hidden flex items-center justify-center">
-                  {homeImage ? (
+                {homeImage && homeImage.trim() !== "" && (
+                  <div className="mt-3 w-fit max-w-xl rounded-xl border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
                     <img
                       src={formatImageUrl(homeImage)}
                       alt="Home About Preview"
                       onError={(e) => {
                         const el = e.currentTarget as HTMLImageElement;
                         el.style.display = "none";
-                        if (el.nextElementSibling) {
-                          (el.nextElementSibling as HTMLElement).style.display = "flex";
-                        }
                       }}
-                      className="max-h-full max-w-full object-contain"
+                      className="h-44 sm:h-52 w-auto max-w-full rounded-lg object-contain block"
                     />
-                  ) : null}
-                  <div
-                    style={{ display: homeImage ? "none" : "flex" }}
-                    className="flex flex-col items-center justify-center text-slate-400 p-4 text-center"
-                  >
-                    <svg className="w-8 h-8 mb-1 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span className="text-[0.68rem] font-mono font-bold uppercase tracking-wider text-slate-300">
-                      No Image Found
-                    </span>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -672,13 +668,17 @@ export default function AdminAboutPage() {
             </div>
           </div>
 
-          {/* Save Button */}
-          <div className="flex justify-end pt-4">
+          {/* Form Footer Action Bar */}
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save and publish updates to the Home Page About section</span>
+            </div>
             <button
               type="button"
               onClick={handleSaveHome}
               disabled={saving}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-xl shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Home Page About Changes"}
             </button>
@@ -755,6 +755,21 @@ export default function AdminAboutPage() {
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload File"}
                 </label>
               </div>
+
+              {/* Hero Image Preview */}
+              {pageHeroBgImage && pageHeroBgImage.trim() !== "" && (
+                <div className="mt-3 w-fit max-w-xl rounded-xl border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                  <img
+                    src={formatImageUrl(pageHeroBgImage)}
+                    alt="About Hero Background Preview"
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      el.style.display = "none";
+                    }}
+                    className="h-44 sm:h-52 w-auto max-w-full rounded-lg object-contain block"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
@@ -833,6 +848,21 @@ export default function AdminAboutPage() {
                     {uploadingField === "facilityImage" ? "Uploading..." : "Upload File"}
                   </label>
                 </div>
+
+                {/* Facility Image Preview */}
+                {pageFacilityImage && pageFacilityImage.trim() !== "" && (
+                  <div className="mt-3 w-fit max-w-xl rounded-xl border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                    <img
+                      src={formatImageUrl(pageFacilityImage)}
+                      alt="Facility Showcase Preview"
+                      onError={(e) => {
+                        const el = e.currentTarget as HTMLImageElement;
+                        el.style.display = "none";
+                      }}
+                      className="h-44 sm:h-52 w-auto max-w-full rounded-lg object-contain block"
+                    />
+                  </div>
+                )}
               </div>
 
               <div>
@@ -1098,13 +1128,17 @@ export default function AdminAboutPage() {
             </div>
           </div>
 
-          {/* Save Button */}
-          <div className="flex justify-end pt-4">
+          {/* Form Footer Action Bar */}
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save and publish updates to the Dedicated About Page</span>
+            </div>
             <button
               type="button"
               onClick={handleSaveAboutPage}
               disabled={saving}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-xl shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Dedicated About Page Changes"}
             </button>

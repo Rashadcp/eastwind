@@ -22,6 +22,7 @@ interface IndustryData {
   image: string;
   description: string;
   icon?: React.ReactNode;
+  items?: any[];
 }
 
 interface CorePortfolio {
@@ -97,6 +98,43 @@ const itemSlugMap: Record<string, string> = {
   "Smart Facility": "mimes",
   "Digital mobility Xshilder": "xshielder"
 };
+
+function resolveItemSlug(name: string): string | undefined {
+  if (!name) return undefined;
+  if (itemSlugMap[name]) return itemSlugMap[name];
+  const lower = name.toLowerCase().trim();
+  for (const [key, slug] of Object.entries(itemSlugMap)) {
+    if (lower === key.toLowerCase().trim()) return slug;
+  }
+  if (lower.includes("truck") || lower.includes("vehicle") || lower.includes("riv") || lower.includes("cbrn") || lower.includes("fire fighting")) {
+    return "fire-truck";
+  }
+  if (lower.includes("cafs") || lower.includes("foam")) {
+    return "one-seven-cafs";
+  }
+  if (lower.includes("gas") || lower.includes("detector") || lower.includes("isa 100")) {
+    return "gas-detection";
+  }
+  if (lower.includes("cascade") || lower.includes("breathing") || lower.includes("scba") || lower.includes("air loop")) {
+    return "breathing-air-cascade-systems";
+  }
+  if (lower.includes("xshielder") || lower.includes("x shielder") || lower.includes("mobility")) {
+    return "xshielder";
+  }
+  if (lower.includes("mimes") || lower.includes("telemetry") || lower.includes("data acquisition")) {
+    return "mimes";
+  }
+  if (lower.includes("diving") || lower.includes("decompression")) {
+    return "diving-chambers";
+  }
+  if (lower.includes("consultancy") || lower.includes("hse")) {
+    return "hse-consultancy";
+  }
+  if (lower.includes("explosion proof")) {
+    return "explosion-proof-design";
+  }
+  return undefined;
+}
 
 const defaultPageConfig: SolutionsPageConfig = {
   heroBgImage: "/application.png",
@@ -401,33 +439,38 @@ function getMatchingIndustryId(catParam: string | null, industries: IndustryData
   const direct = industries.find((ind) => ind.id.toLowerCase() === clean);
   if (direct) return direct.id;
 
-  // 2. Alias / Partial matches
-  if (clean.includes("oil")) {
-    return industries.find((ind) => ind.id.toLowerCase().includes("oil"))?.id || "oil-gas";
+  // 2. Normalized hyphen/space match
+  const cleanNormalized = clean.replace(/[\s_]+/g, "-");
+  const directNorm = industries.find((ind) => ind.id.toLowerCase().replace(/[\s_]+/g, "-") === cleanNormalized);
+  if (directNorm) return directNorm.id;
+
+  // 3. Alias / Partial matches
+  if (clean.includes("civil") || clean.includes("rescue")) {
+    return industries.find((ind) => ind.id.toLowerCase().includes("civil") || ind.name.toLowerCase().includes("civil"))?.id || "civil-defence";
   }
-  if (clean.includes("smart") || clean.includes("facility") || clean.includes("petro")) {
+  if (clean.includes("smart") || clean.includes("facility") || clean.includes("facilities") || clean.includes("factory")) {
     return (
       industries.find((ind) => {
         const id = ind.id.toLowerCase();
         const name = ind.name.toLowerCase();
-        return id.includes("smart") || id.includes("petro") || name.includes("smart") || name.includes("petro");
-      })?.id || "petrochemical"
+        return id.includes("smart") || id.includes("facility") || name.includes("smart") || name.includes("facility");
+      })?.id || "smart-industrial-facilities"
     );
   }
-  if (clean.includes("civil")) {
-    return industries.find((ind) => ind.id.toLowerCase().includes("civil"))?.id || "civil-defense";
+  if (clean.includes("oil") || clean.includes("gas") || clean.includes("hydrocarbon")) {
+    return industries.find((ind) => ind.id.toLowerCase().includes("oil") || ind.name.toLowerCase().includes("oil"))?.id || "oil-and-gas";
   }
-  if (clean.includes("marine") || clean.includes("offshore")) {
-    return industries.find((ind) => ind.id.toLowerCase().includes("marine") || ind.id.toLowerCase().includes("offshore"))?.id || "marine";
+  if (clean.includes("marine") || clean.includes("offshore") || clean.includes("vessel") || clean.includes("deepwater")) {
+    return industries.find((ind) => ind.id.toLowerCase().includes("marine") || ind.id.toLowerCase().includes("offshore") || ind.name.toLowerCase().includes("marine"))?.id || "marine-operations";
   }
-  if (clean.includes("util") || clean.includes("power")) {
-    return industries.find((ind) => ind.id.toLowerCase().includes("util") || ind.id.toLowerCase().includes("power"))?.id || "utility-power";
+  if (clean.includes("util") || clean.includes("power") || clean.includes("grid")) {
+    return industries.find((ind) => ind.id.toLowerCase().includes("util") || ind.id.toLowerCase().includes("power") || ind.name.toLowerCase().includes("util"))?.id || "utilities-and-power";
   }
-  if (clean.includes("defen") || clean.includes("security")) {
-    return industries.find((ind) => ind.id.toLowerCase().includes("defen") || ind.id.toLowerCase().includes("security"))?.id || "defense";
+  if (clean.includes("border") || clean.includes("security") || (clean.includes("defen") && !clean.includes("civil")) || clean.includes("military")) {
+    return industries.find((ind) => ind.id.toLowerCase().includes("border") || ind.id.toLowerCase().includes("security") || (ind.id.toLowerCase().includes("defen") && !ind.id.toLowerCase().includes("civil")) || ind.name.toLowerCase().includes("border"))?.id || "defence-and-border-security";
   }
 
-  // 3. Name match
+  // 4. Name match
   const nameMatch = industries.find(
     (ind) => ind.name.toLowerCase().includes(clean) || clean.includes(ind.name.toLowerCase())
   );
@@ -504,12 +547,12 @@ function SolutionsPageContent() {
   });
 
   useEffect(() => {
-    const typeParam = searchParams.get("type") || searchParams.get("cat") || searchParams.get("tab") || searchParams.get("category");
+    const typeParam = searchParams.get("type");
     if (typeParam === "services" || typeParam === "service") {
       setMainCategory("services");
     } else if (typeParam === "applications" || typeParam === "application") {
       setMainCategory("applications");
-    } else if (typeParam === "solutions" || typeParam === "solution") {
+    } else {
       setMainCategory("solutions");
     }
   }, [searchParams]);
@@ -522,6 +565,15 @@ function SolutionsPageContent() {
       if (matched) {
         setActiveTab(matched);
       }
+    }
+    if (urlCat) {
+      const timer = setTimeout(() => {
+        const el = document.getElementById("industry-solutions");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 150);
+      return () => clearTimeout(timer);
     }
   }, [urlCat, pageConfig.industries]);
 
@@ -621,18 +673,34 @@ function SolutionsPageContent() {
      activeTab.includes("defen") || activeTab.includes("security") ? defaultIndustrySolutionsMap["defence-and-border-security"] :
      defaultIndustrySolutionsMap["oil-and-gas"]);
 
-  const displaySolutions = Object.keys(groupedSolutions).length > 0 
-    ? Object.entries(groupedSolutions).map(([name, items]) => ({
-        name,
-        items: items.map((i) => ({ name: i.title, id: i.id }))
-      }))
-    : fallbackDefaults.map((s) => ({
-        name: s.name,
-        items: s.items.map((it) => {
-          const slug = itemSlugMap[it];
+  const customGroups = Array.isArray(activeIndustry?.items) ? activeIndustry.items : null;
+  const hasCustomIndustryGroups =
+    customGroups &&
+    customGroups.length > 0 &&
+    typeof customGroups[0] === "object" &&
+    customGroups[0] !== null &&
+    "name" in customGroups[0];
+
+  const displaySolutions = hasCustomIndustryGroups && customGroups
+    ? customGroups.map((g: any) => ({
+        name: g.name,
+        items: (g.items || []).map((it: string) => {
+          const slug = resolveItemSlug(it);
           return { name: it, id: slug };
         })
-      }));
+      }))
+    : Object.keys(groupedSolutions).length > 0 
+      ? Object.entries(groupedSolutions).map(([name, items]) => ({
+          name,
+          items: items.map((i) => ({ name: i.title, id: i.id }))
+        }))
+      : fallbackDefaults.map((s) => ({
+          name: s.name,
+          items: s.items.map((it) => {
+            const slug = resolveItemSlug(it);
+            return { name: it, id: slug };
+          })
+        }));
 
   return (
     <>
@@ -921,7 +989,7 @@ function SolutionsPageContent() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.98, y: -10 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
             >
               
               {/* Left Wing: Overview Card */}
@@ -940,10 +1008,9 @@ function SolutionsPageContent() {
                     className="w-full h-full object-cover filter contrast-[1.02] brightness-100 group-hover:scale-103 transition-all duration-[1200ms] ease-out rounded-lg"
                   />
                   <div 
-                    className="absolute bottom-4 left-4 right-4 z-20 flex justify-between items-center bg-[#080c14]/90 border px-3 py-1.5 font-mono text-[9px] tracking-widest rounded-lg backdrop-blur-md"
-                    style={{ borderColor: `${activeIndustry.accent || '#c22026'}50`, color: activeIndustry.accent || '#c22026' }}
+                    className="absolute bottom-4 left-4 right-4 z-20 flex justify-between items-center bg-[#080c14]/95 border border-red-500/40 px-3.5 py-1.5 font-mono text-[10px] font-bold tracking-widest rounded-lg backdrop-blur-md shadow-md"
                   >
-                    <span>{activeIndustry.riskKicker}</span>
+                    <span className="text-red-400 font-bold uppercase tracking-wider">{activeIndustry.riskKicker}</span>
                   </div>
                 </div>
 
@@ -961,7 +1028,7 @@ function SolutionsPageContent() {
 
               {/* Right Wing: High-Performance Solution Grid Matrix */}
               <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {displaySolutions.map((sol) => {
+                {displaySolutions.map((sol: any) => {
                   const isHovered = hoveredSolution === sol.name;
                   return (
                     <div
@@ -994,8 +1061,14 @@ function SolutionsPageContent() {
                             return (
                               <li key={itemIdx} className="text-xs sm:text-sm text-slate-700 font-medium group-hover:text-slate-900 transition-colors">
                                 {path ? (
-                                  <Link href={path} className="hover:text-sky-600 hover:underline transition-colors font-medium">
-                                    {item.name}
+                                  <Link
+                                    href={path}
+                                    className="inline-flex items-center gap-1.5 text-slate-800 hover:text-sky-600 hover:translate-x-0.5 transition-all font-medium group/link"
+                                  >
+                                    <span>{item.name}</span>
+                                    <svg className="w-3 h-3 text-slate-400 group-hover/link:text-sky-600 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                    </svg>
                                   </Link>
                                 ) : (
                                   <span>{item.name}</span>
@@ -1011,7 +1084,74 @@ function SolutionsPageContent() {
               </div>
 
             </motion.div>
-              </AnimatePresence>
+          </AnimatePresence>
+              {/* Section 1.5: Complete Solutions Catalog (Dynamic from Admin) */}
+              {solutionsList.length > 0 && (
+                <div id="solutions-catalog" className="mt-24 pt-16 border-t border-slate-200/80">
+                  <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                    <div className="space-y-2 max-w-2xl">
+                      <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#c22026]">
+                        Engineered Systems Catalog
+                      </span>
+                      <h3 className="text-3xl font-extrabold uppercase text-slate-900 tracking-tight">
+                        All Solutions & Technical Packages ({solutionsList.length})
+                      </h3>
+                      <p className="text-sm text-slate-600 leading-relaxed">
+                        Explore our full catalog of certified mission-critical fire suppression, gas detection, breathing protection, and industrial safety platforms.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {solutionsList.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={`/solutions/${item.id}`}
+                        className="group bg-white border border-slate-200/80 hover:border-[#1e3e8f]/50 rounded-2xl overflow-hidden shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between text-inherit no-underline hover:-translate-y-1 cursor-pointer"
+                      >
+                        <div>
+                          <div className="h-52 w-full bg-slate-950/5 relative overflow-hidden flex items-center justify-center p-3 border-b border-slate-100">
+                            {item.imageUrl && item.imageUrl.trim() !== "" ? (
+                              <img
+                                src={formatImageUrl(item.imageUrl)}
+                                alt={item.title}
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLImageElement).src = "/products/default-fire-fighting-rescue.png";
+                                }}
+                                className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm"
+                              />
+                            ) : (
+                              <div className="flex flex-col items-center justify-center text-slate-300 gap-1.5">
+                                <Layers className="w-8 h-8 stroke-[1.5]" />
+                                <span className="text-[10px] font-mono font-bold uppercase tracking-wider">Eastwind Safety</span>
+                              </div>
+                            )}
+                            {item.subLabel && (
+                              <span className="absolute top-3 left-3 text-[9px] font-mono font-bold uppercase text-orange-600 bg-white/95 border border-orange-200 px-2 py-0.5 rounded-md shadow-2xs">
+                                {item.subLabel}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="p-5 space-y-2.5">
+                            <h4 className="text-base font-extrabold text-slate-900 leading-snug group-hover:text-[#1e3e8f] transition-colors line-clamp-2">
+                              {item.title}
+                            </h4>
+                            <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed font-normal">
+                              {item.description}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="px-5 pb-5 pt-3 border-t border-slate-100/80 flex items-center justify-between text-xs font-bold text-[#1e3e8f] group-hover:text-[#c22026] transition-colors">
+                          <span className="font-mono text-[11px] uppercase tracking-wider">Explore Solution Details</span>
+                          <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
         </section>

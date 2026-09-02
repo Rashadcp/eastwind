@@ -35,7 +35,7 @@ interface IndustryItem {
   accent: string;
   image: string;
   description: string;
-  items?: any;
+  items?: { name: string; items: string[] }[];
 }
 
 interface CorePortfolioItem {
@@ -44,6 +44,85 @@ interface CorePortfolioItem {
   items: string[];
   icon: string;
 }
+
+const DEFAULT_INDUSTRY_GROUPS: Record<string, { name: string; items: string[] }[]> = {
+  "civil-defence": [
+    {
+      name: "Fleet & Specialized Vehicles",
+      items: ["Asset management systems AI integrated fire trucks", "Rescue intervention truck (RIV)", "SCBA trucks", "CBRN Vehicles"]
+    },
+    {
+      name: "Extinguishing & Incident Response",
+      items: ["Compressed air form system (CAFS)", "Emergency response system"]
+    }
+  ],
+  "smart-industrial-facilities": [
+    {
+      name: "Factory Digitalization & IIoT",
+      items: ["Smart factories", "Plant Ai", "Wireless data acquisition"]
+    },
+    {
+      name: "Wireless Systems & Gas Safety",
+      items: ["SIL2 wireless gas detection systems", "ISA 100, LUARA, HART, Wireless systems"]
+    },
+    {
+      name: "Emergency Response & Operations",
+      items: ["Emergency response solution", "Plant OPS"]
+    }
+  ],
+  "oil-and-gas": [
+    {
+      name: "Wireless & Telemetry Systems",
+      items: ["End-End ISA 100 wireless gas detection system", "Plant OPS", "Air loops systems", "Wireless data acquisition"]
+    },
+    {
+      name: "Containment & Safety Infrastructure",
+      items: ["TGR(temporary refuge chamber)", "LER", "Analyzer shelters"]
+    },
+    {
+      name: "Fire Fighting & Operations",
+      items: ["Tank farm fire fighting", "Digital mobility-x shielder", "H2s shelter rental", "Breathing air cascade system"]
+    },
+    {
+      name: "Engineering & Risk Consultancy",
+      items: ["HSE consultancy", "Explosion proof design consultancy"]
+    }
+  ],
+  "marine-operations": [
+    {
+      name: "Vessel Containment & Integrity",
+      items: ["Damage control system", "TGR", "DE Compression champeers"]
+    },
+    {
+      name: "Wireless & Telecom Infrastructures",
+      items: ["Wireless data acquisition and LAUARA 1SA 100, WIRELESS HART", "Digital mobility Xshielder", "Plant OPS"]
+    },
+    {
+      name: "Field Services & Rentals",
+      items: ["H2S shelter rental", "Air loops systems", "Breathing air cascade solution"]
+    }
+  ],
+  "utilities-and-power": [
+    {
+      name: "Grid Telemetry & Sampling",
+      items: ["Sampling systems", "Wireless infrastructure", "Smart Facility", "Digital mobility Xshilder"]
+    },
+    {
+      name: "Thermal & Physical Containment",
+      items: ["Analyzer shelters", "Explosion proof design consultancy"]
+    }
+  ],
+  "defence-and-border-security": [
+    {
+      name: "Secure Telemetry & Modules",
+      items: ["Wireless data acquisition", "Digital mobility Xshielder", "TGR"]
+    },
+    {
+      name: "Blast Isolation & Tactical Shielding",
+      items: ["LER", "Analyzer shelters", "Explosion proof design consultancy"]
+    }
+  ]
+};
 
 export default function UnifiedAdminSolutionsPage() {
   const [activeTab, setActiveTab] = useState<"catalog" | "page_layout">("catalog");
@@ -69,6 +148,7 @@ export default function UnifiedAdminSolutionsPage() {
   const [formDetailedContent, setFormDetailedContent] = useState<string>("");
   const [formImageUrl, setFormImageUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
+  const [savingItem, setSavingItem] = useState<boolean>(false);
 
   // Integration Process Form State
   const [formIntegrationTagline, setFormIntegrationTagline] = useState<string>("Lifecycle Sequence");
@@ -110,7 +190,8 @@ export default function UnifiedAdminSolutionsPage() {
       riskKicker: "Metropolitan Safety Infrastructure & Emergency Response",
       accent: "#991b1b",
       image: "/products/default-fire-fighting-rescue.png",
-      description: "Equipping civil defence authorities with rapid intervention vehicles, CAFS fire suppression, and SCBA breathing protection systems."
+      description: "Equipping civil defence authorities with rapid intervention vehicles, CAFS fire suppression, and SCBA breathing protection systems.",
+      items: DEFAULT_INDUSTRY_GROUPS["civil-defence"]
     },
     {
       id: "smart-industrial-facilities",
@@ -118,15 +199,17 @@ export default function UnifiedAdminSolutionsPage() {
       riskKicker: "Automated Facility Health & Process Reliability",
       accent: "#c22026",
       image: "/products/default-process-instrumentation.png",
-      description: "Deploying enterprise digital twins, automated AI permit tracking, and wireless acoustic leak sensors inside petrochemical plants."
+      description: "Deploying enterprise digital twins, automated AI permit tracking, and wireless acoustic leak sensors inside petrochemical plants.",
+      items: DEFAULT_INDUSTRY_GROUPS["smart-industrial-facilities"]
     },
     {
       id: "oil-and-gas",
       name: "Oil and Gas",
       riskKicker: "Intelligent Hydrocarbon Operations & Wireless Gas Detection",
-      accent: "#1e3e8f",
+      accent: "#c22026",
       image: "/products/default-wireless-gas-detection.png",
-      description: "Integrated hydrocarbon safety, intrinsic ISA 100 wireless gas detection, temporary refuge chambers, and tank farm fire fighting."
+      description: "Integrated hydrocarbon safety, intrinsic ISA 100 wireless gas detection, temporary refuge chambers, and tank farm fire fighting.",
+      items: DEFAULT_INDUSTRY_GROUPS["oil-and-gas"]
     },
     {
       id: "marine-operations",
@@ -134,15 +217,17 @@ export default function UnifiedAdminSolutionsPage() {
       riskKicker: "Harsh Deepwater Infrastructure Resilience & Damage Control",
       accent: "#b45309",
       image: "/products/default-explosion-proof-products.png",
-      description: "Offshore platform and vessel safety, emergency damage control kits, hull breach shoring, and breathing air cascades."
+      description: "Offshore platform and vessel safety, emergency damage control kits, hull breach shoring, and breathing air cascades.",
+      items: DEFAULT_INDUSTRY_GROUPS["marine-operations"]
     },
     {
       id: "utilities-and-power",
       name: "Utilities and Power",
       riskKicker: "Critical Grid Asset Safeguarding & Thermal Monitoring",
-      accent: "#1e3e8f",
+      accent: "#c22026",
       image: "/products/default-process-instrumentation.png",
-      description: "Securing electrical substations, gas pipelines, and SWAS water sampling systems with automated thermal monitoring."
+      description: "Securing electrical substations, gas pipelines, and SWAS water sampling systems with automated thermal monitoring.",
+      items: DEFAULT_INDUSTRY_GROUPS["utilities-and-power"]
     },
     {
       id: "defence-and-border-security",
@@ -150,7 +235,8 @@ export default function UnifiedAdminSolutionsPage() {
       riskKicker: "National Level Security & Blast-Resistant Modules",
       accent: "#b45309",
       image: "/products/default-respiratory-protection.png",
-      description: "High-grade perimeter defense, secure wireless telemetry backbones, and blast-resistant modular security offices."
+      description: "High-grade perimeter defense, secure wireless telemetry backbones, and blast-resistant modular security offices.",
+      items: DEFAULT_INDUSTRY_GROUPS["defence-and-border-security"]
     }
   ]);
 
@@ -235,7 +321,30 @@ export default function UnifiedAdminSolutionsPage() {
         if (data.industriesTagline) setIndustriesTagline(data.industriesTagline);
         if (data.industriesTitle) setIndustriesTitle(data.industriesTitle);
         if (data.industriesDesc) setIndustriesDesc(data.industriesDesc);
-        if (data.industries && data.industries.length > 0) setIndustries(data.industries);
+        if (data.industries && data.industries.length > 0) {
+          const normalized = data.industries.map((ind: any) => {
+            const hasValidGroups =
+              Array.isArray(ind.items) &&
+              ind.items.length > 0 &&
+              typeof ind.items[0] === "object" &&
+              ind.items[0] !== null &&
+              "name" in ind.items[0] &&
+              "items" in ind.items[0];
+
+            return {
+              ...ind,
+              items: hasValidGroups
+                ? ind.items
+                : (DEFAULT_INDUSTRY_GROUPS[ind.id] || DEFAULT_INDUSTRY_GROUPS[ind.name?.toLowerCase()?.replace(/[^a-z0-9]+/g, "-")] || [
+                    {
+                      name: "Core Systems & Capabilities",
+                      items: ["Field Integration System", "Compliance Monitoring Skid"]
+                    }
+                  ])
+            };
+          });
+          setIndustries(normalized);
+        }
         if (data.capabilitiesTagline) setCapabilitiesTagline(data.capabilitiesTagline);
         if (data.capabilitiesTitle) setCapabilitiesTitle(data.capabilitiesTitle);
         if (data.capabilitiesDesc) setCapabilitiesDesc(data.capabilitiesDesc);
@@ -274,28 +383,28 @@ export default function UnifiedAdminSolutionsPage() {
     setFormAccent("blue");
     setFormDescription("");
     setFormDetailedContent("");
-    setFormImageUrl("/predictive_intelligence.webp");
-    setFormIntegrationTagline("Lifecycle Sequence");
-    setFormIntegrationTitle("The Integration Process");
-    setFormIntegrationDescription("We translate abstract regulatory mandates into continuous physical and operational resilience across your installations.");
+    setFormImageUrl("");
+    setFormIntegrationTagline("");
+    setFormIntegrationTitle("");
+    setFormIntegrationDescription("");
     setFormIntegrationSteps([
       {
         stepNumber: "01",
-        title: "Environment Evaluation",
-        description: "Industrial fields map out distinct exposure metrics. We isolate localized volatile gas indicators and ambient temperature boundaries to define system protections accurately.",
-        phase: "Initial Assessment"
+        title: "",
+        description: "",
+        phase: ""
       },
       {
         stepNumber: "02",
-        title: "Custom Infrastructure Integration",
-        description: "Our professional systems represent the pinnacle of industrial safety engineering. We work directly with leading global safety brands to design, supply, install and calibrate instrumentation loops.",
-        phase: "System Deployment"
+        title: "",
+        description: "",
+        phase: ""
       },
       {
         stepNumber: "03",
-        title: "Lower Total Cost of Ownership",
-        description: "By linking engineering hardware loops directly into active plant automation networks, our platforms consistently maintain safety thresholds while lowering total cost of ownership.",
-        phase: "Operations and Support"
+        title: "",
+        description: "",
+        phase: ""
       }
     ]);
     setShowModal(true);
@@ -311,31 +420,31 @@ export default function UnifiedAdminSolutionsPage() {
     setFormAccent(item.accent || "blue");
     setFormDescription(item.description || "");
     setFormDetailedContent(item.detailedContent || "");
-    setFormImageUrl(item.imageUrl || "/predictive_intelligence.webp");
-    setFormIntegrationTagline(item.integrationTagline || "Lifecycle Sequence");
-    setFormIntegrationTitle(item.integrationTitle || "The Integration Process");
-    setFormIntegrationDescription(item.integrationDescription || "We translate abstract regulatory mandates into continuous physical and operational resilience across your installations.");
+    setFormImageUrl(item.imageUrl || "");
+    setFormIntegrationTagline(item.integrationTagline || "");
+    setFormIntegrationTitle(item.integrationTitle || "");
+    setFormIntegrationDescription(item.integrationDescription || "");
     setFormIntegrationSteps(
       item.integrationSteps && item.integrationSteps.length > 0
         ? item.integrationSteps
         : [
             {
               stepNumber: "01",
-              title: "Environment Evaluation",
-              description: "Industrial fields map out distinct exposure metrics. We isolate localized volatile gas indicators and ambient temperature boundaries to define system protections accurately.",
-              phase: "Initial Assessment"
+              title: "",
+              description: "",
+              phase: ""
             },
             {
               stepNumber: "02",
-              title: "Custom Infrastructure Integration",
-              description: item.detailedContent || "Our professional systems represent the pinnacle of industrial safety engineering. We work directly with leading global safety brands to design, supply, install and calibrate instrumentation loops.",
-              phase: "System Deployment"
+              title: "",
+              description: "",
+              phase: ""
             },
             {
               stepNumber: "03",
-              title: "Lower Total Cost of Ownership",
-              description: "By linking engineering hardware loops directly into active plant automation networks, our platforms consistently maintain safety thresholds while lowering total cost of ownership.",
-              phase: "Operations and Support"
+              title: "",
+              description: "",
+              phase: ""
             }
           ]
     );
@@ -351,12 +460,16 @@ export default function UnifiedAdminSolutionsPage() {
       return;
     }
 
+    setSavingItem(true);
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const token = localStorage.getItem("admin_token");
       const generatedId = formId || formTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-      const cleanImageUrl = await sanitizeImage(formImageUrl.trim(), token, baseUrl);
+      let cleanImageUrl = formImageUrl.trim();
+      if (cleanImageUrl.startsWith("data:image/")) {
+        cleanImageUrl = await sanitizeImage(cleanImageUrl, token, baseUrl);
+      }
 
       const payload = {
         id: generatedId,
@@ -385,14 +498,22 @@ export default function UnifiedAdminSolutionsPage() {
         body: JSON.stringify(payload)
       });
 
+      if (res.status === 401) {
+        throw new Error("Admin session has expired. Please log in again to save.");
+      }
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to save solution item");
 
       setSuccess(`Solution item "${formTitle}" saved successfully!`);
-      setShowModal(false);
-      fetchSolutions();
+      setTimeout(() => {
+        setShowModal(false);
+        fetchSolutions();
+      }, 400);
     } catch (err: any) {
       setError(err.message || "Failed to save solution item.");
+    } finally {
+      setSavingItem(false);
     }
   };
 
@@ -535,13 +656,76 @@ export default function UnifiedAdminSolutionsPage() {
         riskKicker: "SAFETY COMPLIANCE HAZARD CONTROL",
         accent: "#1e3e8f",
         image: "/predictive_intelligence.webp",
-        description: "Comprehensive hazard mitigation and continuous safety telemetry integration."
+        description: "Comprehensive hazard mitigation and continuous safety telemetry integration.",
+        items: [
+          {
+            name: "Core Equipment & Capabilities",
+            items: ["Primary Safety Framework", "Integrated Field Module"]
+          }
+        ]
       }
     ]);
   };
 
   const handleDeleteIndustryCard = (index: number) => {
     setIndustries(industries.filter((_, idx) => idx !== index));
+  };
+
+  // Helpers for Industry Solution Columns & Bullet Items
+  const handleAddIndustryColumn = (indIdx: number) => {
+    const updated = [...industries];
+    const ind = updated[indIdx];
+    if (!ind) return;
+    if (!Array.isArray(ind.items)) ind.items = [];
+    ind.items.push({
+      name: "New Solution Column",
+      items: ["New System Capability Item"]
+    });
+    setIndustries(updated);
+  };
+
+  const handleUpdateColumnTitle = (indIdx: number, colIdx: number, newTitle: string) => {
+    const updated = [...industries];
+    const ind = updated[indIdx];
+    if (!ind || !Array.isArray(ind.items) || !ind.items[colIdx]) return;
+    ind.items[colIdx].name = newTitle;
+    setIndustries(updated);
+  };
+
+  const handleDeleteIndustryColumn = (indIdx: number, colIdx: number) => {
+    const updated = [...industries];
+    const ind = updated[indIdx];
+    if (!ind || !Array.isArray(ind.items)) return;
+    ind.items = ind.items.filter((_, i) => i !== colIdx);
+    setIndustries(updated);
+  };
+
+  const handleUpdateBulletItem = (indIdx: number, colIdx: number, bulletIdx: number, newText: string) => {
+    const updated = [...industries];
+    const ind = updated[indIdx];
+    if (!ind || !Array.isArray(ind.items) || !ind.items[colIdx] || !Array.isArray(ind.items[colIdx].items)) return;
+    ind.items[colIdx].items[bulletIdx] = newText;
+    setIndustries(updated);
+  };
+
+  const handleDeleteBulletItem = (indIdx: number, colIdx: number, bulletIdx: number) => {
+    const updated = [...industries];
+    const ind = updated[indIdx];
+    if (!ind || !Array.isArray(ind.items) || !ind.items[colIdx] || !Array.isArray(ind.items[colIdx].items)) return;
+    ind.items[colIdx].items = ind.items[colIdx].items.filter((_, i) => i !== bulletIdx);
+    setIndustries(updated);
+  };
+
+  const handleAddBulletItem = (indIdx: number, colIdx: number, text: string) => {
+    if (!text.trim()) return;
+    const updated = [...industries];
+    const ind = updated[indIdx];
+    if (!ind) return;
+    if (!Array.isArray(ind.items)) ind.items = [];
+    if (!ind.items[colIdx]) return;
+    if (!Array.isArray(ind.items[colIdx].items)) ind.items[colIdx].items = [];
+    ind.items[colIdx].items.push(text.trim());
+    setIndustries(updated);
   };
 
   // Add / Delete Capability Cards Helpers (Tab 2)
@@ -590,8 +774,11 @@ export default function UnifiedAdminSolutionsPage() {
           setter(uploadData.url);
           setSuccess(`Image '${file.name}' uploaded successfully!`);
           setUploading(false);
+          e.target.value = "";
           return;
         }
+      } else if (res.status === 401) {
+        setError("Admin session has expired. Please log in again to upload photos.");
       }
     } catch (err) {
       console.warn("Direct upload fallback to client compression:", err);
@@ -609,8 +796,8 @@ export default function UnifiedAdminSolutionsPage() {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement("canvas");
-        const MAX_WIDTH = 800;
-        const MAX_HEIGHT = 800;
+        const MAX_WIDTH = 1920;
+        const MAX_HEIGHT = 1920;
         let width = img.width;
         let height = img.height;
 
@@ -631,7 +818,7 @@ export default function UnifiedAdminSolutionsPage() {
         const ctx = canvas.getContext("2d");
         if (ctx) {
           ctx.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL(file.type === "image/png" ? "image/png" : "image/jpeg", 0.7);
+          const compressedDataUrl = canvas.toDataURL(file.type === "image/png" ? "image/png" : "image/jpeg", 0.88);
           setter(compressedDataUrl);
           setSuccess(`Image '${file.name}' attached successfully!`);
         } else {
@@ -650,12 +837,33 @@ export default function UnifiedAdminSolutionsPage() {
       setUploading(false);
     };
     reader.readAsDataURL(file);
+    e.target.value = "";
   };
 
-  const filteredSolutions = solutions.filter((s: any) =>
-    s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (s.description && s.description.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredSolutions = solutions.filter((s: any) => {
+    if (!s) return false;
+    const q = (searchQuery || "").toLowerCase().trim();
+    if (!q) return true;
+
+    const qNormalized = q.replace(/[-_\s]+/g, " ");
+    const title = (s.title || "").toLowerCase();
+    const titleNormalized = title.replace(/[-_\s]+/g, " ");
+    const id = (s.id || "").toLowerCase();
+    const idNormalized = id.replace(/[-_\s]+/g, " ");
+    const subLabel = (s.subLabel || "").toLowerCase();
+    const tagline = (s.tagline || "").toLowerCase();
+    const desc = (s.description || "").toLowerCase();
+
+    return (
+      title.includes(q) ||
+      titleNormalized.includes(qNormalized) ||
+      id.includes(q) ||
+      idNormalized.includes(qNormalized) ||
+      subLabel.includes(q) ||
+      tagline.includes(q) ||
+      desc.includes(q)
+    );
+  });
 
   return (
     <div className="space-y-6 font-sans text-slate-800">
@@ -716,23 +924,28 @@ export default function UnifiedAdminSolutionsPage() {
       )}
 
       {/* TAB NAVIGATION */}
-      <div className="flex border-b border-slate-200 space-x-4">
+      <div className="flex items-center gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit border border-slate-200/90 shadow-2xs">
         <button
           onClick={() => setActiveTab("catalog")}
-          className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all border-b-2 cursor-pointer ${
+          className={`px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider rounded-xl transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === "catalog"
-              ? "border-orange-600 text-orange-600"
-              : "border-transparent text-slate-500 hover:text-slate-800"
+              ? "bg-white text-orange-600 shadow-xs border border-slate-200"
+              : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
           }`}
         >
-          Manage Solution Items ({solutions.length})
+          <span>Manage Solution Items</span>
+          <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+            activeTab === "catalog" ? "bg-orange-100 text-orange-700" : "bg-slate-200 text-slate-600"
+          }`}>
+            {solutions.length}
+          </span>
         </button>
         <button
           onClick={() => setActiveTab("page_layout")}
-          className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all border-b-2 cursor-pointer ${
+          className={`px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
             activeTab === "page_layout"
-              ? "border-orange-600 text-orange-600"
-              : "border-transparent text-slate-500 hover:text-slate-800"
+              ? "bg-white text-orange-600 shadow-xs border border-slate-200"
+              : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
           }`}
         >
           Manage Solutions Page Banners & Layout
@@ -743,21 +956,44 @@ export default function UnifiedAdminSolutionsPage() {
         <div className="space-y-6">
           {/* Controls Bar */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-            <div className="w-full md:w-80">
+            <div className="w-full md:w-96 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
               <input
                 type="text"
-                placeholder="Search solutions by title..."
+                placeholder="Search solutions by title, ID (e.g. gas, fire, mimes)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:border-orange-500 focus:outline-none"
+                className="w-full pl-9 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:bg-white focus:border-orange-500 focus:outline-none transition-colors"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer font-bold text-xs"
+                  title="Clear search"
+                >
+                  ✕
+                </button>
+              )}
             </div>
-            <span className="text-xs text-slate-500 font-mono font-bold">
-              Showing {filteredSolutions.length} of {solutions.length} solution items
-            </span>
+            <div className="flex items-center gap-3">
+              {searchQuery && (
+                <span className="text-xs text-orange-600 font-bold bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
+                  Filtering: &ldquo;{searchQuery}&rdquo;
+                </span>
+              )}
+              <span className="text-xs text-slate-500 font-mono font-bold">
+                Showing {filteredSolutions.length} of {solutions.length} solution items
+              </span>
+            </div>
           </div>
 
           {/* Solutions Catalog Grid with View, Edit, Delete Actions */}
+
           {loading ? (
             <div className="p-12 text-center text-slate-400 text-xs font-mono">Loading Solution Catalog...</div>
           ) : filteredSolutions.length === 0 ? (
@@ -813,6 +1049,18 @@ export default function UnifiedAdminSolutionsPage() {
 
                     {/* ACTION BUTTONS: VIEW, EDIT, DELETE */}
                     <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                      <a
+                        href={`/solutions/${item.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-2.5 py-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                        title="Open public page for this solution"
+                      >
+                        <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        <span>Live Page</span>
+                      </a>
                       <button
                         onClick={() => setViewItem(item)}
                         className="px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
@@ -853,23 +1101,17 @@ export default function UnifiedAdminSolutionsPage() {
         </div>
       ) : (
         <div className="space-y-8">
-          <div className="p-4 bg-orange-50 border border-orange-200 rounded-xl text-orange-950 text-xs flex items-center justify-between">
-            <div>
-              <strong className="flex items-center gap-1.5 font-bold mb-0.5">
-                <svg className="w-4 h-4 text-orange-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Website Location:
-              </strong>
-              <span>Edits all page banners, photos, headings, titles, descriptions, and intake text on <strong className="underline">http://localhost:3000/solutions</strong>.</span>
-            </div>
+          <div className="p-4 bg-orange-50/60 border border-orange-200/60 rounded-xl text-orange-950 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <span className="font-medium text-slate-700">
+              Configuring the dedicated <strong className="text-orange-900 font-bold">/solutions</strong> landing page banners, sector matrices, capability portfolios, and partner logos.
+            </span>
             <button
+              type="button"
               onClick={handleSaveSolutionsPageLayout}
               disabled={savingPage}
-              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-md shrink-0 ml-4 cursor-pointer"
+              className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 shrink-0 flex items-center gap-1.5 self-start sm:self-auto"
             >
-              {savingPage ? "Saving Layout..." : "Save Solutions Page Banners & Photos"}
+              {savingPage ? "Saving..." : "Save Layout Changes"}
             </button>
           </div>
 
@@ -883,18 +1125,18 @@ export default function UnifiedAdminSolutionsPage() {
             <div className="space-y-2">
               <label className="block text-xs font-bold text-slate-700">Hero Background Image</label>
               {heroBgImage && (
-                <div className="h-44 w-full bg-slate-950 rounded-xl overflow-hidden relative border border-slate-200 flex items-center justify-center">
+                <div className="w-fit max-w-xl rounded-xl overflow-hidden border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
                   <img
                     src={formatImageUrl(heroBgImage, "/solution.png")}
                     alt="Hero Background"
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src = "/solution.png";
                     }}
-                    className="max-h-full max-w-full object-contain"
+                    className="h-48 sm:h-56 w-auto max-w-full rounded-lg object-contain block"
                   />
                 </div>
               )}
-              <div className="flex gap-2 items-center text-xs">
+              <div className="flex gap-2 items-center text-xs max-w-xl">
                 <input type="text" value={heroBgImage} onChange={(e) => setHeroBgImage(e.target.value)} className="w-full p-2.5 border rounded-lg font-mono text-[11px]" />
                 <label className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg cursor-pointer shrink-0">
                   {uploading ? "Uploading..." : "Upload Photo"}
@@ -933,108 +1175,252 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
               {industries.map((ind, idx) => (
-                <div key={idx} className="p-4 border rounded-xl bg-slate-50 space-y-3 relative group">
-                  <div className="flex justify-between items-center font-bold text-slate-800 border-b pb-2">
-                    <input type="text" value={ind.name} onChange={(e) => {
-                      const updated = [...industries];
-                      updated[idx].name = e.target.value;
-                      setIndustries(updated);
-                    }} className="font-extrabold text-slate-800 bg-transparent border-b border-dashed" />
+                <div key={idx} className="p-4 border border-slate-200 rounded-xl bg-slate-50 space-y-3 relative group shadow-2xs">
+                  <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-2.5">
+                    <input
+                      type="text"
+                      value={ind.name}
+                      onChange={(e) => {
+                        const updated = [...industries];
+                        updated[idx].name = e.target.value;
+                        setIndustries(updated);
+                      }}
+                      placeholder="Industry Sector Name"
+                      className="flex-1 min-w-0 px-3 py-1.5 font-extrabold text-slate-800 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-sm shadow-2xs"
+                    />
                     
-                    <div className="flex items-center gap-2">
-                      <span className="text-orange-600 font-mono text-[11px]">{ind.id}</span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="whitespace-nowrap shrink-0 text-orange-600 font-mono text-[11px] bg-orange-50 border border-orange-200/80 px-2.5 py-1 rounded-md font-bold tracking-tight">
+                        {ind.id}
+                      </span>
                       <button
                         type="button"
                         onClick={() => handleDeleteIndustryCard(idx)}
-                        className="text-red-500 hover:text-red-700 font-bold text-xs cursor-pointer px-2.5 py-1 bg-red-50 hover:bg-red-100 rounded-lg transition-colors flex items-center gap-1"
+                        className="text-red-600 hover:text-red-700 font-bold text-xs cursor-pointer px-3 py-1.5 bg-red-50 hover:bg-red-100 border border-red-200/70 rounded-lg transition-colors flex items-center gap-1.5 shrink-0"
                         title="Delete Card"
                       >
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
-                        <span>Delete</span>
+                        <span className="whitespace-nowrap">Delete</span>
                       </button>
                     </div>
                   </div>
 
-                    {/* Industry Image & Upload */}
-                    <div className="space-y-1">
-                      <label className="block text-[11px] font-bold text-slate-600">Card Photo</label>
-                      <div className="h-28 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center p-1 border relative">
-                        {ind.image && ind.image.trim() !== "" ? (
-                          <img
-                            key={ind.image}
-                            src={formatImageUrl(ind.image)}
-                            alt={ind.name}
-                            onError={(e) => {
-                              const el = e.currentTarget as HTMLImageElement;
-                              el.style.display = "none";
-                              if (el.nextElementSibling) {
-                                (el.nextElementSibling as HTMLElement).style.display = "flex";
-                              }
+                    {/* Compact & Clean Industry Image Upload */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Sector Image</label>
+                      <div className="flex items-center gap-3 p-2 bg-white border border-slate-200 rounded-xl shadow-2xs">
+                        <div className="w-16 h-14 rounded-lg bg-slate-900 border border-slate-800 overflow-hidden flex items-center justify-center shrink-0 p-1 relative">
+                          {ind.image && ind.image.trim() !== "" ? (
+                            <img
+                              key={ind.image}
+                              src={formatImageUrl(ind.image)}
+                              alt={ind.name}
+                              onError={(e) => {
+                                const el = e.currentTarget as HTMLImageElement;
+                                el.style.display = "none";
+                                if (el.nextElementSibling) {
+                                  (el.nextElementSibling as HTMLElement).style.display = "flex";
+                                }
+                              }}
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          ) : null}
+                          <div
+                            style={{ display: ind.image && ind.image.trim() !== "" ? "none" : "flex" }}
+                            className="flex flex-col items-center justify-center text-slate-500 text-[9px] font-mono text-center"
+                          >
+                            <span>No Photo</span>
+                          </div>
+                        </div>
+
+                        <div className="flex-1 min-w-0 flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={ind.image}
+                            onChange={(e) => {
+                              const updated = [...industries];
+                              updated[idx].image = e.target.value;
+                              setIndustries(updated);
                             }}
-                            className="max-h-full max-w-full object-contain"
+                            placeholder="/uploads/... or paste image URL"
+                            className="flex-1 min-w-0 px-2.5 py-1.5 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-orange-500"
                           />
-                        ) : null}
-                        <div
-                          style={{ display: ind.image && ind.image.trim() !== "" ? "none" : "flex" }}
-                          className="flex flex-col items-center justify-center text-center p-2 space-y-0.5 text-slate-400"
-                        >
-                          <svg className="w-6 h-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          <span className="text-[10px] font-mono font-medium text-slate-400">No Image Found</span>
+                          <label className="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg cursor-pointer shrink-0 transition-colors shadow-2xs">
+                            Upload
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleFileUpload(e, (url) => {
+                                const updated = [...industries];
+                                updated[idx].image = url;
+                                setIndustries(updated);
+                              })}
+                              className="hidden"
+                            />
+                          </label>
+                          {ind.image && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = [...industries];
+                                updated[idx].image = "";
+                                setIndustries(updated);
+                              }}
+                              className="text-slate-400 hover:text-red-600 text-xs font-bold px-1.5 py-1 rounded transition-colors cursor-pointer shrink-0"
+                              title="Remove photo"
+                            >
+                              ✕
+                            </button>
+                          )}
                         </div>
                       </div>
-                    <div className="flex gap-2">
-                      <input type="text" value={ind.image} onChange={(e) => {
-                        const updated = [...industries];
-                        updated[idx].image = e.target.value;
-                        setIndustries(updated);
-                      }} className="w-full p-2 border rounded text-[10px] font-mono" />
-                      <label className="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded text-[10px] cursor-pointer shrink-0">
-                        Upload
-                        <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, (url) => {
-                          const updated = [...industries];
-                          updated[idx].image = url;
-                          setIndustries(updated);
-                        })} className="hidden" />
-                      </label>
                     </div>
-                  </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-0.5">Risk Kicker Tagline</label>
-                    <input type="text" value={ind.riskKicker} onChange={(e) => {
-                      const updated = [...industries];
-                      updated[idx].riskKicker = e.target.value;
-                      setIndustries(updated);
-                    }} className="w-full p-2 border rounded font-mono text-[10px]" />
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-0.5">Card Description</label>
-                    <textarea rows={2} value={ind.description} onChange={(e) => {
-                      const updated = [...industries];
-                      updated[idx].description = e.target.value;
-                      setIndustries(updated);
-                    }} className="w-full p-2 border rounded" />
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-0.5">Category Products / Sub-solutions (comma-separated for Navbar & Details)</label>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Risk Kicker Tagline</label>
                     <input
                       type="text"
-                      placeholder="e.g. Wireless Gas Detection, Plant OPS, Temporary Refuge Chamber, Tank Farm Fire Fighting"
-                      value={Array.isArray(ind.items) ? ind.items.map((i: any) => typeof i === "string" ? i : i.name).join(", ") : (ind.items || "")}
+                      value={ind.riskKicker}
                       onChange={(e) => {
                         const updated = [...industries];
-                        const itemsArr = e.target.value.split(",").map(s => s.trim()).filter(Boolean).map(name => ({ name, href: `/solutions/${ind.id}` }));
-                        updated[idx].items = itemsArr;
+                        updated[idx].riskKicker = e.target.value;
                         setIndustries(updated);
                       }}
-                      className="w-full p-2 border rounded font-mono text-[10px]"
+                      placeholder="e.g. Metropolitan Safety Infrastructure & Emergency Response"
+                      className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Card Description</label>
+                    <textarea
+                      rows={2}
+                      value={ind.description}
+                      onChange={(e) => {
+                        const updated = [...industries];
+                        updated[idx].description = e.target.value;
+                        setIndustries(updated);
+                      }}
+                      placeholder="Sector scope description..."
+                      className="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-orange-500"
+                    />
+                  </div>
+
+                  {/* Category Solution Columns & Capabilities Builder */}
+                  <div className="pt-3 border-t border-slate-200 space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <label className="block text-xs font-bold text-slate-800">
+                        Solution Columns & Bullet Points
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => handleAddIndustryColumn(idx)}
+                        className="px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-2xs shrink-0"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>Add Column</span>
+                      </button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {(Array.isArray(ind.items) ? ind.items : []).map((col: any, colIdx: number) => {
+                        const colName = typeof col === "string" ? col : (col?.name || `Column ${colIdx + 1}`);
+                        const colItems: string[] = Array.isArray(col?.items) ? col.items : [];
+
+                        return (
+                          <div key={colIdx} className="bg-white border border-slate-200 rounded-xl p-3.5 space-y-2.5 shadow-2xs">
+                            {/* Column Header & Delete button */}
+                            <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                              <input
+                                type="text"
+                                value={colName}
+                                onChange={(e) => handleUpdateColumnTitle(idx, colIdx, e.target.value)}
+                                placeholder="Column Header Title (e.g. Fleet & Specialized Vehicles)"
+                                className="flex-1 min-w-0 px-2.5 py-1.5 text-xs font-bold text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:border-orange-500 focus:bg-white focus:outline-none"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteIndustryColumn(idx, colIdx)}
+                                className="text-rose-500 hover:text-rose-700 p-1.5 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer shrink-0"
+                                title="Delete this column"
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+
+                            {/* Column Items List */}
+                            <div className="space-y-2">
+                              <span className="text-[10px] font-bold text-slate-500">
+                                Bullet Points ({colItems.length})
+                              </span>
+
+                              <div className="space-y-1.5">
+                                {colItems.map((bullet: string, bulletIdx: number) => (
+                                  <div key={bulletIdx} className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-lg px-2.5 py-1 group/item">
+                                    <span className="text-orange-500 text-xs font-bold shrink-0">•</span>
+                                    <input
+                                      type="text"
+                                      value={bullet}
+                                      onChange={(e) => handleUpdateBulletItem(idx, colIdx, bulletIdx, e.target.value)}
+                                      className="flex-1 text-xs text-slate-700 bg-transparent border-0 focus:outline-none py-0.5"
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteBulletItem(idx, colIdx, bulletIdx)}
+                                      className="text-slate-400 hover:text-rose-600 p-1 rounded hover:bg-white transition-colors cursor-pointer"
+                                      title="Remove item"
+                                    >
+                                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Add New Bullet Point Row */}
+                              <div className="flex gap-2 pt-1">
+                                <input
+                                  type="text"
+                                  id={`add-bullet-${idx}-${colIdx}`}
+                                  placeholder="+ Add bullet point & press Enter..."
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.preventDefault();
+                                      const inputEl = e.currentTarget;
+                                      if (inputEl.value.trim()) {
+                                        handleAddBulletItem(idx, colIdx, inputEl.value.trim());
+                                        inputEl.value = "";
+                                      }
+                                    }
+                                  }}
+                                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-50 border border-dashed border-slate-300 rounded-lg focus:bg-white focus:border-orange-500 focus:outline-none"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const inputEl = document.getElementById(`add-bullet-${idx}-${colIdx}`) as HTMLInputElement;
+                                    if (inputEl && inputEl.value.trim()) {
+                                      handleAddBulletItem(idx, colIdx, inputEl.value.trim());
+                                      inputEl.value = "";
+                                    }
+                                  }}
+                                  className="px-3 py-1.5 bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 font-bold text-xs rounded-lg transition-colors cursor-pointer shadow-2xs"
+                                >
+                                  Add
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1056,29 +1442,29 @@ export default function UnifiedAdminSolutionsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               {corePortfolios.map((cp, idx) => (
                 <div key={idx} className="p-4 border rounded-xl bg-slate-50 space-y-2 relative">
-                  <div className="flex items-center justify-between gap-2 border-b pb-2">
-                    <div className="flex items-center gap-2 flex-1">
+                  <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-2.5">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
                       <input type="text" value={cp.icon} onChange={(e) => {
                         const updated = [...corePortfolios];
                         updated[idx].icon = e.target.value;
                         setCorePortfolios(updated);
-                      }} className="w-10 p-1.5 border rounded text-center text-base" />
+                      }} className="w-10 p-1.5 border border-slate-200 bg-white rounded-lg text-center text-base shrink-0" />
                       <input type="text" value={cp.title} onChange={(e) => {
                         const updated = [...corePortfolios];
                         updated[idx].title = e.target.value;
                         setCorePortfolios(updated);
-                      }} className="w-full p-1.5 border rounded font-bold" />
+                      }} className="flex-1 min-w-0 p-1.5 border border-slate-200 bg-white rounded-lg font-bold text-slate-800 text-xs" />
                     </div>
                     <button
                       type="button"
                       onClick={() => handleDeleteCapabilityCard(idx)}
-                      className="text-red-500 hover:text-red-700 font-bold text-xs cursor-pointer px-2.5 py-1 bg-red-50 hover:bg-red-100 rounded-lg transition-colors shrink-0 flex items-center gap-1"
+                      className="text-red-600 hover:text-red-700 font-bold text-xs cursor-pointer px-3 py-1.5 bg-red-50 hover:bg-red-100 border border-red-200/70 rounded-lg transition-colors shrink-0 flex items-center gap-1.5"
                       title="Delete Capability Card"
                     >
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
-                      <span>Delete</span>
+                      <span className="whitespace-nowrap">Delete</span>
                     </button>
                   </div>
                   <textarea rows={2} value={cp.description} onChange={(e) => {
@@ -1141,7 +1527,7 @@ export default function UnifiedAdminSolutionsPage() {
                       <div className="h-20 w-full bg-white border border-slate-200 rounded-xl p-2 flex items-center justify-center relative overflow-hidden shadow-2xs">
                         {defaultLogo ? (
                           <img
-                            src={defaultLogo}
+                            src={formatImageUrl(defaultLogo)}
                             alt={name}
                             className="max-h-14 max-w-[120px] object-contain"
                             onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
@@ -1247,14 +1633,19 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
           </div>
 
-          {/* Save Button */}
-          <div className="flex justify-end pt-4">
+          {/* Form Footer Action Bar */}
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save and publish updates to the Solutions landing page layout</span>
+            </div>
             <button
+              type="button"
               onClick={handleSaveSolutionsPageLayout}
               disabled={savingPage}
-              className="px-8 py-3.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-lg cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
-              {savingPage ? "Saving Layout..." : "Save Solutions Page Banners & Photos"}
+              {savingPage ? "Saving Layout..." : "Save Layout Changes"}
             </button>
           </div>
         </div>
@@ -1266,15 +1657,19 @@ export default function UnifiedAdminSolutionsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowModal(false);
           }}
-          className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 bg-slate-900/70 backdrop-blur-sm overflow-y-auto"
+          className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200"
         >
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl space-y-6 my-auto relative">
-            <div className="sticky top-0 bg-white pt-1 pb-3 z-10 border-b border-slate-100 flex justify-between items-center">
-              <h2 className="text-base font-bold text-slate-800">{isEdit ? "Edit Solution Item & Photo" : "Create New Solution Item"}</h2>
+          <div className="bg-white border border-slate-200/80 rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+            {/* Fixed Header */}
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
+              <div>
+                <h2 className="text-base font-bold text-slate-800 m-0">{isEdit ? "Edit Solution Item & Photo" : "Create New Solution Item"}</h2>
+                <p className="text-xs text-slate-500 m-0 mt-0.5">Configure technical details, equipment photo, and 3-step integration lifecycle.</p>
+              </div>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-900 hover:text-white text-slate-700 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-900 hover:text-white text-slate-700 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <span>Close</span>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -1283,276 +1678,327 @@ export default function UnifiedAdminSolutionsPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSaveSolutionItem} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Solution Title *</label>
-                <input type="text" required value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="e.g. Fire & Gas Detection Systems" className="w-full p-2.5 border rounded-lg font-bold" />
-              </div>
+            {/* Scrollable Form Body */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {error && (
+                <div className="mb-4 p-3.5 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs flex items-center justify-between shadow-xs">
+                  <span>{error}</span>
+                  <button type="button" onClick={clearMessages} className="text-red-500 font-bold ml-2 cursor-pointer">✕</button>
+                </div>
+              )}
+              {success && (
+                <div className="mb-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs flex items-center justify-between shadow-xs">
+                  <span>{success}</span>
+                  <button type="button" onClick={clearMessages} className="text-emerald-600 font-bold ml-2 cursor-pointer">✕</button>
+                </div>
+              )}
+              <form id="solution-item-form" onSubmit={handleSaveSolutionItem} className="space-y-5 text-xs">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Solution Title *</label>
+                  <input type="text" required value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="e.g. Fire & Gas Detection Systems" className="w-full p-2.5 border rounded-lg font-bold" />
+                </div>
 
-              {/* Solution Item Photo with Upload & Preview */}
-              <div className="space-y-2">
-                <label className="block font-bold text-slate-700">Solution Photo / Equipment Image</label>
-                <div className="h-40 w-full bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center p-2 border relative">
-                  {formImageUrl && formImageUrl.trim() !== "" ? (
-                    <img
-                      key={formImageUrl}
-                      src={formatImageUrl(formImageUrl)}
-                      alt="Solution Preview"
-                      onError={(e) => {
-                        const el = e.currentTarget as HTMLImageElement;
-                        el.style.display = "none";
-                        if (el.nextElementSibling) {
-                          (el.nextElementSibling as HTMLElement).style.display = "flex";
-                        }
-                      }}
-                      className="max-h-full max-w-full object-contain"
-                    />
-                  ) : null}
-                  <div
-                    style={{ display: formImageUrl && formImageUrl.trim() !== "" ? "none" : "flex" }}
-                    className="flex flex-col items-center justify-center text-center p-4 space-y-1 text-slate-400"
-                  >
-                    <svg className="w-8 h-8 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span className="text-xs font-mono font-medium text-slate-400">No Image Found</span>
+                {/* Solution Item Photo with Upload & Preview */}
+                <div className="space-y-2">
+                  <label className="block font-bold text-slate-700">Solution Photo / Equipment Image</label>
+                  <div className="h-44 w-full bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center p-2 border relative">
+                    {formImageUrl && formImageUrl.trim() !== "" ? (
+                      <img
+                        key={formImageUrl}
+                        src={formatImageUrl(formImageUrl)}
+                        alt="Solution Preview"
+                        onError={(e) => {
+                          const el = e.currentTarget as HTMLImageElement;
+                          el.style.display = "none";
+                          if (el.nextElementSibling) {
+                            (el.nextElementSibling as HTMLElement).style.display = "flex";
+                          }
+                        }}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    ) : null}
+                    <div
+                      style={{ display: formImageUrl && formImageUrl.trim() !== "" ? "none" : "flex" }}
+                      className="flex flex-col items-center justify-center text-center p-4 space-y-1 text-slate-400"
+                    >
+                      <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span className="text-xs font-mono font-medium text-slate-500">No Image Selected</span>
+                      <span className="text-[11px] text-slate-400">Click &ldquo;Upload Photo&rdquo; or type an image path below</span>
+                    </div>
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <input type="text" value={formImageUrl} onChange={(e) => setFormImageUrl(e.target.value)} className="w-full p-2.5 border rounded-lg font-mono text-[11px]" />
-                  <label className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg cursor-pointer shrink-0">
-                    {uploading ? "Uploading..." : "Upload Photo"}
-                    <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, setFormImageUrl)} className="hidden" />
-                  </label>
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Overview Description *</label>
-                <textarea rows={3} required value={formDescription} onChange={(e) => setFormDescription(e.target.value)} placeholder="Summary description..." className="w-full p-2.5 border rounded-lg" />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Detailed Technical Content</label>
-                <textarea rows={4} value={formDetailedContent} onChange={(e) => setFormDetailedContent(e.target.value)} placeholder="Detailed technical specifications content..." className="w-full p-2.5 border rounded-lg" />
-              </div>
-
-              {/* Integration Process / Lifecycle Sequence Section */}
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
-                <div className="border-b border-slate-200 pb-2">
-                  <h3 className="font-extrabold text-slate-800 text-sm uppercase tracking-wide">
-                    Lifecycle Sequence / The Integration Process
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    Configure the 3-step integration sequence shown on this solution's public page.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block font-bold text-slate-700 mb-1">Section Tagline</label>
+                  <div className="flex gap-2">
                     <input
                       type="text"
-                      value={formIntegrationTagline}
-                      onChange={(e) => setFormIntegrationTagline(e.target.value)}
-                      placeholder="e.g. Lifecycle Sequence"
-                      className="w-full p-2 border rounded-lg bg-white font-medium"
+                      value={formImageUrl}
+                      onChange={(e) => setFormImageUrl(e.target.value)}
+                      placeholder="Enter image path (e.g. /uploads/image.webp) or upload file"
+                      className="w-full p-2.5 border rounded-lg font-mono text-[11px]"
                     />
-                  </div>
-                  <div>
-                    <label className="block font-bold text-slate-700 mb-1">Section Title</label>
-                    <input
-                      type="text"
-                      value={formIntegrationTitle}
-                      onChange={(e) => setFormIntegrationTitle(e.target.value)}
-                      placeholder="e.g. The Integration Process"
-                      className="w-full p-2 border rounded-lg bg-white font-bold"
-                    />
+                    <label className="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg cursor-pointer shrink-0 transition-colors shadow-xs">
+                      {uploading ? "Uploading..." : "Upload Photo"}
+                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, setFormImageUrl)} className="hidden" />
+                    </label>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Section Subtitle / Description</label>
-                  <textarea
-                    rows={2}
-                    value={formIntegrationDescription}
-                    onChange={(e) => setFormIntegrationDescription(e.target.value)}
-                    placeholder="Brief description of the integration workflow..."
-                    className="w-full p-2 border rounded-lg bg-white"
-                  />
+                  <label className="block font-bold text-slate-700 mb-1">Overview Description *</label>
+                  <textarea rows={3} required value={formDescription} onChange={(e) => setFormDescription(e.target.value)} placeholder="Summary description..." className="w-full p-2.5 border rounded-lg" />
                 </div>
 
-                {/* The 3 Lifecycle Sequence Steps */}
-                <div className="space-y-3 pt-2">
-                  <span className="block font-bold text-slate-700 text-xs">Process Steps (01, 02, 03)</span>
-                  {formIntegrationSteps.map((step, sIdx) => (
-                    <div key={sIdx} className="p-3 bg-white border border-slate-200 rounded-lg space-y-2 shadow-2xs">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          value={step.stepNumber || `0${sIdx + 1}`}
-                          onChange={(e) => {
-                            const updated = [...formIntegrationSteps];
-                            updated[sIdx].stepNumber = e.target.value;
-                            setFormIntegrationSteps(updated);
-                          }}
-                          className="w-14 p-1.5 border rounded font-mono font-bold text-center text-xs"
-                          placeholder={`0${sIdx + 1}`}
-                        />
-                        <input
-                          type="text"
-                          value={step.title}
-                          onChange={(e) => {
-                            const updated = [...formIntegrationSteps];
-                            updated[sIdx].title = e.target.value;
-                            setFormIntegrationSteps(updated);
-                          }}
-                          className="flex-1 p-1.5 border rounded font-bold text-xs"
-                          placeholder={`Step ${sIdx + 1} Title`}
-                        />
-                        <input
-                          type="text"
-                          value={step.phase}
-                          onChange={(e) => {
-                            const updated = [...formIntegrationSteps];
-                            updated[sIdx].phase = e.target.value;
-                            setFormIntegrationSteps(updated);
-                          }}
-                          className="w-36 p-1.5 border rounded font-mono text-[10px] uppercase text-slate-600"
-                          placeholder="e.g. Initial Assessment"
-                        />
-                      </div>
-                      <textarea
-                        rows={2}
-                        value={step.description}
-                        onChange={(e) => {
-                          const updated = [...formIntegrationSteps];
-                          updated[sIdx].description = e.target.value;
-                          setFormIntegrationSteps(updated);
-                        }}
-                        className="w-full p-1.5 border rounded text-xs"
-                        placeholder={`Detailed description for Step ${sIdx + 1}...`}
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Detailed Technical Content</label>
+                  <textarea rows={4} value={formDetailedContent} onChange={(e) => setFormDetailedContent(e.target.value)} placeholder="Detailed technical specifications content..." className="w-full p-2.5 border rounded-lg" />
+                </div>
+
+                {/* Integration Process / Lifecycle Sequence Section */}
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
+                  <div className="border-b border-slate-200 pb-2">
+                    <h3 className="font-extrabold text-slate-800 text-sm uppercase tracking-wide">
+                      Lifecycle Sequence / The Integration Process
+                    </h3>
+                    <p className="text-[11px] text-slate-500">
+                      Configure the 3-step integration sequence shown on this solution's public page.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Section Tagline</label>
+                      <input
+                        type="text"
+                        value={formIntegrationTagline}
+                        onChange={(e) => setFormIntegrationTagline(e.target.value)}
+                        placeholder="e.g. LIFECYCLE SEQUENCE"
+                        className="w-full p-2 border rounded text-xs"
                       />
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Section Title</label>
+                      <input
+                        type="text"
+                        value={formIntegrationTitle}
+                        onChange={(e) => setFormIntegrationTitle(e.target.value)}
+                        placeholder="e.g. The Integration Process"
+                        className="w-full p-2 border rounded text-xs font-bold"
+                      />
+                    </div>
+                  </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-slate-100 font-bold text-xs rounded-lg cursor-pointer">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-orange-600 text-white font-bold text-xs rounded-lg shadow-md cursor-pointer">{isEdit ? "Save Solution Item & Photo" : "Create Solution Item"}</button>
+                  <div className="space-y-3 pt-2">
+                    <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">3-Step Integration Workflow</label>
+                    {formIntegrationSteps.map((step, sIdx) => (
+                      <div key={sIdx} className="p-3 bg-white border border-slate-200 rounded-lg space-y-2">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={step.stepNumber || `0${sIdx + 1}`}
+                            onChange={(e) => {
+                              const updated = [...formIntegrationSteps];
+                              updated[sIdx].stepNumber = e.target.value;
+                              setFormIntegrationSteps(updated);
+                            }}
+                            className="w-14 p-1.5 border rounded font-mono font-bold text-center text-xs"
+                            placeholder={`0${sIdx + 1}`}
+                          />
+                          <input
+                            type="text"
+                            value={step.title}
+                            onChange={(e) => {
+                              const updated = [...formIntegrationSteps];
+                              updated[sIdx].title = e.target.value;
+                              setFormIntegrationSteps(updated);
+                            }}
+                            className="flex-1 p-1.5 border rounded font-bold text-xs"
+                            placeholder={`Step ${sIdx + 1} Title`}
+                          />
+                          <input
+                            type="text"
+                            value={step.phase}
+                            onChange={(e) => {
+                              const updated = [...formIntegrationSteps];
+                              updated[sIdx].phase = e.target.value;
+                              setFormIntegrationSteps(updated);
+                            }}
+                            className="w-36 p-1.5 border rounded font-mono text-[10px] uppercase text-slate-600"
+                            placeholder="e.g. Initial Assessment"
+                          />
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={step.description}
+                          onChange={(e) => {
+                            const updated = [...formIntegrationSteps];
+                            updated[sIdx].description = e.target.value;
+                            setFormIntegrationSteps(updated);
+                          }}
+                          className="w-full p-1.5 border rounded text-xs"
+                          placeholder={`Detailed description for Step ${sIdx + 1}...`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            {/* Fixed Footer */}
+            <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50/70 flex items-center justify-between shrink-0">
+              <span className="text-[11px] text-slate-400 font-medium">
+                Make sure required fields (*) are completed
+              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl cursor-pointer transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  form="solution-item-form"
+                  disabled={uploading || savingItem}
+                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md cursor-pointer transition-all flex items-center gap-2"
+                >
+                  <span>{savingItem ? "Saving..." : (isEdit ? "Save Solution Item & Photo" : "Create Solution Item")}</span>
+                </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}
 
-      {/* VIEW DETAILS MODAL (WITH STICKY CLOSE CONTROLS & SMOOTH SCROLLING) */}
+      {/* VIEW DETAILS MODAL */}
       {viewItem && (
         <div
           onClick={(e) => {
             if (e.target === e.currentTarget) setViewItem(null);
           }}
-          className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md overflow-y-auto"
+          className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200"
         >
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl space-y-4 my-auto relative">
-            
-            {/* Sticky Header Close Control */}
-            <div className="sticky top-0 bg-white pt-1 pb-3 z-20 border-b border-slate-100 flex items-center justify-between">
-              <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
-                ID: {viewItem.id}
-              </span>
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+            {/* Fixed Header */}
+            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
+                  ID: {viewItem.id}
+                </span>
+                <span className="text-xs font-bold text-slate-700 truncate max-w-xs">{viewItem.title}</span>
+              </div>
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold rounded-xl shadow-md flex items-center gap-1.5 transition-all cursor-pointer"
+                className="px-3.5 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 hover:border-slate-400 text-slate-800 text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
               >
                 <span>Close</span>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            {/* Photo Banner */}
-            <div className="h-56 w-full bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center p-3 border border-slate-800 shrink-0 relative">
-              {viewItem.imageUrl && viewItem.imageUrl.trim() !== "" ? (
-                <img
-                  key={viewItem.imageUrl}
-                  src={formatImageUrl(viewItem.imageUrl)}
-                  alt={viewItem.title}
-                  onError={(e) => {
-                    const el = e.currentTarget as HTMLImageElement;
-                    el.style.display = "none";
-                    if (el.nextElementSibling) {
-                      (el.nextElementSibling as HTMLElement).style.display = "flex";
-                    }
-                  }}
-                  className="max-h-full max-w-full object-contain filter drop-shadow-md"
-                />
-              ) : null}
-              <div
-                style={{ display: viewItem.imageUrl && viewItem.imageUrl.trim() !== "" ? "none" : "flex" }}
-                className="flex flex-col items-center justify-center text-center p-4 space-y-1 text-slate-400"
-              >
-                <svg className="w-8 h-8 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span className="text-xs font-mono font-medium text-slate-400">No Image Found</span>
-              </div>
-            </div>
-
-            <h2 className="text-lg font-extrabold text-slate-800">{viewItem.title}</h2>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">{viewItem.description}</p>
-
-            {viewItem.detailedContent && (
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-1.5">
-                <strong className="block text-slate-800 font-bold">Detailed Specifications & Technical Content:</strong>
-                <p className="text-slate-600 leading-relaxed font-normal whitespace-pre-wrap">{viewItem.detailedContent}</p>
-              </div>
-            )}
-
-            {/* Integration Process Preview in View Modal */}
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-3">
-              <div className="border-b border-slate-200 pb-1.5">
-                <span className="text-[10px] font-mono uppercase font-bold text-slate-400">
-                  {viewItem.integrationTagline || "Lifecycle Sequence"}
-                </span>
-                <h4 className="text-sm font-bold text-slate-800">
-                  {viewItem.integrationTitle || "The Integration Process"}
-                </h4>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  {viewItem.integrationDescription || "We translate abstract regulatory mandates into continuous physical and operational resilience across your installations."}
-                </p>
+            {/* Scrollable Body */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              {/* Photo Banner */}
+              <div className="h-56 w-full bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center p-3 border border-slate-800 shrink-0 relative">
+                {viewItem.imageUrl && viewItem.imageUrl.trim() !== "" ? (
+                  <img
+                    key={viewItem.imageUrl}
+                    src={formatImageUrl(viewItem.imageUrl)}
+                    alt={viewItem.title}
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      el.style.display = "none";
+                      if (el.nextElementSibling) {
+                        (el.nextElementSibling as HTMLElement).style.display = "flex";
+                      }
+                    }}
+                    className="max-h-full max-w-full object-contain filter drop-shadow-md"
+                  />
+                ) : null}
+                <div
+                  style={{ display: viewItem.imageUrl && viewItem.imageUrl.trim() !== "" ? "none" : "flex" }}
+                  className="flex flex-col items-center justify-center text-center p-4 space-y-1 text-slate-500"
+                >
+                  <svg className="w-10 h-10 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-xs font-mono font-medium text-slate-400">No Image Specified</span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                {(viewItem.integrationSteps && viewItem.integrationSteps.length > 0
-                  ? viewItem.integrationSteps
-                  : [
-                      { stepNumber: "01", title: "Environment Evaluation", description: "Industrial fields map out distinct exposure metrics.", phase: "Initial Assessment" },
-                      { stepNumber: "02", title: "Custom Infrastructure Integration", description: viewItem.detailedContent || "Our professional systems represent the pinnacle of industrial safety.", phase: "System Deployment" },
-                      { stepNumber: "03", title: "Lower Total Cost of Ownership", description: "By linking engineering hardware loops directly into active plant automation networks.", phase: "Operations and Support" }
-                    ]
-                ).map((st, i) => (
-                  <div key={i} className="bg-white p-2.5 rounded-lg border border-slate-200 space-y-1">
-                    <span className="font-mono font-bold text-slate-400 text-xs">{st.stepNumber || `0${i + 1}`}</span>
-                    <h5 className="font-bold text-slate-800 text-[11px] leading-tight">{st.title}</h5>
-                    <p className="text-[10px] text-slate-500 line-clamp-3">{st.description}</p>
-                    <span className="block text-[9px] font-mono uppercase text-orange-600 font-bold pt-1 border-t border-slate-100">{st.phase}</span>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 m-0">{viewItem.title}</h3>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100">{viewItem.description}</p>
+              </div>
+
+              {viewItem.detailedContent && (
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Technical Architecture Details</h4>
+                  <p className="text-xs text-slate-700 whitespace-pre-line leading-relaxed bg-white border border-slate-200 p-3 rounded-lg">{viewItem.detailedContent}</p>
+                </div>
+              )}
+
+              {/* View Item Integration Steps */}
+              {viewItem.integrationSteps && viewItem.integrationSteps.length > 0 && (
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-orange-600 font-bold block">
+                      {viewItem.integrationTagline || "LIFECYCLE SEQUENCE"}
+                    </span>
+                    <h4 className="text-xs font-extrabold text-slate-900 mt-0.5">
+                      {viewItem.integrationTitle || "The Integration Process"}
+                    </h4>
+                    {viewItem.integrationDescription && (
+                      <p className="text-xs text-slate-500 mt-1">{viewItem.integrationDescription}</p>
+                    )}
                   </div>
-                ))}
-              </div>
+                  <div className="space-y-2">
+                    {viewItem.integrationSteps.map((step, idx) => (
+                      <div key={idx} className="p-2.5 bg-white border border-slate-200 rounded-lg text-xs space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded bg-orange-100 text-orange-700 font-mono font-bold flex items-center justify-center text-[10px]">
+                            {step.stepNumber || `0${idx + 1}`}
+                          </span>
+                          <strong className="text-slate-800">{step.title}</strong>
+                          {step.phase && (
+                            <span className="ml-auto text-[10px] font-mono uppercase text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+                              {step.phase}
+                            </span>
+                          )}
+                        </div>
+                        {step.description && (
+                          <p className="text-slate-600 text-[11px] pl-8 m-0">{step.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Sticky Footer Close Control */}
-            <div className="sticky bottom-0 bg-white/95 backdrop-blur-md pt-3 pb-1 border-t border-slate-100 flex justify-end z-20">
+            {/* Fixed Footer */}
+            <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50/70 flex items-center justify-between shrink-0">
+              <a
+                href={`/solutions/${viewItem.id}`}
+                target="_blank"
+                rel="noreferrer"
+                className="px-4 py-2 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold text-xs rounded-xl shadow-2xs cursor-pointer transition-all flex items-center gap-1.5"
+              >
+                <span>Open Live Page</span>
+                <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 bg-slate-800 hover:bg-red-600 text-white text-xs font-extrabold rounded-xl shadow-md transition-all cursor-pointer flex items-center gap-2"
+                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-xl shadow-md cursor-pointer transition-all flex items-center gap-2"
               >
-                <span>Close Window</span>
+                <span>Close Details</span>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>

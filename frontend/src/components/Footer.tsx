@@ -49,8 +49,7 @@ const DEFAULT_FOOTER: FooterData = {
   ],
   bottomLinks: [
     { name: "Marine & Industrial Compliance", href: "/solutions" },
-    { name: "Privacy Policy", href: "/about" },
-    { name: "Admin Portal", href: "/admin/login" }
+    { name: "Privacy Policy", href: "/about" }
   ]
 };
 

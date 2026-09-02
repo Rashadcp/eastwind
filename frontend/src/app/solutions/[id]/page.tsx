@@ -437,7 +437,8 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const slug = id || "";
+  const rawSlug = id || "";
+  const slug = decodeURIComponent(rawSlug).toLowerCase().trim().replace(/[\s_]+/g, "-");
 
   let product: ProductDetailsData | null = null;
   try {
@@ -449,6 +450,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   } catch (error) {
     // fallback
+  }
+
+  if (!product && solutionsDb[slug]) {
+    product = solutionsDb[slug];
+  }
+
+  if (!product) {
+    if (slug.includes("util") || slug.includes("power")) {
+      product = solutionsDb["utility-power"];
+    } else if (slug.includes("oil") || slug.includes("gas")) {
+      product = solutionsDb["oil-and-gas"];
+    } else if (slug.includes("marine") || slug.includes("offshore")) {
+      product = solutionsDb["marine-offshore"];
+    } else if (slug.includes("civil") || slug.includes("defense") || slug.includes("defence")) {
+      product = solutionsDb["civil-defense"];
+    } else if (slug.includes("petro") || slug.includes("smart") || slug.includes("facility")) {
+      product = solutionsDb["petrochemicals"];
+    }
   }
 
   if (!product) {
@@ -493,7 +512,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductDetailPage({ params }: Props) {
   const { id } = await params;
-  const slug = id || "";
+  const rawSlug = id || "";
+  const slug = decodeURIComponent(rawSlug).toLowerCase().trim().replace(/[\s_]+/g, "-");
   
   let product: ProductDetailsData | null = null;
   try {
@@ -505,6 +525,57 @@ export default async function ProductDetailPage({ params }: Props) {
     }
   } catch (error) {
     // fallback
+  }
+
+  if (!product && solutionsDb[slug]) {
+    product = solutionsDb[slug];
+  }
+
+  if (!product) {
+    if (slug.includes("util") || slug.includes("power")) {
+      product = solutionsDb["utility-power"];
+    } else if (slug.includes("oil") || slug.includes("gas")) {
+      product = solutionsDb["oil-and-gas"];
+    } else if (slug.includes("marine") || slug.includes("offshore")) {
+      product = solutionsDb["marine-offshore"];
+    } else if (slug.includes("civil") || slug.includes("defense") || slug.includes("defence")) {
+      product = solutionsDb["civil-defense"];
+    } else if (slug.includes("petro") || slug.includes("smart") || slug.includes("facility")) {
+      product = solutionsDb["petrochemicals"];
+    }
+  }
+
+  // Fetch dynamic custom sector items from /api/solutions-page if configured in Admin
+  try {
+    const pageRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions-page`, {
+      next: { revalidate: 60 }
+    });
+    if (pageRes.ok) {
+      const pageData = await pageRes.json();
+      if (pageData && Array.isArray(pageData.industries)) {
+        const matchingInd = pageData.industries.find((ind: any) => {
+          const indId = (ind.id || "").toLowerCase();
+          const indName = (ind.name || "").toLowerCase();
+          return indId === slug || slug.includes(indId) || indName.includes(slug.replace(/-/g, " "));
+        });
+        if (matchingInd && Array.isArray(matchingInd.items) && matchingInd.items.length > 0) {
+          const customItems = matchingInd.items.flatMap((it: any) => {
+            if (typeof it === "string") return [it];
+            if (it && Array.isArray(it.items)) return it.items;
+            if (it && it.name) return [it.name];
+            return [];
+          });
+          if (customItems.length > 0 && product) {
+            product = {
+              ...product,
+              features: customItems,
+            };
+          }
+        }
+      }
+    }
+  } catch (e) {
+    // ignore
   }
 
   if (!product) {
@@ -552,6 +623,8 @@ export default async function ProductDetailPage({ params }: Props) {
   
   if (
     lowercaseSlug === "civil-defense" || 
+    lowercaseSlug.includes("civil") || 
+    lowercaseSlug.includes("defense") || 
     lowercaseSlug === "oneseven" || 
     lowercaseSlug === "fire-service" || 
     lowercaseSlug === "rescue-tool-kit" || 
@@ -560,8 +633,18 @@ export default async function ProductDetailPage({ params }: Props) {
     const ids = ["fire-truck", "one-seven-cafs", "sione-fire-suit", "scba-system"];
     relatedHardware = productsList.filter((p) => ids.includes(p.id));
   } else if (
+    lowercaseSlug === "utility-power" ||
+    lowercaseSlug.includes("util") ||
+    lowercaseSlug.includes("power")
+  ) {
+    const ids = ["wireless-converter", "xshielder-phone", "pressure-transmitter", "gas-detector"];
+    relatedHardware = productsList.filter((p) => ids.includes(p.id));
+  } else if (
     lowercaseSlug === "oil-and-gas" || 
+    lowercaseSlug.includes("oil") ||
+    lowercaseSlug.includes("gas") ||
     lowercaseSlug === "petrochemicals" || 
+    lowercaseSlug.includes("petro") ||
     lowercaseSlug === "mimes" || 
     lowercaseSlug === "gas-detection" || 
     lowercaseSlug === "fire-gas-systems" || 
@@ -574,7 +657,8 @@ export default async function ProductDetailPage({ params }: Props) {
     relatedHardware = productsList.filter((p) => ids.includes(p.id));
   } else if (
     lowercaseSlug === "marine-offshore" || 
-    lowercaseSlug === "marine" || 
+    lowercaseSlug.includes("marine") ||
+    lowercaseSlug.includes("offshore") ||
     lowercaseSlug === "nardi" || 
     lowercaseSlug === "self-contained-breathing-apparatus" || 
     lowercaseSlug === "breathing-air-compressor" || 
@@ -597,7 +681,7 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* ── SECTION 1: ELEGANT HERO COVER ── */}
         <section className="bg-slate-50 border-b border-slate-200/60 py-16 md:py-20 w-full">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
               
               <div className="lg:col-span-6 space-y-5 w-full flex flex-col justify-center">
                 <div className="space-y-2">
@@ -622,8 +706,10 @@ export default async function ProductDetailPage({ params }: Props) {
                 </div>
               </div>
 
-              <div className="lg:col-span-6 w-full flex flex-col relative min-h-[260px] lg:min-h-[360px] bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 flex items-center justify-center p-2">
-                <SolutionImage imageUrl={product.imageUrl} title={product.title} />
+              <div className="lg:col-span-6 w-full flex items-center justify-center">
+                <div className="w-full relative aspect-4/3 sm:aspect-16/10 max-h-[440px] rounded-2xl overflow-hidden border border-slate-200/80 shadow-lg bg-slate-100 flex items-center justify-center group">
+                  <SolutionImage imageUrl={product.imageUrl} title={product.title} />
+                </div>
               </div>
 
             </div>
@@ -723,12 +809,12 @@ export default async function ProductDetailPage({ params }: Props) {
         
         {slug === "mimes" && <MimesEcosystem />}
 
-        {/* ── SECTION 3: PLATFORM COMPETENCIES ── */}
+        {/* ── SECTION 3: SOLUTIONS & DELIVERABLES ── */}
         <section className="py-16 bg-slate-50 border-t border-b border-slate-200/60 w-full">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div className="border-b border-slate-200 pb-4 w-full">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Core Strengths</span>
-              <h3 className="text-2xl font-bold text-slate-900 uppercase tracking-tight pt-1">Platform Competencies</h3>
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Scope & Deliverables</span>
+              <h3 className="text-2xl font-bold text-slate-900 uppercase tracking-tight pt-1">Solutions Provided in {product.title}</h3>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 w-full">
@@ -737,7 +823,10 @@ export default async function ProductDetailPage({ params }: Props) {
                   <span className="w-8 h-8 rounded-full bg-blue-50/80 border border-blue-100 flex items-center justify-center text-[#1e3e8f] shrink-0">
                     <Check className="w-4 h-4" />
                   </span>
-                  <p className="text-sm font-semibold text-slate-800 m-0 pt-1 leading-relaxed">{feature}</p>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900 m-0 leading-snug">{feature}</h4>
+                    <p className="text-xs text-slate-500 m-0 pt-0.5 font-normal">Certified turnkey engineering integration & compliance assurance</p>
+                  </div>
                 </div>
               ))}
             </div>

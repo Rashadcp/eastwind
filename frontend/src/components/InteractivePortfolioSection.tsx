@@ -71,6 +71,7 @@ interface InteractivePortfolioSectionProps<T extends PortfolioItem = PortfolioIt
   hideSidebar?: boolean;
   isFullHeight?: boolean;
   hideOverview?: boolean;
+  hideDetailsPanel?: boolean;
   isDark?: boolean;
   topTabControl?: React.ReactNode;
   customContent?: React.ReactNode;
@@ -92,6 +93,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
   hideSidebar = false,
   isFullHeight = false,
   hideOverview = false,
+  hideDetailsPanel = false,
   isDark = false,
   topTabControl,
   customContent,
@@ -109,9 +111,9 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
       id={sectionId}
       className={`relative z-10 w-full border-t border-b ${
         isDark ? "border-white/10" : "border-black/5"
-      } overflow-x-clip ${
+      } overflow-hidden ${
         isFullHeight
-          ? "lg:h-screen lg:min-h-screen lg:max-h-screen flex flex-col py-10 max-lg:py-20 max-lg:h-auto"
+          ? "h-[100dvh] min-h-[620px] max-h-[1100px] flex flex-col justify-between py-4 sm:py-6"
           : "py-16"
       }`}
       style={{
@@ -126,28 +128,28 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
       <div className="absolute top-1/4 left-10 w-[300px] h-[300px] rounded-full blur-[100px] opacity-[0.05] pointer-events-none transition-all duration-700" style={{ backgroundColor: activeTone.base }} />
       <div className="absolute bottom-1/4 right-10 w-[350px] h-[350px] rounded-full blur-[120px] opacity-[0.04] pointer-events-none transition-all duration-700" style={{ backgroundColor: activeTone.accent }} />
 
-      <div className={`max-w-[1400px] mx-auto px-6 sm:px-10 w-full relative z-10 ${
-        isFullHeight ? "flex flex-col flex-grow overflow-hidden" : ""
+      <div className={`max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-10 w-full relative z-10 ${
+        isFullHeight ? "flex flex-col flex-grow h-full justify-between overflow-hidden" : ""
       }`}>
         {/* Header Block */}
-        <div className={`flex flex-col lg:flex-row lg:items-end justify-between gap-4 shrink-0 ${isFullHeight ? "mb-6" : "mb-8"}`}>
+        <div className={`flex flex-col sm:flex-row sm:items-end justify-between gap-3 shrink-0 ${isFullHeight ? "mb-2 sm:mb-4" : "mb-8"}`}>
           <div className="max-w-[700px]">
-            <span className="block mb-2 text-[var(--active-base)] uppercase font-mono text-[0.68rem] font-bold tracking-widest">
+            <span className="block mb-1 text-[var(--active-base)] uppercase font-mono text-[0.68rem] font-bold tracking-widest">
               {sectionLabel}
             </span>
-            <h2 className={`text-2xl sm:text-3xl lg:text-[2.2rem] mb-3 uppercase font-extrabold tracking-tight leading-tight ${
+            <h2 className={`text-xl sm:text-2xl lg:text-[1.95rem] mb-1 uppercase font-extrabold tracking-tight leading-tight m-0 ${
               isDark ? "text-white" : "text-slate-900"
             }`}>
               {sectionTitle}
             </h2>
-            <p className={`text-xs sm:text-[0.88rem] leading-relaxed m-0 font-normal ${
+            <p className={`text-xs sm:text-[0.84rem] leading-relaxed m-0 font-normal line-clamp-1 sm:line-clamp-2 ${
               isDark ? "text-slate-300" : "text-slate-600"
             }`}>
               {sectionDesc}
             </p>
           </div>
           {topTabControl && (
-            <div className="flex shrink-0 max-lg:w-full max-lg:justify-center">
+            <div className="flex shrink-0 max-sm:w-full max-sm:justify-center">
               {topTabControl}
             </div>
           )}
@@ -226,9 +228,6 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                       <h3 className="text-xl sm:text-2xl lg:text-3xl leading-tight text-slate-900 m-0 mb-2 font-extrabold tracking-tight uppercase">
                         {activeProduct.name}
                       </h3>
-                      <span className="inline-flex items-center min-h-[28px] px-3 rounded-full bg-[var(--active-soft)] border border-[var(--active-accent)]/35 text-[var(--active-base)] text-[0.7rem] font-bold">
-                        {activeProduct.category}
-                      </span>
                     </div>
                   </div>
 
@@ -361,10 +360,13 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
           </div>
         ) : (
           /* SVG / Graphic-Selector centered layout - OPEN FULL SCREEN LAYOUT */
-          <div className={`grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-16 items-stretch w-full ${
-            isFullHeight ? "flex-grow min-h-0" : ""
-          }`}>
-            {/* Mobile Selector Accordion: shown only when hideSidebar is true and screen is mobile/tablet (< lg) */}
+          <div className={`${
+            hideDetailsPanel
+              ? "flex flex-col items-center justify-center w-full flex-grow min-h-0"
+              : "grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-16 items-stretch w-full"
+          } ${isFullHeight ? "flex-grow min-h-0 h-full" : ""}`}>
+            {/* Mobile Selector Accordion: shown only when hideSidebar is true and hideDetailsPanel is false */}
+            {!hideDetailsPanel && (
             <div className="lg:hidden w-full flex flex-col gap-4">
               {items.map((product) => {
                 const isActive = product.id === activeId;
@@ -411,13 +413,11 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                           {indIcon}
                         </span>
                         <div>
-                          <h3 className="text-[1.05rem] text-slate-900 font-extrabold tracking-tight uppercase leading-tight m-0">
+                          <span className="text-[0.66rem] font-mono uppercase tracking-widest text-slate-400 block mb-0.5">
+                            {(product as any).num || "Sector"}
+                          </span>
+                          <span className="text-[0.98rem] font-bold text-slate-900 block leading-tight">
                             {product.name}
-                          </h3>
-                          <span className={`block text-[0.68rem] font-bold tracking-wide mt-1 transition-colors duration-200 ${
-                            isActive ? "text-[var(--active-base)]" : "text-slate-400"
-                          }`}>
-                            {product.category}
                           </span>
                         </div>
                       </div>
@@ -598,11 +598,12 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                 );
               })}
             </div>
+            )}
 
-            {/* Left Column: Custom Visual (SVG) wrapped in spatial panel (desktop only) */}
-            <div className={`hidden lg:flex ${
+            {/* Left Column: Custom Visual (SVG) wrapped in spatial panel (full-width when details hidden) */}
+            <div className={`${hideDetailsPanel ? "flex" : "hidden lg:flex"} ${
               isDark ? "spatial-panel" : "bg-[#f2f4f2] border border-[#e2e6e3] rounded-3xl shadow-[0_12px_36px_rgba(0,0,0,0.04)]"
-            } p-8 max-sm:p-4 w-full flex-col justify-center items-stretch ${
+            } p-4 sm:p-8 w-full flex-col justify-center items-center ${
               isFullHeight ? "min-h-0" : ""
             }`}>
               {renderVisual ? (
@@ -617,11 +618,10 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
             </div>
 
             {/* Right Column: Details Panel wrapped in spatial panel (desktop only) */}
+            {!hideDetailsPanel && (
             <div className={`hidden lg:flex ${
               isDark ? "spatial-panel" : "bg-[#f2f4f2] border border-[#e2e6e3] rounded-3xl shadow-[0_12px_36px_rgba(0,0,0,0.04)]"
-            } p-9 max-sm:p-6 flex-col justify-between overflow-y-auto ${
-              isFullHeight ? "h-full min-h-0" : ""
-            }`}>
+            } p-9 max-sm:p-6 flex-col justify-between`}>
               <AnimatePresence mode="wait">
                 <motion.article
                   key={activeProduct.id}
@@ -641,10 +641,6 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                       }`}>
                         {activeProduct.name}
                       </h3>
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--active-soft)] border border-[var(--active-accent)]/35 text-[var(--active-base)] text-[0.72rem] font-extrabold tracking-wider uppercase mt-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--active-base)] animate-pulse shrink-0" />
-                        {activeProduct.category}
-                      </span>
                     </div>
                   </div>
 
@@ -806,6 +802,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
                 </motion.article>
               </AnimatePresence>
             </div>
+            )}
           </div>
         )}
       </div>

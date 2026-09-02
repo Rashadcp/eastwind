@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatImageUrl } from "@/utils/image";
 
 interface IndustryItem {
   id: string;
@@ -60,7 +61,7 @@ export default function AdminSolutionsPage() {
       id: "oil-and-gas",
       name: "Oil and Gas",
       riskKicker: "Intelligent Hydrocarbon Operations & Wireless Gas Detection",
-      accent: "#1e3e8f",
+      accent: "#c22026",
       image: "/products/default-wireless-gas-detection.png",
       description: "Integrated hydrocarbon safety, intrinsic ISA 100 wireless gas detection, temporary refuge chambers, and tank farm fire fighting."
     },
@@ -76,7 +77,7 @@ export default function AdminSolutionsPage() {
       id: "utilities-and-power",
       name: "Utilities and Power",
       riskKicker: "Critical Grid Asset Safeguarding & Thermal Monitoring",
-      accent: "#1e3e8f",
+      accent: "#c22026",
       image: "/products/default-process-instrumentation.png",
       description: "Securing electrical substations, gas pipelines, and SWAS water sampling systems with automated thermal monitoring."
     },
@@ -480,6 +481,21 @@ export default function AdminSolutionsPage() {
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload Image"}
                 </label>
               </div>
+
+              {/* Hero Image Preview */}
+              {heroBgImage && heroBgImage.trim() !== "" && (
+                <div className="mt-3 w-fit max-w-xl rounded-xl border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                  <img
+                    src={formatImageUrl(heroBgImage, "/solution.png")}
+                    alt="Hero Background Preview"
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      el.style.display = "none";
+                    }}
+                    className="h-44 sm:h-52 w-auto max-w-full rounded-lg object-contain block"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
@@ -659,6 +675,21 @@ export default function AdminSolutionsPage() {
                         Upload
                       </label>
                     </div>
+
+                    {/* Category Image Preview */}
+                    {ind.image && ind.image.trim() !== "" && (
+                      <div className="mt-2 w-fit max-w-full rounded-lg border border-slate-200 bg-slate-100 p-1 shadow-2xs">
+                        <img
+                          src={formatImageUrl(ind.image)}
+                          alt={ind.name}
+                          onError={(e) => {
+                            const el = e.currentTarget as HTMLImageElement;
+                            el.style.display = "none";
+                          }}
+                          className="h-28 w-auto max-w-full rounded-md object-contain block"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

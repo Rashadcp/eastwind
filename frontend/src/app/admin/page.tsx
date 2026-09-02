@@ -103,10 +103,10 @@ export default function AdminDashboardPage() {
       <div className="bg-white border border-slate-200/80 p-8 rounded-3xl relative overflow-hidden shadow-3xs">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(#ea580c_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none" />
         <div className="space-y-2 max-w-2xl relative z-10">
-          <span className="text-[10px] font-mono tracking-widest text-orange-600 uppercase font-bold">Operational Status Normal</span>
-          <h2 className="text-2xl font-bold uppercase tracking-tight text-slate-800 m-0">Welcome, Control System Administrator</h2>
+          <span className="text-[10px] font-mono tracking-widest text-orange-600 uppercase font-bold">System Status: Active</span>
+          <h2 className="text-2xl font-bold uppercase tracking-tight text-slate-800 m-0">Welcome to Eastwind Safety Admin</h2>
           <p className="text-xs text-slate-500 leading-relaxed font-light m-0 pt-1">
-            This administration gateway maps directly to the active Middle East database registers. Modifying items below instantly updates the public front-facing catalogs, specifications sheets, and dynamic system layouts.
+            Manage your website content, product catalog, industry solutions, and customer inquiry settings. All changes saved here update the live public website immediately.
           </p>
         </div>
       </div>
@@ -142,9 +142,9 @@ export default function AdminDashboardPage() {
             
             <Link
               href={card.link}
-              className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-600 group-hover:text-orange-600 mt-6 no-underline transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 group-hover:text-orange-600 mt-6 no-underline transition-colors cursor-pointer"
             >
-              Configure Node
+              Open Manager
               <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>

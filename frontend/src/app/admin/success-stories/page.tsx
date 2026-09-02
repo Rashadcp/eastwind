@@ -85,17 +85,14 @@ export default function AdminSuccessStoriesPage() {
     setFormId(`story-${Date.now()}`);
     setFormTitle("");
     setFormClient("");
-    setFormCategory("Fire Fighting & Suppression");
-    setFormYear("2025");
+    setFormCategory("");
+    setFormYear(new Date().getFullYear().toString());
     setFormSummary("");
     setFormChallenge("");
     setFormSolution("");
-    setFormImageUrl("/products/default-fire-fighting-rescue.png");
+    setFormImageUrl("");
     setFormFeatured(true);
-    setFormResults([
-      { label: "Water Saved", value: "90% Reduction" },
-      { label: "HCIS Standard", value: "100% Certified" }
-    ]);
+    setFormResults([]);
     setShowModal(true);
   };
 
@@ -105,12 +102,12 @@ export default function AdminSuccessStoriesPage() {
     setFormId(story.id);
     setFormTitle(story.title);
     setFormClient(story.client);
-    setFormCategory(story.category || "Industrial Safety");
-    setFormYear(story.year || "2025");
+    setFormCategory(story.category || "");
+    setFormYear(story.year || "");
     setFormSummary(story.summary || "");
     setFormChallenge(story.challenge || "");
     setFormSolution(story.solution || "");
-    setFormImageUrl(story.imageUrl || "/products/default-fire-fighting-rescue.png");
+    setFormImageUrl(story.imageUrl || "");
     setFormFeatured(story.featured ?? true);
     setFormResults(story.results || []);
     setShowModal(true);
@@ -392,245 +389,283 @@ export default function AdminSuccessStoriesPage() {
 
       {/* ADD / EDIT MODAL */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl space-y-6">
-            <div className="flex justify-between items-center border-b border-slate-100 pb-4">
-              <h2 className="text-lg font-bold text-slate-800">
-                {isEdit ? "Edit Success Story Case Study" : "Add New Success Story"}
-              </h2>
-              <button onClick={() => setShowModal(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200"
+        >
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+            {/* Fixed Header */}
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
+              <div>
+                <h2 className="text-base font-bold text-slate-800 m-0">
+                  {isEdit ? "Edit Success Story Case Study" : "Add New Success Story"}
+                </h2>
+                <p className="text-xs text-slate-500 m-0 mt-0.5">Configure client case study details, measured results, and cover photo.</p>
+              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+              >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            <form onSubmit={handleSaveStory} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Story Title *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formTitle}
-                    onChange={(e) => setFormTitle(e.target.value)}
-                    placeholder="e.g. One Seven CAFS Deployment for Petrochemical Depot"
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Client / Location *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formClient}
-                    onChange={(e) => setFormClient(e.target.value)}
-                    placeholder="e.g. Major Energy Terminal, Jubail"
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Category</label>
-                  <input
-                    type="text"
-                    value={formCategory}
-                    onChange={(e) => setFormCategory(e.target.value)}
-                    placeholder="e.g. Fire Fighting & Suppression"
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Year</label>
-                  <input
-                    type="text"
-                    value={formYear}
-                    onChange={(e) => setFormYear(e.target.value)}
-                    placeholder="e.g. 2025"
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Project Summary *</label>
-                <textarea
-                  rows={3}
-                  required
-                  value={formSummary}
-                  onChange={(e) => setFormSummary(e.target.value)}
-                  placeholder="Overview of engineered package delivered..."
-                  className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-medium"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Industrial Challenge</label>
-                  <textarea
-                    rows={3}
-                    value={formChallenge}
-                    onChange={(e) => setFormChallenge(e.target.value)}
-                    placeholder="Challenges faced by the client..."
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-medium"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Engineered Solution</label>
-                  <textarea
-                    rows={3}
-                    value={formSolution}
-                    onChange={(e) => setFormSolution(e.target.value)}
-                    placeholder="Solution and equipment installed..."
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-medium"
-                  />
-                </div>
-              </div>
-
-              {/* Image URL & Upload */}
-              <div className="space-y-2">
-                <label className="block font-bold text-slate-700">Product / Project Image</label>
-                
-                {/* Live Image Preview */}
-                {formImageUrl && (
-                  <div className="h-36 w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-200 relative">
-                    <img
-                      src={formImageUrl}
-                      alt="Story Preview"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLElement).style.display = "none";
-                      }}
+            {/* Scrollable Body */}
+            <div className="flex-1 overflow-y-auto p-6">
+              <form id="story-form" onSubmit={handleSaveStory} className="space-y-4 text-xs">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Story Title *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formTitle}
+                      onChange={(e) => setFormTitle(e.target.value)}
+                      placeholder="e.g. One Seven CAFS Deployment for Petrochemical Depot"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
                     />
                   </div>
-                )}
 
-                <div className="flex gap-2 items-center">
-                  <input
-                    type="text"
-                    value={formImageUrl}
-                    onChange={(e) => setFormImageUrl(e.target.value)}
-                    placeholder="/emergency_vehicle.webp"
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-mono text-[11px]"
-                  />
-                  <label className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg cursor-pointer shrink-0">
-                    {uploading ? "Uploading..." : "Upload File"}
-                    <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-                  </label>
-                </div>
-              </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Client / Location *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formClient}
+                      onChange={(e) => setFormClient(e.target.value)}
+                      placeholder="e.g. Major Energy Terminal, Jubail"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
+                    />
+                  </div>
 
-              {/* Dynamic Key Results Builder */}
-              <div className="space-y-2 border-t border-slate-100 pt-4">
-                <label className="block font-bold text-slate-800">Key Measured Results (Metrics)</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Result Label (e.g. Water Saved)"
-                    value={resLabel}
-                    onChange={(e) => setResLabel(e.target.value)}
-                    className="w-1/2 p-2 border border-slate-200 rounded-lg"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Metric Value (e.g. 90% Reduction)"
-                    value={resValue}
-                    onChange={(e) => setResValue(e.target.value)}
-                    className="w-1/2 p-2 border border-slate-200 rounded-lg"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddResultMetric}
-                    className="px-4 py-2 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-900 shrink-0"
-                  >
-                    + Add
-                  </button>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Category</label>
+                    <input
+                      type="text"
+                      value={formCategory}
+                      onChange={(e) => setFormCategory(e.target.value)}
+                      placeholder="e.g. Fire Fighting & Suppression"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Year</label>
+                    <input
+                      type="text"
+                      value={formYear}
+                      onChange={(e) => setFormYear(e.target.value)}
+                      placeholder="e.g. 2025"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
+                    />
+                  </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {formResults.map((res, i) => (
-                    <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg font-mono">
-                      <strong>{res.label}:</strong> <span className="text-orange-600">{res.value}</span>
-                      <button type="button" onClick={() => handleRemoveResultMetric(i)} className="text-red-500 hover:text-red-700 font-bold ml-1 p-0.5 rounded hover:bg-red-50">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </span>
-                  ))}
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Executive Summary *</label>
+                  <textarea
+                    rows={3}
+                    required
+                    value={formSummary}
+                    onChange={(e) => setFormSummary(e.target.value)}
+                    placeholder="Short 2-3 sentence overview..."
+                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500"
+                  />
                 </div>
-              </div>
 
-              {/* Submit / Cancel Buttons */}
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Challenge</label>
+                    <textarea
+                      rows={3}
+                      value={formChallenge}
+                      onChange={(e) => setFormChallenge(e.target.value)}
+                      placeholder="What was the high-risk operational obstacle?"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Engineered Solution</label>
+                    <textarea
+                      rows={3}
+                      value={formSolution}
+                      onChange={(e) => setFormSolution(e.target.value)}
+                      placeholder="How did East Wind architect the resolution?"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Cover Image Upload with Live Image Preview Box */}
+                <div className="space-y-2">
+                  <label className="block font-bold text-slate-700">Story Cover Image</label>
+                  
+                  {formImageUrl && formImageUrl.trim() !== "" && (
+                    <div className="h-36 w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-900 flex items-center justify-center p-2 relative">
+                      <img
+                        src={formImageUrl}
+                        alt="Story Preview"
+                        className="max-h-full max-w-full object-contain"
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = "none";
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      value={formImageUrl}
+                      onChange={(e) => setFormImageUrl(e.target.value)}
+                      placeholder="/emergency_vehicle.webp"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-mono text-[11px]"
+                    />
+                    <label className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg cursor-pointer shrink-0 transition-colors">
+                      {uploading ? "Uploading..." : "Upload File"}
+                      <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+                    </label>
+                  </div>
+                </div>
+
+                {/* Dynamic Key Results Builder */}
+                <div className="space-y-2 border-t border-slate-100 pt-4">
+                  <label className="block font-bold text-slate-800">Key Measured Results (Metrics)</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Result Label (e.g. Water Saved)"
+                      value={resLabel}
+                      onChange={(e) => setResLabel(e.target.value)}
+                      className="w-1/2 p-2 border border-slate-200 rounded-lg"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Metric Value (e.g. 90% Reduction)"
+                      value={resValue}
+                      onChange={(e) => setResValue(e.target.value)}
+                      className="w-1/2 p-2 border border-slate-200 rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddResultMetric}
+                      className="px-4 py-2 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-900 shrink-0 cursor-pointer"
+                    >
+                      + Add
+                    </button>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {formResults.map((res, i) => (
+                      <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg font-mono">
+                        <strong>{res.label}:</strong> <span className="text-orange-600">{res.value}</span>
+                        <button type="button" onClick={() => handleRemoveResultMetric(i)} className="text-red-500 hover:text-red-700 font-bold ml-1 p-0.5 rounded hover:bg-red-50 cursor-pointer">
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            {/* Fixed Footer */}
+            <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50/70 flex items-center justify-between shrink-0">
+              <span className="text-[11px] text-slate-400 font-medium">Case studies display on the public success stories portal</span>
+              <div className="flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl"
+                  className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold rounded-xl cursor-pointer transition-colors text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl shadow-md"
+                  form="story-form"
+                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl shadow-md cursor-pointer transition-all text-xs"
                 >
                   {isEdit ? "Save Changes" : "Create Story"}
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}
 
       {/* VIEW DETAILS MODAL */}
       {viewStory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-              <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setViewStory(null);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200"
+        >
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+            {/* Fixed Header */}
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
+              <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded border border-orange-200">
                 {viewStory.category} ({viewStory.year || "2025"})
               </span>
-              <button onClick={() => setViewStory(null)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+              <button
+                onClick={() => setViewStory(null)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+              >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            {/* IMAGE BANNER IN MODAL (WHOLE IMAGE UNCROPPED) */}
-            <div className="h-64 relative overflow-hidden bg-slate-950 rounded-xl flex items-center justify-center p-3 border border-slate-800">
-              <img
-                src={viewStory.imageUrl || "/emergency_vehicle.webp"}
-                alt={viewStory.title}
-                className="max-h-full max-w-full object-contain filter drop-shadow-md rounded-lg"
-              />
+            {/* Scrollable Body */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              {/* IMAGE BANNER IN MODAL */}
+              <div className="h-56 relative overflow-hidden bg-slate-950 rounded-xl flex items-center justify-center p-3 border border-slate-800 shrink-0">
+                <img
+                  src={viewStory.imageUrl || "/emergency_vehicle.webp"}
+                  alt={viewStory.title}
+                  className="max-h-full max-w-full object-contain filter drop-shadow-md rounded-lg"
+                />
+              </div>
+
+              <h2 className="text-lg font-extrabold text-slate-800 m-0">{viewStory.title}</h2>
+              <p className="text-xs font-mono font-bold text-slate-500 m-0">Client / Location: {viewStory.client}</p>
+
+              <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100 m-0">{viewStory.summary}</p>
+
+              {viewStory.challenge && (
+                <div className="bg-rose-50/60 p-3 rounded-lg border border-rose-100 text-xs">
+                  <strong className="block text-rose-700 mb-1">Challenge:</strong>
+                  <p className="text-slate-600 m-0">{viewStory.challenge}</p>
+                </div>
+              )}
+
+              {viewStory.solution && (
+                <div className="bg-sky-50/60 p-3 rounded-lg border border-sky-100 text-xs">
+                  <strong className="block text-sky-700 mb-1">Solution:</strong>
+                  <p className="text-slate-600 m-0">{viewStory.solution}</p>
+                </div>
+              )}
             </div>
 
-            <h2 className="text-lg font-extrabold text-slate-800">{viewStory.title}</h2>
-            <p className="text-xs font-mono font-bold text-slate-500">Client / Location: {viewStory.client}</p>
-
-            <p className="text-xs text-slate-600 leading-relaxed">{viewStory.summary}</p>
-
-            {viewStory.challenge && (
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
-                <strong className="block text-red-600 mb-1">Challenge:</strong>
-                <p className="text-slate-600">{viewStory.challenge}</p>
-              </div>
-            )}
-
-            {viewStory.solution && (
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
-                <strong className="block text-blue-600 mb-1">Solution:</strong>
-                <p className="text-slate-600">{viewStory.solution}</p>
-              </div>
-            )}
-
-            <div className="flex justify-end pt-3">
-              <button onClick={() => setViewStory(null)} className="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-lg">
-                Close
+            {/* Fixed Footer */}
+            <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50/70 flex justify-end shrink-0">
+              <button
+                type="button"
+                onClick={() => setViewStory(null)}
+                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-xl shadow-md cursor-pointer transition-all flex items-center gap-2"
+              >
+                <span>Close Details</span>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
           </div>
