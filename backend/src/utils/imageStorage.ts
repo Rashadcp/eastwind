@@ -39,14 +39,14 @@ export function extractAndSaveBase64(value: any, prefix = "img"): any {
       return `/uploads/${filename}`;
     }
 
-    // Compress & convert bitmap images to WebP
+    // Compress & convert bitmap images to WebP (effort: 4 is the optimal CPU/compression sweet spot)
     const filename = `${cleanPrefix}_${uniqueId}.webp`;
     const filePath = path.join(UPLOAD_DIR, filename);
 
     // Run Sharp with high visual fidelity settings
     sharp(buffer)
       .resize({ width: 2048, height: 2048, fit: "inside", withoutEnlargement: true })
-      .webp({ quality: 86, effort: 6, smartSubsample: true })
+      .webp({ quality: 86, effort: 4, smartSubsample: true })
       .toBuffer()
       .then((compressedBuffer: Buffer) => {
         fs.writeFileSync(filePath, compressedBuffer);

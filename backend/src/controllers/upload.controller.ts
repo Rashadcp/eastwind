@@ -37,7 +37,7 @@ export class UploadController {
         finalFilename = `${timestamp}-${baseName}.webp`;
         finalBuffer = await sharp(uploadedFile.buffer)
           .resize({ width: 2048, height: 2048, fit: "inside", withoutEnlargement: true })
-          .webp({ quality: 86, effort: 6, smartSubsample: true })
+          .webp({ quality: 86, effort: 4, smartSubsample: true })
           .toBuffer();
       }
 
