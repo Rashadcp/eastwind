@@ -49,22 +49,36 @@ const defaultData: HomeAboutData = {
 export default function About() {
   const [data, setData] = useState<HomeAboutData>(defaultData);
   const [imageError, setImageError] = useState(false);
+  const [imgSrc, setImgSrc] = useState<string>(formatImageUrl(defaultData.imageUrl));
 
   useEffect(() => {
     const fetchHomeAbout = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const isLocal = typeof window !== "undefined"
+          ? (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+          : false;
+        let baseUrl = (process.env.NEXT_PUBLIC_API_URL || "").trim();
+        if (!baseUrl) {
+          baseUrl = typeof window !== "undefined"
+            ? (isLocal ? "http://localhost:5000" : window.location.origin)
+            : "http://localhost:5000";
+        } else if (typeof window !== "undefined" && !isLocal && (baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1"))) {
+          baseUrl = window.location.origin;
+        }
+
         const res = await fetch(`${baseUrl}/api/about/home`, { cache: "no-store" });
         if (res.ok) {
           const json = await res.json();
+          const validImg = json.imageUrl && json.imageUrl.trim() !== "" ? json.imageUrl : defaultData.imageUrl;
           setData({
-            imageUrl: json.imageUrl || defaultData.imageUrl,
+            imageUrl: validImg,
             title: json.title || defaultData.title,
             overviewText: json.overviewText || defaultData.overviewText,
             secondaryText: json.secondaryText || defaultData.secondaryText,
             metrics: json.metrics && json.metrics.length > 0 ? json.metrics : defaultData.metrics,
             lifecycleSteps: json.lifecycleSteps && json.lifecycleSteps.length > 0 ? json.lifecycleSteps : defaultData.lifecycleSteps,
           });
+          setImgSrc(formatImageUrl(validImg));
           setImageError(false);
         }
       } catch (err) {
@@ -93,11 +107,18 @@ export default function About() {
         {/* LEFT COLUMN: Premium Documentary Splash Visual */}
         <div className="lg:col-span-5 flex flex-col relative group">
           <div className="relative w-full h-full min-h-[480px] max-lg:min-h-[320px] overflow-hidden rounded-[28px] border border-slate-200/60 shadow-2xl bg-slate-950/10 flex items-center justify-center">
-            {data.imageUrl && !imageError ? (
+            {!imageError && imgSrc ? (
               <img
-                src={formatImageUrl(data.imageUrl)}
+                src={imgSrc}
                 alt={data.title}
-                onError={() => setImageError(true)}
+                onError={() => {
+                  // Fallback chain: if custom image fails, fallback to default instrumentation image
+                  if (imgSrc !== defaultData.imageUrl && imgSrc !== formatImageUrl(defaultData.imageUrl)) {
+                    setImgSrc(defaultData.imageUrl);
+                  } else {
+                    setImageError(true);
+                  }
+                }}
                 className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105 select-none"
               />
             ) : (

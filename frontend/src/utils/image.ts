@@ -8,44 +8,68 @@ export function formatImageUrl(
   // Clean corrupted trailing backslashes or spaces from pasted/saved base64 strings
   trimmed = trimmed.replace(/[\r\n\s\\]+$/g, "");
 
-  // 1. Data URLs or absolute HTTP/HTTPS URLs
-  if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("data:")) {
+  // 1. Data URLs
+  if (trimmed.startsWith("data:")) {
     return trimmed;
   }
 
-  // 2. Base URL resolution for local vs production
+  // 2. Environment detection
+  const isBrowser = typeof window !== "undefined";
+  const isLocal = isBrowser
+    ? (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    : process.env.NODE_ENV === "development";
+
+  // 3. Absolute URLs: rewrite production origin /uploads/ to /api/uploads/ to prevent Nginx 500 errors
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    if (isBrowser && !isLocal) {
+      try {
+        const parsed = new URL(trimmed);
+        if (
+          (parsed.hostname === window.location.hostname || parsed.hostname.includes("royalwish.in")) &&
+          parsed.pathname.startsWith("/uploads/")
+        ) {
+          return `${window.location.origin}/api${parsed.pathname}${parsed.search}`;
+        }
+      } catch {}
+    }
+    return trimmed;
+  }
+
+  // 4. Base URL resolution
   let baseUrl = (process.env.NEXT_PUBLIC_API_URL || "").trim();
 
   if (!baseUrl) {
-    if (typeof window !== "undefined") {
-      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    if (isBrowser) {
       baseUrl = isLocal ? "http://localhost:5000" : window.location.origin;
     } else {
-      baseUrl = "http://localhost:5000";
+      baseUrl = isLocal ? "http://localhost:5000" : "";
     }
   }
 
-  // In production browser, if env contains localhost, fallback to current origin
-  if (typeof window !== "undefined") {
-    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    if (!isLocal && (baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1"))) {
-      baseUrl = window.location.origin;
-    }
+  // In production browser, if env accidentally points to localhost, fallback to current origin
+  if (isBrowser && !isLocal && (baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1"))) {
+    baseUrl = window.location.origin;
   }
 
   baseUrl = baseUrl.replace(/\/+$/, "");
 
-  if (trimmed.startsWith("/uploads/")) {
-    return `${baseUrl}${trimmed}`;
+  // 5. Normalise path
+  const normalizedPath = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+
+  // 6. Uploaded media assets (/uploads/ or uploads/)
+  if (normalizedPath.startsWith("/uploads/")) {
+    if (!isLocal) {
+      // On production, backend media is reverse-proxied via /api/
+      return `${baseUrl}/api${normalizedPath}`;
+    }
+    return `${baseUrl}${normalizedPath}`;
   }
 
-  if (trimmed.startsWith("uploads/")) {
-    return `${baseUrl}/${trimmed}`;
+  // 7. Directly referenced /api/uploads/ paths
+  if (normalizedPath.startsWith("/api/uploads/")) {
+    return `${baseUrl}${normalizedPath}`;
   }
 
-  if (!trimmed.startsWith("/")) {
-    return `/${trimmed}`;
-  }
-
-  return trimmed;
+  // 8. Static frontend assets (e.g. /products/..., /about.png)
+  return normalizedPath;
 }

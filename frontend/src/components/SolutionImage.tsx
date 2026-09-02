@@ -9,12 +9,13 @@ interface SolutionImageProps {
   title: string;
 }
 
+const DEFAULT_FALLBACK = "/products/default-process-instrumentation.png";
+
 export default function SolutionImage({ imageUrl, title }: SolutionImageProps) {
   const [hasError, setHasError] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState<string>(imageUrl ? formatImageUrl(imageUrl) : DEFAULT_FALLBACK);
 
-  const formattedUrl = imageUrl ? formatImageUrl(imageUrl) : "";
-
-  if (!formattedUrl || hasError) {
+  if (!currentSrc || hasError) {
     return (
       <div className="flex flex-col items-center justify-center text-center p-6 space-y-1 text-slate-400">
         <ImageIcon className="w-8 h-8 text-slate-300 stroke-[1.5]" />
@@ -25,9 +26,15 @@ export default function SolutionImage({ imageUrl, title }: SolutionImageProps) {
 
   return (
     <img
-      src={formattedUrl}
+      src={currentSrc}
       alt={title}
-      onError={() => setHasError(true)}
+      onError={() => {
+        if (currentSrc !== DEFAULT_FALLBACK && currentSrc !== formatImageUrl(DEFAULT_FALLBACK)) {
+          setCurrentSrc(DEFAULT_FALLBACK);
+        } else {
+          setHasError(true);
+        }
+      }}
       className="w-full h-full object-cover filter contrast-102 transition-transform duration-700 hover:scale-105"
     />
   );
