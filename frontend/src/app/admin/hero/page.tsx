@@ -6,6 +6,7 @@ import { formatImageUrl } from "@/utils/image";
 export default function AdminHeroPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
+  const [savingSection, setSavingSection] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState<boolean>(false);
   const [uploadingVideo, setUploadingVideo] = useState<boolean>(false);
   const [videoStats, setVideoStats] = useState<string | null>(null);
@@ -149,10 +150,11 @@ export default function AdminHeroPage() {
     }
   };
 
-  const handleSaveHero = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveHero = async (e?: React.FormEvent, sectionLabel?: string) => {
+    if (e) e.preventDefault();
     clearMessages();
     setSaving(true);
+    setSavingSection(sectionLabel || "all");
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -187,12 +189,13 @@ export default function AdminHeroPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update Hero captions");
 
-      setSuccess("Homepage Hero media and slide captions updated successfully!");
+      setSuccess(sectionLabel ? `${sectionLabel} saved successfully!` : "Homepage Hero media and slide captions updated successfully!");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to save Hero section changes.");
     } finally {
       setSaving(false);
+      setSavingSection(null);
     }
   };
 
@@ -266,13 +269,24 @@ export default function AdminHeroPage() {
         
         {/* ================= HERO MEDIA ================= */}
         <div className="bg-white p-8 border border-slate-200 rounded-2xl space-y-6 shadow-sm">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
               <span className="text-[10px] font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded border border-orange-200">
                 HERO MEDIA ASSETS
               </span>
               <h2 className="text-lg font-bold text-slate-800 mt-2">Banner Image & Background Video</h2>
             </div>
+            <button
+              type="button"
+              onClick={() => handleSaveHero(undefined, "Hero Media Assets")}
+              disabled={saving}
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{saving && savingSection === "Hero Media Assets" ? "Saving..." : "Save Media Assets"}</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs">
@@ -345,7 +359,7 @@ export default function AdminHeroPage() {
                   className="flex-1 px-4 py-3 border border-slate-300 rounded-xl font-mono text-slate-800 bg-slate-50 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
                   placeholder="/hero-video.mp4"
                 />
-                <label className="px-5 py-3 bg-sky-600 hover:bg-sky-700 active:scale-95 text-white font-bold rounded-xl cursor-pointer text-xs shrink-0 flex items-center justify-center gap-2 transition-all shadow-md">
+                <label className="px-5 py-3 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold rounded-xl cursor-pointer text-xs shrink-0 flex items-center justify-center gap-2 transition-all shadow-md">
                   <svg className="w-4 h-4 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
@@ -354,27 +368,24 @@ export default function AdminHeroPage() {
                   </span>
                   <input
                     type="file"
-                    accept="video/mp4,video/webm,video/quicktime,video/*"
+                    accept="video/mp4,video/webm,video/quicktime"
                     className="hidden"
                     onChange={handleVideoUpload}
                     disabled={uploadingVideo}
                   />
                 </label>
               </div>
-              <p className="text-[11px] text-slate-500 flex items-start gap-1.5">
-                <svg className="w-3.5 h-3.5 text-sky-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>
-                  <strong>Automatic Video Compression:</strong> Uploaded MP4/MOV videos are automatically re-encoded using <strong>FFmpeg H.264 (faststart)</strong> to optimize file size and guarantee instant, smooth scroll scrubbing.
-                </span>
+              <p className="text-[11px] text-slate-400">
+                Supports MP4, WebM, MOV. Fast-start WebM conversion applied automatically.
               </p>
               {videoSrc && (
                 <div className="mt-2 w-full h-36 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 relative shadow-inner">
                   <video
                     src={formatImageUrl(videoSrc)}
-                    controls
                     muted
+                    loop
+                    autoPlay
+                    playsInline
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-2 left-2 px-2.5 py-1 bg-black/75 text-[10px] text-white font-mono rounded-md backdrop-blur-xs pointer-events-none">
@@ -384,17 +395,47 @@ export default function AdminHeroPage() {
               )}
             </div>
           </div>
+
+          {/* Media Assets Bottom Save Bar */}
+          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save updates to Hero Banner Image & Background Video</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleSaveHero(undefined, "Hero Media Assets")}
+              disabled={saving}
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{saving && savingSection === "Hero Media Assets" ? "Saving..." : "Save Media Assets"}</span>
+            </button>
+          </div>
         </div>
 
         {/* ================= HERO SLIDE 1 ================= */}
         <div className="bg-white p-8 border border-slate-200 rounded-2xl space-y-6 shadow-sm">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
               <span className="text-[10px] font-mono font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded border border-amber-200">
                 SLIDE 1 CAPTIONS
               </span>
               <h2 className="text-lg font-bold text-slate-800 mt-2">Hero Slide 1 (Safety Arabia Infrastructure)</h2>
             </div>
+            <button
+              type="button"
+              onClick={() => handleSaveHero(undefined, "Slide 1")}
+              disabled={saving}
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{saving && savingSection === "Slide 1" ? "Saving..." : "Save Slide 1"}</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
@@ -454,7 +495,7 @@ export default function AdminHeroPage() {
                   value={slide1Btn1Link}
                   onChange={(e) => setSlide1Btn1Link(e.target.value)}
                   className="w-full px-4 py-2.5 border rounded-xl font-mono text-slate-700 bg-slate-50 text-xs"
-                  placeholder="#solutions or /contact"
+                  placeholder="#solutions or /products"
                 />
               </div>
             </div>
@@ -482,17 +523,47 @@ export default function AdminHeroPage() {
               </div>
             </div>
           </div>
+
+          {/* Slide 1 Bottom Save Bar */}
+          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save updates to Slide 1 Captions & Buttons</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleSaveHero(undefined, "Slide 1")}
+              disabled={saving}
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{saving && savingSection === "Slide 1" ? "Saving..." : "Save Slide 1"}</span>
+            </button>
+          </div>
         </div>
 
         {/* ================= HERO SLIDE 2 ================= */}
         <div className="bg-white p-8 border border-slate-200 rounded-2xl space-y-6 shadow-sm">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
               <span className="text-[10px] font-mono font-bold text-sky-600 bg-sky-50 px-2.5 py-1 rounded border border-sky-200">
                 SLIDE 2 CAPTIONS
               </span>
               <h2 className="text-lg font-bold text-slate-800 mt-2">Hero Slide 2 (IIoT Edge Telemetry)</h2>
             </div>
+            <button
+              type="button"
+              onClick={() => handleSaveHero(undefined, "Slide 2")}
+              disabled={saving}
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{saving && savingSection === "Slide 2" ? "Saving..." : "Save Slide 2"}</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
@@ -533,7 +604,7 @@ export default function AdminHeroPage() {
             />
           </div>
 
-          <div className="pt-4 border-t border-slate-100 text-xs space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs pt-4 border-t border-slate-100">
             <div>
               <label className="block font-bold text-slate-700 mb-2">Primary Button Text</label>
               <input
@@ -555,16 +626,42 @@ export default function AdminHeroPage() {
               />
             </div>
           </div>
+
+          {/* Slide 2 Bottom Save Bar */}
+          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span>Ready to save updates to Slide 2 Captions & Buttons</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleSaveHero(undefined, "Slide 2")}
+              disabled={saving}
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{saving && savingSection === "Slide 2" ? "Saving..." : "Save Slide 2"}</span>
+            </button>
+          </div>
         </div>
 
         {/* Action Save Button */}
-        <div className="flex justify-end pt-4">
+        <div className="p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-center gap-2.5 text-xs text-slate-600 font-medium">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
+            <span>Ready to save and publish all updates across Homepage Hero media & slide captions</span>
+          </div>
           <button
             type="submit"
             disabled={saving}
-            className="px-8 py-3.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-lg cursor-pointer transition-all"
+            className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-md cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            {saving ? "Saving Changes..." : "Save Hero Slide Captions"}
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{saving && savingSection === "all" ? "Saving All Hero Changes..." : "Save All Hero Changes"}</span>
           </button>
         </div>
 

@@ -50,11 +50,47 @@ export class UploadController {
       const baseName = path.parse(uploadedFile.originalname).name.replace(/[^a-zA-Z0-9_-]/g, "_");
       const isVideo = uploadedFile.mimetype.startsWith("video/") || /\.(mp4|webm|mov|mkv|avi)$/i.test(uploadedFile.originalname);
       const isSvg = uploadedFile.mimetype.includes("svg") || uploadedFile.originalname.toLowerCase().endsWith(".svg");
+      const docExtRegex = /\.(pdf|docx|doc|xls|xlsx|txt|csv|zip)$/i;
+      const isDocument = docExtRegex.test(uploadedFile.originalname) ||
+        uploadedFile.mimetype.includes("pdf") ||
+        uploadedFile.mimetype.includes("document") ||
+        uploadedFile.mimetype.includes("msword") ||
+        uploadedFile.mimetype.includes("officedocument");
 
       // Sync directory for frontend dev
       const frontendUploadDir = path.resolve(process.cwd(), "../frontend/public/uploads");
 
       let finalFilename: string;
+
+      if (isDocument) {
+        const fileExt = path.extname(uploadedFile.originalname) || ".pdf";
+        finalFilename = `${timestamp}-${baseName}${fileExt.toLowerCase()}`;
+        const filePath = path.join(UPLOAD_DIR, finalFilename);
+        fs.writeFileSync(filePath, uploadedFile.buffer);
+
+        // Copy to frontend public uploads for local parity
+        try {
+          if (fs.existsSync(frontendUploadDir)) {
+            fs.writeFileSync(path.join(frontendUploadDir, finalFilename), uploadedFile.buffer);
+          }
+        } catch (e) {
+          // ignore
+        }
+
+        const originalKb = (uploadedFile.size / 1024).toFixed(1);
+        console.log(`[Upload Document] ${uploadedFile.originalname} (${originalKb} KB) -> ${finalFilename}`);
+
+        const fileUrl = `/uploads/${finalFilename}`;
+        res.status(201).json({
+          url: fileUrl,
+          fileUrl: fileUrl,
+          filename: finalFilename,
+          originalName: uploadedFile.originalname,
+          originalSizeKb: `${originalKb} KB`,
+          isDocument: true
+        });
+        return;
+      }
 
       if (isVideo) {
         // High-efficiency video compression: converts to fast-streaming web H.264/AAC with +faststart

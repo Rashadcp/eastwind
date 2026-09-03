@@ -129,6 +129,7 @@ export default function UnifiedAdminSolutionsPage() {
   const [solutions, setSolutions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [savingPage, setSavingPage] = useState<boolean>(false);
+  const [savingSection, setSavingSection] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -563,9 +564,11 @@ export default function UnifiedAdminSolutionsPage() {
   };
 
   // Save Handler for Tab 2 Solutions Page Banners & Content
-  const handleSaveSolutionsPageLayout = async () => {
+  const handleSaveSolutionsPageLayout = async (sectionLabel?: string | React.MouseEvent) => {
+    const label = typeof sectionLabel === "string" ? sectionLabel : undefined;
     clearMessages();
     setSavingPage(true);
+    setSavingSection(label || "all");
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 45000);
 
@@ -629,10 +632,10 @@ export default function UnifiedAdminSolutionsPage() {
         if (res.status === 401) {
           throw new Error("Admin authentication session expired. Please logout and log back in.");
         }
-        throw new Error(data.error || data.message || `Failed to save Solutions Page layout (${res.status})`);
+        throw new Error(data.error || data.message || `Failed to save ${label || "Solutions Page layout"} (${res.status})`);
       }
 
-      setSuccess("Solutions Page Banners & Layout saved successfully!");
+      setSuccess(label ? `${label} saved successfully!` : "Solutions Page Banners & Layout saved successfully!");
     } catch (err: any) {
       clearTimeout(timeoutId);
       if (err.name === "AbortError") {
@@ -642,6 +645,7 @@ export default function UnifiedAdminSolutionsPage() {
       }
     } finally {
       setSavingPage(false);
+      setSavingSection(null);
     }
   };
 
@@ -1107,18 +1111,35 @@ export default function UnifiedAdminSolutionsPage() {
             </span>
             <button
               type="button"
-              onClick={handleSaveSolutionsPageLayout}
+              onClick={() => handleSaveSolutionsPageLayout()}
               disabled={savingPage}
               className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 shrink-0 flex items-center gap-1.5 self-start sm:self-auto"
             >
-              {savingPage ? "Saving..." : "Save Layout Changes"}
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{savingPage && savingSection === "all" ? "Saving..." : "Save Layout Changes"}</span>
             </button>
           </div>
 
           {/* Section 1: Hero Banner Settings & Photo */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-base font-bold text-slate-800">1. Solutions Page Hero Banner & Background Photo</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <div>
+                <h2 className="text-base font-bold text-slate-800">1. Solutions Page Hero Banner & Background Photo</h2>
+                <p className="text-xs text-slate-500 mt-0.5">Customize hero banner background image, headline title, tagline badge, and intro text.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleSaveSolutionsPageLayout("Hero Banner")}
+                disabled={savingPage}
+                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{savingPage && savingSection === "Hero Banner" ? "Saving..." : "Save Hero Banner"}</span>
+              </button>
             </div>
             
             {/* Hero Background Photo Preview & Uploader */}
@@ -1159,19 +1180,57 @@ export default function UnifiedAdminSolutionsPage() {
               <label className="block font-bold text-slate-700 mb-1">Hero Description</label>
               <textarea rows={3} value={heroDescription} onChange={(e) => setHeroDescription(e.target.value)} className="w-full p-2.5 border rounded-lg text-xs" />
             </div>
+
+            {/* Section 1 Bottom Save Action Bar */}
+            <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                <span>Ready to save updates to Solutions Hero Banner & Photo</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleSaveSolutionsPageLayout("Hero Banner")}
+                disabled={savingPage}
+                className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{savingPage && savingSection === "Hero Banner" ? "Saving..." : "Save Hero Banner"}</span>
+              </button>
+            </div>
           </div>
 
           {/* Section 2: Operating Industries Cards with Add & Delete Controls */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-base font-bold text-slate-800">2. Solutions By Operating Industry ({industries.length} Cards)</h2>
-              <button
-                type="button"
-                onClick={handleAddIndustryCard}
-                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg cursor-pointer shadow-sm"
-              >
-                + Add Industry Card
-              </button>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <div>
+                <h2 className="text-base font-bold text-slate-800">2. Solutions By Operating Industry ({industries.length} Cards)</h2>
+                <p className="text-xs text-slate-500 mt-0.5">Manage industry sector risk profiles, image covers, technical solution columns, and bullet points.</p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                <button
+                  type="button"
+                  onClick={handleAddIndustryCard}
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl cursor-pointer shadow-xs transition-all flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>+ Add Industry Card</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSaveSolutionsPageLayout("Operating Industries")}
+                  disabled={savingPage}
+                  className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{savingPage && savingSection === "Operating Industries" ? "Saving..." : "Save Operating Industries"}</span>
+                </button>
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
               {industries.map((ind, idx) => (
@@ -1193,6 +1252,18 @@ export default function UnifiedAdminSolutionsPage() {
                       <span className="whitespace-nowrap shrink-0 text-orange-600 font-mono text-[11px] bg-orange-50 border border-orange-200/80 px-2.5 py-1 rounded-md font-bold tracking-tight">
                         {ind.id}
                       </span>
+                      <button
+                        type="button"
+                        onClick={() => handleSaveSolutionsPageLayout(`Industry Card (${ind.name || ind.id})`)}
+                        disabled={savingPage}
+                        className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                        title="Quick save this industry card"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Save</span>
+                      </button>
                       <button
                         type="button"
                         onClick={() => handleDeleteIndustryCard(idx)}
@@ -1425,19 +1496,69 @@ export default function UnifiedAdminSolutionsPage() {
                 </div>
               ))}
             </div>
+
+            {/* Section 2 Bottom Save Action Bar */}
+            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+              <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
+                <span>Ready to save updates to all {industries.length} Operating Industry sectors, columns & bullet points</span>
+              </div>
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={handleAddIndustryCard}
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-xl shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Add Another Sector</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSaveSolutionsPageLayout("Operating Industries")}
+                  disabled={savingPage}
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{savingPage && savingSection === "Operating Industries" ? "Saving..." : "Save Operating Industries"}</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Section 3: Core Capabilities with Add & Delete Controls */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-base font-bold text-slate-800">3. Technical Core Capabilities Portfolio ({corePortfolios.length} Cards)</h2>
-              <button
-                type="button"
-                onClick={handleAddCapabilityCard}
-                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg cursor-pointer shadow-sm"
-              >
-                + Add Capability Card
-              </button>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <div>
+                <h2 className="text-base font-bold text-slate-800">3. Technical Core Capabilities Portfolio ({corePortfolios.length} Cards)</h2>
+                <p className="text-xs text-slate-500 mt-0.5">Edit high-level technical capability domains, icons, and descriptions.</p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                <button
+                  type="button"
+                  onClick={handleAddCapabilityCard}
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl cursor-pointer shadow-xs transition-all flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>+ Add Capability Card</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSaveSolutionsPageLayout("Core Capabilities")}
+                  disabled={savingPage}
+                  className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{savingPage && savingSection === "Core Capabilities" ? "Saving..." : "Save Core Capabilities"}</span>
+                </button>
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               {corePortfolios.map((cp, idx) => (
@@ -1475,6 +1596,37 @@ export default function UnifiedAdminSolutionsPage() {
                 </div>
               ))}
             </div>
+
+            {/* Section 3 Bottom Save Action Bar */}
+            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+              <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
+                <span>Ready to save updates to {corePortfolios.length} Technical Core Capabilities</span>
+              </div>
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={handleAddCapabilityCard}
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-xl shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Add Another Capability</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSaveSolutionsPageLayout("Core Capabilities")}
+                  disabled={savingPage}
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{savingPage && savingSection === "Core Capabilities" ? "Saving..." : "Save Core Capabilities"}</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* SECTION 4: INTEGRATED PARTNER BRANDS & LOGOS */}
@@ -1491,15 +1643,31 @@ export default function UnifiedAdminSolutionsPage() {
                   Manage brand names and logo images displayed on the public solutions auto-scrolling marquee.
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setPartners([...partners, { name: "New Partner Brand", logo: "" }]);
-                }}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-xl shadow-md cursor-pointer transition-all shrink-0"
-              >
-                <span>+ Add Partner Brand</span>
-              </button>
+              <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPartners([...partners, { name: "New Partner Brand", logo: "" }]);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-xs cursor-pointer transition-all shrink-0"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>+ Add Partner Brand</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSaveSolutionsPageLayout("Partner Brands")}
+                  disabled={savingPage}
+                  className="inline-flex items-center gap-1.5 px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 shrink-0"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{savingPage && savingSection === "Partner Brands" ? "Saving..." : "Save Partner Brands"}</span>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -1631,22 +1799,37 @@ export default function UnifiedAdminSolutionsPage() {
                 );
               })}
             </div>
-          </div>
 
-          {/* Form Footer Action Bar */}
-          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-              <span>Ready to save and publish updates to the Solutions landing page layout</span>
+            {/* Section 4 Bottom Save Action Bar */}
+            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+              <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
+                <span>Ready to save updates to {partners.length} Integrated Partner Brands & Logos</span>
+              </div>
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={() => setPartners([...partners, { name: "New Partner Brand", logo: "" }])}
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-xl shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Add Another Brand</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSaveSolutionsPageLayout("Partner Brands")}
+                  disabled={savingPage}
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{savingPage && savingSection === "Partner Brands" ? "Saving..." : "Save Partner Brands"}</span>
+                </button>
+              </div>
             </div>
-            <button
-              type="button"
-              onClick={handleSaveSolutionsPageLayout}
-              disabled={savingPage}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
-            >
-              {savingPage ? "Saving Layout..." : "Save Layout Changes"}
-            </button>
           </div>
         </div>
       )}

@@ -95,7 +95,7 @@ export default function AdminLoginPage() {
         router.push("/admin");
       }
     } catch (err: any) {
-      console.error("Login error:", err);
+      console.warn("Login attempt notice:", err.message);
       setError(err.message || "Failed to establish secure session.");
     } finally {
       setLoading(false);

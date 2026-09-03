@@ -14,14 +14,24 @@ const upload = multer({
   storage,
   limits: { fileSize: 150 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const allowedExtensions = /jpeg|jpg|png|webp|gif|svg|mp4|webm|mov|mkv|avi/;
+    const allowedExtensions = /jpeg|jpg|png|webp|gif|svg|mp4|webm|mov|mkv|avi|pdf|docx|doc|xls|xlsx|txt|csv|zip/;
     const extName = allowedExtensions.test(path.extname(file.originalname).toLowerCase());
-    const mimeType = allowedExtensions.test(file.mimetype.toLowerCase()) || file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/");
+    const isDocMime = file.mimetype.includes("pdf") ||
+                      file.mimetype.includes("document") ||
+                      file.mimetype.includes("msword") ||
+                      file.mimetype.includes("officedocument") ||
+                      file.mimetype.includes("text/") ||
+                      file.mimetype.includes("application/zip") ||
+                      file.mimetype.includes("application/octet-stream");
+    const mimeType = allowedExtensions.test(file.mimetype.toLowerCase()) || 
+                     file.mimetype.startsWith("image/") || 
+                     file.mimetype.startsWith("video/") ||
+                     isDocMime;
 
     if (extName || mimeType) {
       return cb(null, true);
     }
-    cb(new Error("Only image and video files (.png, .jpg, .jpeg, .webp, .svg, .mp4, .webm, .mov) are allowed!"));
+    cb(new Error("Only images, videos, and documents (.pdf, .docx, .doc, .png, .jpg, .webp, .mp4) are allowed!"));
   }
 });
 

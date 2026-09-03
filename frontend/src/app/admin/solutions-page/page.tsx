@@ -28,6 +28,7 @@ export default function AdminSolutionsPage() {
   const [activeTab, setActiveTab] = useState<"hero_industries" | "capabilities" | "partners" | "gateway">("hero_industries");
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
+  const [savingSection, setSavingSection] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
@@ -274,9 +275,11 @@ export default function AdminSolutionsPage() {
   };
 
   // Save full configuration
-  const handleSaveConfig = async () => {
+  const handleSaveConfig = async (sectionLabel?: string | React.MouseEvent) => {
+    const label = typeof sectionLabel === "string" ? sectionLabel : undefined;
     clearMessages();
     setSaving(true);
+    setSavingSection(label || "all");
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -316,14 +319,15 @@ export default function AdminSolutionsPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to save Solutions Page config");
+      if (!res.ok) throw new Error(data.error || `Failed to save ${label || "Solutions Page config"}`);
 
-      setSuccess("Solutions Page content saved successfully!");
+      setSuccess(label ? `${label} saved successfully!` : "Solutions Page content saved successfully!");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to save changes.");
     } finally {
       setSaving(false);
+      setSavingSection(null);
     }
   };
 
@@ -423,9 +427,22 @@ export default function AdminSolutionsPage() {
           
           {/* Hero Section Card */}
           <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
-              Solutions Page Hero Banner
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <h2 className="text-lg font-bold text-slate-800 m-0">
+                Solutions Page Hero Banner
+              </h2>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => handleSaveConfig("Hero Banner")}
+                className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{saving && savingSection === "Hero Banner" ? "Saving..." : "Save Hero Banner"}</span>
+              </button>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -516,12 +533,12 @@ export default function AdminSolutionsPage() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Section Title</label>
+                <label className="block text-xs font-bold text-slate-700 mb-2">Section Heading Title</label>
                 <input
                   type="text"
                   value={industriesTitle}
                   onChange={(e) => setIndustriesTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-xl font-bold"
                 />
               </div>
             </div>
@@ -539,25 +556,41 @@ export default function AdminSolutionsPage() {
 
           {/* Industry Categories List */}
           <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Operating Industry Categories</h2>
-              <button
-                type="button"
-                onClick={() => setIndustries([
-                  ...industries,
-                  {
-                    id: `industry-${Date.now()}`,
-                    name: "New Industry Category",
-                    riskKicker: "PROCESS RISK CATEGORY | ZONE 1",
-                    accent: "#c22026",
-                    image: "/predictive_intelligence.webp",
-                    description: "High-level risk mitigation narrative for this operating environment..."
-                  }
-                ])}
-                className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold rounded-lg hover:bg-orange-700 cursor-pointer"
-              >
-                + Add Industry Category
-              </button>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <h2 className="text-lg font-bold text-slate-800 m-0">Operating Industry Categories ({industries.length})</h2>
+              <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => setIndustries([
+                    ...industries,
+                    {
+                      id: `industry-${Date.now()}`,
+                      name: "New Industry Category",
+                      riskKicker: "PROCESS RISK CATEGORY | ZONE 1",
+                      accent: "#c22026",
+                      image: "/predictive_intelligence.webp",
+                      description: "High-level risk mitigation narrative for this operating environment..."
+                    }
+                  ])}
+                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>+ Add Industry Category</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => handleSaveConfig("Operating Industries")}
+                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{saving && savingSection === "Operating Industries" ? "Saving..." : "Save Operating Industries"}</span>
+                </button>
+              </div>
             </div>
 
             <div className="space-y-6">
@@ -752,23 +785,39 @@ export default function AdminSolutionsPage() {
 
           {/* Portfolios Cards List */}
           <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Core Capability Portfolio Cards</h2>
-              <button
-                type="button"
-                onClick={() => setCorePortfolios([
-                  ...corePortfolios,
-                  {
-                    title: "New Capability Domain",
-                    description: "High-level domain description narrative...",
-                    items: ["Capability feature item 1", "Capability feature item 2"],
-                    icon: "🛡️"
-                  }
-                ])}
-                className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold rounded-lg hover:bg-orange-700 cursor-pointer"
-              >
-                + Add Capability Card
-              </button>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <h2 className="text-lg font-bold text-slate-800 m-0">Core Capability Portfolio Cards ({corePortfolios.length})</h2>
+              <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => setCorePortfolios([
+                    ...corePortfolios,
+                    {
+                      title: "New Capability Domain",
+                      description: "High-level domain description narrative...",
+                      items: ["Capability feature item 1", "Capability feature item 2"],
+                      icon: "🛡️"
+                    }
+                  ])}
+                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>+ Add Capability Card</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => handleSaveConfig("Core Capabilities")}
+                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{saving && savingSection === "Core Capabilities" ? "Saving..." : "Save Core Capabilities"}</span>
+                </button>
+              </div>
             </div>
 
             <div className="space-y-6">
@@ -913,16 +962,32 @@ export default function AdminSolutionsPage() {
                 </h2>
                 <p className="text-xs text-slate-500 m-0 mt-1">Manage brand names and logo images displayed on the auto-scrolling solutions carousel.</p>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  const newBrand = { name: "New Partner Brand", logo: "" };
-                  setPartners([...partners, newBrand]);
-                }}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-xl shadow-md cursor-pointer transition-all shrink-0"
-              >
-                <span>+ Add Partner Brand</span>
-              </button>
+              <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newBrand = { name: "New Partner Brand", logo: "" };
+                    setPartners([...partners, newBrand]);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-xs cursor-pointer transition-all shrink-0"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>+ Add Partner Brand</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => handleSaveConfig("Partner Brands")}
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 shrink-0"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{saving && savingSection === "Partner Brands" ? "Saving..." : "Save Partner Brands"}</span>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -1122,18 +1187,34 @@ export default function AdminSolutionsPage() {
 
           {/* Primary Solution Scope Dropdown Options */}
           <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Primary Solution Scope Dropdown Choices</h2>
-              <button
-                type="button"
-                onClick={() => setSolutionScopeOptions([
-                  ...solutionScopeOptions,
-                  { value: `scope-${Date.now()}`, label: "New Solution Scope Option" }
-                ])}
-                className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold rounded-lg hover:bg-orange-700 cursor-pointer"
-              >
-                + Add Scope Option
-              </button>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <h2 className="text-lg font-bold text-slate-800 m-0">Primary Solution Scope Dropdown Choices ({solutionScopeOptions.length})</h2>
+              <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => setSolutionScopeOptions([
+                    ...solutionScopeOptions,
+                    { value: `scope-${Date.now()}`, label: "New Solution Scope Option" }
+                  ])}
+                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>+ Add Scope Option</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => handleSaveConfig("Enquiry Gateway")}
+                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{saving && savingSection === "Enquiry Gateway" ? "Saving..." : "Save Gateway"}</span>
+                </button>
+              </div>
             </div>
 
             <div className="space-y-4">

@@ -20,6 +20,11 @@ export interface ProductItem {
   description: string;
   features?: string[];
   specifications?: SpecItem[];
+  certifications?: string[];
+  datasheetUrl?: string;
+  datasheetName?: string;
+  whitepaperUrl?: string;
+  whitepaperName?: string;
   imageUrl?: string;
   slug?: string;
   solutionName?: string;
@@ -145,7 +150,17 @@ function ProductsCatalogContent() {
         const mainProds = await cachedFetch<any[]>(`${baseUrl}/api/products`, { fallback: [] });
         if (Array.isArray(mainProds)) {
           mainProds.forEach((mp) => {
-            if (!allProds.some((p) => p.id === mp.id)) {
+            const existingIdx = allProds.findIndex((p) => p.id === mp.id);
+            if (existingIdx !== -1) {
+              allProds[existingIdx] = {
+                ...allProds[existingIdx],
+                ...mp,
+                brand: mp.brand || allProds[existingIdx].brand,
+                specifications: (mp.specifications && mp.specifications.length > 0) ? mp.specifications : allProds[existingIdx].specifications,
+                certifications: (mp.certifications && mp.certifications.length > 0) ? mp.certifications : allProds[existingIdx].certifications,
+                features: (mp.features && mp.features.length > 0) ? mp.features : allProds[existingIdx].features,
+              };
+            } else {
               allProds.push(mp);
             }
           });
@@ -267,6 +282,20 @@ function ProductsCatalogContent() {
   };
 
   const handleDownloadDatasheet = (product: ProductItem) => {
+    if (product.datasheetUrl && product.datasheetUrl.trim() !== "") {
+      const fullUrl = formatImageUrl(product.datasheetUrl);
+      const downloadName = product.datasheetName || `${product.name.replace(/\s+/g, "_")}_Datasheet${fullUrl.substring(fullUrl.lastIndexOf(".")) || ".pdf"}`;
+      const link = document.createElement("a");
+      link.href = fullUrl;
+      link.download = downloadName;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return;
+    }
+
     const printWindow = window.open("", "_blank");
     if (!printWindow) return;
     
@@ -350,6 +379,20 @@ function ProductsCatalogContent() {
   };
 
   const handleDownloadWhitePaper = (product: ProductItem) => {
+    if (product.whitepaperUrl && product.whitepaperUrl.trim() !== "") {
+      const fullUrl = formatImageUrl(product.whitepaperUrl);
+      const downloadName = product.whitepaperName || `${product.name.replace(/\s+/g, "_")}_Safety_White_Paper${fullUrl.substring(fullUrl.lastIndexOf(".")) || ".pdf"}`;
+      const link = document.createElement("a");
+      link.href = fullUrl;
+      link.download = downloadName;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return;
+    }
+
     const printWindow = window.open("", "_blank");
     if (!printWindow) return;
 
@@ -557,35 +600,6 @@ function ProductsCatalogContent() {
 
             {/* ================= RIGHT MAIN PRODUCTS GRID ================= */}
             <main className="space-y-6">
-              
-              {/* Filter Header Info */}
-              <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <span className="font-mono font-bold text-slate-400">Active Filters:</span>
-                  {selectedBrand !== "All" && (
-                    <span className="px-3 py-1 bg-orange-50 text-orange-600 border border-orange-200 rounded-full font-bold">
-                      Brand: {selectedBrand}
-                    </span>
-                  )}
-                  {selectedCategory !== "All" && (
-                    <span className="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-200 rounded-full font-bold">
-                      Solution: {selectedCategory}
-                    </span>
-                  )}
-                  {searchQuery && (
-                    <span className="px-3 py-1 bg-slate-100 text-slate-700 border border-slate-200 rounded-full font-bold">
-                      Search: "{searchQuery}"
-                    </span>
-                  )}
-                  {selectedBrand === "All" && selectedCategory === "All" && !searchQuery && (
-                    <span className="font-bold text-slate-700">Showing All Equipment</span>
-                  )}
-                </div>
-
-                <span className="text-xs font-mono font-bold text-slate-400">
-                  Showing {filteredProducts.length} Products
-                </span>
-              </div>
 
               {/* Products Grid */}
               {loading ? (
@@ -757,22 +771,39 @@ function ProductsCatalogContent() {
                       Industrial Safety Certifications
                     </h4>
                     <div className="flex flex-wrap items-center gap-2 text-xs">
-                      <span className="px-3 py-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold rounded-lg flex items-center gap-1.5">
-                        <Shield className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                        <span>ATEX Zone 1 / 2</span>
-                      </span>
-                      <span className="px-3 py-1.5 bg-blue-50 text-blue-800 border border-blue-200 font-bold rounded-lg flex items-center gap-1.5">
-                        <Zap className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                        <span>IECEx Certified</span>
-                      </span>
-                      <span className="px-3 py-1.5 bg-purple-50 text-purple-800 border border-purple-200 font-bold rounded-lg flex items-center gap-1.5">
-                        <Check className="w-3.5 h-3.5 text-purple-600 shrink-0" />
-                        <span>SIL 2 / SIL 3</span>
-                      </span>
-                      <span className="px-3 py-1.5 bg-slate-100 text-slate-700 border border-slate-200 font-bold rounded-lg flex items-center gap-1.5">
-                        <Shield className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                        <span>IP66 / IP67 NEMA 4X</span>
-                      </span>
+                      {(selectedProduct.certifications && selectedProduct.certifications.length > 0
+                        ? selectedProduct.certifications
+                        : [
+                            "ATEX Zone 1 / 2",
+                            "IECEx Certified",
+                            "SIL 2 / SIL 3",
+                            "IP66 / IP67 NEMA 4X"
+                          ]
+                      ).map((cert, cIdx) => {
+                        const cLower = cert.toLowerCase();
+                        let badgeStyle = "bg-slate-100 text-slate-700 border-slate-200";
+                        let IconComponent = Shield;
+
+                        if (cLower.includes("atex") || cLower.includes("zone")) {
+                          badgeStyle = "bg-emerald-50 text-emerald-800 border-emerald-200";
+                        } else if (cLower.includes("iecex") || cLower.includes("cert") || cLower.includes("ul") || cLower.includes("fm") || cLower.includes("ce")) {
+                          badgeStyle = "bg-blue-50 text-blue-800 border-blue-200";
+                          IconComponent = Zap;
+                        } else if (cLower.includes("sil")) {
+                          badgeStyle = "bg-purple-50 text-purple-800 border-purple-200";
+                          IconComponent = Check;
+                        }
+
+                        return (
+                          <span
+                            key={cIdx}
+                            className={`px-3 py-1.5 font-bold rounded-lg flex items-center gap-1.5 border ${badgeStyle}`}
+                          >
+                            <IconComponent className="w-3.5 h-3.5 shrink-0" />
+                            <span>{cert}</span>
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -796,7 +827,9 @@ function ProductsCatalogContent() {
                               Download Technical Datasheet
                             </div>
                             <div className="text-[10px] text-slate-400 font-mono">
-                              PDF • Complete Parameter Specs
+                              {selectedProduct.datasheetName && selectedProduct.datasheetName.trim() !== ""
+                                ? `${(selectedProduct.datasheetName.split(".").pop() || "PDF").toUpperCase()} • ${selectedProduct.datasheetName}`
+                                : "PDF • Complete Parameter Specs"}
                             </div>
                           </div>
                         </div>
@@ -817,7 +850,9 @@ function ProductsCatalogContent() {
                               Download Safety White Paper
                             </div>
                             <div className="text-[10px] text-slate-400 font-mono">
-                              PDF • Deployment & Compliance
+                              {selectedProduct.whitepaperName && selectedProduct.whitepaperName.trim() !== ""
+                                ? `${(selectedProduct.whitepaperName.split(".").pop() || "PDF").toUpperCase()} • ${selectedProduct.whitepaperName}`
+                                : "PDF • Deployment & Compliance"}
                             </div>
                           </div>
                         </div>
@@ -849,17 +884,6 @@ function ProductsCatalogContent() {
                   
                   {/* Main Product Header */}
                   <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">
-                          Model Ref: {selectedProduct.id}
-                        </span>
-                        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200">
-                          Active In Stock
-                        </span>
-                      </div>
-                    </div>
-
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                       {selectedProduct.name}
                     </h1>
@@ -948,9 +972,6 @@ function ProductsCatalogContent() {
               {/* Bottom Full-Width Technical Enquiry Form */}
               <div id="product-enquiry-form" className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-10 shadow-sm space-y-6">
                 <div className="space-y-1">
-                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-orange-600">
-                    Direct Manufacturer Integration
-                  </div>
                   <h3 className="text-2xl font-black text-slate-900 tracking-tight">
                     Request Technical Integration Quote for {selectedProduct.name}
                   </h3>

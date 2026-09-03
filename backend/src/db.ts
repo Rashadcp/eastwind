@@ -13,7 +13,12 @@ export interface IProduct extends Document {
   description: string;
   features: string[];
   specifications: { label: string; value: string }[];
+  certifications?: string[];
   imageUrl?: string;
+  datasheetUrl?: string;
+  datasheetName?: string;
+  whitepaperUrl?: string;
+  whitepaperName?: string;
 }
 
 export interface ISolution extends Document {
@@ -222,7 +227,12 @@ const ProductSchema = new Schema<IProduct>({
   description: { type: String, default: "" },
   features: { type: [String], default: [] },
   specifications: [{ label: String, value: String }],
-  imageUrl: { type: String }
+  certifications: { type: [String], default: [] },
+  imageUrl: { type: String },
+  datasheetUrl: { type: String, default: "" },
+  datasheetName: { type: String, default: "" },
+  whitepaperUrl: { type: String, default: "" },
+  whitepaperName: { type: String, default: "" }
 });
 
 const SolutionSchema = new Schema<ISolution>({

@@ -9,7 +9,12 @@ export interface ProductItem {
   description: string;
   features: string[];
   specifications: { label: string; value: string }[];
+  certifications?: string[];
   imageUrl?: string;
+  datasheetUrl?: string;
+  datasheetName?: string;
+  whitepaperUrl?: string;
+  whitepaperName?: string;
 }
 
 export function getProductImageUrl(product: ProductItem): string {
