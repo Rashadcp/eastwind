@@ -350,14 +350,20 @@ export default function AdminProductsPage() {
     e.preventDefault();
     clearMessages();
 
-    if (!formId || !formName || !formBrand || !formCategory) {
+    if (!formName || !formBrand || !formCategory) {
       setError("Please fill in all required parameters.");
       return;
     }
 
+    const finalId = formId ? formId.trim().toLowerCase().replace(/\s+/g, "-") : formName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    if (!finalId) {
+      setError("Please provide a valid product name.");
+      return;
+    }
+
     const payload: ProductItem = {
-      id: formId.trim().toLowerCase().replace(/\s+/g, "-"),
-      slug: formId.trim().toLowerCase().replace(/\s+/g, "-") + "-system",
+      id: finalId,
+      slug: finalId + "-system",
       name: formName.trim(),
       brand: formBrand,
       category: formCategory,
@@ -546,17 +552,15 @@ export default function AdminProductsPage() {
             <table className="w-full border-collapse text-left m-0">
               <thead>
                 <tr className="bg-white/[0.02] border-b border-white/5">
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Code (ID)</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Name</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Brand</th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Category Category</th>
+                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 font-sans">
                 {paginatedProducts.map((item) => (
                   <tr key={item.id} className="hover:bg-white/[0.01] transition-colors">
-                    <td className="px-6 py-4 text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{item.id}</td>
                     <td className="px-6 py-4 text-xs font-bold text-slate-100 max-w-xs truncate">{item.name}</td>
                     <td className="px-6 py-4 text-xs font-semibold text-slate-400">{item.brand}</td>
                     <td className="px-6 py-4 text-xs font-semibold text-slate-400 max-w-[180px] truncate">
@@ -637,7 +641,7 @@ export default function AdminProductsPage() {
             {/* Modal Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-white/5 flex-shrink-0">
               <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
-                {isEdit ? `Configure Product: ${formId}` : "Create New Product Catalog Node"}
+                {isEdit ? `Configure Product: ${formName || formId}` : "Create New Product Catalog Node"}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
@@ -654,20 +658,6 @@ export default function AdminProductsPage() {
               <form id="product-form" onSubmit={handleSave} className="space-y-6">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* ID input */}
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Product Code ID *</label>
-                  <input
-                    type="text"
-                    required
-                    disabled={isEdit}
-                    placeholder="e.g. gas-leak-detector"
-                    value={formId}
-                    onChange={(e) => setFormId(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium disabled:opacity-40 disabled:cursor-not-allowed"
-                  />
-                </div>
-
                 {/* Name Input */}
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Product Name *</label>

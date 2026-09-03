@@ -144,13 +144,19 @@ export default function AdminApplicationsPage() {
     e.preventDefault();
     clearMessages();
 
-    if (!formId || !formTitle || !formTagline || !formOverview) {
+    if (!formTitle || !formTagline || !formOverview) {
       setError("Please fill in all required parameters.");
       return;
     }
 
+    const finalId = formId ? formId.trim().toLowerCase().replace(/\s+/g, "-") : formTitle.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    if (!finalId) {
+      setError("Please provide a valid application title.");
+      return;
+    }
+
     const payload = {
-      id: formId.trim().toLowerCase().replace(/\s+/g, "-"),
+      id: finalId,
       title: formTitle.trim(),
       category: formCategory.trim(),
       tagline: formTagline.trim(),
@@ -304,7 +310,6 @@ export default function AdminApplicationsPage() {
             <table className="w-full border-collapse text-left m-0">
               <thead>
                 <tr className="bg-white/[0.02] border-b border-white/5">
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Application Code (ID)</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Application Title</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Accent Color</th>
@@ -314,7 +319,6 @@ export default function AdminApplicationsPage() {
               <tbody className="divide-y divide-white/5 font-sans">
                 {paginatedApplications.map((item) => (
                   <tr key={item.id} className="hover:bg-white/[0.01] transition-colors">
-                    <td className="px-6 py-4 text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{item.id}</td>
                     <td className="px-6 py-4 text-xs font-bold text-slate-100 max-w-xs truncate">{item.title}</td>
                     <td className="px-6 py-4 text-xs font-semibold text-slate-400">{item.category}</td>
                     <td className="px-6 py-4 text-xs">
@@ -397,7 +401,7 @@ export default function AdminApplicationsPage() {
             {/* Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-white/5 flex-shrink-0">
               <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
-                {isEdit ? `Edit Application: ${formId}` : "Create New Application"}
+                {isEdit ? `Edit Application: ${formTitle || formId}` : "Create New Application"}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
@@ -414,19 +418,6 @@ export default function AdminApplicationsPage() {
               <form id="application-form" onSubmit={handleSave} className="space-y-6">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Application Slug ID *</label>
-                  <input
-                    type="text"
-                    required
-                    disabled={isEdit}
-                    placeholder="e.g. smart-refinery"
-                    value={formId}
-                    onChange={(e) => setFormId(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium disabled:opacity-45"
-                  />
-                </div>
-
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Application Title *</label>
                   <input
