@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { formatImageUrl } from "@/utils/image";
 
 const ROUTE_LOCATION_MAP: Record<
   string,
@@ -82,11 +83,28 @@ export default function AdminLayout({
   const [username, setUsername] = useState<string>("Admin");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
   const [origin, setOrigin] = useState<string>("");
+  const [logoUrl, setLogoUrl] = useState<string>("/logo.png");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setOrigin(window.location.origin);
     }
+
+    async function fetchLogo() {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(`${baseUrl}/api/footer`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.logoUrl) {
+            setLogoUrl(data.logoUrl);
+          }
+        }
+      } catch (e) {
+        // fallback to /logo.png
+      }
+    }
+    fetchLogo();
   }, []);
 
   const locationInfo = ROUTE_LOCATION_MAP[pathname];
@@ -367,7 +385,7 @@ export default function AdminLayout({
           background-color: #ffffff !important;
           color: #334155 !important;
         }
-        /* Inputs */
+        /* Inputs, Selects & Options */
         .admin-light-theme input,
         .admin-light-theme select,
         .admin-light-theme textarea {
@@ -375,6 +393,17 @@ export default function AdminLayout({
           border: 1px solid #cbd5e1 !important;
           color: #0f172a !important;
           border-radius: 12px !important;
+        }
+        .admin-light-theme select option,
+        .admin-light-theme option {
+          background-color: #ffffff !important;
+          color: #0f172a !important;
+          padding: 8px 12px !important;
+        }
+        .admin-light-theme select option:checked {
+          background-color: #fed7aa !important;
+          color: #9a3412 !important;
+          font-weight: 700 !important;
         }
         .admin-light-theme input:focus,
         .admin-light-theme select:focus,
@@ -483,15 +512,22 @@ export default function AdminLayout({
         <div className="flex flex-col flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-orange-500">
           {/* Brand header */}
           <div className="h-20 flex items-center justify-between px-6 border-b border-slate-200/60 shrink-0 sticky top-0 bg-white z-10">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center font-bold text-white text-md">
-                EW
+            <Link href="/admin" className="flex items-center gap-3 no-underline">
+              <div className="p-1 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-center">
+                <img
+                  src={formatImageUrl(logoUrl)}
+                  alt="Eastwind"
+                  className="h-8 w-auto max-w-[110px] object-contain"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = "/logo.png";
+                  }}
+                />
               </div>
-              <div>
-                <span className="font-bold text-sm text-slate-800 block">Eastwind</span>
-                <span className="text-xs text-slate-550 block">Admin Console</span>
+              <div className="leading-tight">
+                <span className="font-bold text-xs text-slate-800 block">Eastwind</span>
+                <span className="text-[10px] text-slate-500 block font-mono">Console</span>
               </div>
-            </div>
+            </Link>
             {/* Close button for mobile */}
             <button
               type="button"

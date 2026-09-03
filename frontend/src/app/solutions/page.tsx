@@ -431,6 +431,57 @@ const defaultIndustrySolutionsMap: Record<string, { name: string; items: string[
   ]
 };
 
+const DEFAULT_SERVICES = [
+  {
+    id: "explosion-proof-design",
+    title: "Explosion-Proof System Design",
+    category: "Hazardous Area Engineering",
+    desc: "Comprehensive ATEX/IECEx compliant engineering consultancy for hazardous plant environments. Designing pressurized shelters, LER units, and intrinsically safe sensor loops.",
+    badge: "ATEX / IECEx Certified",
+    items: ["Zone 1 & 2 Audit Studies", "Pressurized Shelter Engineering", "Intrinsically Safe Loops"]
+  },
+  {
+    id: "hse-consultancy",
+    title: "HSE & Risk Consultancy",
+    category: "Safety & Threat Assessment",
+    desc: "End-to-end HSE risk studies, toxic gas dispersion modeling, blast wave calculation, and emergency response planning for energy infrastructure.",
+    badge: "3D CFD Dispersion",
+    items: ["Quantitative Risk Analysis (QRA)", "3D Blast & Gas Dispersion", "Refuge Chamber Assessment"]
+  },
+  {
+    id: "fire-gas-mapping",
+    title: "Fire & Gas Mapping Services",
+    category: "Detection System Optimization",
+    desc: "Advanced 3D optical detector mapping to ensure maximum flame and gas detector coverage with zero blind spots across process areas.",
+    badge: "SIL 2/3 Target Coverage",
+    items: ["3D Line-of-Sight Flame Mapping", "Gas Cloud Accumulation Studies", "Detector Layout Matrix"]
+  },
+  {
+    id: "digitalisation-consultancy",
+    title: "Digitalisation Consultancy",
+    category: "IIoT & Telemetry Integration",
+    desc: "Architecting wireless ISA100 and WirelessHART IIoT telemetry fabrics across offshore platforms and remote refineries for real-time asset monitoring.",
+    badge: "ISA 100 Wireless",
+    items: ["Wireless Mesh Network Design", "Edge AI Telemetry Integration", "SCADA Gateway Protocol Specs"]
+  },
+  {
+    id: "electromechanical-automation",
+    title: "Electromechanical Automation",
+    category: "Plant Safety Control Systems",
+    desc: "Turnkey engineering of automated fire deluge valves, One Seven CAFS foam skid controls, and integrated safety shutdown panels.",
+    badge: "SIL 3 PLC Controls",
+    items: ["Deluge Actuation Control Skids", "Emergency Shutdown (ESD) Panels", "FAT & SAT Field Commissioning"]
+  },
+  {
+    id: "power-optimisation",
+    title: "Power Optimisation Support",
+    category: "Energy & Infrastructure Resilience",
+    desc: "Designing redundant industrial UPS systems, solar-powered telemetry nodes, and battery backup loops for continuous safety monitoring.",
+    badge: "72Hr+ Autonomy",
+    items: ["Redundant Industrial UPS Loops", "Solar IIoT Power Packs", "Battery Autonomy Calculations"]
+  }
+];
+  
 function getMatchingIndustryId(catParam: string | null, industries: IndustryData[]): string | null {
   if (!catParam) return null;
   const clean = catParam.toLowerCase().trim();
@@ -558,6 +609,8 @@ function SolutionsPageContent() {
   }, [searchParams]);
   const [hoveredSolution, setHoveredSolution] = useState<string | null>(null);
   const [solutionsList, setSolutionsList] = useState<any[]>([]);
+  const [servicesList, setServicesList] = useState<any[]>(DEFAULT_SERVICES);
+  const [applicationsList, setApplicationsList] = useState<any[]>(pageApplicationsList);
 
   useEffect(() => {
     if (urlCat && pageConfig.industries.length > 0) {
@@ -630,6 +683,24 @@ function SolutionsPageContent() {
         if (solRes.ok) {
           const list = await solRes.json();
           setSolutionsList(list);
+        }
+
+        // Fetch Services Catalog
+        const srvRes = await fetch(`${baseUrl}/api/services`);
+        if (srvRes.ok) {
+          const sList = await srvRes.json();
+          if (Array.isArray(sList) && sList.length > 0) {
+            setServicesList(sList);
+          }
+        }
+
+        // Fetch Applications Catalog
+        const appRes = await fetch(`${baseUrl}/api/applications`);
+        if (appRes.ok) {
+          const aList = await appRes.json();
+          if (Array.isArray(aList) && aList.length > 0) {
+            setApplicationsList(aList);
+          }
         }
       } catch (err) {
         console.error("Failed to load solutions page configuration:", err);
@@ -844,118 +915,88 @@ function SolutionsPageContent() {
           </div>
 
           {mainCategory === "services" ? (
-            /* Services Portfolio List View */
+            /* Services Portfolio List View (Dynamic from Admin) */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-              {[
-                {
-                  id: "explosion-proof-design",
-                  title: "Explosion-Proof System Design",
-                  category: "Hazardous Area Engineering",
-                  desc: "Comprehensive ATEX/IECEx compliant engineering consultancy for hazardous plant environments. Designing pressurized shelters, LER units, and intrinsically safe sensor loops.",
-                  badge: "ATEX / IECEx Certified",
-                  items: ["Zone 1 & 2 Audit Studies", "Pressurized Shelter Engineering", "Intrinsically Safe Loops"]
-                },
-                {
-                  id: "hse-consultancy",
-                  title: "HSE & Risk Consultancy",
-                  category: "Safety & Threat Assessment",
-                  desc: "End-to-end HSE risk studies, toxic gas dispersion modeling, blast wave calculation, and emergency response planning for energy infrastructure.",
-                  badge: "3D CFD Dispersion",
-                  items: ["Quantitative Risk Analysis (QRA)", "3D Blast & Gas Dispersion", "Refuge Chamber Assessment"]
-                },
-                {
-                  id: "fire-gas-mapping",
-                  title: "Fire & Gas Mapping Services",
-                  category: "Detection System Optimization",
-                  desc: "Advanced 3D optical detector mapping to ensure maximum flame and gas detector coverage with zero blind spots across process areas.",
-                  badge: "SIL 2/3 Target Coverage",
-                  items: ["3D Line-of-Sight Flame Mapping", "Gas Cloud Accumulation Studies", "Detector Layout Matrix"]
-                },
-                {
-                  id: "digitalisation-consultancy",
-                  title: "Digitalisation Consultancy",
-                  category: "IIoT & Telemetry Integration",
-                  desc: "Architecting wireless ISA100 and WirelessHART IIoT telemetry fabrics across offshore platforms and remote refineries for real-time asset monitoring.",
-                  badge: "ISA 100 Wireless",
-                  items: ["Wireless Mesh Network Design", "Edge AI Telemetry Integration", "SCADA Gateway Protocol Specs"]
-                },
-                {
-                  id: "electromechanical-automation",
-                  title: "Electromechanical Automation",
-                  category: "Plant Safety Control Systems",
-                  desc: "Turnkey engineering of automated fire deluge valves, One Seven CAFS foam skid controls, and integrated safety shutdown panels.",
-                  badge: "SIL 3 PLC Controls",
-                  items: ["Deluge Actuation Control Skids", "Emergency Shutdown (ESD) Panels", "FAT & SAT Field Commissioning"]
-                },
-                {
-                  id: "power-optimisation",
-                  title: "Power Optimisation Support",
-                  category: "Energy & Infrastructure Resilience",
-                  desc: "Designing redundant industrial UPS systems, solar-powered telemetry nodes, and battery backup loops for continuous safety monitoring.",
-                  badge: "72Hr+ Autonomy",
-                  items: ["Redundant Industrial UPS Loops", "Solar IIoT Power Packs", "Battery Autonomy Calculations"]
-                }
-              ].map((srv, idx) => (
-                <div
-                  key={srv.id}
-                  className="bg-white border border-slate-200/90 rounded-3xl p-7 shadow-xs hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between group"
-                >
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-bold text-slate-900 leading-snug group-hover:text-emerald-700 transition-colors">
-                      {srv.title}
-                    </h3>
+              {servicesList.map((srv, idx) => {
+                const serviceItems: string[] = (srv.deliverables && srv.deliverables.length > 0)
+                  ? srv.deliverables
+                  : (srv.items && srv.items.length > 0)
+                  ? srv.items
+                  : (srv.capabilities && srv.capabilities.length > 0)
+                  ? srv.capabilities.map((c: any) => typeof c === "string" ? c : c.title)
+                  : [];
 
-                    <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                      {srv.desc}
-                    </p>
+                return (
+                  <div
+                    key={srv.id || idx}
+                    className="bg-white border border-slate-200/90 rounded-3xl p-7 shadow-xs hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between group"
+                  >
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-bold text-slate-900 leading-snug group-hover:text-emerald-700 transition-colors">
+                        {srv.title}
+                      </h3>
 
-                    <div className="pt-2 space-y-1.5 border-t border-slate-100">
-                      {srv.items.map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 text-xs text-slate-700 font-medium">
-                          <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 stroke-[2.5]" />
-                          <span>{item}</span>
+                      <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                        {srv.overview || srv.desc || srv.tagline}
+                      </p>
+
+                      {serviceItems.length > 0 && (
+                        <div className="pt-2 space-y-1.5 border-t border-slate-100">
+                          {serviceItems.slice(0, 3).map((item, i) => (
+                            <div key={i} className="flex items-center gap-2 text-xs text-slate-700 font-medium">
+                              <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 stroke-[2.5]" />
+                              <span>{item}</span>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
+                    </div>
+
+                    <div className="pt-6 mt-6 border-t border-slate-100">
+                      <a
+                        href="#enquire-form"
+                        className="w-full py-2.5 px-4 bg-slate-900 hover:bg-emerald-700 text-white font-bold text-xs uppercase font-mono tracking-wider rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-xs no-underline"
+                      >
+                        <span>Enquire About This Service</span>
+                        <span>→</span>
+                      </a>
                     </div>
                   </div>
-
-                  <div className="pt-6 mt-6 border-t border-slate-100">
-                    <a
-                      href="#enquire-form"
-                      className="w-full py-2.5 px-4 bg-slate-900 hover:bg-emerald-700 text-white font-bold text-xs uppercase font-mono tracking-wider rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-xs no-underline"
-                    >
-                      <span>Enquire About This Service</span>
-                      <span>→</span>
-                    </a>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : mainCategory === "applications" ? (
-            /* Applications Streamlined List View */
+            /* Applications Streamlined List View (Dynamic from Admin) */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
-              {pageApplicationsList.map((app, idx) => (
-                <Link
-                  key={app.id}
-                  href={app.href}
-                  className="group relative p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-slate-300 transition-all duration-300 flex items-center justify-between no-underline text-inherit cursor-pointer"
-                >
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="min-w-0">
-                      <h3 className="text-base font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-[#1e3e8f] transition-colors m-0 truncate">
-                        {app.name}
-                      </h3>
-                      <p className="text-xs font-medium text-slate-400 m-0 mt-0.5 truncate">
-                        {app.tagline}
-                      </p>
-                    </div>
-                  </div>
+              {applicationsList.map((app, idx) => {
+                const appId = app.id || `app-${idx}`;
+                const appTitle = app.title || app.name || "Application Framework";
+                const appTagline = app.tagline || app.category || "Technical Application Scope";
+                const appHref = app.href || `/applications/${appId}`;
 
-                  <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#1e3e8f] group-hover:text-white transition-all duration-300 text-xs font-bold shrink-0 ml-3">
-                    →
-                  </span>
-                </Link>
-              ))}
+                return (
+                  <Link
+                    key={appId}
+                    href={appHref}
+                    className="group relative p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-slate-300 transition-all duration-300 flex items-center justify-between no-underline text-inherit cursor-pointer"
+                  >
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className="min-w-0">
+                        <h3 className="text-base font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-[#1e3e8f] transition-colors m-0 truncate">
+                          {appTitle}
+                        </h3>
+                        <p className="text-xs font-medium text-slate-400 m-0 mt-0.5 truncate">
+                          {appTagline}
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#1e3e8f] group-hover:text-white transition-all duration-300 text-xs font-bold shrink-0 ml-3">
+                      →
+                    </span>
+                  </Link>
+                );
+              })}
             </div>
           ) : (
             /* Solutions View */

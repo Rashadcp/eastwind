@@ -530,10 +530,10 @@ export default function AdminProductsPage() {
                   <select
                     value={formBrand}
                     onChange={(e) => setFormBrand(e.target.value)}
-                    className="w-full px-4 py-3.5 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium cursor-pointer"
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
                   >
                     {PRODUCT_BRANDS.map((b) => (
-                      <option key={b.id} value={b.name} className="bg-slate-950 text-white">
+                      <option key={b.id} value={b.name} className="bg-white text-slate-900 py-1.5">
                         {b.name}
                       </option>
                     ))}
@@ -546,10 +546,10 @@ export default function AdminProductsPage() {
                   <select
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
-                    className="w-full px-4 py-3.5 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium cursor-pointer"
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
                   >
                     {PRODUCT_CATEGORIES.map((c) => (
-                      <option key={c.id} value={c.id} className="bg-slate-950 text-white">
+                      <option key={c.id} value={c.id} className="bg-white text-slate-900 py-1.5">
                         {c.name}
                       </option>
                     ))}

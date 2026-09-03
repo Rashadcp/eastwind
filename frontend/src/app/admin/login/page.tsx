@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { formatImageUrl } from "@/utils/image";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
+  const [logoUrl, setLogoUrl] = useState<string>("/logo.png");
   
   const [otpRequired, setOtpRequired] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +21,22 @@ export default function AdminLoginPage() {
     if (token) {
       router.push("/admin");
     }
+
+    async function fetchLogo() {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(`${baseUrl}/api/footer`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.logoUrl) {
+            setLogoUrl(data.logoUrl);
+          }
+        }
+      } catch (e) {
+        // use fallback /logo.png
+      }
+    }
+    fetchLogo();
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,12 +120,21 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md bg-white border border-slate-200/80 p-8 rounded-[32px] shadow-[0_20px_50px_rgba(15,23,42,0.06)] relative z-10 space-y-6">
         
         {/* Brand header */}
-        <div className="text-center space-y-2 select-none">
-          <div className="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center font-extrabold text-white text-lg tracking-wider mx-auto shadow-lg shadow-orange-600/10">
-            EW
+        <div className="text-center space-y-3 select-none flex flex-col items-center justify-center">
+          <div className="p-3 bg-white border border-slate-100 rounded-2xl shadow-xs inline-flex items-center justify-center max-w-[220px]">
+            <img
+              src={formatImageUrl(logoUrl)}
+              alt="Eastwind Safety"
+              className="h-11 sm:h-12 w-auto max-w-[190px] object-contain"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = "/logo.png";
+              }}
+            />
           </div>
-          <h2 className="text-xl font-bold uppercase tracking-widest text-slate-800 mt-4">Eastwind Safety</h2>
-          <p className="text-[10px] font-mono tracking-widest text-slate-450 uppercase">Operational Security Gateway</p>
+          <div>
+            <h2 className="text-xl font-bold uppercase tracking-widest text-slate-800 mt-1">Eastwind Safety</h2>
+            <p className="text-[10px] font-mono tracking-widest text-slate-400 uppercase">Operational Security Gateway</p>
+          </div>
         </div>
 
         {/* Informative message for OTP */}

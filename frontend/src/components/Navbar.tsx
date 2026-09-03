@@ -40,6 +40,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<AccordionKey | null>(null);
   const [solutionsExpanded, setSolutionsExpanded] = useState<boolean>(false);
+  const [logoUrl, setLogoUrl] = useState<string>("/logo.png");
   const navRef = useRef<HTMLElement>(null);
   
   const [mobileAccordions, setMobileAccordions] = useState<Record<AccordionKey, boolean>>({
@@ -375,6 +376,15 @@ export default function Navbar() {
       } catch (err) {
         console.error("Navbar failed to fetch services:", err);
       }
+      // Fetch footer data to get unified logoUrl
+      try {
+        const footerRes = await cachedFetch<any>(`${baseUrl}/api/footer`, { fallback: null });
+        if (footerRes && footerRes.logoUrl) {
+          setLogoUrl(footerRes.logoUrl);
+        }
+      } catch (err) {
+        console.warn("Navbar failed to fetch logo from footer:", err);
+      }
     }
 
     fetchNavbarData();
@@ -448,9 +458,12 @@ export default function Navbar() {
               : "bg-transparent"
           }`}>
             <img
-              src="/logo.png"
+              src={formatImageUrl(logoUrl)}
               alt="East Wind Energy Arabia"
               className="h-9 sm:h-11 w-auto max-w-[150px] sm:max-w-none object-contain shrink-0"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = "/logo.png";
+              }}
             />
           </div>
         </Link>

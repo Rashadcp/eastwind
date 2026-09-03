@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cachedFetch } from "@/utils/apiCache";
+import { formatImageUrl } from "@/utils/image";
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -20,14 +21,18 @@ export default function Hero() {
   const [slide1Title, setSlide1Title] = useState<string>("");
   const [slide1Desc, setSlide1Desc] = useState<string>("");
   const [slide1Btn1Text, setSlide1Btn1Text] = useState<string>("");
+  const [slide1Btn1Link, setSlide1Btn1Link] = useState<string>("#solutions");
   const [slide1Btn2Text, setSlide1Btn2Text] = useState<string>("");
+  const [slide1Btn2Link, setSlide1Btn2Link] = useState<string>("#solutions");
 
   const [slide2Tagline, setSlide2Tagline] = useState<string>("");
   const [slide2Title, setSlide2Title] = useState<string>("");
   const [slide2Desc, setSlide2Desc] = useState<string>("");
   const [slide2Btn1Text, setSlide2Btn1Text] = useState<string>("");
+  const [slide2Btn1Link, setSlide2Btn1Link] = useState<string>("/solutions/mimes");
 
-  // Adaptive Video Source for Mobile (<768px gets 3MB 540p; Desktop gets 5.5MB 720p)
+  // Dynamic Media Sources
+  const [bannerImg, setBannerImg] = useState<string>("/hero-section.webp");
   const [videoSrc, setVideoSrc] = useState<string>("/hero-video.mp4");
 
   useEffect(() => {
@@ -42,16 +47,23 @@ export default function Hero() {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         const data = await cachedFetch<any>(`${baseUrl}/api/hero`, { fallback: null });
         if (data) {
+          if (data.bannerImg) setBannerImg(data.bannerImg);
+          if (data.videoSrc && (typeof window === "undefined" || window.innerWidth >= 768)) {
+            setVideoSrc(data.videoSrc);
+          }
           if (data.slide1Tagline) setSlide1Tagline(data.slide1Tagline);
           if (data.slide1Title) setSlide1Title(data.slide1Title);
           if (data.slide1Desc) setSlide1Desc(data.slide1Desc);
           if (data.slide1Btn1Text) setSlide1Btn1Text(data.slide1Btn1Text);
+          if (data.slide1Btn1Link) setSlide1Btn1Link(data.slide1Btn1Link);
           if (data.slide1Btn2Text) setSlide1Btn2Text(data.slide1Btn2Text);
+          if (data.slide1Btn2Link) setSlide1Btn2Link(data.slide1Btn2Link);
 
           if (data.slide2Tagline) setSlide2Tagline(data.slide2Tagline);
           if (data.slide2Title) setSlide2Title(data.slide2Title);
           if (data.slide2Desc) setSlide2Desc(data.slide2Desc);
           if (data.slide2Btn1Text) setSlide2Btn1Text(data.slide2Btn1Text);
+          if (data.slide2Btn1Link) setSlide2Btn1Link(data.slide2Btn1Link);
         }
       } catch (err) {
         console.error("Hero data fetch error:", err);
@@ -181,10 +193,13 @@ export default function Hero() {
           style={{ opacity: 1 }}
         >
           <img
-            src="/hero-section.webp"
+            src={formatImageUrl(bannerImg)}
             alt="Safety Arabia Hero Banner"
             className="w-full h-full object-cover object-center sm:object-right"
             loading="eager"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = "/hero-section.webp";
+            }}
           />
         </div>
 
@@ -196,7 +211,7 @@ export default function Hero() {
         >
           <video
             ref={videoRef}
-            src={videoSrc}
+            src={formatImageUrl(videoSrc)}
             muted
             playsInline
             preload="auto"
@@ -243,13 +258,13 @@ export default function Hero() {
               )}
               <div className="flex flex-wrap items-center gap-3">
                 {slide1Btn1Text && (
-                  <a href="#solutions" className="btn-primary !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-[0.76rem] sm:!text-[0.78rem] shadow-lg">
+                  <a href={slide1Btn1Link} className="btn-primary !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-[0.76rem] sm:!text-[0.78rem] shadow-lg">
                     {slide1Btn1Text}
                   </a>
                 )}
                 {slide1Btn2Text && (
                   <a
-                    href="#solutions"
+                    href={slide1Btn2Link}
                     className="btn-secondary !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-[0.76rem] sm:!text-[0.78rem] text-white border-white/35 hover:border-white hover:bg-white/10"
                   >
                     {slide1Btn2Text}
@@ -276,7 +291,7 @@ export default function Hero() {
               )}
               {slide2Btn1Text && (
                 <div>
-                  <a href="#solutions" className="btn-primary !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-[0.76rem] sm:!text-[0.78rem] shadow-lg">
+                  <a href={slide2Btn1Link} className="btn-primary !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-[0.76rem] sm:!text-[0.78rem] shadow-lg">
                     {slide2Btn1Text}
                   </a>
                 </div>

@@ -899,6 +899,8 @@ export default function IndustrySolutions() {
   const [industries, setIndustries] = useState<IndustryItem[]>(initialIndustries);
   const [mainTab, setMainTab] = useState<"solutions" | "applications">("solutions");
   const [applicationsList, setApplicationsList] = useState(defaultApplicationsList);
+  const [sectionTitle, setSectionTitle] = useState("Solutions & Applications");
+  const [sectionDesc, setSectionDesc] = useState("We adapt our core capabilities to the specific compliance and threat profiles of primary infrastructure sectors.");
 
   useEffect(() => {
     async function loadDynamicApplications() {
@@ -954,7 +956,9 @@ export default function IndustrySolutions() {
           clearTimeout(timeoutId2);
           if (solPageRes.ok) {
             const data = await solPageRes.json();
-          if (data && Array.isArray(data.industries) && data.industries.length > 0) {
+            if (data.industriesTitle) setSectionTitle(data.industriesTitle);
+            if (data.industriesDesc) setSectionDesc(data.industriesDesc);
+            if (data && Array.isArray(data.industries) && data.industries.length > 0) {
             const updated: IndustryItem[] = data.industries.map((ind: any, idx: number) => {
               const indId = (ind.id || "").toLowerCase();
               const indName = (ind.name || "").toLowerCase();
@@ -1120,11 +1124,11 @@ export default function IndustrySolutions() {
     <InteractivePortfolioSection
       sectionId="solutions"
       sectionLabel={mainTab === "applications" ? "Technical Capabilities & Scopes" : undefined}
-      sectionTitle="Solutions & Applications"
+      sectionTitle={sectionTitle}
       sectionDesc={
         mainTab === "applications"
           ? "Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities."
-          : "We adapt our core capabilities to the specific compliance and threat profiles of primary infrastructure sectors."
+          : sectionDesc
       }
       topTabControl={topTabControl}
       customContent={mainTab === "applications" ? applicationsGrid : null}
