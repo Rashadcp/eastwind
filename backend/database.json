@@ -3894,9 +3894,9 @@
           "label": "Utility & Electrical Grids"
         }
       ],
-      "submitButtonText": "Transmit Encrypted Request //",
-      "successTitle": "Message Transmitted",
-      "successMessage": "Thank you. Your layout constraints and details have been securely logged. An application engineer will contact you shortly."
+      "submitButtonText": "Send Request",
+      "successTitle": "Message Sent",
+      "successMessage": "Thank you. Your request has been received. Our team will contact you shortly."
     },
     {
       "id": "contact_page",
@@ -3908,7 +3908,7 @@
       "communicationsTitle": "Primary Operation Hubs",
       "communicationsDesc": "Direct routing channels across our regional estimating centers, specialized equipment workshop cells, and corporate headquarters.",
       "formSubHeaderTagline": "Project Registration",
-      "formSubHeaderTitle": "Blueprint Specifications Intake",
+      "formSubHeaderTitle": "Project Requirements",
       "marketSegments": [
         {
           "value": "oil-gas",
@@ -3931,15 +3931,15 @@
           "label": "Marine Engineering & Fleet Operations"
         }
       ],
-      "submitButtonText": "Transmit Integration File",
-      "successTitle": "Transmission Complete",
-      "successMessage": "Your infrastructure profile has been successfully parsed and channeled to our technical estimating group in Dammam. A specialist will follow up within 24 business hours."
+      "submitButtonText": "Send Message",
+      "successTitle": "Message Sent",
+      "successMessage": "Your message has been sent to our team in Dammam. A specialist will follow up within 24 hours."
     },
     {
       "id": "enquiry_page",
-      "enquiryTagline": "Regional Proposal Intake",
-      "enquiryTitle": "Request Technical Integration Quoting",
-      "enquiryDescription": "Complete the security assessment form below. Our estimation group will process your scope and respond with preliminary blueprints.",
+      "enquiryTagline": "Request a Quote",
+      "enquiryTitle": "Request a Quote",
+      "enquiryDescription": "Fill out the form below. Our team will review your requirements and get back to you with an estimate.",
       "applicationPurposes": [
         {
           "value": "house",
@@ -3966,9 +3966,9 @@
           "label": "Other / Custom Infrastructure"
         }
       ],
-      "submitButtonText": "Submit Solution Enquiry",
-      "successTitle": "Enquiry Dispatched",
-      "successMessage": "Thank you. Your proposal request and structural application scope details have been forwarded directly to our engineering coordinators at harik2021a@gmail.com."
+      "submitButtonText": "Send Request",
+      "successTitle": "Request Sent",
+      "successMessage": "Thank you. Your request has been sent to our team at harik2021a@gmail.com."
     }
   ],
   "solutions_page": [

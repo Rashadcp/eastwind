@@ -975,9 +975,9 @@ function ProductsCatalogContent() {
                   <div className="p-5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-2xl space-y-2">
                     <p className="font-extrabold text-sm flex items-center gap-2 text-emerald-900">
                       <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                      <span>Technical Enquiry Dispatched Successfully!</span>
+                      <span>Enquiry Sent Successfully!</span>
                     </p>
-                    <p>Your product enquiry for <strong>{selectedProduct.name}</strong> has been transmitted and emailed directly to <strong className="underline">harik2021a@gmail.com</strong>.</p>
+                    <p>Your enquiry for <strong>{selectedProduct.name}</strong> has been sent directly to our team at <strong className="underline">harik2021a@gmail.com</strong>.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSendEnquiry} className="space-y-4 text-xs">
@@ -994,7 +994,7 @@ function ProductsCatalogContent() {
                         />
                       </div>
                       <div>
-                        <label className="block text-slate-600 font-bold mb-1">Corporate Email *</label>
+                        <label className="block text-slate-600 font-bold mb-1">Email Address *</label>
                         <input
                           type="email"
                           required
@@ -1022,7 +1022,7 @@ function ProductsCatalogContent() {
                         rows={4}
                         value={enquireMessage}
                         onChange={(e) => setEnquireMessage(e.target.value)}
-                        placeholder="Specify target zone classification, quantity, or commissioning timelines..."
+                        placeholder="Specify target zone classification, quantity, or requirements..."
                         className="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 font-medium bg-slate-50/50"
                       />
                     </div>
@@ -1032,7 +1032,7 @@ function ProductsCatalogContent() {
                       disabled={enquireSubmitting}
                       className="px-8 py-3.5 bg-slate-900 hover:bg-orange-600 text-white font-bold uppercase tracking-wider font-mono text-xs rounded-xl shadow-md transition-all cursor-pointer inline-flex items-center gap-2"
                     >
-                      <span>{enquireSubmitting ? "Transmitting Request..." : "Send Product Enquiry"}</span>
+                      <span>{enquireSubmitting ? "Sending Request..." : "Send Enquiry"}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </form>

@@ -23,9 +23,9 @@ interface EnquiryPageSettings {
 }
 
 const defaultEnquirySettings: EnquiryPageSettings = {
-  enquiryTagline: "Regional Proposal Intake",
-  enquiryTitle: "Request Technical Integration Quoting",
-  enquiryDescription: "Complete the security assessment form below. Our estimation group will process your scope and respond with preliminary blueprints.",
+  enquiryTagline: "Request a Quote",
+  enquiryTitle: "Request a Quote",
+  enquiryDescription: "Fill out the form below. Our team will review your requirements and provide an estimate.",
   applicationPurposes: [
     { value: "house", label: "Residential (House)" },
     { value: "company", label: "Corporate Office (Company)" },
@@ -34,9 +34,9 @@ const defaultEnquirySettings: EnquiryPageSettings = {
     { value: "commercial", label: "Commercial Hub / Hotel" },
     { value: "other", label: "Other / Custom Infrastructure" }
   ],
-  submitButtonText: "Submit Solution Enquiry",
-  successTitle: "Enquiry Dispatched",
-  successMessage: "Thank you. Your proposal request and structural application scope details have been forwarded directly to our engineering coordinators at harik2021a@gmail.com."
+  submitButtonText: "Send Request",
+  successTitle: "Request Sent",
+  successMessage: "Thank you. Your request has been sent to our team at harik2021a@gmail.com."
 };
 
 function EnquiryFormContent() {
@@ -290,11 +290,11 @@ function EnquiryFormContent() {
           {submitting ? (
             <>
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Transmitting Proposal Scope...
+              Sending Request...
             </>
           ) : (
             <>
-              {settings.submitButtonText}
+              {settings.submitButtonText?.includes("Submit Solution") ? "Send Request" : (settings.submitButtonText || "Send Request")}
               <span>→</span>
             </>
           )}

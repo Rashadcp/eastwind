@@ -512,18 +512,6 @@ export default function Navbar() {
           </Link>
         </nav>
 
-        <div className="nav-actions hidden lg:flex items-center">
-          <Link
-            href="/enquire"
-            className="group/btn relative overflow-hidden min-h-[38px] px-5 inline-flex items-center justify-center rounded-full bg-[#c22026] text-white no-underline text-[0.76rem] font-extrabold uppercase tracking-wider transition-all duration-300 hover:bg-[#1e3e8f] shadow-sm whitespace-nowrap"
-          >
-            <span>Enquire Now</span>
-            <span className="ml-1.5 transition-transform duration-300 transform group-hover/btn:translate-x-1 font-bold text-[0.8rem]">
-              →
-            </span>
-          </Link>
-        </div>
-
         {/* Mobile Menu Toggle Button */}
         <button
           type="button"
@@ -592,14 +580,6 @@ export default function Navbar() {
               className="w-full min-h-[44px] flex items-center justify-between px-4 border border-slate-200/50 rounded-xl bg-slate-50/50 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Contact Us
-            </Link>
-
-            <Link 
-              href="/enquire" 
-              onClick={() => setMobileMenuOpen(false)} 
-              className="min-h-[40px] inline-flex items-center justify-center px-5 rounded-full bg-[#c22026] text-white no-underline text-[0.82rem] font-extrabold uppercase tracking-wider mt-2 shadow-sm"
-            >
-              Enquire Now
             </Link>
           </div>
         </div>

@@ -54,9 +54,9 @@ const defaultHomeContact: HomeContactData = {
     { value: "marine", label: "Marine & Offshore Platforms" },
     { value: "utility-power", label: "Utility & Electrical Grids" }
   ],
-  submitButtonText: "Transmit Encrypted Request //",
-  successTitle: "Message Transmitted",
-  successMessage: "Thank you. Your layout constraints and details have been securely logged. An application engineer will contact you shortly."
+  submitButtonText: "Send Request",
+  successTitle: "Message Sent",
+  successMessage: "Thank you. Your request has been received. Our team will contact you shortly."
 };
 
 export default function Contact() {
@@ -163,9 +163,6 @@ export default function Contact() {
         
         {/* Section Header */}
         <div className="mb-8 max-w-[700px]">
-          <span className="block text-[0.68rem] uppercase tracking-[0.25em] text-[#c22026] mb-2 font-bold font-mono">
-            {homeContact.tagline}
-          </span>
           <h2 className="text-2xl sm:text-3xl lg:text-[2.2rem] text-slate-900 mb-3 uppercase tracking-tight font-extrabold leading-tight">
             {homeContact.title}
           </h2>
@@ -336,7 +333,7 @@ export default function Contact() {
                     disabled={isSubmitting}
                     className="w-full min-h-[48px] bg-slate-900 hover:bg-[#c22026] text-white text-xs font-mono uppercase tracking-widest rounded-full transition-all duration-300 cursor-pointer active:scale-[0.99] disabled:opacity-50"
                   >
-                    {isSubmitting ? "TRANSMITTING..." : homeContact.submitButtonText}
+                    {isSubmitting ? "Sending Request..." : (homeContact.submitButtonText?.includes("Transmit") ? "Send Request" : (homeContact.submitButtonText || "Send Request"))}
                   </button>
                 </motion.form>
               )}

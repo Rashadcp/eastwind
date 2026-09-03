@@ -4,26 +4,16 @@
 import { useEffect, useRef, useState } from "react";
 import { cachedFetch } from "@/utils/apiCache";
 
-const TOTAL_FRAMES = 85;
-
-const getFrameUrl = (index: number) => {
-  let fileNum = index + 1;
-  if (fileNum >= 82) {
-    fileNum = fileNum + 7;
-  }
-  const padNum = String(fileNum).padStart(5, "0");
-  return `/hero-frames/${padNum}.webp`;
-};
-
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const bannerImgRef = useRef<HTMLDivElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const frame1Ref = useRef<HTMLDivElement>(null);
   const frame2Ref = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
-
-  const [images, setImages] = useState<HTMLImageElement[]>([]);
+  const targetTimeRef = useRef<number>(0);
+  const isSeekingRef = useRef<boolean>(false);
 
   // Dynamic Captions State (Loaded purely from backend CMS)
   const [slide1Tagline, setSlide1Tagline] = useState<string>("");
@@ -36,6 +26,15 @@ export default function Hero() {
   const [slide2Title, setSlide2Title] = useState<string>("");
   const [slide2Desc, setSlide2Desc] = useState<string>("");
   const [slide2Btn1Text, setSlide2Btn1Text] = useState<string>("");
+
+  // Adaptive Video Source for Mobile (<768px gets 3MB 540p; Desktop gets 5.5MB 720p)
+  const [videoSrc, setVideoSrc] = useState<string>("/hero-video.mp4");
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setVideoSrc("/hero-video-mobile.mp4");
+    }
+  }, []);
 
   useEffect(() => {
     async function loadHeroData() {
@@ -61,128 +60,58 @@ export default function Hero() {
     loadHeroData();
   }, []);
 
+  // Rock-solid, mobile-optimized Apple-style scroll scrubbing
   useEffect(() => {
-    let isCancelled = false;
-    const loadedMap: HTMLImageElement[] = [];
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.setAttribute("playsinline", "true");
+      video.setAttribute("webkit-playsinline", "true");
+      video.pause();
+      video.currentTime = 0;
+    }
 
-    // Preload starting frame 50 immediately for instant transition
-    const startImg = new Image();
-    startImg.src = getFrameUrl(50);
-    loadedMap[50] = startImg;
-    setImages([...loadedMap]);
-
-    // Stream the remaining active animation frames (51 to 84) progressively in idle time
-    const loadRemainingFrames = () => {
-      const activeFrameIndices: number[] = [];
-      for (let i = 51; i < TOTAL_FRAMES; i++) {
-        activeFrameIndices.push(i);
-      }
-
-      let currentIndex = 0;
-      function loadNextBatch() {
-        if (isCancelled || currentIndex >= activeFrameIndices.length) return;
-        const batch = activeFrameIndices.slice(currentIndex, currentIndex + 4);
-        currentIndex += 4;
-
-        batch.forEach((idx) => {
-          const img = new Image();
-          img.src = getFrameUrl(idx);
-          img.onload = () => {
-            if (!isCancelled) {
-              loadedMap[idx] = img;
-              setImages([...loadedMap]);
-            }
-          };
-        });
-
-        if (currentIndex < activeFrameIndices.length) {
-          if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-            (window as any).requestIdleCallback(() => loadNextBatch(), { timeout: 1000 });
-          } else {
-            setTimeout(loadNextBatch, 80);
-          }
-        }
-      }
-
-      // Start streaming shortly after initial render
-      setTimeout(loadNextBatch, 300);
+    const onSeeking = () => {
+      isSeekingRef.current = true;
+    };
+    const onSeeked = () => {
+      isSeekingRef.current = false;
     };
 
-    loadRemainingFrames();
+    video?.addEventListener("seeking", onSeeking);
+    video?.addEventListener("seeked", onSeeked);
 
-    return () => {
-      isCancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const START_FRAME = 50; // Start slide 2 animation from frame 50 (00051.webp)
-
-    const drawFrame = (progress: number) => {
-      // 1. Slide 1 (0% to 35%): Show fixed banner image
-      // 2. Transition (35% to 50%): Cross-fade fixed banner to 3D canvas animation
-      // 3. Slide 2 (35% to 100%): Scrub 3D animation starting from frame 50
+    const updateDOM = (progress: number) => {
+      // 1. Cross-fade first banner image to video
       if (bannerImgRef.current) {
-        const bannerOpacity = progress <= 0.35 ? 1 : Math.max(0, 1 - (progress - 0.35) / 0.15);
+        const bannerOpacity = progress <= 0.22 ? 1 : Math.max(0, 1 - (progress - 0.22) / 0.18);
         bannerImgRef.current.style.opacity = String(bannerOpacity);
       }
 
-      if (canvasRef.current) {
-        const canvasOpacity = progress > 0.35 ? Math.min(1, (progress - 0.35) / 0.15) : 0;
-        canvasRef.current.style.opacity = String(canvasOpacity);
+      if (videoContainerRef.current) {
+        const videoOpacity = progress <= 0.20 ? 0 : Math.min(1, (progress - 0.20) / 0.18);
+        videoContainerRef.current.style.opacity = String(videoOpacity);
       }
 
-      const slide2Progress = Math.max(0, Math.min(1, (progress - 0.30) / 0.65));
-      const frameIndex = Math.min(
-        TOTAL_FRAMES - 1,
-        START_FRAME + Math.floor(slide2Progress * (TOTAL_FRAMES - 1 - START_FRAME))
-      );
-
-      const img = images[frameIndex] || images[START_FRAME];
-      if (img && img.complete) {
-        const imgRatio = img.width / img.height;
-        const canvasRatio = canvas.width / canvas.height;
-        let drawWidth, drawHeight, drawX, drawY;
-
-        if (imgRatio > canvasRatio) {
-          drawHeight = canvas.height;
-          drawWidth = canvas.height * imgRatio;
-          drawX = (canvas.width - drawWidth) / 2;
-          drawY = 0;
-        } else {
-          drawWidth = canvas.width;
-          drawHeight = canvas.width / imgRatio;
-          drawX = 0;
-          drawY = (canvas.height - drawHeight) / 2;
-        }
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-      }
-    };
-
-    const updateDOM = (progress: number) => {
+      // 2. Slide 1 text: fully visible on first image, floats up & fades on scroll
       if (frame1Ref.current) {
-        const opacity = progress <= 0.45 ? 1 - (progress / 0.45) : 0;
+        const opacity = progress <= 0.35 ? Math.max(0, 1 - progress / 0.28) : 0;
         frame1Ref.current.style.opacity = String(opacity);
-        frame1Ref.current.style.pointerEvents = progress <= 0.35 ? "auto" : "none";
-        frame1Ref.current.style.transform = `translate3d(0, calc(-50% - ${progress * 60}px), 0)`;
+        frame1Ref.current.style.pointerEvents = progress <= 0.24 ? "auto" : "none";
+        frame1Ref.current.style.transform = `translate3d(0, calc(-50% - ${progress * 70}px), 0)`;
       }
 
+      // 3. Slide 2 text: fades in as video progresses
       if (frame2Ref.current) {
-        const opacity = progress > 0.45 ? Math.min(1, (progress - 0.45) / 0.10) : 0;
+        const opacity = progress > 0.42 ? Math.min(1, (progress - 0.42) / 0.16) : 0;
         frame2Ref.current.style.opacity = String(opacity);
         frame2Ref.current.style.pointerEvents = progress > 0.50 ? "auto" : "none";
         frame2Ref.current.style.transform = `translate3d(0, calc(-50% - ${(progress - 0.75) * 60}px), 0)`;
       }
 
+      // 4. Scroll indicator
       if (indicatorRef.current) {
-        indicatorRef.current.style.opacity = String(Math.max(0, 1 - progress * 6));
+        indicatorRef.current.style.opacity = String(Math.max(0, 1 - progress * 5));
       }
     };
 
@@ -190,104 +119,164 @@ export default function Hero() {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const scrollableHeight = rect.height - window.innerHeight;
+      if (scrollableHeight <= 0) return;
+
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(1, scrolled / scrollableHeight));
 
-      requestAnimationFrame(() => {
-        drawFrame(progress);
-        updateDOM(progress);
-      });
+      // Map progress (from 0.20 to 1.0) to video timeline
+      if (videoRef.current && videoRef.current.duration) {
+        const videoProgress = Math.max(0, Math.min(1, (progress - 0.20) / 0.80));
+        targetTimeRef.current = videoProgress * videoRef.current.duration;
+      }
+
+      updateDOM(progress);
     };
 
-    const resizeCanvas = () => {
-      if (!canvasRef.current) return;
-      canvasRef.current.width = window.innerWidth;
-      canvasRef.current.height = window.innerHeight;
-      handleScroll();
+    // Smooth lerp loop with Apple-style fastSeek optimization
+    let animId: number;
+    const renderLoop = () => {
+      const vid = videoRef.current;
+      if (vid && !isNaN(vid.duration) && vid.duration > 0) {
+        const diff = targetTimeRef.current - vid.currentTime;
+        // Check if seek is pending to avoid overloading mobile decoder queue
+        if (Math.abs(diff) > 0.02 && !isSeekingRef.current && !vid.seeking) {
+          const nextTime = vid.currentTime + diff * 0.32;
+          try {
+            if ("fastSeek" in vid && typeof (vid as any).fastSeek === "function") {
+              (vid as any).fastSeek(nextTime);
+            } else {
+              vid.currentTime = nextTime;
+            }
+          } catch {
+            vid.currentTime = nextTime;
+          }
+        }
+      }
+      animId = requestAnimationFrame(renderLoop);
     };
 
-    window.addEventListener("resize", resizeCanvas);
+    animId = requestAnimationFrame(renderLoop);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    resizeCanvas();
+    window.addEventListener("resize", handleScroll, { passive: true });
+    handleScroll();
 
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
+      cancelAnimationFrame(animId);
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      video?.removeEventListener("seeking", onSeeking);
+      video?.removeEventListener("seeked", onSeeked);
     };
-  }, [images]);
+  }, [videoSrc]);
 
   return (
-    <div ref={containerRef} className="h-[200vh] relative bg-white w-full" id="hero">
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
-        {/* Slide 1 Fixed Banner Image */}
+    <div ref={containerRef} className="h-[240vh] relative bg-[#08090c] w-full" id="hero">
+      <div className="sticky top-0 left-0 w-full h-[100dvh] overflow-hidden">
+
+        {/* 1. First Hero Image (Visible at top, fades out on scroll) */}
         <div
           ref={bannerImgRef}
           className="absolute top-0 left-0 w-full h-full z-10 transition-opacity duration-300 pointer-events-none bg-[#08090c]"
+          style={{ opacity: 1 }}
         >
           <img
             src="/hero-section.webp"
             alt="Safety Arabia Hero Banner"
-            className="w-full h-full object-cover object-right-top sm:object-right"
+            className="w-full h-full object-cover object-center sm:object-right"
+            loading="eager"
           />
         </div>
 
-        {/* Slide 2 Canvas 3D Frame Animation */}
-        <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full object-cover z-10 bg-black opacity-0 transition-opacity duration-300" />
-        <div className="absolute inset-0 z-15 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(to bottom, rgba(0, 240, 255, 0.01) 0px, rgba(0, 240, 255, 0.01) 1px, transparent 1px, transparent 4px)" }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#08090c]/70 via-[#08090c]/20 to-[#08090c]/75 z-20 pointer-events-none" />
+        {/* 2. Apple-style Scroll Video (Mobile & Desktop hardware accelerated) */}
+        <div
+          ref={videoContainerRef}
+          className="absolute top-0 left-0 w-full h-full overflow-hidden bg-[#08090c] z-10 transition-opacity duration-300 pointer-events-none"
+          style={{ opacity: 0 }}
+        >
+          <video
+            ref={videoRef}
+            src={videoSrc}
+            muted
+            playsInline
+            preload="auto"
+            tabIndex={-1}
+            className="w-full h-full object-cover scale-[1.03] select-none"
+            onLoadedMetadata={() => {
+              if (videoRef.current) {
+                videoRef.current.pause();
+                videoRef.current.currentTime = 0;
+              }
+            }}
+          />
+        </div>
 
+        {/* Ambient Scanlines & Dynamic Dark Vignette for Contrast */}
+        <div
+          className="absolute inset-0 z-15 pointer-events-none"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(to bottom, rgba(0, 240, 255, 0.01) 0px, rgba(0, 240, 255, 0.01) 1px, transparent 1px, transparent 4px)",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#08090c]/75 via-[#08090c]/25 to-[#08090c]/85 z-20 pointer-events-none" />
+
+        {/* Floating Narrative Content */}
         <div className="max-w-[1240px] w-full mx-auto h-full px-6 sm:px-8 lg:px-12 relative z-30 flex items-center">
           <div className="relative h-[68vh] w-full max-w-[600px] lg:max-w-[640px] flex flex-col justify-center">
 
-            <div ref={frame1Ref} className="absolute top-1/2 left-0 w-full" style={{ opacity: 1, transform: "translate3d(0, -50%, 0)", pointerEvents: "auto" }}>
-              {slide1Tagline && (
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[0.72rem] font-mono font-bold uppercase tracking-wider rounded-md mb-4 backdrop-blur-sm">
-                  {slide1Tagline}
-                </div>
-              )}
+            {/* Frame 1: Opening Perspective (Paired with First Image) */}
+            <div
+              ref={frame1Ref}
+              className="absolute top-1/2 left-0 w-full"
+              style={{ opacity: 1, transform: "translate3d(0, -50%, 0)", pointerEvents: "auto" }}
+            >
               {slide1Title && (
-                <h1 className="text-3xl sm:text-4xl md:text-[2.65rem] lg:text-[2.85rem] font-extrabold text-white mb-4 leading-[1.12] tracking-tight uppercase">
+                <h1 className="text-2xl sm:text-4xl md:text-[2.65rem] lg:text-[2.85rem] font-extrabold text-white mb-4 leading-[1.15] tracking-tight uppercase">
                   {slide1Title}
                 </h1>
               )}
               {slide1Desc && (
-                <p className="text-sm sm:text-[0.98rem] text-slate-200 mb-8 max-w-[520px] leading-relaxed font-normal">
+                <p className="text-xs sm:text-[0.98rem] text-slate-200 mb-6 sm:mb-8 max-w-[520px] leading-relaxed font-normal">
                   {slide1Desc}
                 </p>
               )}
-              <div className="flex flex-wrap items-center gap-3.5">
+              <div className="flex flex-wrap items-center gap-3">
                 {slide1Btn1Text && (
-                  <a href="#solutions" className="btn-primary !py-3 !px-7 !text-[0.78rem] shadow-lg">
+                  <a href="#solutions" className="btn-primary !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-[0.76rem] sm:!text-[0.78rem] shadow-lg">
                     {slide1Btn1Text}
                   </a>
                 )}
                 {slide1Btn2Text && (
-                  <a href="#solutions" className="btn-secondary !py-3 !px-7 !text-[0.78rem] text-white border-white/35 hover:border-white hover:bg-white/10">
+                  <a
+                    href="#solutions"
+                    className="btn-secondary !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-[0.76rem] sm:!text-[0.78rem] text-white border-white/35 hover:border-white hover:bg-white/10"
+                  >
                     {slide1Btn2Text}
                   </a>
                 )}
               </div>
             </div>
 
-            <div ref={frame2Ref} className="absolute top-1/2 left-0 w-full" style={{ opacity: 0, transform: "translate3d(0, -50%, 0)", pointerEvents: "none" }}>
-              {slide2Tagline && (
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[0.72rem] font-mono font-bold uppercase tracking-wider rounded-md mb-4 backdrop-blur-sm">
-                  {slide2Tagline}
-                </div>
-              )}
+            {/* Frame 2: Advanced Telemetry Perspective (Paired with Video) */}
+            <div
+              ref={frame2Ref}
+              className="absolute top-1/2 left-0 w-full"
+              style={{ opacity: 0, transform: "translate3d(0, -50%, 0)", pointerEvents: "none" }}
+            >
               {slide2Title && (
-                <h2 className="text-3xl sm:text-4xl md:text-[2.65rem] lg:text-[2.85rem] font-extrabold text-white mb-4 leading-[1.12] tracking-tight uppercase">
+                <h2 className="text-2xl sm:text-4xl md:text-[2.65rem] lg:text-[2.85rem] font-extrabold text-white mb-4 leading-[1.15] tracking-tight uppercase">
                   {slide2Title}
                 </h2>
               )}
               {slide2Desc && (
-                <p className="text-sm sm:text-[0.98rem] text-slate-200 mb-8 max-w-[520px] leading-relaxed font-normal">
+                <p className="text-xs sm:text-[0.98rem] text-slate-200 mb-6 sm:mb-8 max-w-[520px] leading-relaxed font-normal">
                   {slide2Desc}
                 </p>
               )}
               {slide2Btn1Text && (
                 <div>
-                  <a href="#solutions" className="btn-primary !py-3 !px-7 !text-[0.78rem] shadow-lg">
+                  <a href="#solutions" className="btn-primary !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-[0.76rem] sm:!text-[0.78rem] shadow-lg">
                     {slide2Btn1Text}
                   </a>
                 </div>
@@ -297,7 +286,11 @@ export default function Hero() {
           </div>
         </div>
 
-        <div ref={indicatorRef} className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-40 transition-opacity duration-300 pointer-events-none">
+        {/* Scroll To Explore Indicator */}
+        <div
+          ref={indicatorRef}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-40 transition-opacity duration-300 pointer-events-none"
+        >
           <span className="font-mono text-[0.6rem] uppercase text-white/50 tracking-widest">Scroll to explore</span>
           <div className="w-4 h-7 rounded-[8px] border border-white/30 relative">
             <div className="w-0.5 h-1.5 bg-sky-400 rounded-[1px] absolute top-1 left-1/2 -translate-x-1/2 animate-[scrollMouse_1.5s_infinite]" />

@@ -826,13 +826,6 @@ function SolutionsPageContent() {
 
           <div className="border-b border-slate-200/60 pb-12 mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="space-y-2">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#c22026]">
-                {mainCategory === "services"
-                  ? "Engineering & Compliance Consultancy"
-                  : mainCategory === "applications"
-                  ? "Technical Capabilities & Scopes"
-                  : pageConfig.industriesTagline}
-              </span>
               <h2 className="text-3xl font-extrabold uppercase text-slate-900 tracking-tight">
                 {mainCategory === "services"
                   ? "Services & Technical Consultancy"
@@ -908,12 +901,6 @@ function SolutionsPageContent() {
                   className="bg-white border border-slate-200/90 rounded-3xl p-7 shadow-xs hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between group"
                 >
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-mono font-extrabold uppercase text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md">
-                        {srv.category}
-                      </span>
-                    </div>
-
                     <h3 className="text-xl font-bold text-slate-900 leading-snug group-hover:text-emerald-700 transition-colors">
                       {srv.title}
                     </h3>
@@ -1105,9 +1092,6 @@ function SolutionsPageContent() {
                 <div id="solutions-catalog" className="mt-24 pt-16 border-t border-slate-200/80">
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                     <div className="space-y-2 max-w-2xl">
-                      <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#c22026]">
-                        Engineered Systems Catalog
-                      </span>
                       <h3 className="text-3xl font-extrabold uppercase text-slate-900 tracking-tight">
                         All Solutions & Technical Packages ({solutionsList.length})
                       </h3>
@@ -1125,7 +1109,7 @@ function SolutionsPageContent() {
                         className="group bg-white border border-slate-200/80 hover:border-[#1e3e8f]/50 rounded-2xl overflow-hidden shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between text-inherit no-underline hover:-translate-y-1 cursor-pointer"
                       >
                         <div>
-                          <div className="h-52 w-full bg-slate-950/5 relative overflow-hidden flex items-center justify-center p-3 border-b border-slate-100">
+                          <div className="h-40 sm:h-44 w-full relative overflow-hidden bg-slate-100 border-b border-slate-100">
                             {item.imageUrl && item.imageUrl.trim() !== "" ? (
                               <img
                                 src={formatImageUrl(item.imageUrl)}
@@ -1135,18 +1119,13 @@ function SolutionsPageContent() {
                                 onError={(e) => {
                                   (e.currentTarget as HTMLImageElement).src = "/products/default-fire-fighting-rescue.png";
                                 }}
-                                className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                               />
                             ) : (
-                              <div className="flex flex-col items-center justify-center text-slate-300 gap-1.5">
+                              <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 gap-1.5 bg-slate-50">
                                 <Layers className="w-8 h-8 stroke-[1.5]" />
                                 <span className="text-[10px] font-mono font-bold uppercase tracking-wider">Eastwind Safety</span>
                               </div>
-                            )}
-                            {item.subLabel && (
-                              <span className="absolute top-3 left-3 text-[9px] font-mono font-bold uppercase text-orange-600 bg-white/95 border border-orange-200 px-2 py-0.5 rounded-md shadow-2xs">
-                                {item.subLabel}
-                              </span>
                             )}
                           </div>
 
@@ -1178,7 +1157,6 @@ function SolutionsPageContent() {
           <div className="max-w-[1400px] mx-auto px-10 max-sm:px-5">
             
             <div className="mb-20 max-w-3xl space-y-2">
-              <span className="text-xs font-bold uppercase tracking-[0.2em]">{pageConfig.capabilitiesTagline}</span>
               <h2 className="text-3xl font-extrabold uppercase text-slate-900 tracking-tight">{pageConfig.capabilitiesTitle}</h2>
               <p className="text-sm text-slate-600 leading-relaxed pt-2">
                 {pageConfig.capabilitiesDesc}
@@ -1370,9 +1348,6 @@ function SolutionsPageContent() {
             <div className="p-12 max-md:p-8 max-sm:p-6 bg-[#f8fafc] border border-slate-200 rounded-[32px] max-sm:rounded-[24px] relative overflow-hidden shadow-sm">
               
               <div className="mb-12 space-y-3 max-w-2xl">
-                <span className="block text-xs font-bold text-[#c22026] uppercase tracking-[0.25em]">
-                  {pageConfig.gatewayTagline}
-                </span>
                 <h3 className="text-[2.2rem] max-md:text-[1.8rem] max-sm:text-[1.45rem] font-extrabold uppercase text-slate-900 tracking-tight leading-none m-0">
                   {pageConfig.gatewayTitle}
                 </h3>

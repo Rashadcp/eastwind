@@ -114,42 +114,44 @@ export default function Footer() {
       {/* High-Tech Industrial Grid Backdrop Overlay */}
       <div className="industrial-grid absolute inset-0 opacity-[0.02] pointer-events-none z-0" />
 
-      <div className="max-w-[1400px] mx-auto grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-10 lg:gap-0 mb-12 relative z-10">
+      <div className="max-w-[1360px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 mb-12 relative z-10 items-start">
         
-        {/* Column 1: Brand & Mission */}
-        <div className="col-span-2 max-lg:col-span-1 lg:pr-[60px]">
-          <div className="flex items-center gap-3 mb-6">
+        {/* Column 1: Brand & Mission (4 cols) */}
+        <div className="lg:col-span-4 flex flex-col justify-start">
+          <div className="h-10 flex items-center mb-6">
             <img
               src={formatImageUrl(footer.logoUrl, "/logo.png")}
               alt="East Wind Energy Arabia"
-              className="h-10 sm:h-12 w-auto object-contain"
+              className="h-10 w-auto object-contain"
             />
           </div>
           <p 
-            className="text-[0.95rem] text-slate-650 mb-8 max-w-[480px] leading-relaxed m-0 font-light"
+            className="text-[0.92rem] text-slate-600 max-w-[380px] leading-relaxed m-0 font-normal"
             style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
           >
             {footer.tagline}
           </p>
         </div>
 
-        {/* Column 2: Dynamic Solutions Navigation Links */}
-        <div>
-          <span 
-            className="block mb-6 text-slate-900 uppercase text-[0.75rem] font-bold tracking-[0.25em]"
-            style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
-          >
-            {footer.solutionsTitle}
-          </span>
+        {/* Column 2: Solutions Navigation Links (4 cols) */}
+        <div className="lg:col-span-4 flex flex-col justify-start">
+          <div className="h-10 flex items-center mb-6">
+            <span 
+              className="text-slate-900 uppercase text-[0.75rem] font-bold tracking-[0.25em]"
+              style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
+            >
+              {footer.solutionsTitle}
+            </span>
+          </div>
           <ul className="list-none flex flex-col gap-3.5 text-[0.88rem] p-0 m-0">
             {footer.solutionsLinks.map((link, idx) => (
               <li key={idx}>
                 <Link 
                   href={link.href} 
-                  className="group/lnk text-slate-650 hover:text-[#c22026] no-underline transition-colors duration-300 flex items-center font-normal text-[0.88rem]"
+                  className="group/lnk text-slate-600 hover:text-[#c22026] no-underline transition-colors duration-300 flex items-center font-normal text-[0.88rem]"
                   style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
                 >
-                  <span className="inline-block transition-all duration-300 transform -translate-x-1 opacity-0 group-hover/lnk:translate-x-0 group-hover/lnk:opacity-100 mr-1 text-[#c22026] font-bold text-[0.9rem] leading-none">
+                  <span className="inline-block transition-all duration-300 transform -translate-x-1 opacity-0 group-hover/lnk:translate-x-0 group-hover/lnk:opacity-100 mr-1.5 text-[#c22026] font-bold text-[0.9rem] leading-none">
                     ›
                   </span>
                   <span className="transition-transform duration-300 group-hover/lnk:translate-x-1">
@@ -161,28 +163,30 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Column 3: Dynamic Operations & Contact Info */}
-        <div className="lg:border-l lg:border-slate-200/50 lg:pl-[60px]">
-          <span 
-            className="block mb-6 text-slate-900 uppercase text-[0.75rem] font-bold tracking-[0.25em]"
-            style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
-          >
-            {footer.operationsTitle}
-          </span>
-          <div className="flex flex-col gap-5 text-[0.88rem] text-slate-660">
+        {/* Column 3: Operations & Contact Info (4 cols) */}
+        <div className="lg:col-span-4 flex flex-col justify-start">
+          <div className="h-10 flex items-center mb-6">
+            <span 
+              className="text-slate-900 uppercase text-[0.75rem] font-bold tracking-[0.25em]"
+              style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
+            >
+              {footer.operationsTitle}
+            </span>
+          </div>
+          <div className="flex flex-col gap-5 text-[0.88rem] text-slate-600">
             {footer.hqTitle && (
-              <div className="flex gap-4 items-start">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center bg-slate-50 border border-slate-100 shadow-sm shrink-0 mt-0.5">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#1e3e8f]">
+              <div className="flex gap-3.5 items-start">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-50 border border-blue-100 shadow-sm shrink-0 mt-0.5">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#1e3e8f]">
                     <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z" />
                     <circle cx="12" cy="10" r="3" />
                   </svg>
                 </div>
                 <div>
-                  <strong className="text-slate-900 block mb-1 font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
+                  <strong className="text-slate-900 block mb-0.5 text-[0.88rem] font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
                     {footer.hqTitle}
                   </strong>
-                  <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-light text-slate-600 block text-[0.85rem]">
+                  <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-normal text-slate-500 block text-[0.82rem]">
                     {footer.hqAddress}
                   </span>
                 </div>
@@ -190,36 +194,36 @@ export default function Footer() {
             )}
 
             {footer.hubTitle && (
-              <div className="flex gap-4 items-start">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center bg-slate-50 border border-slate-100 shadow-sm shrink-0 mt-0.5">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#c22026]">
+              <div className="flex gap-3.5 items-start">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-red-50 border border-red-100 shadow-sm shrink-0 mt-0.5">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#c22026]">
                     <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z" />
                     <circle cx="12" cy="10" r="3" />
                   </svg>
                 </div>
                 <div>
-                  <strong className="text-slate-900 block mb-1 font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
+                  <strong className="text-slate-900 block mb-0.5 text-[0.88rem] font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
                     {footer.hubTitle}
                   </strong>
-                  <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-light text-slate-600 block text-[0.85rem]">
+                  <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-normal text-slate-500 block text-[0.82rem]">
                     {footer.hubAddress}
                   </span>
                 </div>
               </div>
             )}
 
-            <div className="border-t border-slate-100 pt-5 flex gap-4 items-start">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center bg-slate-50 border border-slate-100 shadow-sm shrink-0 mt-0.5">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#c22026]">
+            <div className="border-t border-slate-100 pt-4 flex gap-3.5 items-start">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-red-50 border border-red-100 shadow-sm shrink-0 mt-0.5">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#c22026]">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
               </div>
               <div>
-                <strong className="text-slate-900 block mb-1 font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
+                <strong className="text-slate-900 block mb-0.5 text-[0.88rem] font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
                   Contact Portal
                 </strong>
-                <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-light text-slate-600 block text-[0.85rem]">
-                  Email: <a href={`mailto:${footer.email}`} className="text-[#c22026] hover:text-[#1e3e8f] transition-colors duration-300 no-underline font-semibold">{footer.email}</a><br />
+                <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-normal text-slate-500 block text-[0.82rem]">
+                  Email: <a href={`mailto:${footer.email}`} className="text-[#c22026] hover:text-[#1e3e8f] transition-colors duration-300 no-underline font-medium">{footer.email}</a><br />
                   Tel: {footer.telephone}
                 </span>
               </div>

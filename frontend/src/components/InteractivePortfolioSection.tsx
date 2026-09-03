@@ -49,7 +49,7 @@ const getRgbFromHex = (hex: string) => {
 
 interface InteractivePortfolioSectionProps<T extends PortfolioItem = PortfolioItem> {
   sectionId: string;
-  sectionLabel: string;
+  sectionLabel?: string;
   sectionTitle: string;
   sectionDesc: string;
   items: T[];
@@ -134,9 +134,11 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
         {/* Header Block */}
         <div className={`flex flex-col sm:flex-row sm:items-end justify-between gap-3 shrink-0 ${isFullHeight ? "mb-2 sm:mb-4" : "mb-8"}`}>
           <div className="max-w-[700px]">
-            <span className="block mb-1 text-[var(--active-base)] uppercase font-mono text-[0.68rem] font-bold tracking-widest">
-              {sectionLabel}
-            </span>
+            {sectionLabel && (
+              <span className="block mb-1 text-[var(--active-base)] uppercase font-mono text-[0.68rem] font-bold tracking-widest">
+                {sectionLabel}
+              </span>
+            )}
             <h2 className={`text-xl sm:text-2xl lg:text-[1.95rem] mb-1 uppercase font-extrabold tracking-tight leading-tight m-0 ${
               isDark ? "text-white" : "text-slate-900"
             }`}>

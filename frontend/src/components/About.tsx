@@ -159,7 +159,7 @@ export default function About() {
           >
             
             {/* Quantitative Data Grid */}
-            <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4 mb-5 border-b border-slate-200/60 pb-5">
+            <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4">
               {data.metrics.map((metric, idx) => (
                 <div key={idx} className="flex flex-col">
                   <span className={`text-2xl sm:text-3xl font-black font-mono ${idx % 2 === 0 ? "text-[#1e3e8f]" : "text-[#ff2228]"}`}>
@@ -171,22 +171,6 @@ export default function About() {
                   <span className="text-[11px] text-black leading-tight mt-1 opacity-90">
                     {metric.desc}
                   </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Matrix Deliverables Section */}
-            <span className="block text-[10px] font-sans font-bold text-black opacity-60 uppercase tracking-widest mb-3">
-              Turnkey Project Lifecycle Delivery Scope:
-            </span>
-            <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-2.5">
-              {data.lifecycleSteps.map((step) => (
-                <div 
-                  key={step} 
-                  className="flex items-center gap-2 py-2 px-3 bg-white/80 border border-slate-200/60 rounded-lg text-[0.72rem] font-bold text-black shadow-3xs"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#ff2228] shrink-0" />
-                  <span className="truncate">{step}</span>
                 </div>
               ))}
             </div>

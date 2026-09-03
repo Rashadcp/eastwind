@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { formatImageUrl } from "@/utils/image";
 
 export interface SuccessStoryItem {
   id: string;
@@ -88,10 +89,6 @@ export default function SuccessStoriesSection() {
         
         {/* Executive Header Block */}
         <div className="max-w-[780px] mb-16">
-          <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-600 text-[0.75rem] font-mono font-bold uppercase tracking-widest mb-4">
-            <span className="w-2 h-2 rounded-full bg-orange-600 animate-pulse" />
-            Our Journey & Achievements
-          </span>
           <h2 className="text-[3rem] max-md:text-[2.2rem] uppercase font-extrabold tracking-tight leading-none text-slate-900">
             Our Success Story
           </h2>
@@ -112,12 +109,15 @@ export default function SuccessStoriesSection() {
               className="bg-white border border-slate-200/90 rounded-[24px] overflow-hidden shadow-lg hover:shadow-2xl hover:border-orange-500/40 transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
-                {/* 1. IMAGE (WHOLE IMAGE UNCROPPED) */}
-                <div className="h-72 max-sm:h-60 relative overflow-hidden bg-slate-950 flex items-center justify-center p-3 border-b border-slate-800">
+                {/* 1. IMAGE (Fills card container with balanced proportions) */}
+                <div className="w-full h-56 sm:h-64 relative overflow-hidden bg-slate-100">
                   <img
-                    src={story.imageUrl || "/emergency_vehicle.webp"}
+                    src={formatImageUrl(story.imageUrl, "/emergency_vehicle.webp")}
                     alt={story.title}
-                    className="max-h-full max-w-full object-contain filter drop-shadow-md transition-transform duration-700 group-hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.src = "/emergency_vehicle.webp";
+                    }}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
 

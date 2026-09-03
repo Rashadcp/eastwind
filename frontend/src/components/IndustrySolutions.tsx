@@ -1119,7 +1119,7 @@ export default function IndustrySolutions() {
   return (
     <InteractivePortfolioSection
       sectionId="solutions"
-      sectionLabel={mainTab === "applications" ? "Technical Capabilities & Scopes" : "Sector Specific Operations"}
+      sectionLabel={mainTab === "applications" ? "Technical Capabilities & Scopes" : undefined}
       sectionTitle="Solutions & Applications"
       sectionDesc={
         mainTab === "applications"

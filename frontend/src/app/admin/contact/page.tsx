@@ -38,9 +38,9 @@ export default function AdminContactPage() {
     { value: "marine", label: "Marine & Offshore Platforms" },
     { value: "utility-power", label: "Utility & Electrical Grids" }
   ]);
-  const [homeSubmitBtn, setHomeSubmitBtn] = useState<string>("Transmit Encrypted Request //");
-  const [homeSuccessTitle, setHomeSuccessTitle] = useState<string>("Message Transmitted");
-  const [homeSuccessMessage, setHomeSuccessMessage] = useState<string>("Thank you. Your layout constraints and details have been securely logged. An application engineer will contact you shortly.");
+  const [homeSubmitBtn, setHomeSubmitBtn] = useState<string>("Send Request");
+  const [homeSuccessTitle, setHomeSuccessTitle] = useState<string>("Message Sent");
+  const [homeSuccessMessage, setHomeSuccessMessage] = useState<string>("Thank you. Your request has been received. Our team will contact you shortly.");
 
   // Tab 3: Contact Page State (contact_page)
   const [pageHeroBgImage, setPageHeroBgImage] = useState<string>("/contact_hero.png");
@@ -51,7 +51,7 @@ export default function AdminContactPage() {
   const [pageCommsTitle, setPageCommsTitle] = useState<string>("Primary Operation Hubs");
   const [pageCommsDesc, setPageCommsDesc] = useState<string>("Direct routing channels across our regional estimating centers, specialized equipment workshop cells, and corporate headquarters.");
   const [pageFormTagline, setPageFormTagline] = useState<string>("Project Registration");
-  const [pageFormTitle, setPageFormTitle] = useState<string>("Blueprint Specifications Intake");
+  const [pageFormTitle, setPageFormTitle] = useState<string>("Project Requirements");
   const [pageMarketSegments, setPageMarketSegments] = useState<DropdownOption[]>([
     { value: "oil-gas", label: "Onshore / Offshore Oil & Gas" },
     { value: "petrochemical", label: "Downstream Petrochemical Infrastructure" },
@@ -59,14 +59,14 @@ export default function AdminContactPage() {
     { value: "power-utilities", label: "Utility Systems & Smart Energy Grids" },
     { value: "marine-offshore", label: "Marine Engineering & Fleet Operations" }
   ]);
-  const [pageSubmitBtn, setPageSubmitBtn] = useState<string>("Transmit Integration File");
-  const [pageSuccessTitle, setPageSuccessTitle] = useState<string>("Transmission Complete");
-  const [pageSuccessMessage, setPageSuccessMessage] = useState<string>("Your infrastructure profile has been successfully parsed and channeled to our technical estimating group in Dammam. A specialist will follow up within 24 business hours.");
+  const [pageSubmitBtn, setPageSubmitBtn] = useState<string>("Send Message");
+  const [pageSuccessTitle, setPageSuccessTitle] = useState<string>("Message Sent");
+  const [pageSuccessMessage, setPageSuccessMessage] = useState<string>("Your message has been sent to our team in Dammam. A specialist will follow up within 24 hours.");
 
   // Tab 4: Enquiry Page State (enquiry_page)
-  const [enquiryTagline, setEnquiryTagline] = useState<string>("Regional Proposal Intake");
-  const [enquiryTitle, setEnquiryTitle] = useState<string>("Request Technical Integration Quoting");
-  const [enquiryDescription, setEnquiryDescription] = useState<string>("Complete the security assessment form below. Our estimation group will process your scope and respond with preliminary blueprints.");
+  const [enquiryTagline, setEnquiryTagline] = useState<string>("Request a Quote");
+  const [enquiryTitle, setEnquiryTitle] = useState<string>("Request a Quote");
+  const [enquiryDescription, setEnquiryDescription] = useState<string>("Fill out the form below. Our team will review your requirements and get back to you with an estimate.");
   const [enquiryPurposes, setEnquiryPurposes] = useState<DropdownOption[]>([
     { value: "house", label: "Residential (House)" },
     { value: "company", label: "Corporate Office (Company)" },
@@ -75,9 +75,9 @@ export default function AdminContactPage() {
     { value: "commercial", label: "Commercial Hub / Hotel" },
     { value: "other", label: "Other / Custom Infrastructure" }
   ]);
-  const [enquirySubmitBtn, setEnquirySubmitBtn] = useState<string>("Submit Solution Enquiry");
-  const [enquirySuccessTitle, setEnquirySuccessTitle] = useState<string>("Enquiry Dispatched");
-  const [enquirySuccessMessage, setEnquirySuccessMessage] = useState<string>("Thank you. Your proposal request and structural application scope details have been forwarded directly to our engineering coordinators at harik2021a@gmail.com.");
+  const [enquirySubmitBtn, setEnquirySubmitBtn] = useState<string>("Send Request");
+  const [enquirySuccessTitle, setEnquirySuccessTitle] = useState<string>("Request Sent");
+  const [enquirySuccessMessage, setEnquirySuccessMessage] = useState<string>("Thank you. Your request has been sent to our team at harik2021a@gmail.com.");
 
   const clearMessages = () => {
     setError(null);
@@ -663,6 +663,30 @@ export default function AdminContactPage() {
                   />
                 </div>
               )}
+            </div>
+
+            {/* Left Side: Operations Hubs Section Header */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-2">Operations Hubs Section Title</label>
+                <input
+                  type="text"
+                  value={pageCommsTitle}
+                  onChange={(e) => setPageCommsTitle(e.target.value)}
+                  placeholder="e.g. Primary Operation Hubs"
+                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-2">Operations Hubs Description</label>
+                <textarea
+                  rows={2}
+                  value={pageCommsDesc}
+                  onChange={(e) => setPageCommsDesc(e.target.value)}
+                  placeholder="e.g. Direct routing channels across our regional estimating centers..."
+                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">

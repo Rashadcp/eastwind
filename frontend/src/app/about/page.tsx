@@ -249,9 +249,6 @@ export default async function AboutPage() {
             <div className="lg:col-span-5 relative flex justify-center">
               {/* Decorative coordinate grid border backdrop */}
               <div className="absolute -inset-4 rounded-[32px] border border-slate-200/60 pointer-events-none z-0" />
-              <div className="absolute top-2 right-4 font-mono text-[9px] text-[#1e3e8f] select-none tracking-widest z-20 bg-white/95 py-1 px-3 rounded-full border border-slate-200 shadow-3xs">
-                {data.facilityCode}
-              </div>
 
               {/* Main Facility Showcase Image Card */}
               <div className="relative z-10 w-full h-[440px] max-sm:h-[320px] p-2 bg-white border border-slate-200 shadow-md rounded-[28px] overflow-hidden group">
