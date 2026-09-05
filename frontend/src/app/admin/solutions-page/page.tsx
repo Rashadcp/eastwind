@@ -331,6 +331,30 @@ export default function AdminSolutionsPage() {
     }
   };
 
+  const handleSyncFromBrandsPortfolio = async () => {
+    clearMessages();
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const res = await fetch(`${baseUrl}/api/brands?t=${Date.now()}`);
+      if (res.ok) {
+        const bList = await res.json();
+        if (Array.isArray(bList) && bList.length > 0) {
+          const synced = bList.map((b: any) => ({
+            name: b.name,
+            logo: b.logoUrl || b.imageUrl || ""
+          }));
+          setPartners(synced);
+          setSuccess(`Successfully imported ${synced.length} brands and photos from Brands Portfolio! Remember to click 'Save Partner Brands'.`);
+        } else {
+          setError("No brands found in Brands Portfolio.");
+        }
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError("Failed to sync from Brands Portfolio.");
+    }
+  };
+
   if (loading) {
     return (
       <div className="py-20 text-center space-y-4">
@@ -965,6 +989,16 @@ export default function AdminSolutionsPage() {
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
+                  onClick={handleSyncFromBrandsPortfolio}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 text-[#1e3e8f] text-xs font-bold rounded-xl border border-blue-200 cursor-pointer transition-all shrink-0"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span>Sync from Brands Portfolio</span>
+                </button>
+                <button
+                  type="button"
                   onClick={() => {
                     const newBrand = { name: "New Partner Brand", logo: "" };
                     setPartners([...partners, newBrand]);
@@ -994,35 +1028,22 @@ export default function AdminSolutionsPage() {
               {partners.map((partnerItem, idx) => {
                 const name = typeof partnerItem === "string" ? partnerItem : partnerItem?.name || "Partner Brand";
                 const logo = typeof partnerItem === "object" ? partnerItem?.logo || partnerItem?.image || "" : "";
-                const cleanKey = name.toLowerCase().trim();
-                const defaultLogo = logo || (
-                  cleanKey.includes("dräg") || cleanKey.includes("draeg") ? "/brands/draeger.png" :
-                  cleanKey.includes("one seven") ? "/brands/oneseven.png" :
-                  cleanKey.includes("xshield") ? "/brands/xshielder.png" :
-                  cleanKey.includes("nardi") ? "/brands/nardi.png" :
-                  cleanKey.includes("mimes") ? "/brands/mimes.png" :
-                  cleanKey.includes("sieon") || cleanKey.includes("sione") ? "/brands/sione.png" :
-                  cleanKey.includes("e2s") ? "/brands/e2s.png" :
-                  cleanKey.includes("flamepro") ? "/brands/flamepro.png" :
-                  cleanKey.includes("schneider") ? "/brands/schneider.png" :
-                  cleanKey.includes("pepperl") ? "/brands/pepperlfuchs.png" : ""
-                );
 
                 return (
                   <div key={idx} className="p-4 border border-slate-200 rounded-2xl bg-slate-50 hover:bg-white hover:border-slate-300 transition-all duration-200 flex flex-col justify-between space-y-3 shadow-3xs hover:shadow-sm group">
                     <div className="space-y-3">
                       {/* Logo Preview Box */}
                       <div className="h-20 w-full bg-white border border-slate-200 rounded-xl p-2 flex items-center justify-center relative overflow-hidden shadow-2xs">
-                        {defaultLogo ? (
+                        {logo && logo.trim() !== "" ? (
                           <img
-                            src={defaultLogo}
+                            src={formatImageUrl(logo)}
                             alt={name}
                             className="max-h-14 max-w-[120px] object-contain"
                             onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-600 font-extrabold text-sm">
-                            {name.charAt(0)}
+                          <div className="flex flex-col items-center justify-center text-center p-2 text-slate-400">
+                            <span className="text-[11px] font-semibold text-slate-400">No Logo Uploaded</span>
                           </div>
                         )}
                       </div>
@@ -1032,8 +1053,8 @@ export default function AdminSolutionsPage() {
                         <h3 className="text-sm font-extrabold text-slate-900 m-0 truncate group-hover:text-orange-600 transition-colors">
                           {name}
                         </h3>
-                        <span className="text-[10px] text-slate-400 font-mono truncate block mt-0.5">
-                          {logo ? "Custom Logo Attached" : "Default Auto Match"}
+                        <span className={`text-[10px] font-mono truncate block mt-0.5 ${logo ? "text-emerald-600 font-bold" : "text-amber-600 font-bold"}`}>
+                          {logo ? "✓ Logo Attached" : "⚠ No Logo (Hidden on Live Page)"}
                         </span>
                       </div>
                     </div>

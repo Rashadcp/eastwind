@@ -14,6 +14,9 @@ export default function AdminProductsPage() {
   const ITEMS_PER_PAGE = 10;
 
   const [selectedBrandFilter, setSelectedBrandFilter] = useState<string>("All");
+  const [availableBrandsList, setAvailableBrandsList] = useState<string[]>(
+    PRODUCT_BRANDS.map((b) => b.name)
+  );
 
   useEffect(() => {
     setCurrentPage(1);
@@ -56,9 +59,10 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const timestamp = Date.now();
       const [res, bRes] = await Promise.all([
-        fetch(`${baseUrl}/api/products`),
-        fetch(`${baseUrl}/api/brands`)
+        fetch(`${baseUrl}/api/products?t=${timestamp}`, { cache: "no-store" }),
+        fetch(`${baseUrl}/api/brands?t=${timestamp}`, { cache: "no-store" })
       ]);
 
       let allList: ProductItem[] = [];
@@ -66,10 +70,11 @@ export default function AdminProductsPage() {
         allList = await res.json();
       }
 
+      let fetchedBrands: any[] = [];
       if (bRes.ok) {
-        const brands = await bRes.json();
-        if (Array.isArray(brands)) {
-          brands.forEach((b: any) => {
+        fetchedBrands = await bRes.json();
+        if (Array.isArray(fetchedBrands)) {
+          fetchedBrands.forEach((b: any) => {
             if (b.products && Array.isArray(b.products)) {
               b.products.forEach((bp: any) => {
                 const existingIdx = allList.findIndex((p) => p.id === bp.id);
@@ -102,6 +107,16 @@ export default function AdminProductsPage() {
       }
 
       setProducts(allList);
+
+      const dynamicBrands = Array.from(
+        new Set([
+          ...(Array.isArray(fetchedBrands) ? fetchedBrands.map((b: any) => b.name) : []),
+          ...allList.map((p) => p.brand),
+          ...PRODUCT_BRANDS.map((b) => b.name)
+        ])
+      ).filter(Boolean) as string[];
+      dynamicBrands.sort((a, b) => a.localeCompare(b));
+      setAvailableBrandsList(dynamicBrands);
     } catch (err: any) {
       console.error(err);
       setError("Failed to retrieve products from active registers.");
@@ -151,6 +166,11 @@ export default function AdminProductsPage() {
     setFormId(item.id);
     setFormName(item.name);
     setFormBrand(item.brand);
+    if (item.brand) {
+      setAvailableBrandsList((prev) =>
+        prev.includes(item.brand) ? prev : [...prev, item.brand].sort((a, b) => a.localeCompare(b))
+      );
+    }
     setFormCategory(item.category);
     setFormDescription(item.description);
     setFormImageUrl(item.imageUrl || "");
@@ -410,7 +430,7 @@ export default function AdminProductsPage() {
 
       setSuccess(`Product '${payload.name}' successfully ${isEdit ? "updated" : "created"}.`);
       setShowModal(false);
-      fetchProducts();
+      await fetchProducts();
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to commit changes to dynamic database.");
@@ -438,7 +458,7 @@ export default function AdminProductsPage() {
 
       setSuccess("Product record deleted successfully.");
       setDeleteTarget(null);
-      fetchProducts();
+      await fetchProducts();
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to delete product from database.");
@@ -446,7 +466,12 @@ export default function AdminProductsPage() {
     }
   };
 
-  const availableBrands = ["All", ...Array.from(new Set(products.map(p => p.brand).filter(Boolean)))];
+  const availableBrands = [
+    "All",
+    ...Array.from(
+      new Set([...availableBrandsList, ...products.map((p) => p.brand).filter(Boolean)])
+    ).sort((a, b) => a.localeCompare(b))
+  ];
 
   const filteredProducts = products.filter(item => {
     const matchesSearch =
@@ -679,9 +704,14 @@ export default function AdminProductsPage() {
                     onChange={(e) => setFormBrand(e.target.value)}
                     className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
                   >
-                    {PRODUCT_BRANDS.map((b) => (
-                      <option key={b.id} value={b.name} className="bg-white text-slate-900 py-1.5">
-                        {b.name}
+                    {formBrand && !availableBrandsList.includes(formBrand) && (
+                      <option value={formBrand} className="bg-white text-slate-900 py-1.5 font-bold">
+                        {formBrand}
+                      </option>
+                    )}
+                    {availableBrandsList.map((bName) => (
+                      <option key={bName} value={bName} className="bg-white text-slate-900 py-1.5">
+                        {bName}
                       </option>
                     ))}
                   </select>
@@ -695,6 +725,11 @@ export default function AdminProductsPage() {
                     onChange={(e) => setFormCategory(e.target.value)}
                     className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
                   >
+                    {formCategory && !PRODUCT_CATEGORIES.some((c) => c.id === formCategory || c.name === formCategory) && (
+                      <option value={formCategory} className="bg-white text-slate-900 py-1.5 font-bold">
+                        {formCategory}
+                      </option>
+                    )}
                     {PRODUCT_CATEGORIES.map((c) => (
                       <option key={c.id} value={c.id} className="bg-white text-slate-900 py-1.5">
                         {c.name}

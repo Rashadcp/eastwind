@@ -212,29 +212,26 @@ export default async function AboutPage() {
         </section>
 
         {/* Narrative & Facility Showcase Section */}
-        <section className="py-28 max-w-[1400px] mx-auto px-10 max-sm:px-5">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <section className="py-16 md:py-20 max-w-[1400px] mx-auto px-10 max-sm:px-5">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
             {/* Left Column: Narrative Details */}
-            <div className="lg:col-span-7 flex flex-col space-y-6">
-              <span className="text-xs font-bold text-[#c22026] uppercase tracking-[0.2em]">
-                {data.mandateBadge}
-              </span>
-              <h2 className="text-[2.6rem] leading-[1.1] font-extrabold uppercase text-slate-900 tracking-tight">
+            <div className="lg:col-span-7 flex flex-col space-y-4">
+              <h2 className="text-2xl sm:text-3xl md:text-[2rem] leading-tight font-extrabold uppercase text-slate-900 tracking-tight">
                 {data.mandateTitle}
               </h2>
-              <p className="text-[1.08rem] text-slate-650 leading-relaxed font-normal">
+              <p className="text-[0.95rem] text-slate-650 leading-relaxed font-normal">
                 {data.mandateParagraph1}
               </p>
-              <p className="text-sm text-slate-500 leading-relaxed font-light">
+              <p className="text-xs sm:text-[13px] text-slate-500 leading-relaxed font-light">
                 {data.mandateParagraph2}
               </p>
 
               {/* Core market position bullets */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-100 mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-5 border-t border-slate-100 mt-2">
                 {data.positioning.map((pos, idx) => (
-                  <div key={idx} className="flex flex-col gap-2">
-                    <h4 className="text-[0.85rem] font-bold text-[#1e3e8f] uppercase tracking-wider">
+                  <div key={idx} className="flex flex-col gap-1.5">
+                    <h4 className="text-xs font-bold text-[#1e3e8f] uppercase tracking-wider">
                       {pos.title}
                     </h4>
                     <p className="text-[11px] text-slate-500 leading-relaxed m-0 font-medium">
@@ -248,14 +245,14 @@ export default async function AboutPage() {
             {/* Right Column: Premium Image Container */}
             <div className="lg:col-span-5 relative flex justify-center">
               {/* Decorative coordinate grid border backdrop */}
-              <div className="absolute -inset-4 rounded-[32px] border border-slate-200/60 pointer-events-none z-0" />
+              <div className="absolute -inset-3 rounded-[28px] border border-slate-200/60 pointer-events-none z-0" />
 
               {/* Main Facility Showcase Image Card */}
-              <div className="relative z-10 w-full h-[440px] max-sm:h-[320px] p-2 bg-white border border-slate-200 shadow-md rounded-[28px] overflow-hidden group">
+              <div className="relative z-10 w-full h-[380px] max-sm:h-[280px] p-2 bg-white border border-slate-200 shadow-md rounded-[24px] overflow-hidden group">
                 <img
                   src={data.facilityImage}
                   alt={data.mandateTitle}
-                  className="w-full h-full object-cover rounded-[20px] transition-transform duration-[1200ms] hover:scale-103"
+                  className="w-full h-full object-cover rounded-[18px] transition-transform duration-[1200ms] hover:scale-103"
                 />
               </div>
             </div>
@@ -295,9 +292,6 @@ export default async function AboutPage() {
         {/* Specialized Multi-Disciplinary Engineering Matrix */}
         <section className="py-28 max-w-[1400px] mx-auto px-10 max-sm:px-5">
           <div className="mb-20 max-w-[800px]">
-            <span className="block text-xs font-bold text-[#c22026] uppercase tracking-[0.2em] mb-3">
-              Technical Capabilities
-            </span>
             <h2 className="text-[2.8rem] max-sm:text-[2rem] font-extrabold uppercase text-slate-900 tracking-tight mb-4">
               Multi-Disciplinary Engineering Team
             </h2>

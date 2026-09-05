@@ -80,57 +80,57 @@ export default function SuccessStoriesSection() {
   }, []);
 
   return (
-    <section className="relative z-10 py-24 bg-[#F8FAFC] text-slate-900 border-t border-b border-slate-200/80 overflow-hidden">
+    <section className="relative z-10 py-14 md:py-18 bg-[#F8FAFC] text-slate-900 border-t border-b border-slate-200/80 overflow-hidden">
       {/* Subtle ambient glows */}
-      <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-blue-500/10 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-orange-500/10 blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-10 w-80 h-80 rounded-full bg-blue-500/10 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full bg-orange-500/10 blur-[100px] pointer-events-none" />
 
-      <div className="max-w-[1400px] mx-auto px-10 max-sm:px-5 relative z-10">
+      <div className="max-w-[1400px] mx-auto px-8 max-sm:px-5 relative z-10">
         
         {/* Executive Header Block */}
-        <div className="max-w-[780px] mb-16">
-          <h2 className="text-[3rem] max-md:text-[2.2rem] uppercase font-extrabold tracking-tight leading-none text-slate-900">
+        <div className="max-w-[650px] mb-8 sm:mb-10">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl uppercase font-extrabold tracking-tight leading-tight text-slate-900">
             Our Success Story
           </h2>
-          <p className="text-[1.08rem] leading-relaxed m-0 font-medium text-slate-700 mt-4">
+          <p className="text-xs sm:text-sm leading-relaxed m-0 font-medium text-slate-600 mt-2">
             Explore Eastwind's milestones of engineered safety excellence, technological breakthroughs, and proven achievements across Saudi Arabia.
           </p>
         </div>
 
         {/* ================= SUCCESS STORIES CONTAINERS GRID (IMAGE, HEADING, DATE, CONTENT ONLY) ================= */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {stories.map((story, idx) => (
             <motion.div
               key={story.id || idx}
-              initial={{ opacity: 0, y: 25 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className="bg-white border border-slate-200/90 rounded-[24px] overflow-hidden shadow-lg hover:shadow-2xl hover:border-orange-500/40 transition-all duration-300 flex flex-col justify-between group"
+              transition={{ duration: 0.35, delay: idx * 0.08 }}
+              className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-orange-500/40 transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
-                {/* 1. IMAGE (Fills card container with balanced proportions) */}
-                <div className="w-full h-56 sm:h-64 relative overflow-hidden bg-slate-100">
+                {/* 1. IMAGE (Compact & proportional) */}
+                <div className="w-full h-44 sm:h-48 relative overflow-hidden bg-slate-100">
                   <img
                     src={formatImageUrl(story.imageUrl, "/emergency_vehicle.webp")}
                     alt={story.title}
                     onError={(e) => {
                       e.currentTarget.src = "/emergency_vehicle.webp";
                     }}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
 
-                {/* 2. DATE, HEADING & CONTENT */}
-                <div className="p-7 space-y-3">
+                {/* 2. HEADING & CONTENT */}
+                <div className="p-5 sm:p-5.5 space-y-2">
                   
                   {/* HEADING */}
-                  <h3 className="text-xl font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-orange-600 transition-colors">
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-snug group-hover:text-orange-600 transition-colors">
                     {story.title}
                   </h3>
 
                   {/* CONTENT / SUMMARY */}
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium pt-1">
+                  <p className="text-xs text-slate-600 leading-relaxed font-normal">
                     {story.summary}
                   </p>
 

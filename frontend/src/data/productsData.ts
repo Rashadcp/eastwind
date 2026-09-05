@@ -62,11 +62,13 @@ export function getProductImageUrl(product: ProductItem): string {
 export const PRODUCT_BRANDS = [
   { id: "one-seven", name: "One Seven" },
   { id: "sione", name: "SIONE" },
+  { id: "partech", name: "Partech" },
   { id: "paratech", name: "Paratech" },
   { id: "nardi", name: "Nardi Compressor" },
   { id: "xshielder", name: "Xshielder" },
   { id: "mimes", name: "Mimes" },
   { id: "atexor", name: "Atexor" },
+  { id: "polyhose", name: "Polyhose" },
   { id: "poly-hose", name: "Poly Hose" },
   { id: "key-connections", name: "Key Connections" },
   { id: "cejn", name: "CEJN" },

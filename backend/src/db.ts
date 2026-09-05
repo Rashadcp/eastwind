@@ -473,6 +473,7 @@ export async function seedDatabase(): Promise<void> {
         - ${counts.contactSettings} Contact Settings Records
         - ${counts.solutionPage} Solutions Page Configuration
         - ${counts.brands} Brands Portfolio`);
+      await syncBrandProductsToProductsCollection();
       return;
     }
 
@@ -524,8 +525,41 @@ export async function seedDatabase(): Promise<void> {
       }
     }
 
+    await syncBrandProductsToProductsCollection();
     console.log("Database initialization & seeding completed successfully.");
   } catch (error) {
     console.error("Critical Failure during MongoDB seeding process:", error);
+  }
+}
+
+export async function syncBrandProductsToProductsCollection(): Promise<void> {
+  try {
+    const brands = await Brand.find({}).lean().exec();
+    if (!brands || brands.length === 0) return;
+
+    for (const brand of brands) {
+      if (Array.isArray(brand.products)) {
+        for (const bp of brand.products) {
+          const exists = await Product.findOne({ id: bp.id }).lean().exec();
+          if (!exists) {
+            await Product.create({
+              id: bp.id,
+              slug: `${bp.id}-system`,
+              name: bp.name,
+              brand: brand.name,
+              category: bp.category || "fire-fighting-rescue",
+              description: bp.description || "",
+              features: [],
+              specifications: [],
+              certifications: [],
+              imageUrl: bp.imageUrl || ""
+            });
+            console.log(`[DB Sync] Synced brand product '${bp.id}' (${bp.name}) into Products collection.`);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Error syncing brand products to products collection:", err);
   }
 }

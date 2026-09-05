@@ -643,7 +643,7 @@ export default function AdminContactPage() {
                 />
                 <label
                   htmlFor="contact-hero-upload"
-                  className="px-4 py-3 bg-slate-800 text-white rounded-xl text-xs font-medium hover:bg-slate-900 cursor-pointer shrink-0 flex items-center gap-1.5"
+                  className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
                 >
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload File"}
                 </label>

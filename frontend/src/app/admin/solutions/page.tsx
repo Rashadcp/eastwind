@@ -1674,35 +1674,22 @@ export default function UnifiedAdminSolutionsPage() {
               {partners.map((partnerItem, idx) => {
                 const name = typeof partnerItem === "string" ? partnerItem : partnerItem?.name || "Partner Brand";
                 const logo = typeof partnerItem === "object" ? partnerItem?.logo || partnerItem?.image || "" : "";
-                const cleanKey = name.toLowerCase().trim();
-                const defaultLogo = logo || (
-                  cleanKey.includes("dräg") || cleanKey.includes("draeg") ? "/brands/draeger.png" :
-                  cleanKey.includes("one seven") ? "/brands/oneseven.png" :
-                  cleanKey.includes("xshield") ? "/brands/xshielder.png" :
-                  cleanKey.includes("nardi") ? "/brands/nardi.png" :
-                  cleanKey.includes("mimes") ? "/brands/mimes.png" :
-                  cleanKey.includes("sieon") || cleanKey.includes("sione") ? "/brands/sione.png" :
-                  cleanKey.includes("e2s") ? "/brands/e2s.png" :
-                  cleanKey.includes("flamepro") ? "/brands/flamepro.png" :
-                  cleanKey.includes("schneider") ? "/brands/schneider.png" :
-                  cleanKey.includes("pepperl") ? "/brands/pepperlfuchs.png" : ""
-                );
 
                 return (
                   <div key={idx} className="p-4 border border-slate-200 rounded-2xl bg-slate-50 hover:bg-white hover:border-slate-300 transition-all duration-200 flex flex-col justify-between space-y-3 shadow-3xs hover:shadow-sm group">
                     <div className="space-y-3">
                       {/* Logo Preview Box */}
                       <div className="h-20 w-full bg-white border border-slate-200 rounded-xl p-2 flex items-center justify-center relative overflow-hidden shadow-2xs">
-                        {defaultLogo ? (
+                        {logo && logo.trim() !== "" ? (
                           <img
-                            src={formatImageUrl(defaultLogo)}
+                            src={formatImageUrl(logo)}
                             alt={name}
                             className="max-h-14 max-w-[120px] object-contain"
                             onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-600 font-extrabold text-sm">
-                            {name.charAt(0)}
+                          <div className="flex flex-col items-center justify-center text-center p-2 text-slate-400">
+                            <span className="text-[11px] font-semibold text-slate-400">No Logo Uploaded</span>
                           </div>
                         )}
                       </div>
@@ -1712,8 +1699,8 @@ export default function UnifiedAdminSolutionsPage() {
                         <h4 className="text-sm font-extrabold text-slate-900 m-0 truncate group-hover:text-orange-600 transition-colors">
                           {name}
                         </h4>
-                        <span className="text-[10px] text-slate-400 font-mono truncate block mt-0.5">
-                          {logo ? "Custom Logo Uploaded" : "Default Auto Match"}
+                        <span className={`text-[10px] font-mono truncate block mt-0.5 ${logo ? "text-emerald-600 font-bold" : "text-amber-600 font-bold"}`}>
+                          {logo ? "✓ Logo Attached" : "⚠ No Logo (Hidden on Live Page)"}
                         </span>
                       </div>
                     </div>

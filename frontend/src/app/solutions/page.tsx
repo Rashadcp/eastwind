@@ -578,7 +578,6 @@ const pageApplicationsList = [
 function SolutionsPageContent() {
   const searchParams = useSearchParams();
   const urlCat = searchParams.get("cat") || searchParams.get("id") || searchParams.get("tab") || searchParams.get("category");
-  const marqueeScrollRef = useRef<HTMLDivElement>(null);
 
   const [mainCategory, setMainCategory] = useState<"solutions" | "applications" | "services">((): "solutions" | "applications" | "services" => {
     const typeParam = searchParams.get("type") || searchParams.get("cat") || searchParams.get("tab") || searchParams.get("category");
@@ -592,10 +591,55 @@ function SolutionsPageContent() {
   });
 
   const [pageConfig, setPageConfig] = useState<SolutionsPageConfig>(defaultPageConfig);
+  const [portfolioBrands, setPortfolioBrands] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<string>(() => {
     const matched = getMatchingIndustryId(urlCat, defaultPageConfig.industries);
     return matched || "oil-gas";
   });
+
+  const marqueeScrollRef = useRef<HTMLDivElement>(null);
+  const [isMarqueePaused, setIsMarqueePaused] = useState(false);
+
+  // Seamless Infinite Marquee Auto-Scroll Loop
+  useEffect(() => {
+    let animationFrameId: number;
+    const container = marqueeScrollRef.current;
+    if (!container) return;
+
+    const step = () => {
+      if (!isMarqueePaused && container) {
+        container.scrollLeft += 0.75; // Cinematic, smooth gliding speed
+        const halfWidth = container.scrollWidth / 2;
+        if (halfWidth > 0 && container.scrollLeft >= halfWidth) {
+          container.scrollLeft -= halfWidth;
+        }
+      }
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isMarqueePaused, portfolioBrands, pageConfig?.partners]);
+
+  const handleMarqueeNext = () => {
+    if (!marqueeScrollRef.current) return;
+    const el = marqueeScrollRef.current;
+    const halfWidth = el.scrollWidth / 2;
+    if (halfWidth > 0 && el.scrollLeft >= halfWidth) {
+      el.scrollLeft -= halfWidth;
+    }
+    el.scrollBy({ left: 260, behavior: "smooth" });
+  };
+
+  const handleMarqueePrev = () => {
+    if (!marqueeScrollRef.current) return;
+    const el = marqueeScrollRef.current;
+    const halfWidth = el.scrollWidth / 2;
+    if (el.scrollLeft <= 20 && halfWidth > 0) {
+      el.scrollLeft += halfWidth;
+    }
+    el.scrollBy({ left: -260, behavior: "smooth" });
+  };
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
@@ -700,6 +744,21 @@ function SolutionsPageContent() {
           const aList = await appRes.json();
           if (Array.isArray(aList) && aList.length > 0) {
             setApplicationsList(aList);
+          }
+        }
+
+        // Fetch Dynamic Brands Portfolio from /api/brands
+        const brandsRes = await fetch(`${baseUrl}/api/brands?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache"
+          }
+        });
+        if (brandsRes.ok) {
+          const bList = await brandsRes.json();
+          if (Array.isArray(bList) && bList.length > 0) {
+            setPortfolioBrands(bList);
           }
         }
       } catch (err) {
@@ -955,7 +1014,7 @@ function SolutionsPageContent() {
                     <div className="pt-6 mt-6 border-t border-slate-100">
                       <a
                         href="#enquire-form"
-                        className="w-full py-2.5 px-4 bg-slate-900 hover:bg-emerald-700 text-white font-bold text-xs uppercase font-mono tracking-wider rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-xs no-underline"
+                        className="w-full py-2.5 px-4 bg-slate-900 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-xs no-underline"
                       >
                         <span>Enquire About This Service</span>
                         <span>→</span>
@@ -1051,7 +1110,7 @@ function SolutionsPageContent() {
                     className="w-full h-full object-cover filter contrast-[1.02] brightness-100 group-hover:scale-103 transition-all duration-[1200ms] ease-out rounded-lg"
                   />
                   <div 
-                    className="absolute bottom-4 left-4 right-4 z-20 flex justify-between items-center bg-[#080c14]/95 border border-red-500/40 px-3.5 py-1.5 font-mono text-[10px] font-bold tracking-widest rounded-lg backdrop-blur-md shadow-md"
+                    className="absolute bottom-4 left-4 right-4 z-20 flex justify-between items-center bg-[#080c14]/95 border border-red-500/40 px-3.5 py-1.5 text-[10px] font-bold tracking-widest rounded-lg backdrop-blur-md shadow-md"
                   >
                     <span className="text-red-400 font-bold uppercase tracking-wider">{activeIndustry.riskKicker}</span>
                   </div>
@@ -1086,7 +1145,7 @@ function SolutionsPageContent() {
                       <div className="space-y-4 relative z-10">
                         <div className="flex items-center justify-between border-b border-slate-200/60 pb-3">
                           <h4 
-                            className="text-xs font-mono font-bold text-slate-850 uppercase tracking-wider transition-colors duration-300"
+                            className="text-xs font-bold text-slate-850 uppercase tracking-wider transition-colors duration-300"
                             style={{ color: isHovered ? activeIndustry.accent || '#c22026' : '' }}
                           >
                             {sol.name}
@@ -1165,7 +1224,7 @@ function SolutionsPageContent() {
                             ) : (
                               <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 gap-1.5 bg-slate-50">
                                 <Layers className="w-8 h-8 stroke-[1.5]" />
-                                <span className="text-[10px] font-mono font-bold uppercase tracking-wider">Eastwind Safety</span>
+                                <span className="text-[10px] font-bold uppercase tracking-wider">Eastwind Safety</span>
                               </div>
                             )}
                           </div>
@@ -1181,7 +1240,7 @@ function SolutionsPageContent() {
                         </div>
 
                         <div className="px-5 pb-5 pt-3 border-t border-slate-100/80 flex items-center justify-between text-xs font-bold text-[#1e3e8f] group-hover:text-[#c22026] transition-colors">
-                          <span className="font-mono text-[11px] uppercase tracking-wider">Explore Solution Details</span>
+                          <span className="text-[11px] font-bold uppercase tracking-wider">Explore Solution Details</span>
                           <span className="group-hover:translate-x-1 transition-transform">→</span>
                         </div>
                       </Link>
@@ -1229,17 +1288,17 @@ function SolutionsPageContent() {
                     </div>
 
                     <div className="space-y-2">
-                      <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 group-hover:text-[#c22026] transition-colors duration-300">
+                      <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 group-hover:text-[#c22026] transition-colors duration-300">
                         {portfolio.title}
                       </h3>
-                      <p className="text-xs text-slate-500 font-mono leading-relaxed min-h-[32px]">
+                      <p className="text-xs text-slate-600 leading-relaxed min-h-[32px] font-normal">
                         {portfolio.description}
                       </p>
                     </div>
 
                     <ul className="space-y-2.5 pl-0 list-none pt-4 border-t border-slate-200/60">
                       {portfolio.items.map((item, itemIdx) => (
-                        <li key={itemIdx} className="flex items-start gap-2.5 text-xs text-slate-600 font-mono leading-normal">
+                        <li key={itemIdx} className="flex items-start gap-2.5 text-xs text-slate-600 leading-normal font-normal">
                           <span className="text-[#c22026] select-none shrink-0">•</span>
                           <span>{item}</span>
                         </li>
@@ -1254,30 +1313,33 @@ function SolutionsPageContent() {
         </section>
 
         {/* Section 3: Tech Ecosystem / Technology Partners */}
-        <section className="py-24 max-w-[1400px] mx-auto px-10 max-sm:px-5 z-10 relative">
+        <section className="py-20 lg:py-24 max-w-[1400px] mx-auto px-10 max-sm:px-5 z-10 relative overflow-hidden">
           
-          <div className="mb-14 text-center space-y-2">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#c22026]">{pageConfig.partnersTagline}</span>
-            <h2 className="text-2xl font-extrabold uppercase text-slate-900 tracking-tight">{pageConfig.partnersTitle}</h2>
-            <p className="text-sm text-slate-600 max-w-xl mx-auto">
+          {/* Subtle ambient lighting */}
+          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 rounded-full bg-blue-500/[0.035] blur-[120px] pointer-events-none" />
+          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 rounded-full bg-orange-500/[0.035] blur-[120px] pointer-events-none" />
+
+          {/* Premium Header Block */}
+          <div className="mb-12 text-center space-y-3">
+            <h2 className="text-2xl sm:text-3xl lg:text-[2.2rem] font-extrabold uppercase text-slate-900 tracking-tight leading-tight">
+              {pageConfig.partnersTitle || "Integrated Technology Partners"}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
               {pageConfig.partnersDesc}
             </p>
           </div>
 
-          {/* Auto-Scrolling Brand Cards Marquee with Left & Right Arrow Buttons */}
+          {/* Seamless Infinite Marquee with Floating Controls */}
           <div className="relative w-full select-none max-w-6xl mx-auto group/carousel">
+            
             {/* Left Navigation Arrow */}
             <button
               type="button"
-              onClick={() => {
-                if (marqueeScrollRef.current) {
-                  marqueeScrollRef.current.scrollBy({ left: -340, behavior: "smooth" });
-                }
-              }}
-              className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white text-slate-800 hover:bg-[#1e3e8f] hover:text-white border border-slate-200/80 shadow-xl backdrop-blur-md flex items-center justify-center transition-all duration-300 cursor-pointer group/btn active:scale-95"
+              onClick={handleMarqueePrev}
+              className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/95 backdrop-blur-md text-slate-700 hover:text-white hover:bg-slate-900 border border-slate-200/90 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-95 group/btn"
               aria-label="Previous Brand"
             >
-              <svg className="w-5 h-5 transition-transform group-hover/btn:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-4 h-4 transition-transform group-hover/btn:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
@@ -1285,97 +1347,83 @@ function SolutionsPageContent() {
             {/* Right Navigation Arrow */}
             <button
               type="button"
-              onClick={() => {
-                if (marqueeScrollRef.current) {
-                  marqueeScrollRef.current.scrollBy({ left: 340, behavior: "smooth" });
-                }
-              }}
-              className="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white text-slate-800 hover:bg-[#1e3e8f] hover:text-white border border-slate-200/80 shadow-xl backdrop-blur-md flex items-center justify-center transition-all duration-300 cursor-pointer group/btn active:scale-95"
+              onClick={handleMarqueeNext}
+              className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/95 backdrop-blur-md text-slate-700 hover:text-white hover:bg-slate-900 border border-slate-200/90 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-95 group/btn"
               aria-label="Next Brand"
             >
-              <svg className="w-5 h-5 transition-transform group-hover/btn:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </button>
 
-            {/* Soft Edge Fade Gradients */}
-            <div className="absolute left-0 top-0 bottom-0 w-28 bg-gradient-to-r from-white via-white/90 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-28 bg-gradient-to-l from-white via-white/90 to-transparent z-10 pointer-events-none" />
+            {/* Smooth Edge Fade Gradients */}
+            <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-r from-white via-white/80 to-transparent z-20 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-l from-white via-white/80 to-transparent z-20 pointer-events-none" />
 
-            {/* Scroll Container */}
+            {/* Infinite Scroll Container */}
             <div
               ref={marqueeScrollRef}
-              className="w-full overflow-x-auto scroll-smooth py-8 scrollbar-none"
+              onMouseEnter={() => setIsMarqueePaused(true)}
+              onMouseLeave={() => setIsMarqueePaused(false)}
+              className="w-full overflow-x-auto scroll-smooth py-5 sm:py-7 scrollbar-none flex items-center gap-4 sm:gap-6"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
-              <motion.div
-                className="flex items-center gap-6 w-max"
-                animate={{ x: ["0%", "-50%"] }}
-                transition={{
-                  repeat: Infinity,
-                  ease: "linear",
-                  duration: 40,
-                }}
-              >
-              {[...(pageConfig.partners || []), ...(pageConfig.partners || [])].map((partner, index) => {
-                const name = typeof partner === "string" ? partner : (partner?.name || "Partner Brand");
-                const customLogo = typeof partner === "object" ? partner?.logo || partner?.image : null;
-                const cleanKey = name.toLowerCase().trim();
-                
-                const logoSrc = (customLogo ? formatImageUrl(customLogo, "") : null) || (
-                  cleanKey.includes("dräg") || cleanKey.includes("draeg") ? "/brands/draeger.png" :
-                  cleanKey.includes("one seven") ? "/brands/oneseven.png" :
-                  cleanKey.includes("xshield") ? "/brands/xshielder.png" :
-                  cleanKey.includes("nardi") ? "/brands/nardi.png" :
-                  cleanKey.includes("mimes") ? "/brands/mimes.png" :
-                  cleanKey.includes("sieon") || cleanKey.includes("sione") ? "/brands/sione.png" :
-                  cleanKey.includes("e2s") ? "/brands/e2s.png" :
-                  cleanKey.includes("flamepro") ? "/brands/flamepro.png" :
-                  cleanKey.includes("schneider") ? "/brands/schneider.png" :
-                  cleanKey.includes("pepperl") ? "/brands/pepperlfuchs.png" : null
-                );
+              {(() => {
+                // 1. Gather all brands from dynamic Brands Portfolio (/admin/brands)
+                const dynamicBrands = portfolioBrands.filter((b: any) => {
+                  if (!b) return false;
+                  const rawLogo = b.logoUrl || b.imageUrl || b.logo;
+                  return typeof rawLogo === "string" && rawLogo.trim() !== "";
+                });
 
-                return (
-                  <div
-                    key={`${name}-${index}`}
-                    className="flex flex-col items-center justify-between p-6 bg-white border border-slate-200/90 hover:border-[#1e3e8f]/40 rounded-3xl shadow-2xs hover:shadow-xl transition-all duration-300 w-[280px] sm:w-[320px] shrink-0 h-56 sm:h-64 group relative overflow-hidden"
-                  >
-                    {/* Subtle Card Background Accent */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-slate-50/60 via-white to-white group-hover:from-[#1e3e8f]/5 group-hover:to-white transition-all duration-300" />
+                // 2. Fallback to pageConfig.partners if dynamicBrands is empty
+                const fallbackPartners = (pageConfig.partners && pageConfig.partners.length > 0)
+                  ? pageConfig.partners.filter((partner: any) => {
+                      if (!partner) return false;
+                      const rawLogo = typeof partner === "object" ? (partner?.logo || partner?.image || partner?.logoUrl) : null;
+                      return typeof rawLogo === "string" && rawLogo.trim() !== "";
+                    })
+                  : [];
 
-                    <div className="relative z-10 w-full h-full flex flex-col items-center justify-between">
-                      {logoSrc ? (
-                        <div className="h-36 sm:h-40 w-full flex items-center justify-center px-2 my-auto">
-                          <img
-                            src={logoSrc}
-                            alt={name}
-                            className="max-h-36 sm:max-h-40 max-w-[270px] w-auto h-auto object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-xs"
-                            onError={(e) => {
-                              const target = e.target as HTMLElement;
-                              target.style.display = "none";
-                              const parent = target.parentElement;
-                              if (parent && !parent.querySelector('.fallback-icon')) {
-                                const fallback = document.createElement('div');
-                                fallback.className = 'fallback-icon w-20 h-20 rounded-3xl bg-red-50 border border-red-100 flex items-center justify-center text-[#c22026] font-black text-3xl shadow-sm group-hover:bg-[#1e3e8f] group-hover:text-white transition-colors';
-                                fallback.innerText = name.charAt(0);
-                                parent.appendChild(fallback);
-                              }
-                            }}
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-20 h-20 rounded-3xl bg-red-50 border border-red-100 flex items-center justify-center text-[#c22026] font-black text-3xl my-auto shadow-sm group-hover:bg-[#1e3e8f] group-hover:text-white transition-colors">
-                          {name.charAt(0)}
-                        </div>
-                      )}
-                      <span className="text-sm sm:text-base font-extrabold text-slate-800 group-hover:text-[#1e3e8f] tracking-widest uppercase transition-colors text-center truncate w-full pt-2">
-                        {name}
-                      </span>
+                const validPartners = dynamicBrands.length > 0 ? dynamicBrands : fallbackPartners;
+
+                if (validPartners.length === 0) {
+                  return null;
+                }
+
+                const repeatFactor = validPartners.length < 5 ? 8 : (validPartners.length < 10 ? 5 : 3);
+                const loopList = Array.from({ length: repeatFactor }).flatMap(() => validPartners);
+
+                return loopList.map((partner, index) => {
+                  const name = typeof partner === "string" ? partner : (partner?.name || "Partner Brand");
+                  const rawLogo = typeof partner === "object" ? (partner?.logoUrl || partner?.imageUrl || partner?.logo) : "";
+                  const logoSrc = formatImageUrl(rawLogo ? rawLogo.trim() : "");
+
+                  if (!logoSrc) return null;
+
+                  return (
+                    <div
+                      key={`${name}-${index}`}
+                      className="partner-card flex items-center justify-center p-3 sm:p-4 bg-white border border-slate-200/90 hover:border-[#1e3e8f]/40 rounded-2xl shadow-3xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 w-[180px] sm:w-[220px] shrink-0 h-28 sm:h-34 group relative overflow-hidden cursor-default"
+                    >
+                      {/* Subtle Ambient Hover Glow */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-slate-50/60 group-hover:from-blue-50/30 group-hover:to-white transition-all duration-300 pointer-events-none" />
+
+                      <div className="relative z-10 w-full h-full flex items-center justify-center">
+                        <img
+                          src={logoSrc}
+                          alt=""
+                          className="max-h-24 sm:max-h-28 max-w-[155px] sm:max-w-[195px] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                          onError={(e) => {
+                            const card = (e.currentTarget as HTMLElement).closest('.partner-card');
+                            if (card) (card as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </motion.div>
+                  );
+                });
+              })()}
             </div>
           </div>
 
@@ -1401,35 +1449,35 @@ function SolutionsPageContent() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-md:gap-5">
                   <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-500 font-bold">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600">
                       Full Name
                     </label>
                     <input
                       type="text"
                       placeholder="Identified Site Engineer Name"
-                      className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-slate-800 font-mono text-xs focus:outline-none focus:border-[#c22026] focus:ring-1 focus:ring-[#c22026]/20 transition-all duration-300 placeholder:text-slate-400"
+                      className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-[#c22026] focus:ring-1 focus:ring-[#c22026]/20 transition-all duration-300 placeholder:text-slate-400"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-500 font-bold">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600">
                       Corporate Email Address
                     </label>
                     <input
                       type="email"
                       placeholder="engineer@enterprise.com.sa"
-                      className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-slate-800 font-mono text-xs focus:outline-none focus:border-[#c22026] focus:ring-1 focus:ring-[#c22026]/20 transition-all duration-300 placeholder:text-slate-400"
+                      className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-[#c22026] focus:ring-1 focus:ring-[#c22026]/20 transition-all duration-300 placeholder:text-slate-400"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-md:gap-5">
                   <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-700 font-bold">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
                       Operational Sector
                     </label>
                     <div className="relative">
                       <select
-                        className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-slate-700 font-mono text-xs focus:outline-none focus:border-[#c22026] transition-all appearance-none cursor-pointer"
+                        className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm focus:outline-none focus:border-[#c22026] transition-all appearance-none cursor-pointer"
                         defaultValue=""
                       >
                         <option value="" disabled>Select industry classification...</option>
@@ -1444,12 +1492,12 @@ function SolutionsPageContent() {
                   </div>
                   
                   <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-500 font-bold">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600">
                       Primary Solution Scope
                     </label>
                     <div className="relative">
                       <select
-                        className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-slate-700 font-mono text-xs focus:outline-none focus:border-[#c22026] transition-all appearance-none cursor-pointer"
+                        className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm focus:outline-none focus:border-[#c22026] transition-all appearance-none cursor-pointer"
                         defaultValue=""
                       >
                         <option value="" disabled>Select capability tier...</option>
@@ -1465,20 +1513,20 @@ function SolutionsPageContent() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-500 font-bold">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600">
                     Project Scope & Environmental Constraints
                   </label>
                   <textarea
                     rows={4}
                     placeholder="Specify physical area classifications, target gas exposure matrices, thermal limitations, or regulatory HCIS code scopes..."
-                    className="w-full p-4 rounded-xl bg-white border border-slate-200 text-slate-800 font-mono text-xs focus:outline-none focus:border-[#c22026] focus:ring-1 focus:ring-[#c22026]/20 transition-all resize-y placeholder:text-slate-400"
+                    className="w-full p-4 rounded-xl bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-[#c22026] focus:ring-1 focus:ring-[#c22026]/20 transition-all resize-y placeholder:text-slate-400"
                   />
                 </div>
 
                 <div className="pt-2 flex justify-end max-sm:justify-start">
                   <button
                     type="submit"
-                    className="w-full sm:w-auto py-3.5 px-10 text-xs font-bold uppercase tracking-wider text-white bg-[#c22026] hover:bg-[#1e3e8f] rounded-full inline-flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer font-mono"
+                    className="w-full sm:w-auto py-3.5 px-10 text-xs font-bold uppercase tracking-wider text-white bg-[#c22026] hover:bg-[#1e3e8f] rounded-full inline-flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
                   >
                     {pageConfig.submitButtonText}
                     <span className="font-bold">→</span>
@@ -1499,7 +1547,7 @@ function SolutionsPageContent() {
 export default function SolutionsPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white text-sm font-mono">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white text-sm">
         Loading Solutions...
       </div>
     }>
