@@ -459,8 +459,8 @@ export default function Navbar() {
           }`}>
             <img
               src={formatImageUrl(logoUrl)}
-              alt="East Wind Energy Arabia"
-              className="h-9 sm:h-11 w-auto max-w-[150px] sm:max-w-none object-contain shrink-0"
+              alt="East Wind"
+              className="h-8 sm:h-10 w-auto max-w-[160px] sm:max-w-none object-contain shrink-0"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = "/logo.png";
               }}
@@ -490,6 +490,17 @@ export default function Navbar() {
             <span className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full opacity-0 scale-50 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-300 ${showTransparent ? "bg-white" : "bg-[#c22026]"}`} />
           </Link>
 
+          {/* Products Link Button */}
+          <Link
+            href="/products"
+            className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
+              showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
+            }`}
+          >
+            <span>Products</span>
+            <span className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full opacity-0 scale-50 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-300 ${showTransparent ? "bg-white" : "bg-[#c22026]"}`} />
+          </Link>
+
           {/* Single Solutions & Applications Link Button */}
           <Link
             href="/solutions"
@@ -511,8 +522,6 @@ export default function Navbar() {
             <span>Services</span>
             <span className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full opacity-0 scale-50 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-300 ${showTransparent ? "bg-white" : "bg-[#c22026]"}`} />
           </Link>
-
-
 
           <Link
             href="/contact"
@@ -567,6 +576,15 @@ export default function Navbar() {
               About Us
             </Link>
 
+            {/* Mobile Products Direct Link */}
+            <Link 
+              href="/products" 
+              onClick={() => setMobileMenuOpen(false)} 
+              className="w-full min-h-[44px] flex items-center justify-between px-4 border border-slate-200/50 rounded-xl bg-slate-50/50 text-slate-800 text-[0.88rem] font-bold no-underline"
+            >
+              Products
+            </Link>
+
             {/* Mobile Solutions & Applications Direct Link */}
             <Link 
               href="/solutions" 
@@ -584,8 +602,6 @@ export default function Navbar() {
             >
               Services & Consultancy
             </Link>
-
-
 
             <Link 
               href="/contact" 

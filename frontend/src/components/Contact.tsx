@@ -45,7 +45,7 @@ const defaultContactInfo: ContactInfoData = {
 
 const defaultHomeContact: HomeContactData = {
   tagline: "Get In Touch",
-  title: "Contact Engineering",
+  title: "Contact Our Team",
   description: "Have a project requirement or need technical details? Coordinate with our estimating and engineering teams based in Al Khobar and Riyadh.",
   operationalSectors: [
     { value: "oil-gas", label: "Oil & Gas Infrastructure" },

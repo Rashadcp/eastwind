@@ -60,19 +60,17 @@ export function getProductImageUrl(product: ProductItem): string {
 }
 
 export const PRODUCT_BRANDS = [
-  { id: "one-seven", name: "One Seven" },
-  { id: "sione", name: "SIONE" },
-  { id: "partech", name: "Partech" },
-  { id: "paratech", name: "Paratech" },
-  { id: "nardi", name: "Nardi Compressor" },
-  { id: "xshielder", name: "Xshielder" },
-  { id: "mimes", name: "Mimes" },
-  { id: "atexor", name: "Atexor" },
-  { id: "polyhose", name: "Polyhose" },
-  { id: "poly-hose", name: "Poly Hose" },
-  { id: "key-connections", name: "Key Connections" },
-  { id: "cejn", name: "CEJN" },
-  { id: "thermo-cable", name: "Thermo Cable" }
+  { id: "linear-heat-detection", name: "Linear Heat Detection" },
+  { id: "air-compressors", name: "Air Compressors" },
+  { id: "damage-control", name: "Damage Control Systems" },
+  { id: "firefighting-suits", name: "Firefighting Suits & Gear" },
+  { id: "cafs-systems", name: "Compressed Air Foam (CAFS)" },
+  { id: "wireless-gas-detection", name: "Wireless Gas Detection & Telemetry" },
+  { id: "ex-mobility", name: "Intrinsically Safe Mobile Devices" },
+  { id: "ex-lighting", name: "Explosion-Proof Lighting" },
+  { id: "breathing-air-hoses", name: "Breathing Air Lines & Hoses" },
+  { id: "quick-couplings", name: "Quick Connect Couplings" },
+  { id: "flange-adapters", name: "Emergency Flange Adapters" }
 ] as const;
 
 export const PRODUCT_CATEGORIES = [
@@ -89,7 +87,7 @@ export const productsDb: ProductItem[] = [
     id: "fire-truck",
     slug: "industrial-fire-truck",
     name: "AI-Integrated Industrial Fire Truck",
-    brand: "One Seven",
+    brand: "Compressed Air Foam (CAFS)",
     category: "fire-fighting-rescue",
     description: "Premium high-capacity rapid intervention response vehicle integrated with intelligent crew telemetry routing systems and advanced fire suppression skids.",
     features: [
@@ -107,7 +105,7 @@ export const productsDb: ProductItem[] = [
     id: "one-seven-cafs",
     slug: "one-seven-cafs-system",
     name: "Compressed Air Foam System (CAFS)",
-    brand: "One Seven",
+    brand: "Compressed Air Foam (CAFS)",
     category: "fire-fighting-rescue",
     description: "Patented energy foam generation framework that expands water surface coverage exponentially while slashing industrial fluid footprints.",
     features: [
@@ -124,8 +122,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "sione-hood",
     slug: "sione-structural-fire-hood",
-    name: "SIONE Structural Fire Hood",
-    brand: "SIONE",
+    name: "Structural Fire Hood",
+    brand: "Firefighting Suits & Gear",
     category: "fire-fighting-rescue",
     description: "Premium particulate barrier safety hood engineered to shield emergency response crews against aggressive micro-toxins and extreme ambient radiation loops.",
     features: [
@@ -142,8 +140,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "sione-fire-suit",
     slug: "sione-structural-fire-suit",
-    name: "SIONE Structural Turnout Fire Suit",
-    brand: "SIONE",
+    name: "Structural Turnout Fire Suit",
+    brand: "Firefighting Suits & Gear",
     category: "fire-fighting-rescue",
     description: "High-tier multi-layered turnout apparel providing critical thermal protection loops for close-range industrial firefighting operations.",
     features: [
@@ -161,7 +159,7 @@ export const productsDb: ProductItem[] = [
     id: "fire-gloves",
     slug: "premium-firefighting-gloves",
     name: "Heavy Industrial Firefighting Gloves",
-    brand: "SIONE",
+    brand: "Firefighting Suits & Gear",
     category: "fire-fighting-rescue",
     description: "Heavy-duty heat-insulated structural gloves providing high tactile dexterity paired with exceptional puncture defense lines.",
     features: [
@@ -179,7 +177,7 @@ export const productsDb: ProductItem[] = [
     id: "fire-boots",
     slug: "insulated-firefighting-boots",
     name: "Insulated Structural Firefighting Boots",
-    brand: "SIONE",
+    brand: "Firefighting Suits & Gear",
     category: "fire-fighting-rescue",
     description: "Vulcanized safety rubber firefighting boots outfitted with impact-resistant steel caps and high-voltage grid insulation loops.",
     features: [
@@ -197,7 +195,7 @@ export const productsDb: ProductItem[] = [
     id: "fire-helmet",
     slug: "premium-fire-helmet-system",
     name: "Premium Structural Fire Helmet System",
-    brand: "SIONE",
+    brand: "Firefighting Suits & Gear",
     category: "fire-fighting-rescue",
     description: "High-grade thermoplastic safety helmet system featuring dual visor elements and built-in interface tracks for communication loops.",
     features: [
@@ -214,8 +212,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "paratech-rescue-kit",
     slug: "paratech-heavy-rescue-system",
-    name: "Paratech Heavy Rescue Shoring System",
-    brand: "Paratech",
+    name: "Heavy Rescue Shoring System",
+    brand: "Damage Control Systems",
     category: "fire-fighting-rescue",
     description: "Premium tactical pneumatic shoring cylinders and structural lift tools engineered to stabilize collapsed industrial infrastructure safely.",
     features: [
@@ -233,7 +231,7 @@ export const productsDb: ProductItem[] = [
     id: "chemical-suit",
     slug: "cbrn-chemical-protection-suit",
     name: "CBRN Chemical Protection Suit",
-    brand: "Paratech",
+    brand: "Damage Control Systems",
     category: "fire-fighting-rescue",
     description: "Gas-tight Type 1a chemical defense containment suit engineered to isolate technicians completely from aggressive industrial fluid splashes and gaseous agents.",
     features: [
@@ -252,8 +250,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "nardi-compressor",
     slug: "nardi-breathing-air-compressor",
-    name: "Nardi High-Pressure Breathing Air Compressor",
-    brand: "Nardi",
+    name: "High-Pressure Breathing Air Compressor",
+    brand: "Air Compressors",
     category: "respiratory-protection",
     description: "Premium heavy-duty reciprocating compressor terminal equipped with a multi-stage active air purification filter array.",
     features: [
@@ -271,7 +269,7 @@ export const productsDb: ProductItem[] = [
     id: "scba-system",
     slug: "self-contained-breathing-apparatus",
     name: "Self-Contained Breathing Apparatus (SCBA)",
-    brand: "Nardi",
+    brand: "Air Compressors",
     category: "respiratory-protection",
     description: "High-grade industrial SCBA pack incorporating an ergonomic backplate chassis, safety pressure reduction links, and a clear panoramic mask setup.",
     features: [
@@ -289,7 +287,7 @@ export const productsDb: ProductItem[] = [
     id: "cascade-system",
     slug: "breathing-air-cascade-system",
     name: "Breathing Air Cylinder Cascade Station",
-    brand: "Nardi",
+    brand: "Air Compressors",
     category: "respiratory-protection",
     description: "High-capacity heavy-duty multi-cylinder cascade manifold rig configured to store critical breathing reserves and supply remote airline loops.",
     features: [
@@ -306,8 +304,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "polyhose-breathing",
     slug: "poly-hose-breathing-air-line",
-    name: "Poly Hose High-Pressure Breathing Air Hose",
-    brand: "Poly Hose",
+    name: "High-Pressure Breathing Air Hose",
+    brand: "Breathing Air Lines & Hoses",
     category: "respiratory-protection",
     description: "Specialised multi-layered high-pressure and low-pressure hose units built explicitly for continuous airline breathing applications.",
     features: [
@@ -324,8 +322,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "cejn-connections",
     slug: "cejn-pneumatic-safety-couplings",
-    name: "CEJN Smart Safety Pneumatic Connections",
-    brand: "CEJN",
+    name: "Smart Safety Pneumatic Connections",
+    brand: "Quick Connect Couplings",
     category: "respiratory-protection",
     description: "Premium quick-connect coupling terminals engineered to prevent accidental line separation in breathing air supply systems.",
     features: [
@@ -343,7 +341,7 @@ export const productsDb: ProductItem[] = [
     id: "hose-reel",
     slug: "industrial-respiratory-hose-reel",
     name: "Industrial Respiratory Hose Reel Station",
-    brand: "Key Connections",
+    brand: "Emergency Flange Adapters",
     category: "respiratory-protection",
     description: "Heavy-duty steel supply reel configured to store and deploy long lengths of breathing air line in high-risk zones.",
     features: [
@@ -362,8 +360,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "mimes-beacon",
     slug: "mimes-wireless-safety-beacon",
-    name: "Mimes Industrial Wireless Safety Beacon",
-    brand: "Mimes",
+    name: "Industrial Wireless Safety Beacon",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "wireless-gas-detection",
     description: "High-visibility wireless visual signaling node integrated into self-healing field sensor mesh network paths.",
     features: [
@@ -380,8 +378,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "mimes-sounder",
     slug: "mimes-wireless-alarm-sounder",
-    name: "Mimes Wireless High-Output Alarm Sounder",
-    brand: "Mimes",
+    name: "Wireless High-Output Alarm Sounder",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "wireless-gas-detection",
     description: "High-decibel audible alarm warning node configured to receive automated emergency process loop commands via secure radio arrays.",
     features: [
@@ -398,8 +396,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "wireless-mcp",
     slug: "mimes-wireless-manual-call-point",
-    name: "Mimes Wireless Manual Call Point (MCP)",
-    brand: "Mimes",
+    name: "Wireless Manual Call Point (MCP)",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "wireless-gas-detection",
     description: "Intrinsically safe wireless manual alarm terminal that allows operators to trigger facility emergency shutdown systems instantly.",
     features: [
@@ -416,8 +414,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "smoke-detector",
     slug: "mimes-wireless-smoke-detector",
-    name: "Mimes Wireless Photoelectric Smoke Detector",
-    brand: "Mimes",
+    name: "Wireless Photoelectric Smoke Detector",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "wireless-gas-detection",
     description: "Intrinsically safe wireless smoke detection node utilizing an advanced optical sensing chamber for early fire detection in industrial zones.",
     features: [
@@ -434,8 +432,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "heat-detector",
     slug: "mimes-wireless-heat-detector",
-    name: "Mimes Wireless Intelligent Heat Detector",
-    brand: "Mimes",
+    name: "Wireless Intelligent Heat Detector",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "wireless-gas-detection",
     description: "Rugged wireless thermal tracking node providing dual rate-of-rise and fixed temperature monitoring paths for fast-burning fires.",
     features: [
@@ -452,8 +450,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "gas-detector",
     slug: "mimes-wireless-gas-detector",
-    name: "Mimes Wireless SIL2 Gas Detector",
-    brand: "Mimes",
+    name: "Wireless SIL2 Gas Detector",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "wireless-gas-detection",
     description: "High-precision wireless gas detection transmitter designed to spot toxic leaks or combustible hydrocarbon gas build-ups in real-time.",
     features: [
@@ -473,7 +471,7 @@ export const productsDb: ProductItem[] = [
     id: "wireless-converter",
     slug: "wired-to-wireless-converting-system",
     name: "Wired-to-Wireless Field Converting Gateway",
-    brand: "Mimes",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "process-instrumentation",
     description: "Industrial interface module configured to convert conventional analog 4-20mA or Modbus wired loops into secure wireless data flows.",
     features: [
@@ -490,8 +488,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "level-transmitter",
     slug: "mimes-wireless-level-transmitter",
-    name: "Mimes Wireless Guided Wave Level Transmitter",
-    brand: "Mimes",
+    name: "Wireless Guided Wave Level Transmitter",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "process-instrumentation",
     description: "Advanced wireless level transmitter configured to track fluid interfaces accurately inside high-pressure storage tanks.",
     features: [
@@ -508,8 +506,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "temp-transmitter",
     slug: "mimes-wireless-temperature-transmitter",
-    name: "Mimes Wireless Multipoint Temperature Transmitter",
-    brand: "Mimes",
+    name: "Wireless Multipoint Temperature Transmitter",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "process-instrumentation",
     description: "High-stability wireless temperature tracking module compatible with multi-element RTD and thermocouple inputs.",
     features: [
@@ -527,7 +525,7 @@ export const productsDb: ProductItem[] = [
     id: "steam-trap-monitor",
     slug: "wireless-steam-trap-monitor",
     name: "Wireless Acoustic Steam Trap Monitor",
-    brand: "Mimes",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "process-instrumentation",
     description: "Non-intrusive wireless acoustic sensor node engineered to identify steam trap blow-through or blockage conditions instantly.",
     features: [
@@ -544,8 +542,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "pressure-transmitter",
     slug: "mimes-wireless-pressure-transmitter",
-    name: "Mimes Wireless Process Pressure Transmitter",
-    brand: "Mimes",
+    name: "Wireless Process Pressure Transmitter",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "process-instrumentation",
     description: "Highly accurate wireless pressure transmitter built to monitor gauge or absolute pressure levels in extreme chemical process loops.",
     features: [
@@ -562,8 +560,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "flow-transmitter",
     slug: "mimes-wireless-flow-transmitter",
-    name: "Mimes Wireless Differential Flow Transmitter",
-    brand: "Mimes",
+    name: "Wireless Differential Flow Transmitter",
+    brand: "Wireless Gas Detection & Telemetry",
     category: "process-instrumentation",
     description: "High-precision differential pressure flow transmitter designed to log fluid transfer rates cleanly and transmit data via wireless mesh networks.",
     features: [
@@ -582,8 +580,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "xshielder-phone",
     slug: "xshielder-intrinsically-safe-smartphone",
-    name: "Xshielder ATEX Zone 1 Smartphone",
-    brand: "Xshielder",
+    name: "ATEX Zone 1 Smartphone",
+    brand: "Intrinsically Safe Mobile Devices",
     category: "explosion-proof-products",
     description: "Premium intrinsically safe Android smartphone certified for safe communication directly inside volatile, explosive gas atmospheres.",
     features: [
@@ -600,8 +598,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "ex-lights",
     slug: "atexor-explosion-proof-led-luminaire",
-    name: "Atexor Explosion-Proof LED Luminaire",
-    brand: "Atexor",
+    name: "Explosion-Proof LED Luminaire",
+    brand: "Explosion-Proof Lighting",
     category: "explosion-proof-products",
     description: "High-output, heavy-duty explosion-proof LED light fixtures engineered to provide safe, dependable lighting in hazardous Zone 1 and 21 workspaces.",
     features: [
@@ -619,7 +617,7 @@ export const productsDb: ProductItem[] = [
     id: "custom-enclosure",
     slug: "custom-ex-d-flameproof-enclosure",
     name: "Custom Ex-d Flameproof Control Enclosure",
-    brand: "Atexor",
+    brand: "Explosion-Proof Lighting",
     category: "explosion-proof-products",
     description: "Custom-engineered flameproof control and junction box enclosures tailored to house conventional electrical gear safely in classified fields.",
     features: [
@@ -636,8 +634,8 @@ export const productsDb: ProductItem[] = [
   {
     id: "thermocable-linear",
     slug: "thermocable-linear-heat-detection-cable",
-    name: "Thermo Cable Digital Linear Heat Detection Cable",
-    brand: "Thermo Cable",
+    name: "Digital Linear Heat Detection Cable",
+    brand: "Linear Heat Detection",
     category: "explosion-proof-products",
     description: "Advanced continuous linear heat detection cable designed to monitor temperature spikes along cable trays, conveyors, and storage tanks.",
     features: [

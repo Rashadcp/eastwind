@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { PRODUCT_BRANDS, PRODUCT_CATEGORIES, ProductItem } from "@/data/productsData";
 import { formatImageUrl } from "@/utils/image";
+import { sanitizeCategory, cleanProductName } from "@/app/products/page";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<ProductItem[]>([]);
@@ -82,9 +83,9 @@ export default function AdminProductsPage() {
                   allList.push({
                     id: bp.id,
                     slug: `${bp.id}-system`,
-                    name: bp.name,
-                    brand: b.name,
-                    category: bp.category || "Foam Equipment",
+                    name: cleanProductName(bp.name),
+                    brand: sanitizeCategory(b.name),
+                    category: bp.category || "Safety Equipment",
                     description: bp.description || "",
                     features: bp.features || [],
                     specifications: bp.specifications || [],
@@ -97,7 +98,7 @@ export default function AdminProductsPage() {
                   });
                 } else {
                   if (!allList[existingIdx].brand) {
-                    allList[existingIdx].brand = b.name;
+                    allList[existingIdx].brand = sanitizeCategory(b.name);
                   }
                 }
               });
@@ -106,12 +107,18 @@ export default function AdminProductsPage() {
         }
       }
 
-      setProducts(allList);
+      const cleanList = allList.map((p) => ({
+        ...p,
+        name: cleanProductName(p.name),
+        brand: sanitizeCategory(p.brand)
+      }));
+
+      setProducts(cleanList);
 
       const dynamicBrands = Array.from(
         new Set([
-          ...(Array.isArray(fetchedBrands) ? fetchedBrands.map((b: any) => b.name) : []),
-          ...allList.map((p) => p.brand),
+          ...(Array.isArray(fetchedBrands) ? fetchedBrands.map((b: any) => sanitizeCategory(b.name)) : []),
+          ...cleanList.map((p) => sanitizeCategory(p.brand)),
           ...PRODUCT_BRANDS.map((b) => b.name)
         ])
       ).filter(Boolean) as string[];
@@ -269,7 +276,7 @@ export default function AdminProductsPage() {
   // Load standard specs template
   const loadDefaultSpecs = () => {
     const defaults = [
-      { label: "Manufacturer Brand", value: formBrand || "One Seven" },
+      { label: "Equipment Category", value: sanitizeCategory(formBrand) || "Industrial Safety Equipment" },
       { label: "Safety Classification", value: "ATEX Zone 1/2, IECEx, SIL Compliant" },
       { label: "Operational Environment", value: "High-Hazard Industrial / Energy Sector" },
       { label: "Operating Temperature", value: "-40°C to +85°C Industrial Grade" },
@@ -375,21 +382,33 @@ export default function AdminProductsPage() {
       return;
     }
 
-    const finalId = formId ? formId.trim().toLowerCase().replace(/\s+/g, "-") : formName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    const cleanedName = cleanProductName(formName.trim());
+    const sanitizedBrand = sanitizeCategory(formBrand.trim());
+
+    const finalId = formId ? formId.trim().toLowerCase().replace(/\s+/g, "-") : cleanedName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     if (!finalId) {
       setError("Please provide a valid product name.");
       return;
     }
 
+    const cleanedSpecs = formSpecs
+      .filter((s) => !s.label.toLowerCase().includes("manufacturer brand"))
+      .map((s) => {
+        if (s.label.toLowerCase().includes("brand")) {
+          return { ...s, label: "Equipment Category", value: sanitizedBrand };
+        }
+        return s;
+      });
+
     const payload: ProductItem = {
       id: finalId,
       slug: finalId + "-system",
-      name: formName.trim(),
-      brand: formBrand,
+      name: cleanedName,
+      brand: sanitizedBrand,
       category: formCategory,
       description: formDescription.trim(),
       features: formFeatures,
-      specifications: formSpecs,
+      specifications: cleanedSpecs,
       certifications: formCertifications,
       datasheetUrl: formDatasheetUrl.trim() || undefined,
       datasheetName: formDatasheetName.trim() || undefined,
@@ -536,16 +555,16 @@ export default function AdminProductsPage() {
           </span>
           <input
             type="text"
-            placeholder="Search products by name, brand or ID..."
+            placeholder="Search products by name, category or ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-2xl text-xs text-white placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium"
           />
         </div>
 
-        {/* Filter By Brand Dropdown */}
+        {/* Filter By Category Dropdown */}
         <div className="flex items-center gap-2 shrink-0 max-sm:w-full">
-          <span className="text-xs font-bold text-slate-700 uppercase tracking-wider shrink-0">Filter Brand:</span>
+          <span className="text-xs font-bold text-slate-700 uppercase tracking-wider shrink-0">Filter Category:</span>
           <select
             value={selectedBrandFilter}
             onChange={(e) => setSelectedBrandFilter(e.target.value)}
@@ -553,7 +572,7 @@ export default function AdminProductsPage() {
           >
             {availableBrands.map((b) => (
               <option key={b} value={b} className="bg-white text-slate-900 font-bold py-1">
-                {b === "All" ? "All Brands (Show All)" : b}
+                {b === "All" ? "All Categories (Show All)" : b}
               </option>
             ))}
           </select>
@@ -578,7 +597,7 @@ export default function AdminProductsPage() {
               <thead>
                 <tr className="bg-white/[0.02] border-b border-white/5">
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Name</th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Brand</th>
+                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Equipment Category</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
                 </tr>
@@ -696,9 +715,9 @@ export default function AdminProductsPage() {
                   />
                 </div>
 
-                {/* Brand select */}
+                {/* Category line select */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Brand Name *</label>
+                  <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Equipment Category *</label>
                   <select
                     value={formBrand}
                     onChange={(e) => setFormBrand(e.target.value)}
@@ -1392,7 +1411,7 @@ export default function AdminProductsPage() {
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400">Brand Manufacturer</span>
+                      <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400">Equipment Category</span>
                       <p className="text-xs text-slate-700 font-medium m-0 mt-0.5">{viewItem.brand}</p>
                     </div>
                     <div>

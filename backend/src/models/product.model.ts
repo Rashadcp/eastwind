@@ -2,6 +2,37 @@ import { Product, Brand, IProduct } from "../db.js";
 import { sanitizeObjectImages } from "../utils/imageStorage.js";
 import { invalidateCache } from "../utils/cache.js";
 
+const BRAND_TO_CATEGORY: Record<string, string> = {
+  "one seven": "Compressed Air Foam (CAFS)",
+  "one-seven": "Compressed Air Foam (CAFS)",
+  "sione": "Firefighting Suits & Gear",
+  "paratech": "Damage Control Systems",
+  "partech": "Damage Control Systems",
+  "nardi": "Air Compressors",
+  "nardi compressor": "Air Compressors",
+  "poly hose": "Breathing Air Lines & Hoses",
+  "polyhose": "Breathing Air Lines & Hoses",
+  "cejn": "Quick Connect Couplings",
+  "key connections": "Emergency Flange Adapters",
+  "mimes": "Wireless Gas Detection & Telemetry",
+  "xshielder": "Intrinsically Safe Mobile Devices",
+  "atexor": "Explosion-Proof Lighting",
+  "thermo cable": "Linear Heat Detection",
+  "thermo-cable": "Linear Heat Detection",
+  "thermocable": "Linear Heat Detection"
+};
+
+function sanitizeBrand(brand?: string): string {
+  if (!brand) return "Industrial Safety Equipment";
+  const key = brand.trim().toLowerCase();
+  return BRAND_TO_CATEGORY[key] || brand.trim();
+}
+
+function cleanProductName(name?: string): string {
+  if (!name) return "";
+  return name.replace(/^(One Seven|SIONE|Paratech|Partech|Nardi|Xshielder|Mimes|Atexor|Polyhose|Poly Hose|CEJN|Key Connections|Thermo Cable|OS)\s+/i, "").trim();
+}
+
 export class ProductModel {
   static async getAll(): Promise<any[]> {
     return await Product.find({}).lean().exec();
@@ -17,9 +48,9 @@ export class ProductModel {
           item = {
             id: bp.id,
             slug: `${bp.id}-system`,
-            name: bp.name,
-            brand: brandWithProd.name,
-            category: bp.category || "Foam Equipment",
+            name: cleanProductName(bp.name),
+            brand: sanitizeBrand(brandWithProd.name),
+            category: bp.category || "Safety Equipment",
             description: bp.description || "",
             features: [],
             specifications: [],
@@ -33,6 +64,19 @@ export class ProductModel {
   }
 
   static async create(data: Partial<IProduct>): Promise<any> {
+    if (data.brand) data.brand = sanitizeBrand(data.brand);
+    if (data.name) data.name = cleanProductName(data.name);
+    if (Array.isArray(data.specifications)) {
+      data.specifications = data.specifications
+        .filter((s: any) => !s.label?.toLowerCase().includes("manufacturer brand"))
+        .map((s: any) => {
+          if (s.label?.toLowerCase().includes("brand")) {
+            return { ...s, label: "Equipment Category", value: data.brand };
+          }
+          return s;
+        });
+    }
+
     const sanitized = sanitizeObjectImages(data, data.id || "prod");
     const doc: any = await Product.create(sanitized);
 
@@ -69,6 +113,19 @@ export class ProductModel {
   }
 
   static async update(id: string, updates: Partial<IProduct>): Promise<any | null> {
+    if (updates.brand) updates.brand = sanitizeBrand(updates.brand);
+    if (updates.name) updates.name = cleanProductName(updates.name);
+    if (Array.isArray(updates.specifications)) {
+      updates.specifications = updates.specifications
+        .filter((s: any) => !s.label?.toLowerCase().includes("manufacturer brand"))
+        .map((s: any) => {
+          if (s.label?.toLowerCase().includes("brand")) {
+            return { ...s, label: "Equipment Category", value: updates.brand };
+          }
+          return s;
+        });
+    }
+
     const sanitized = sanitizeObjectImages(updates, id);
 
     let doc: any = await Product.findOneAndUpdate({ id }, sanitized, { new: true }).lean().exec();
@@ -81,9 +138,9 @@ export class ProductModel {
       const newProductData = {
         id,
         slug: `${id}-system`,
-        name: updates.name || bp?.name || id,
-        brand: updates.brand || brandWithProd?.name || "One Seven",
-        category: updates.category || bp?.category || "Fire Fighting & Rescue Application",
+        name: updates.name || cleanProductName(bp?.name) || id,
+        brand: updates.brand || sanitizeBrand(brandWithProd?.name) || "Industrial Safety Equipment",
+        category: updates.category || bp?.category || "Industrial Safety & Fire Protection",
         description: updates.description || bp?.description || "",
         imageUrl: updates.imageUrl || bp?.imageUrl || "",
         features: updates.features || [],

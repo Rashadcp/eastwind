@@ -121,7 +121,7 @@ export default function Footer() {
           <div className="h-10 flex items-center mb-6">
             <img
               src={formatImageUrl(footer.logoUrl, "/logo.png")}
-              alt="East Wind Energy Arabia"
+              alt="East Wind"
               className="h-10 w-auto object-contain"
             />
           </div>

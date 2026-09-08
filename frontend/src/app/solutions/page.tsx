@@ -945,13 +945,6 @@ function SolutionsPageContent() {
                 />
               )}
             </button>
-
-            <Link
-              href="/products"
-              className="relative pb-3 font-extrabold tracking-tight transition-all duration-300 cursor-pointer text-[1.4rem] text-slate-400 hover:text-slate-700 no-underline"
-            >
-              Products
-            </Link>
           </div>
 
           <div className="border-b border-slate-200/60 pb-12 mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -1109,18 +1102,13 @@ function SolutionsPageContent() {
                     }}
                     className="w-full h-full object-cover filter contrast-[1.02] brightness-100 group-hover:scale-103 transition-all duration-[1200ms] ease-out rounded-lg"
                   />
-                  <div 
-                    className="absolute bottom-4 left-4 right-4 z-20 flex justify-between items-center bg-[#080c14]/95 border border-red-500/40 px-3.5 py-1.5 text-[10px] font-bold tracking-widest rounded-lg backdrop-blur-md shadow-md"
-                  >
-                    <span className="text-red-400 font-bold uppercase tracking-wider">{activeIndustry.riskKicker}</span>
-                  </div>
                 </div>
 
                 {/* Sub-system Narrative Container */}
                 <div className="p-6 bg-white border border-slate-200/60 rounded-xl flex-grow flex flex-col justify-center space-y-3 relative overflow-hidden shadow-3xs">
                   <div className="absolute top-0 left-0 w-1.5 h-full" style={{ backgroundColor: activeIndustry.accent || '#c22026' }} />
                   <h3 className="text-md font-bold text-slate-900 uppercase tracking-tight pl-2">
-                    {activeIndustry.name} Control Parameters
+                    {activeIndustry.name} Expertise
                   </h3>
                   <p className="text-xs text-slate-650 leading-relaxed pl-2 font-medium">
                     {activeIndustry.description}
@@ -1193,7 +1181,7 @@ function SolutionsPageContent() {
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                     <div className="space-y-2 max-w-2xl">
                       <h3 className="text-3xl font-extrabold uppercase text-slate-900 tracking-tight">
-                        All Solutions & Technical Packages ({solutionsList.length})
+                        All Solutions & Technical Packages
                       </h3>
                       <p className="text-sm text-slate-600 leading-relaxed">
                         Explore our full catalog of certified mission-critical fire suppression, gas detection, breathing protection, and industrial safety platforms.

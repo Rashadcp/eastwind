@@ -29,7 +29,7 @@ export default function AdminContactPage() {
 
   // Tab 2: Home Page Contact Section State (home_contact)
   const [homeTagline, setHomeTagline] = useState<string>("Get In Touch");
-  const [homeTitle, setHomeTitle] = useState<string>("Contact Engineering");
+  const [homeTitle, setHomeTitle] = useState<string>("Contact Our Team");
   const [homeDescription, setHomeDescription] = useState<string>("Have a project requirement or need technical details? Coordinate with our estimating and engineering teams based in Al Khobar and Riyadh.");
   const [homeSectors, setHomeSectors] = useState<DropdownOption[]>([
     { value: "oil-gas", label: "Oil & Gas Infrastructure" },

@@ -1,11 +1,41 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatImageUrl } from "@/utils/image";
+
+const BRAND_TO_CATEGORY: Record<string, string> = {
+  "one seven": "Compressed Air Foam (CAFS)",
+  "one-seven": "Compressed Air Foam (CAFS)",
+  "sione": "Firefighting Suits & Gear",
+  "paratech": "Damage Control Systems",
+  "partech": "Damage Control Systems",
+  "nardi": "Air Compressors",
+  "nardi compressor": "Air Compressors",
+  "poly hose": "Breathing Air Lines & Hoses",
+  "polyhose": "Breathing Air Lines & Hoses",
+  "cejn": "Quick Connect Couplings",
+  "key connections": "Emergency Flange Adapters",
+  "mimes": "Wireless Gas Detection & Telemetry",
+  "xshielder": "Intrinsically Safe Mobile Devices",
+  "atexor": "Explosion-Proof Lighting",
+  "thermo cable": "Linear Heat Detection",
+  "thermo-cable": "Linear Heat Detection",
+  "thermocable": "Linear Heat Detection"
+};
+
+export function sanitizeCategory(brandOrCat?: string): string {
+  if (!brandOrCat) return "Industrial Safety Equipment";
+  const key = brandOrCat.trim().toLowerCase();
+  return BRAND_TO_CATEGORY[key] || brandOrCat;
+}
+
+export function cleanProductName(name: string): string {
+  return name.replace(/^(One Seven|SIONE|Paratech|Partech|Nardi|Xshielder|Mimes|Atexor|Polyhose|Poly Hose|CEJN|Key Connections|Thermo Cable|OS)\s+/i, "");
+}
 
 export interface SpecItem {
   label: string;
@@ -69,15 +99,17 @@ function ProductsCatalogContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const initialBrand = searchParams.get("brand") || "All";
-  const initialSolution = searchParams.get("solution") || searchParams.get("category") || "All";
+  const rawBrandParam = searchParams.get("category") || searchParams.get("brand") || "All";
+  const initialBrand = rawBrandParam === "All" ? "All" : sanitizeCategory(rawBrandParam);
+  const initialSolution = searchParams.get("solution") || "All";
   const initialId = searchParams.get("id") || null;
 
   // Initialize with local productsDb so page and modals render in 0ms with zero loading screen
   const [products, setProducts] = useState<ProductItem[]>(() => {
     return productsDb.map((p: any) => ({
       ...p,
-      brand: p.brand || "East Wind",
+      name: cleanProductName(p.name),
+      brand: sanitizeCategory(p.brand),
       solutionName: p.category
     }));
   });
@@ -85,6 +117,24 @@ function ProductsCatalogContent() {
   const [categories, setCategories] = useState<string[]>(() => {
     return Array.from(new Set(productsDb.map((p: any) => p.category).filter(Boolean)));
   });
+
+  const productCategoriesList = useMemo(() => {
+    const list = Array.from(new Set(products.map((p) => p.brand).filter(Boolean)));
+    const preferredOrder = [
+      "Linear Heat Detection",
+      "Air Compressors",
+      "Damage Control Systems",
+      "Firefighting Suits & Gear",
+      "Compressed Air Foam (CAFS)",
+      "Wireless Gas Detection & Telemetry",
+      "Intrinsically Safe Mobile Devices",
+      "Explosion-Proof Lighting",
+      "Breathing Air Lines & Hoses",
+      "Quick Connect Couplings",
+      "Emergency Flange Adapters"
+    ];
+    return preferredOrder.filter(cat => list.includes(cat)).concat(list.filter(cat => !preferredOrder.includes(cat)));
+  }, [products]);
 
   const [selectedBrand, setSelectedBrand] = useState<string>(initialBrand);
   const [selectedCategory, setSelectedCategory] = useState<string>(initialSolution);
@@ -95,7 +145,8 @@ function ProductsCatalogContent() {
       if (match) {
         return {
           ...match,
-          brand: match.brand || "East Wind",
+          name: cleanProductName(match.name),
+          brand: sanitizeCategory(match.brand),
           solutionName: match.category
         };
       }
@@ -138,7 +189,8 @@ function ProductsCatalogContent() {
               b.products.forEach((p) => {
                 allProds.push({
                   ...p,
-                  brand: b.name,
+                  name: cleanProductName(p.name),
+                  brand: sanitizeCategory(b.name || p.brand),
                   solutionName: b.solutionName || p.category
                 });
               });
@@ -150,18 +202,25 @@ function ProductsCatalogContent() {
         const mainProds = await cachedFetch<any[]>(`${baseUrl}/api/products`, { fallback: [] });
         if (Array.isArray(mainProds)) {
           mainProds.forEach((mp) => {
+            const sanitizedBrand = sanitizeCategory(mp.brand);
+            const sanitizedName = cleanProductName(mp.name);
             const existingIdx = allProds.findIndex((p) => p.id === mp.id);
             if (existingIdx !== -1) {
               allProds[existingIdx] = {
                 ...allProds[existingIdx],
                 ...mp,
-                brand: mp.brand || allProds[existingIdx].brand,
+                name: sanitizedName || allProds[existingIdx].name,
+                brand: sanitizedBrand || allProds[existingIdx].brand,
                 specifications: (mp.specifications && mp.specifications.length > 0) ? mp.specifications : allProds[existingIdx].specifications,
                 certifications: (mp.certifications && mp.certifications.length > 0) ? mp.certifications : allProds[existingIdx].certifications,
                 features: (mp.features && mp.features.length > 0) ? mp.features : allProds[existingIdx].features,
               };
             } else {
-              allProds.push(mp);
+              allProds.push({
+                ...mp,
+                name: sanitizedName,
+                brand: sanitizedBrand
+              });
             }
           });
         }
@@ -240,7 +299,7 @@ function ProductsCatalogContent() {
     setSelectedProduct(product);
     setEnquireSuccess(false);
     setEnquireError(null);
-    setEnquireMessage(`Hello, I would like to request technical details and pricing for: ${product.name} (${product.brand}).`);
+    setEnquireMessage(`Hello, I would like to request technical details and pricing for: ${product.name}.`);
   };
 
   const handleSendEnquiry = async (e: React.FormEvent) => {
@@ -257,7 +316,7 @@ function ProductsCatalogContent() {
         phone: enquireCompany.trim() || "Not Provided",
         purpose: "Product Technical Enquiry",
         productName: selectedProduct?.name,
-        brand: selectedProduct?.brand,
+        category: selectedProduct?.brand,
         message: enquireMessage
       };
 
@@ -300,7 +359,7 @@ function ProductsCatalogContent() {
     if (!printWindow) return;
     
     const specsHtml = (product.specifications || [
-      { label: "Manufacturer Brand", value: product.brand },
+      { label: "Equipment Category", value: product.brand },
       { label: "Product Identifier", value: product.id },
       { label: "Safety Classification", value: "ATEX / IECEx / SIL Compliant" },
       { label: "Operational Environment", value: "High-Hazard Industrial / Energy Sector" },
@@ -347,7 +406,7 @@ function ProductsCatalogContent() {
           </div>
 
           <div>
-            <span class="badge badge-brand">Brand: ${product.brand}</span>
+            <span class="badge badge-brand">${product.brand}</span>
             <span class="badge badge-cat">${product.category}</span>
           </div>
 
@@ -427,7 +486,7 @@ function ProductsCatalogContent() {
 
           <div style="font-size: 11px; font-weight: 700; color: #c22026; text-transform: uppercase; letter-spacing: 1px;">WHITE PAPER // HAZARDOUS SYSTEMS INTEGRATION</div>
           <h1>${product.name}: Enterprise Field Deployment & Safety Validation Framework</h1>
-          <div class="meta">Target Scope: ${product.brand} Industrial Architecture • Release Revision: 2026.Q3 • Scope Ref: ${product.id}</div>
+          <div class="meta">Target Scope: Eastwind Industrial Safety Architecture • Release Revision: 2026.Q3 • Scope Ref: ${product.id}</div>
 
           <div class="section">
             <h2>1. Executive Summary & Operational Scope</h2>
@@ -437,7 +496,7 @@ function ProductsCatalogContent() {
 
           <div class="section">
             <h2>2. Functional Safety & Compliance Verification</h2>
-            <p>Every deployment of ${product.brand} equipment is engineered to eliminate field failure modes in volatile atmospheres (Zone 1/2 or Class 1 Div 1/2). System response latencies and fail-safe signal paths adhere to strict IEC 61508 / IEC 61511 SIL-2/3 safety integrity standards.</p>
+            <p>Every deployment of certified equipment is engineered to eliminate field failure modes in volatile atmospheres (Zone 1/2 or Class 1 Div 1/2). System response latencies and fail-safe signal paths adhere to strict IEC 61508 / IEC 61511 SIL-2/3 safety integrity standards.</p>
           </div>
 
           <div class="section">
@@ -460,8 +519,29 @@ function ProductsCatalogContent() {
       <Navbar />
 
       <main className="pt-32 pb-24 flex-1">
-        
+        {/* Page Title Header */}
+        <section className="max-w-[1400px] mx-auto px-10 max-sm:px-5 mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Industrial Safety & Hazardous Systems
+            </h1>
 
+            {(selectedBrand !== "All" || selectedCategory !== "All" || searchQuery) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedBrand("All");
+                  setSelectedCategory("All");
+                  setSearchQuery("");
+                }}
+                className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono font-bold text-orange-600 bg-white border border-orange-200 shadow-2xs rounded-xl hover:bg-orange-50 transition-colors cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset Filters</span>
+              </button>
+            )}
+          </div>
+        </section>
 
         {/* Main Content Layout (Left Filters + Right Products Grid) */}
         <section className="max-w-[1400px] mx-auto px-10 max-sm:px-5">
@@ -480,27 +560,28 @@ function ProductsCatalogContent() {
                 </label>
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="Search equipment..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full px-3.5 py-2.5 text-xs border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 font-medium"
                 />
               </div>
 
-              {/* Filter By Brand */}
+              {/* Filter By Equipment Category */}
               <div className="space-y-2 border-t border-slate-100 pt-5">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
-                    Filter By Brand
+                    Equipment Categories
                   </span>
-                  {(selectedBrand !== "All" || selectedCategory !== "All") && (
+                  {(selectedBrand !== "All" || selectedCategory !== "All" || searchQuery) && (
                     <button
+                      type="button"
                       onClick={() => {
                         setSelectedBrand("All");
                         setSelectedCategory("All");
                         setSearchQuery("");
                       }}
-                      className="text-[10px] font-mono text-orange-600 font-bold hover:underline"
+                      className="text-[10px] font-mono text-orange-600 font-bold hover:underline cursor-pointer"
                     >
                       Reset All
                     </button>
@@ -509,31 +590,33 @@ function ProductsCatalogContent() {
 
                 <div className="space-y-1 text-xs">
                   <button
+                    type="button"
                     onClick={() => setSelectedBrand("All")}
-                    className={`w-full text-left px-3 py-2 rounded-lg font-bold transition-colors flex justify-between items-center ${
+                    className={`w-full text-left px-3 py-2 rounded-lg font-bold transition-colors flex justify-between items-center cursor-pointer ${
                       selectedBrand === "All"
                         ? "bg-slate-900 text-white"
                         : "text-slate-600 hover:bg-slate-100"
                     }`}
                   >
-                    <span>All Brands</span>
+                    <span>All Categories</span>
                     <span className="font-mono text-[10px] opacity-75">({products.length})</span>
                   </button>
 
-                  {brands.map((b) => {
-                    const count = products.filter((p) => p.brand.toLowerCase() === b.name.toLowerCase()).length;
-                    const isSelected = selectedBrand.toLowerCase() === b.name.toLowerCase();
+                  {productCategoriesList.map((catName) => {
+                    const count = products.filter((p) => p.brand.toLowerCase() === catName.toLowerCase()).length;
+                    const isSelected = selectedBrand.toLowerCase() === catName.toLowerCase();
                     return (
                       <button
-                        key={b.id}
-                        onClick={() => setSelectedBrand(b.name)}
-                        className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors flex justify-between items-center ${
+                        key={catName}
+                        type="button"
+                        onClick={() => setSelectedBrand(catName)}
+                        className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors flex justify-between items-center cursor-pointer ${
                           isSelected
                             ? "bg-orange-600 text-white font-bold"
                             : "text-slate-700 hover:bg-slate-100"
                         }`}
                       >
-                        <span className="line-clamp-1">{b.name}</span>
+                        <span className="line-clamp-1">{catName}</span>
                         <span className="font-mono text-[10px] opacity-75">({count})</span>
                       </button>
                     );
@@ -722,14 +805,6 @@ function ProductsCatalogContent() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono font-bold bg-slate-900 text-white px-3 py-1 rounded-md">
-                    Brand: {selectedProduct.brand}
-                  </span>
-                  <span className="text-[11px] font-mono font-bold bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 rounded-md">
-                    {selectedProduct.category}
-                  </span>
-                </div>
               </div>
 
               {/* 2-Column Product Showcase Layout (Mimes Architecture) */}
@@ -860,8 +935,8 @@ function ProductsCatalogContent() {
                       </button>
                     </div>
 
-                    {/* Mimes Ecosystem Architecture Link */}
-                    {selectedProduct.brand.toLowerCase().includes("mimes") && (
+                    {/* Industrial Wireless Telemetry Link */}
+                    {(selectedProduct.brand.toLowerCase().includes("wireless") || selectedProduct.category.toLowerCase().includes("wireless")) && (
                       <div className="pt-2 border-t border-slate-100">
                         <Link
                           href="/solutions?cat=oil-gas"
@@ -869,7 +944,7 @@ function ProductsCatalogContent() {
                         >
                           <span className="flex items-center gap-2">
                             <Globe className="w-3.5 h-3.5" />
-                            <span>View Mimes Mesh Ecosystem</span>
+                            <span>View Industrial Wireless Architecture</span>
                           </span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
@@ -941,13 +1016,22 @@ function ProductsCatalogContent() {
                     <div className="border border-slate-200 rounded-xl overflow-x-auto text-xs">
                       <table className="w-full text-left border-collapse">
                         <tbody>
-                          {(selectedProduct.specifications || [
-                            { label: "Manufacturer Brand", value: selectedProduct.brand },
-                            { label: "Safety Classification", value: "ATEX Zone 1/2, IECEx, SIL Compliant" },
-                            { label: "Operational Environment", value: "High-Hazard Industrial / Energy Sector" },
-                            { label: "Operating Temperature", value: "-40°C to +85°C Industrial Grade" },
-                            { label: "Ingress Protection", value: "IP66 / IP67 NEMA 4X" }
-                          ]).map((spec, sIdx) => (
+                          {(selectedProduct.specifications && selectedProduct.specifications.length > 0
+                            ? selectedProduct.specifications
+                            : [
+                                { label: "Equipment Category", value: selectedProduct.brand },
+                                { label: "Safety Classification", value: "ATEX Zone 1/2, IECEx, SIL Compliant" },
+                                { label: "Operational Environment", value: "High-Hazard Industrial / Energy Sector" },
+                                { label: "Operating Temperature", value: "-40°C to +85°C Industrial Grade" },
+                                { label: "Ingress Protection", value: "IP66 / IP67 NEMA 4X" }
+                              ]
+                          )
+                            .filter(
+                              (spec) =>
+                                !spec.label.toLowerCase().includes("brand") &&
+                                !spec.label.toLowerCase().includes("manufacturer")
+                            )
+                            .map((spec, sIdx) => (
                             <tr
                               key={sIdx}
                               className={sIdx % 2 === 0 ? "bg-white" : "bg-slate-50/70"}

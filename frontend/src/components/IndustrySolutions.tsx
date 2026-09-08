@@ -280,6 +280,37 @@ export function getProperSectorIcon(id: string, name?: string): React.ReactNode 
   );
 }
 
+// Helper to format sector names cleanly into lines for mobile display
+export function getMobileLabelLines(name: string): string[] {
+  const n = (name || "").trim();
+  if (n.includes("Defence and Border") || n.includes("Defense and Border") || n.includes("Defence & Border")) {
+    return ["Defence & Border", "Security"];
+  }
+  if (n.includes("Smart Industrial")) {
+    return ["Smart Industrial", "Facilities"];
+  }
+  if (n.includes("Utilities and Power") || n.includes("Utilities & Power")) {
+    return ["Utilities &", "Power"];
+  }
+  if (n.includes("Marine Operations") || n.includes("Marine & Offshore")) {
+    return ["Marine", "Operations"];
+  }
+  if (n.includes("Civil Defence") || n.includes("Civil Defense")) {
+    return ["Civil Defence"];
+  }
+  if (n.includes("Oil and Gas") || n.includes("Oil & Gas")) {
+    return ["Oil & Gas"];
+  }
+  if (n.length > 14) {
+    const words = n.split(" ");
+    if (words.length >= 2) {
+      const mid = Math.ceil(words.length / 2);
+      return [words.slice(0, mid).join(" "), words.slice(mid).join(" ")];
+    }
+  }
+  return [n];
+}
+
 // ─── Telemetry Hub Visual ────────────────────────────────────────────────────
 
 function TelemetryHubVisual({
@@ -294,18 +325,29 @@ function TelemetryHubVisual({
   const router = useRouter();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  const nodeCoords = [
-    { x: 520, y: 280 },
-    { x: 410, y: 393 },
-    { x: 190, y: 393 },
-    { x: 80,  y: 280 },
-    { x: 190, y: 167 },
-    { x: 410, y: 167 },
+  // Desktop horizontal coordinates (viewBox: -140 70 880 430)
+  const desktopCoords = [
+    { x: 520, y: 280 }, // 0: Civil Defence (Right)
+    { x: 410, y: 393 }, // 1: Smart Industrial Facilities (Bottom-Right)
+    { x: 190, y: 393 }, // 2: Oil and Gas (Bottom-Left)
+    { x: 80,  y: 280 }, // 3: Marine Operations (Left)
+    { x: 190, y: 167 }, // 4: Utilities and Power (Top-Left)
+    { x: 410, y: 167 }, // 5: Defence and Border Security (Top-Right)
+  ] as const;
+
+  // Mobile portrait coordinates (viewBox: 0 0 380 470, center at 190, 230)
+  const mobileCoords = [
+    { x: 295, y: 230 }, // 0: Civil Defence (Right)
+    { x: 265, y: 345 }, // 1: Smart Industrial Facilities (Bottom-Right)
+    { x: 115, y: 345 }, // 2: Oil and Gas (Bottom-Left)
+    { x: 85,  y: 230 }, // 3: Marine Operations (Left)
+    { x: 115, y: 115 }, // 4: Utilities and Power (Top-Left)
+    { x: 265, y: 115 }, // 5: Defence and Border Security (Top-Right)
   ] as const;
 
   return (
     <div
-      className="relative w-full h-full flex flex-col justify-between items-center rounded-[20px] sm:rounded-[28px] overflow-hidden p-3 sm:p-5"
+      className="relative w-full h-full flex flex-col justify-between items-center rounded-[20px] sm:rounded-[28px] overflow-hidden p-2 sm:p-5 min-h-[440px] sm:min-h-0"
       style={{
         background: "linear-gradient(150deg, #ffffff 0%, #f4f7fd 50%, #edf1fa 100%)",
         border: "1px solid rgba(255,255,255,0.95)",
@@ -340,8 +382,9 @@ function TelemetryHubVisual({
         }}
       />
 
-      <div className="relative w-full max-w-[1040px] flex-grow flex items-center justify-center min-h-0 py-1">
-        <svg viewBox="-140 70 880 430" className="w-full h-full max-h-[calc(100dvh-270px)] object-contain overflow-visible select-none">
+      <div className="relative w-full max-w-[1040px] flex-grow flex items-center justify-center min-h-[420px] sm:min-h-0 py-1">
+        {/* ─── DESKTOP HORIZONTAL SVG (MD & UP) ─────────────────────────── */}
+        <svg viewBox="-140 70 880 430" className="hidden md:block w-full h-full max-h-[calc(100dvh-270px)] object-contain overflow-visible select-none">
           <defs>
             <radialGradient id="hubGradientPremium" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#ffffff" />
@@ -389,7 +432,7 @@ function TelemetryHubVisual({
           {items.map((indItem, idx) => {
             const ind = indItem as IndustryItem;
             const lit = activeId === ind.id || hoveredId === ind.id;
-            const coords = nodeCoords[idx];
+            const coords = desktopCoords[idx] || desktopCoords[0];
             return (
               <line
                 key={`line-${ind.id}`}
@@ -437,11 +480,11 @@ function TelemetryHubVisual({
             </text>
           </g>
 
-          {/* Node SVG Labels: Responsive across all screen sizes (Mobile, Tablet, Laptop, Mac) */}
+          {/* Node SVG Labels: Responsive across desktop */}
           {items.map((indItem, idx) => {
             const ind = indItem as IndustryItem;
             const lit = activeId === ind.id || hoveredId === ind.id;
-            const coords = nodeCoords[idx];
+            const coords = desktopCoords[idx] || desktopCoords[0];
             
             let lx = coords.x;
             let ly = coords.y;
@@ -510,7 +553,7 @@ function TelemetryHubVisual({
           {items.map((indItem, idx) => {
             const ind = indItem as IndustryItem;
             const lit = activeId === ind.id || hoveredId === ind.id;
-            const coords = nodeCoords[idx];
+            const coords = desktopCoords[idx] || desktopCoords[0];
             return (
               <g
                 key={`node-${ind.id}`}
@@ -555,6 +598,226 @@ function TelemetryHubVisual({
                 <circle
                   cx={coords.x} cy={coords.y} r="22"
                   fill={lit ? "#ffffff" : "url(#inactiveNodeGrad)"}
+                  stroke={lit ? ind.accent : "rgba(30,62,143,0.12)"}
+                  strokeWidth={lit ? "2" : "1.5"}
+                  style={{
+                    transition: "all 0.3s ease",
+                    filter: lit
+                      ? `drop-shadow(0 4px 12px ${ind.accent}25)`
+                      : "drop-shadow(0 2px 4px rgba(30,62,143,0.08))",
+                  }}
+                />
+
+                {/* Node inner accent fill */}
+                {lit && (
+                  <circle
+                    cx={coords.x} cy={coords.y} r="22"
+                    fill={ind.accentLight}
+                  />
+                )}
+
+                {/* Icon */}
+                <g
+                  transform={`translate(${coords.x - 10}, ${coords.y - 10})`}
+                  style={{
+                    color: lit ? ind.accent : "#000000",
+                    transition: "color 300ms",
+                  }}
+                >
+                  {getProperSectorIcon(ind.id, ind.name)}
+                </g>
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* ─── MOBILE PORTRAIT OPTIMIZED SVG (< MD) ────────────────────── */}
+        <svg viewBox="0 0 380 470" className="block md:hidden w-full h-full min-h-[400px] max-h-[500px] object-contain overflow-visible select-none">
+          <defs>
+            <radialGradient id="hubGradientPremiumMob" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="60%" stopColor="#f4f7fd" />
+              <stop offset="100%" stopColor="#e8eef8" />
+            </radialGradient>
+            <radialGradient id="hubRingGradMob" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="rgba(30,62,143,0.15)" />
+              <stop offset="100%" stopColor="rgba(30,62,143,0.03)" />
+            </radialGradient>
+            <filter id="hubShadowPremiumMob" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="3" stdDeviation="6" floodColor="rgba(30,62,143,0.14)" />
+            </filter>
+            <linearGradient id="inactiveNodeGradMob" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#eef2fc" />
+            </linearGradient>
+          </defs>
+
+          {/* Guide lines */}
+          <line x1="190" y1="40" x2="190" y2="430" stroke="rgba(30,62,143,0.05)" strokeWidth="1" strokeDasharray="3 9" />
+          <line x1="30"  y1="230" x2="350" y2="230" stroke="rgba(30,62,143,0.05)" strokeWidth="1" strokeDasharray="3 9" />
+
+          {/* Orbit rings */}
+          <ellipse cx="190" cy="230" rx="140" ry="155" stroke="rgba(30,62,143,0.04)" fill="none" strokeWidth="1" />
+          <ellipse cx="190" cy="230" rx="115" ry="130" stroke="rgba(30,62,143,0.08)" fill="none" strokeWidth="1" strokeDasharray="5 8" />
+          <ellipse cx="190" cy="230" rx="75"  ry="85"  stroke="rgba(30,62,143,0.04)" fill="none" strokeWidth="1" />
+
+          {/* Animated orbit particles */}
+          <circle r="2.5" fill="rgba(30,62,143,0.35)">
+            <animateMotion dur="16s" repeatCount="indefinite" path="M 75,230 A 115,130 0 1,0 305,230 A 115,130 0 1,0 75,230" />
+          </circle>
+          <circle r="2" fill="rgba(180,83,9,0.30)">
+            <animateMotion dur="22s" repeatCount="indefinite" begin="-7s" path="M 75,230 A 115,130 0 1,0 305,230 A 115,130 0 1,0 75,230" />
+          </circle>
+          <circle r="1.5" fill="rgba(153,27,27,0.25)">
+            <animateMotion dur="28s" repeatCount="indefinite" begin="-14s" path="M 75,230 A 115,130 0 1,1 305,230 A 115,130 0 1,1 75,230" />
+          </circle>
+
+          {/* Connector lines */}
+          {items.map((indItem, idx) => {
+            const ind = indItem as IndustryItem;
+            const lit = activeId === ind.id || hoveredId === ind.id;
+            const coords = mobileCoords[idx] || mobileCoords[0];
+            return (
+              <line
+                key={`mob-line-${ind.id}`}
+                x1="190" y1="230" x2={coords.x} y2={coords.y}
+                stroke={lit ? ind.accent : "rgba(30,62,143,0.09)"}
+                strokeWidth={lit ? "2" : "1"}
+                strokeDasharray={lit ? "4 4" : "none"}
+                opacity={lit ? 1 : 0.7}
+                style={{ transition: "stroke 300ms, stroke-width 300ms, opacity 300ms" }}
+              />
+            );
+          })}
+
+          {/* Hub center interactive trigger */}
+          <g
+            className="cursor-pointer group"
+            onClick={() => router.push("/solutions")}
+          >
+            {/* Hub outer pulse ring */}
+            <circle cx="190" cy="230" r="54" fill="none" stroke="url(#hubRingGradMob)" strokeWidth="1.5" />
+            {/* Hub backdrop rings */}
+            <circle cx="190" cy="230" r="48" fill="rgba(255,255,255,0.6)" stroke="rgba(30,62,143,0.06)" strokeWidth="1" />
+            <circle cx="190" cy="230" r="42"
+              fill="url(#hubGradientPremiumMob)"
+              stroke="rgba(30,62,143,0.18)"
+              strokeWidth="1.5"
+              filter="url(#hubShadowPremiumMob)"
+              className="transition-transform duration-300 group-hover:scale-105 origin-[190px_230px]"
+            />
+            {/* Hub inner accent ring */}
+            <circle cx="190" cy="230" r="36" fill="none" stroke="rgba(30,62,143,0.07)" strokeWidth="1" strokeDasharray="3 5" />
+
+            {/* Hub label */}
+            <text
+              x="190"
+              y="234"
+              textAnchor="middle"
+              fontSize="11.5"
+              fontFamily="var(--font-sans), sans-serif"
+              fontWeight="900"
+              letterSpacing="2.5"
+              fill="#1e3e8f"
+            >
+              SOLUTIONS
+            </text>
+          </g>
+
+          {/* Node Mobile SVG Labels */}
+          {items.map((indItem, idx) => {
+            const ind = indItem as IndustryItem;
+            const lit = activeId === ind.id || hoveredId === ind.id;
+            const coords = mobileCoords[idx] || mobileCoords[0];
+            const lines = getMobileLabelLines(ind.name);
+
+            // idx 4 & 5 (top nodes): label above node; others: label below node
+            const isTop = idx === 4 || idx === 5;
+            const labelY = isTop ? coords.y - (lines.length > 1 ? 40 : 34) : coords.y + 36;
+
+            return (
+              <text
+                key={`mob-svg-label-${ind.id}`}
+                x={coords.x}
+                y={labelY}
+                textAnchor="middle"
+                fill={lit ? ind.accent : "#1e293b"}
+                fontSize={lit ? "11.5" : "11"}
+                fontFamily="var(--font-sans), sans-serif"
+                fontWeight={lit ? "800" : "700"}
+                className="cursor-pointer select-none transition-all duration-300"
+                onClick={() => {
+                  setActiveId(ind.id);
+                  router.push(getSolutionPageHref(ind.id, ind.name));
+                }}
+                onMouseEnter={() => {
+                  setActiveId(ind.id);
+                  setHoveredId(ind.id);
+                }}
+                onMouseLeave={() => setHoveredId(null)}
+              >
+                {lines.map((lineText, lineIdx) => (
+                  <tspan
+                    key={`${ind.id}-line-${lineIdx}`}
+                    x={coords.x}
+                    dy={lineIdx === 0 ? "0" : "13"}
+                  >
+                    {lineText}
+                  </tspan>
+                ))}
+              </text>
+            );
+          })}
+
+          {/* Node circles on Mobile */}
+          {items.map((indItem, idx) => {
+            const ind = indItem as IndustryItem;
+            const lit = activeId === ind.id || hoveredId === ind.id;
+            const coords = mobileCoords[idx] || mobileCoords[0];
+            return (
+              <g
+                key={`mob-node-${ind.id}`}
+                onClick={() => {
+                  setActiveId(ind.id);
+                  router.push(getSolutionPageHref(ind.id, ind.name));
+                }}
+                onMouseEnter={() => {
+                  setActiveId(ind.id);
+                  setHoveredId(ind.id);
+                }}
+                onMouseLeave={() => setHoveredId(null)}
+                className="cursor-pointer"
+              >
+                {/* Hit area - generous 76px hit area for easy tapping */}
+                <circle cx={coords.x} cy={coords.y} r="38" fill="transparent" />
+
+                {/* Outer pulse ring */}
+                {lit && (
+                  <circle
+                    cx={coords.x} cy={coords.y} r="32"
+                    fill="none"
+                    stroke={ind.accent}
+                    strokeWidth="1.5"
+                    opacity="0.12"
+                  />
+                )}
+
+                {/* Mid ring on hover */}
+                {lit && (
+                  <circle
+                    cx={coords.x} cy={coords.y} r="26"
+                    fill="none"
+                    stroke={ind.accent}
+                    strokeWidth="1"
+                    opacity="0.22"
+                    strokeDasharray="3 4"
+                  />
+                )}
+
+                {/* Main node circle */}
+                <circle
+                  cx={coords.x} cy={coords.y} r="22"
+                  fill={lit ? "#ffffff" : "url(#inactiveNodeGradMob)"}
                   stroke={lit ? ind.accent : "rgba(30,62,143,0.12)"}
                   strokeWidth={lit ? "2" : "1.5"}
                   style={{

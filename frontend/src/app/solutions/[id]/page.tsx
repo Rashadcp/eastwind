@@ -872,10 +872,7 @@ export default async function ProductDetailPage({ params }: Props) {
           <section className="py-16 bg-slate-50 border-t border-b border-slate-200/60 w-full">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
               <div className="border-b border-slate-200 pb-4 w-full">
-                <span className="text-xs font-bold uppercase tracking-widest block" style={{ color: brandColor }}>
-                  System Infrastructure Elements
-                </span>
-                <h3 className="text-2xl font-bold text-slate-900 uppercase tracking-tight pt-1">
+                <h3 className="text-2xl font-bold text-slate-900 uppercase tracking-tight">
                   Featured Hardware Components
                 </h3>
               </div>
@@ -975,18 +972,14 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="bg-slate-50 border border-slate-200 text-slate-800 rounded-2xl p-6 sm:p-10 md:p-16 text-center relative overflow-hidden shadow-xs w-full">
             <div className="absolute top-0 left-0 right-0 h-1.5" style={{ backgroundColor: brandColor }} />
             
-            <div className="max-w-2xl mx-auto space-y-4 relative z-10 w-full">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] block" style={{ color: brandColor }}>
-                Procurement and Infrastructure Planning
-              </span>
-              <h2 className="text-2xl md:text-4xl font-light tracking-tight text-slate-900 uppercase">
-                Request Engineering <br />
-                <span className="font-bold block text-slate-950 mt-1">Integration Blueprints</span>
+            <div className="max-w-2xl mx-auto space-y-3 relative z-10 w-full">
+              <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 uppercase">
+                Request a Project Quote
               </h2>
-              <p className="text-xs md:text-sm text-slate-500 leading-relaxed font-normal max-w-xl mx-auto pt-1">
-                Coordinate directly with our regional technical estimating group based in Dammam to compile custom infrastructure layouts, validation parameters, and comprehensive project quoting metrics.
+              <p className="text-xs md:text-sm text-slate-500 leading-relaxed font-normal max-w-lg mx-auto">
+                Contact our engineering team to discuss your project requirements and receive a detailed quote.
               </p>
-              <div className="pt-6 flex flex-col sm:flex-row justify-center items-center gap-3 w-full">
+              <div className="pt-4 flex flex-col sm:flex-row justify-center items-center gap-3 w-full">
                 <ProductActions productTitle={product.title} accentColor={brandColor} layout="footer" />
               </div>
             </div>

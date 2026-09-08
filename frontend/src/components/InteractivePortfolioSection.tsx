@@ -113,7 +113,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
         isDark ? "border-white/10" : "border-black/5"
       } overflow-hidden ${
         isFullHeight
-          ? "h-[100dvh] min-h-[620px] max-h-[1100px] flex flex-col justify-between py-4 sm:py-6"
+          ? "h-auto sm:h-[100dvh] min-h-[540px] sm:min-h-[620px] max-h-none sm:max-h-[1100px] flex flex-col justify-between py-4 sm:py-6"
           : "py-16"
       }`}
       style={{
@@ -128,7 +128,7 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
       <div className="absolute top-1/4 left-10 w-[300px] h-[300px] rounded-full blur-[100px] opacity-[0.05] pointer-events-none transition-all duration-700" style={{ backgroundColor: activeTone.base }} />
       <div className="absolute bottom-1/4 right-10 w-[350px] h-[350px] rounded-full blur-[120px] opacity-[0.04] pointer-events-none transition-all duration-700" style={{ backgroundColor: activeTone.accent }} />
 
-      <div className={`max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-10 w-full relative z-10 ${
+      <div className={`max-w-[1400px] mx-auto px-3 sm:px-8 lg:px-10 w-full relative z-10 ${
         isFullHeight ? "flex flex-col flex-grow h-full justify-between overflow-hidden" : ""
       }`}>
         {/* Header Block */}
@@ -604,9 +604,9 @@ export default function InteractivePortfolioSection<T extends PortfolioItem = Po
 
             {/* Left Column: Custom Visual (SVG) wrapped in spatial panel (full-width when details hidden) */}
             <div className={`${hideDetailsPanel ? "flex" : "hidden lg:flex"} ${
-              isDark ? "spatial-panel" : "bg-[#f2f4f2] border border-[#e2e6e3] rounded-3xl shadow-[0_12px_36px_rgba(0,0,0,0.04)]"
-            } p-4 sm:p-8 w-full flex-col justify-center items-center ${
-              isFullHeight ? "min-h-0" : ""
+              isDark ? "spatial-panel" : "bg-[#f2f4f2] border border-[#e2e6e3] rounded-2xl sm:rounded-3xl shadow-[0_12px_36px_rgba(0,0,0,0.04)]"
+            } p-2 sm:p-8 w-full flex-col justify-center items-center ${
+              isFullHeight ? "min-h-0 flex-grow" : ""
             }`}>
               {renderVisual ? (
                 renderVisual(activeProduct, activeTone, {
