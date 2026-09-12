@@ -21,6 +21,7 @@ import solutionsPageRouter from "./routes/solutionsPage.js";
 import brandsRouter from "./routes/brands.js";
 import successStoriesRouter from "./routes/successStories.js";
 import heroRouter from "./routes/hero.js";
+import productCategoriesRouter from "./routes/productCategories.js";
 import { EnquiryController } from "./controllers/enquiry.controller.js";
 
 const app = express();
@@ -69,6 +70,7 @@ const routes: [string, any][] = [
   ["brands", brandsRouter],
   ["success-stories", successStoriesRouter],
   ["hero", heroRouter],
+  ["product-categories", productCategoriesRouter],
 ];
 
 // Add cache middleware to resource routes

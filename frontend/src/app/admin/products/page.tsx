@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { PRODUCT_BRANDS, PRODUCT_CATEGORIES, ProductItem } from "@/data/productsData";
 import { formatImageUrl } from "@/utils/image";
 import { sanitizeCategory, cleanProductName } from "@/app/products/page";
@@ -23,11 +23,48 @@ export default function AdminProductsPage() {
     setCurrentPage(1);
   }, [searchQuery, selectedBrandFilter]);
 
+  // Auto-dismiss success notification after 3.5 seconds
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess(null);
+      }, 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
+
+  // Auto-dismiss error notification after 6 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   // Modal states
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [viewItem, setViewItem] = useState<ProductItem | null>(null);
+
+  // Category management modal states
+  const [showCategoryModal, setShowCategoryModal] = useState<boolean>(false);
+  const [managedCategories, setManagedCategories] = useState<{ id: string; name: string; order: number }[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState<boolean>(false);
+  const [savingCategories, setSavingCategories] = useState<boolean>(false);
+  const [newCatName, setNewCatName] = useState<string>("");
+  const [editingCatId, setEditingCatId] = useState<string | null>(null);
+  const [editingCatName, setEditingCatName] = useState<string>("");
+  const [catDeleteTarget, setCatDeleteTarget] = useState<{ id: string; name: string; count: number } | null>(null);
+
+  // Product reordering states
+  const isLocalReorderRef = useRef<boolean>(false);
+  const [showProductOrderModal, setShowProductOrderModal] = useState<boolean>(false);
+  const [savingProductOrder, setSavingProductOrder] = useState<boolean>(false);
+  const [hasPendingProductOrderChanges, setHasPendingProductOrderChanges] = useState<boolean>(false);
+  const [orderedCategoryProducts, setOrderedCategoryProducts] = useState<ProductItem[]>([]);
 
   // Form states
   const [formId, setFormId] = useState<string>("");
@@ -132,9 +169,259 @@ export default function AdminProductsPage() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      setLoadingCategories(true);
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const res = await fetch(`${baseUrl}/api/product-categories?t=${Date.now()}`, { cache: "no-store" });
+      if (res.ok) {
+        const list = await res.json();
+        if (Array.isArray(list) && list.length > 0) {
+          setManagedCategories(list);
+          setAvailableBrandsList(list.map((c: any) => c.name));
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load categories:", e);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
+
+  const handleOpenCategoryManager = () => {
+    clearMessages();
+    setShowCategoryModal(true);
+    fetchCategories();
+  };
+
+  const handleMoveCategory = (index: number, direction: "up" | "down") => {
+    const newIdx = direction === "up" ? index - 1 : index + 1;
+    if (newIdx < 0 || newIdx >= managedCategories.length) return;
+    const copy = [...managedCategories];
+    const [moved] = copy.splice(index, 1);
+    copy.splice(newIdx, 0, moved);
+    const updated = copy.map((item, idx) => ({ ...item, order: idx }));
+    setManagedCategories(updated);
+  };
+
+  const handleAddCategory = async () => {
+    const trimmed = newCatName.trim();
+    if (!trimmed) return;
+    if (managedCategories.some(c => c.name.toLowerCase() === trimmed.toLowerCase())) {
+      setError(`Category '${trimmed}' already exists`);
+      return;
+    }
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const res = await fetch(`${baseUrl}/api/product-categories`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ name: trimmed })
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to create category");
+      }
+      setNewCatName("");
+      setSuccess(`Category '${trimmed}' added successfully.`);
+      await fetchCategories();
+    } catch (e: any) {
+      setError(e.message || "Failed to add category");
+    }
+  };
+
+  const handleSaveRenameCategory = async (catId: string) => {
+    const trimmed = editingCatName.trim();
+    if (!trimmed) return;
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const res = await fetch(`${baseUrl}/api/product-categories/${catId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ name: trimmed })
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to rename category");
+      }
+      setEditingCatId(null);
+      setEditingCatName("");
+      setSuccess(`Category renamed to '${trimmed}'. Matching products updated.`);
+      await fetchCategories();
+      await fetchProducts();
+    } catch (e: any) {
+      setError(e.message || "Failed to rename category");
+    }
+  };
+
+  const handleRequestDeleteCategory = (cat: { id: string; name: string }) => {
+    const count = products.filter(p => (p.brand || "").toLowerCase() === cat.name.toLowerCase()).length;
+    setCatDeleteTarget({ id: cat.id, name: cat.name, count });
+  };
+
+  const handleExecuteDeleteCategory = async () => {
+    if (!catDeleteTarget) return;
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const res = await fetch(`${baseUrl}/api/product-categories/${catDeleteTarget.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to delete category");
+      }
+      setSuccess(`Category '${catDeleteTarget.name}' deleted.`);
+      setCatDeleteTarget(null);
+      await fetchCategories();
+    } catch (e: any) {
+      setError(e.message || "Failed to delete category");
+      setCatDeleteTarget(null);
+    }
+  };
+
+  const handleSaveCategoriesOrder = async () => {
+    try {
+      setSavingCategories(true);
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const res = await fetch(`${baseUrl}/api/product-categories`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ categories: managedCategories })
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to save category order");
+      }
+      setSuccess("Category order saved successfully!");
+      setAvailableBrandsList(managedCategories.map(c => c.name));
+      await fetchCategories();
+    } catch (e: any) {
+      setError(e.message || "Failed to save category order");
+    } finally {
+      setSavingCategories(false);
+    }
+  };
+
+  // Synchronize orderedCategoryProducts when selectedBrandFilter or products change
+  useEffect(() => {
+    if (isLocalReorderRef.current) {
+      isLocalReorderRef.current = false;
+      return;
+    }
+    if (selectedBrandFilter !== "All") {
+      const catProds = products
+        .filter((p) => p.brand?.toLowerCase() === selectedBrandFilter.toLowerCase())
+        .sort((a, b) => (a.order ?? 99999) - (b.order ?? 99999));
+      setOrderedCategoryProducts(catProds);
+      setHasPendingProductOrderChanges(false);
+    } else {
+      const allProds = [...products].sort((a, b) => (a.order ?? 99999) - (b.order ?? 99999));
+      setOrderedCategoryProducts(allProds);
+      setHasPendingProductOrderChanges(false);
+    }
+  }, [selectedBrandFilter, products]);
+
+  const handleMoveProduct = (index: number, direction: "up" | "down") => {
+    const newIdx = direction === "up" ? index - 1 : index + 1;
+    if (newIdx < 0 || newIdx >= orderedCategoryProducts.length) return;
+    const copy = [...orderedCategoryProducts];
+    const [moved] = copy.splice(index, 1);
+    copy.splice(newIdx, 0, moved);
+    const updated = copy.map((item, idx) => ({ ...item, order: idx }));
+    isLocalReorderRef.current = true;
+    setOrderedCategoryProducts(updated);
+    setHasPendingProductOrderChanges(true);
+
+    // Update in-place in local products list so the table updates dynamically
+    if (selectedBrandFilter !== "All") {
+      setProducts((prev) => {
+        const others = prev.filter((p) => p.brand?.toLowerCase() !== selectedBrandFilter.toLowerCase());
+        return [...others, ...updated];
+      });
+    } else {
+      setProducts(updated);
+    }
+  };
+
+  const handleSaveProductOrder = async (overrideList?: ProductItem[]) => {
+    const list = overrideList || orderedCategoryProducts;
+    if (list.length === 0) return;
+    try {
+      setSavingProductOrder(true);
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+
+      let payload: { id: string; order: number }[] = [];
+
+      if (selectedBrandFilter === "All") {
+        // Reordering the entire catalog globally
+        payload = list.map((item, idx) => ({
+          id: item.id,
+          order: idx
+        }));
+      } else {
+        // Reordering within a specific category:
+        // Get existing orders of this category's products in catalog
+        const currentCategoryProds = products
+          .filter((p) => p.brand?.toLowerCase() === selectedBrandFilter.toLowerCase())
+          .sort((a, b) => (a.order ?? 99999) - (b.order ?? 99999));
+
+        const slots = currentCategoryProds
+          .map((p, i) => (typeof p.order === "number" ? p.order : i * 10))
+          .sort((a, b) => a - b);
+
+        payload = list.map((item, idx) => ({
+          id: item.id,
+          order: slots[idx] !== undefined ? slots[idx] : idx
+        }));
+      }
+
+      const res = await fetch(`${baseUrl}/api/products/reorder`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ items: payload })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to save product order");
+      }
+
+      const scopeName = selectedBrandFilter === "All" ? "All Products" : `'${selectedBrandFilter}'`;
+      setSuccess(`Product order for ${scopeName} saved successfully.`);
+      setHasPendingProductOrderChanges(false);
+      setShowProductOrderModal(false);
+      await fetchProducts();
+    } catch (e: any) {
+      setError(e.message || "Failed to save product order");
+    } finally {
+      setSavingProductOrder(false);
+    }
+  };
 
   const clearMessages = () => {
     setError(null);
@@ -492,25 +779,30 @@ export default function AdminProductsPage() {
     ).sort((a, b) => a.localeCompare(b))
   ];
 
-  const filteredProducts = products.filter(item => {
-    const matchesSearch =
-      item.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      item.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.brand?.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredProducts = products
+    .filter((item) => {
+      const matchesSearch =
+        item.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        item.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.brand?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesBrand =
-      selectedBrandFilter === "All" ||
-      item.brand?.toLowerCase() === selectedBrandFilter.toLowerCase();
+      const matchesBrand =
+        selectedBrandFilter === "All" ||
+        item.brand?.toLowerCase() === selectedBrandFilter.toLowerCase();
 
-    return matchesSearch && matchesBrand;
-  });
+      return matchesSearch && matchesBrand;
+    })
+    .sort((a, b) => (a.order ?? 99999) - (b.order ?? 99999));
   
   const totalItems = filteredProducts.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const paginatedProducts =
+    selectedBrandFilter !== "All"
+      ? filteredProducts
+      : filteredProducts.slice(
+          (currentPage - 1) * ITEMS_PER_PAGE,
+          currentPage * ITEMS_PER_PAGE
+        );
 
   return (
     <div className="space-y-6 font-sans text-white select-none">
@@ -521,26 +813,69 @@ export default function AdminProductsPage() {
           <h2 className="text-xl font-bold uppercase tracking-tight m-0 text-white">Product Inventory</h2>
           <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">Manage physical hardware database records</p>
         </div>
-        <button
-          onClick={handleOpenCreate}
-          className="flex items-center gap-2 py-3 px-6 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-600/10 active:translate-y-0.5"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-          </svg>
-          Add Product Node
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleOpenCategoryManager}
+            className="flex items-center gap-2 py-3 px-5 rounded-full bg-slate-800 hover:bg-slate-750 border border-slate-700 text-orange-400 hover:text-orange-300 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md active:translate-y-0.5"
+          >
+            <svg className="w-4 h-4 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+            <span>Edit Categories</span>
+          </button>
+
+          <button
+            onClick={handleOpenCreate}
+            className="flex items-center gap-2 py-3 px-6 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-600/10 active:translate-y-0.5"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Add Product Node
+          </button>
+        </div>
       </div>
 
       {/* Notifications */}
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-4 rounded-2xl text-xs flex items-center gap-2">
-          <span>{error}</span>
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-3.5 px-4 rounded-2xl text-xs flex items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <svg className="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span className="font-medium truncate">{error}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setError(null)}
+            className="p-1 text-rose-400 hover:text-rose-200 hover:bg-rose-500/15 rounded-lg transition-colors cursor-pointer shrink-0"
+            title="Dismiss"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
       {success && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-4 rounded-2xl text-xs flex items-center gap-2">
-          <span>{success}</span>
+        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-3.5 px-4 rounded-2xl text-xs flex items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <svg className="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-medium truncate">{success}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSuccess(null)}
+            className="p-1 text-emerald-400 hover:text-emerald-200 hover:bg-emerald-500/15 rounded-lg transition-colors cursor-pointer shrink-0"
+            title="Dismiss"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
 
@@ -562,8 +897,8 @@ export default function AdminProductsPage() {
           />
         </div>
 
-        {/* Filter By Category Dropdown */}
-        <div className="flex items-center gap-2 shrink-0 max-sm:w-full">
+        {/* Filter By Category Dropdown & Order Controls */}
+        <div className="flex items-center gap-2.5 shrink-0 max-sm:w-full flex-wrap justify-end">
           <span className="text-xs font-bold text-slate-700 uppercase tracking-wider shrink-0">Filter Category:</span>
           <select
             value={selectedBrandFilter}
@@ -576,6 +911,35 @@ export default function AdminProductsPage() {
               </option>
             ))}
           </select>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowProductOrderModal(true)}
+              className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-sky-400 hover:text-sky-300 rounded-2xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:translate-y-0.5"
+              title={selectedBrandFilter === "All" ? "Reorder all products in catalog" : `Reorder products in ${selectedBrandFilter}`}
+            >
+              <svg className="w-4 h-4 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+              <span>Reorder ({orderedCategoryProducts.length})</span>
+            </button>
+
+            {hasPendingProductOrderChanges && (
+              <button
+                type="button"
+                onClick={() => handleSaveProductOrder()}
+                disabled={savingProductOrder}
+                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-600/20 animate-pulse"
+                title="Save order changes to database"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{savingProductOrder ? "Saving..." : "Save Order"}</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -596,6 +960,9 @@ export default function AdminProductsPage() {
             <table className="w-full border-collapse text-left m-0">
               <thead>
                 <tr className="bg-white/[0.02] border-b border-white/5">
+                  <th className="px-5 py-4.5 text-[10px] font-bold uppercase tracking-wider text-orange-400 w-28">
+                    Order
+                  </th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Name</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Equipment Category</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</th>
@@ -603,13 +970,52 @@ export default function AdminProductsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 font-sans">
-                {paginatedProducts.map((item) => (
-                  <tr key={item.id} className="hover:bg-white/[0.01] transition-colors">
-                    <td className="px-6 py-4 text-xs font-bold text-slate-100 max-w-xs truncate">{item.name}</td>
-                    <td className="px-6 py-4 text-xs font-semibold text-slate-400">{item.brand}</td>
-                    <td className="px-6 py-4 text-xs font-semibold text-slate-400 max-w-[180px] truncate">
-                      {PRODUCT_CATEGORIES.find((c) => c.id === item.category)?.name || item.category}
-                    </td>
+                {paginatedProducts.map((item, idx) => {
+                  const itemOrderIdx = orderedCategoryProducts.findIndex((p) => p.id === item.id);
+                  const displaySeq = itemOrderIdx !== -1 ? itemOrderIdx + 1 : (currentPage - 1) * ITEMS_PER_PAGE + idx + 1;
+                  const canMoveUp = itemOrderIdx > 0 && !savingProductOrder;
+                  const canMoveDown = itemOrderIdx !== -1 && itemOrderIdx < orderedCategoryProducts.length - 1 && !savingProductOrder;
+
+                  return (
+                    <tr key={item.id} className="hover:bg-white/[0.01] transition-colors">
+                      <td className="px-5 py-3.5 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <span className="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 text-orange-700 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                            #{displaySeq}
+                          </span>
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              disabled={!canMoveUp}
+                              onClick={() => handleMoveProduct(itemOrderIdx, "up")}
+                              className="p-1.5 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                              title="Move Up"
+                              style={{ color: "#334155" }}
+                            >
+                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              disabled={!canMoveDown}
+                              onClick={() => handleMoveProduct(itemOrderIdx, "down")}
+                              className="p-1.5 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                              title="Move Down"
+                              style={{ color: "#334155" }}
+                            >
+                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-xs font-bold text-slate-100 max-w-xs truncate">{item.name}</td>
+                      <td className="px-6 py-4 text-xs font-semibold text-slate-400">{item.brand}</td>
+                      <td className="px-6 py-4 text-xs font-semibold text-slate-400 max-w-[180px] truncate">
+                        {PRODUCT_CATEGORIES.find((c) => c.id === item.category)?.name || item.category}
+                      </td>
                     <td className="px-6 py-4 text-right flex items-center justify-end gap-2.5">
                       <button
                         onClick={() => setViewItem(item)}
@@ -631,7 +1037,8 @@ export default function AdminProductsPage() {
                       </button>
                     </td>
                   </tr>
-                ))}
+                );
+              })}
               </tbody>
             </table>
 
@@ -1484,6 +1891,414 @@ export default function AdminProductsPage() {
               >
                 Close View
               </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* CATEGORY MANAGEMENT MODAL */}
+      {showCategoryModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-white/10 w-full max-w-2xl rounded-[32px] shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+            
+            {/* Modal Header */}
+            <div className="h-16 flex items-center justify-between px-8 border-b border-white/10 flex-shrink-0 bg-slate-950/40">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
+                <div>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
+                    Manage Equipment Categories
+                  </h3>
+                  <p className="text-[10px] font-mono text-slate-400 m-0">
+                    Add, edit, delete, and reorder display sequence (Total: {managedCategories.length})
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowCategoryModal(false);
+                  setEditingCatId(null);
+                  setCatDeleteTarget(null);
+                }}
+                className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-slate-400 hover:text-white cursor-pointer transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-5 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full">
+              
+              {/* Add New Category Row */}
+              <div className="bg-slate-950/50 border border-white/10 p-4 rounded-2xl space-y-2">
+                <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">
+                  + Add New Equipment Category
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newCatName}
+                    onChange={(e) => setNewCatName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddCategory();
+                      }
+                    }}
+                    placeholder="e.g. Explosion-Proof Detection Arrays"
+                    className="flex-1 px-4 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 font-medium"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddCategory}
+                    className="px-5 py-2.5 bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm active:translate-y-0.5 shrink-0"
+                  >
+                    Add Category
+                  </button>
+                </div>
+              </div>
+
+              {/* Instructions Tip */}
+              <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono">
+                <span>Use ▲ and ▼ to rearrange sequence</span>
+                <span className="text-orange-400 font-bold">Display Order</span>
+              </div>
+
+              {/* Categories Reorderable List */}
+              <div className="space-y-2">
+                {managedCategories.map((cat, idx) => {
+                  const isEditing = editingCatId === cat.id;
+                  const prodCount = products.filter(p => (p.brand || "").toLowerCase() === cat.name.toLowerCase()).length;
+                  const isFirst = idx === 0;
+                  const isLast = idx === managedCategories.length - 1;
+
+                  return (
+                    <div
+                      key={cat.id || idx}
+                      className="flex items-center justify-between gap-3 p-3 bg-slate-950/40 border border-white/5 hover:border-white/15 rounded-2xl transition-colors group"
+                    >
+                      {/* Left: Position index + Reorder arrows */}
+                      <div className="flex items-center gap-2">
+                        <span className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center font-mono font-bold text-[10px] text-slate-400 shrink-0">
+                          #{idx + 1}
+                        </span>
+
+                        <div className="flex flex-col gap-0.5">
+                          <button
+                            type="button"
+                            onClick={() => handleMoveCategory(idx, "up")}
+                            disabled={isFirst}
+                            className={`p-1 rounded bg-white/5 border border-white/5 transition-colors ${
+                              isFirst ? "opacity-20 cursor-not-allowed" : "hover:bg-orange-500/20 hover:text-orange-400 cursor-pointer"
+                            }`}
+                            title="Move Up"
+                          >
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleMoveCategory(idx, "down")}
+                            disabled={isLast}
+                            className={`p-1 rounded bg-white/5 border border-white/5 transition-colors ${
+                              isLast ? "opacity-20 cursor-not-allowed" : "hover:bg-orange-500/20 hover:text-orange-400 cursor-pointer"
+                            }`}
+                            title="Move Down"
+                          >
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Middle: Category Name or Edit input */}
+                      <div className="flex-1 min-w-0 px-2">
+                        {isEditing ? (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={editingCatName}
+                              onChange={(e) => setEditingCatName(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  handleSaveRenameCategory(cat.id);
+                                } else if (e.key === "Escape") {
+                                  setEditingCatId(null);
+                                }
+                              }}
+                              className="flex-1 px-3 py-1.5 bg-slate-900 border border-orange-500 rounded-lg text-xs text-white focus:outline-none font-medium"
+                              autoFocus
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleSaveRenameCategory(cat.id)}
+                              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                            >
+                              Save
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingCatId(null)}
+                              className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 text-slate-300 rounded-lg text-xs transition-colors cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-xs text-white truncate">
+                              {cat.name}
+                            </span>
+                            <span className="font-mono text-[10px] text-slate-500 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">
+                              {prodCount} product{prodCount === 1 ? "" : "s"}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Right: Actions (Edit & Delete) */}
+                      {!isEditing && (
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingCatId(cat.id);
+                              setEditingCatName(cat.name);
+                            }}
+                            className="p-2 text-slate-400 hover:text-orange-400 hover:bg-orange-500/10 rounded-lg transition-colors cursor-pointer"
+                            title="Edit Category Name"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleRequestDeleteCategory(cat)}
+                            className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
+                            title="Delete Category"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+            </div>
+
+            {/* Modal Footer */}
+            <div className="h-20 flex items-center justify-between px-8 border-t border-white/10 flex-shrink-0 bg-slate-950/60">
+              <span className="text-[10px] font-mono text-slate-400">
+                Changes persist automatically across the public store.
+              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowCategoryModal(false)}
+                  className="px-5 py-2.5 rounded-full border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveCategoriesOrder}
+                  disabled={savingCategories}
+                  className="px-6 py-2.5 rounded-full bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-orange-600/20 active:translate-y-0.5 font-mono"
+                >
+                  {savingCategories ? "Saving..." : "Save Order"}
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* CATEGORY DELETE CONFIRMATION MODAL */}
+      {catDeleteTarget && (
+        <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-white/10 max-w-md w-full rounded-3xl p-6 shadow-2xl text-center space-y-4">
+            <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center mx-auto">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+
+            <div>
+              <h4 className="text-base font-bold text-white m-0 uppercase tracking-tight">Delete Equipment Category?</h4>
+              <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                Are you sure you want to delete <strong className="text-white">"{catDeleteTarget.name}"</strong>?
+                {catDeleteTarget.count > 0 && (
+                  <span className="block text-amber-400 mt-1 font-semibold">
+                    Warning: {catDeleteTarget.count} product(s) are currently assigned to this category.
+                  </span>
+                )}
+              </p>
+            </div>
+
+            <div className="flex justify-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setCatDeleteTarget(null)}
+                className="px-5 py-2 rounded-full border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleExecuteDeleteCategory}
+                className="px-6 py-2 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PRODUCT ORDER MANAGEMENT MODAL */}
+      {showProductOrderModal && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 w-full max-w-xl rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden text-slate-900">
+            
+            {/* Modal Header */}
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-orange-600 font-bold">
+                  {selectedBrandFilter === "All" ? "Catalog Sequence" : "Category Sequence"}
+                </span>
+                <h3 className="text-lg font-bold text-slate-900 mt-0.5" style={{ color: "#0f172a" }}>
+                  Reorder Products: {selectedBrandFilter === "All" ? "All Categories" : selectedBrandFilter}
+                </h3>
+                <p className="text-xs text-slate-500 mt-1" style={{ color: "#64748b" }}>
+                  {selectedBrandFilter === "All"
+                    ? "Adjust the global display order of all products in the catalog."
+                    : "Adjust the display order of products in this category on the public website."}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowProductOrderModal(false)}
+                className="text-slate-400 hover:text-slate-700 p-2 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+                title="Close"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Body: Product List */}
+            <div className="p-6 overflow-y-auto space-y-2.5 flex-1 bg-white">
+              {orderedCategoryProducts.length === 0 ? (
+                <div className="text-center py-12 text-slate-400 text-xs font-mono">
+                  {selectedBrandFilter === "All" ? "No products found in catalog." : `No products found under "${selectedBrandFilter}".`}
+                </div>
+              ) : (
+                orderedCategoryProducts.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between gap-3 p-3.5 bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-2xl transition-colors"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                        #{idx + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <p
+                          className="text-xs font-bold text-slate-900 truncate m-0 block"
+                          style={{ color: "#0f172a" }}
+                        >
+                          {item.name}
+                        </p>
+                        <p
+                          className="text-[11px] font-mono text-slate-500 truncate m-0 block mt-0.5"
+                          style={{ color: "#64748b" }}
+                        >
+                          {selectedBrandFilter === "All" && item.brand ? (
+                            <span className="text-orange-600 font-semibold mr-1.5 font-sans">[{item.brand}]</span>
+                          ) : null}
+                          {item.id}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        type="button"
+                        disabled={idx === 0 || savingProductOrder}
+                        onClick={() => handleMoveProduct(idx, "up")}
+                        className="p-2 rounded-xl bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                        title="Move Up"
+                        style={{ color: "#334155" }}
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        disabled={idx === orderedCategoryProducts.length - 1 || savingProductOrder}
+                        onClick={() => handleMoveProduct(idx, "down")}
+                        className="p-2 rounded-xl bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                        title="Move Down"
+                        style={{ color: "#334155" }}
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="h-20 flex items-center justify-between px-8 border-t border-slate-100 flex-shrink-0 bg-slate-50">
+              <span className="text-xs font-mono text-slate-500 font-semibold" style={{ color: "#64748b" }}>
+                {orderedCategoryProducts.length} product{orderedCategoryProducts.length === 1 ? "" : "s"} {selectedBrandFilter === "All" ? "in catalog" : `in ${selectedBrandFilter}`}
+              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowProductOrderModal(false)}
+                  className="px-5 py-2.5 rounded-full border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors shadow-2xs"
+                  style={{ color: "#334155" }}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  disabled={savingProductOrder || orderedCategoryProducts.length === 0}
+                  onClick={() => handleSaveProductOrder()}
+                  className="px-6 py-2.5 rounded-full bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-orange-600/20 active:translate-y-0.5 font-mono flex items-center gap-2"
+                  style={{ color: "#ffffff", backgroundColor: "#ea580c" }}
+                >
+                  {savingProductOrder ? (
+                    <span>Saving...</span>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Save Order</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
           </div>

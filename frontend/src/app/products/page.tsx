@@ -58,6 +58,7 @@ export interface ProductItem {
   imageUrl?: string;
   slug?: string;
   solutionName?: string;
+  order?: number;
 }
 
 export interface BrandItem {
@@ -117,10 +118,11 @@ function ProductsCatalogContent() {
   const [categories, setCategories] = useState<string[]>(() => {
     return Array.from(new Set(productsDb.map((p: any) => p.category).filter(Boolean)));
   });
+  const [managedCategories, setManagedCategories] = useState<string[]>([]);
 
   const productCategoriesList = useMemo(() => {
     const list = Array.from(new Set(products.map((p) => p.brand).filter(Boolean)));
-    const preferredOrder = [
+    const preferredOrder = managedCategories.length > 0 ? managedCategories : [
       "Linear Heat Detection",
       "Air Compressors",
       "Damage Control Systems",
@@ -133,8 +135,15 @@ function ProductsCatalogContent() {
       "Quick Connect Couplings",
       "Emergency Flange Adapters"
     ];
-    return preferredOrder.filter(cat => list.includes(cat)).concat(list.filter(cat => !preferredOrder.includes(cat)));
-  }, [products]);
+    const result: string[] = [];
+    preferredOrder.forEach((cat) => {
+      if (!result.includes(cat)) result.push(cat);
+    });
+    list.forEach((cat) => {
+      if (!result.includes(cat)) result.push(cat);
+    });
+    return result;
+  }, [products, managedCategories]);
 
   const [selectedBrand, setSelectedBrand] = useState<string>(initialBrand);
   const [selectedCategory, setSelectedCategory] = useState<string>(initialSolution);
@@ -238,6 +247,19 @@ function ProductsCatalogContent() {
             if (match) setSelectedProduct(match);
           }
         }
+
+        // 3. Fetch dynamically ordered categories from /api/product-categories
+        try {
+          const catRes = await fetch(`${baseUrl}/api/product-categories?t=${Date.now()}`, { cache: "no-store" });
+          if (catRes.ok) {
+            const catList = await catRes.json();
+            if (Array.isArray(catList) && catList.length > 0) {
+              setManagedCategories(catList.map((c: any) => c.name));
+            }
+          }
+        } catch (catErr) {
+          // ignore error and fallback to default order
+        }
       } catch (err) {
         console.warn("Background product refresh warning:", err);
       }
@@ -291,7 +313,7 @@ function ProductsCatalogContent() {
       p.description.toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesBrand && matchesCategory && matchesSearch;
-  });
+  }).sort((a, b) => (a.order ?? 99999) - (b.order ?? 99999));
 
   const [enquireError, setEnquireError] = useState<string | null>(null);
 

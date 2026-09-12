@@ -15,6 +15,7 @@ export interface ProductItem {
   datasheetName?: string;
   whitepaperUrl?: string;
   whitepaperName?: string;
+  order?: number;
 }
 
 export function getProductImageUrl(product: ProductItem): string {

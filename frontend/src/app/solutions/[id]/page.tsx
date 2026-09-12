@@ -463,7 +463,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       product = solutionsDb["oil-and-gas"];
     } else if (slug.includes("marine") || slug.includes("offshore")) {
       product = solutionsDb["marine-offshore"];
-    } else if (slug.includes("civil") || slug.includes("defense") || slug.includes("defence")) {
+    } else if (slug === "fire-truck" || slug.includes("truck") || slug.includes("vehicle") || slug.includes("riv") || slug.includes("cbrn") || slug.includes("civil") || slug.includes("defense") || slug.includes("defence")) {
       product = solutionsDb["civil-defense"];
     } else if (slug.includes("petro") || slug.includes("smart") || slug.includes("facility")) {
       product = solutionsDb["petrochemicals"];
@@ -538,7 +538,7 @@ export default async function ProductDetailPage({ params }: Props) {
       product = solutionsDb["oil-and-gas"];
     } else if (slug.includes("marine") || slug.includes("offshore")) {
       product = solutionsDb["marine-offshore"];
-    } else if (slug.includes("civil") || slug.includes("defense") || slug.includes("defence")) {
+    } else if (slug === "fire-truck" || slug.includes("truck") || slug.includes("vehicle") || slug.includes("riv") || slug.includes("cbrn") || slug.includes("civil") || slug.includes("defense") || slug.includes("defence")) {
       product = solutionsDb["civil-defense"];
     } else if (slug.includes("petro") || slug.includes("smart") || slug.includes("facility")) {
       product = solutionsDb["petrochemicals"];

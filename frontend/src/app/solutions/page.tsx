@@ -80,14 +80,20 @@ const itemSlugMap: Record<string, string> = {
   "SIL2 wireless gas detection systems": "gas-detection",
   "ISA 100, LUARA, HART, Wireless systems": "mimes",
   "Emergency response solution": "oneseven",
-  "Asset management systems AI integrated fire trucks": "fire-truck",
-  "Rescue intervention truck (RIV)": "fire-truck",
-  "SCBA trucks": "fire-truck",
-  "CBRN Vehicles": "fire-truck",
-  "Compressed air form system (CAFS)": "one-seven-cafs",
-  "Emergency response system": "oneseven",
+  "Asset management systems AI integrated fire trucks": "civil-defense",
+  "Rescue intervention truck (RIV)": "civil-defense",
+  "SCBA trucks": "civil-defense",
+  "CBRN Vehicles": "civil-defense",
+  "Compressed Air Foam System (CAFS)": "oneseven",
+  "Compressed Air Foam System": "oneseven",
+  "Compressed air form system (CAFS)": "oneseven",
+  "Compressed air form system": "oneseven",
+  "CAFS": "oneseven",
+  "One Seven CAFS": "oneseven",
+  "Emergency response system": "civil-defense",
   "Damage control system": "diving-chambers",
   "TGR": "temporary-refuge-shelters",
+  "DE Compression chambers": "diving-chambers",
   "DE Compression champeers": "diving-chambers",
   "Wireless data acquisition and LAUARA 1SA 100, WIRELESS HART": "mimes",
   "Digital mobility Xshielder": "xshielder",
@@ -99,18 +105,57 @@ const itemSlugMap: Record<string, string> = {
   "Digital mobility Xshilder": "xshielder"
 };
 
-function resolveItemSlug(name: string): string | undefined {
+function resolveItemSlug(name: string, solutionsList: any[] = []): string | undefined {
   if (!name) return undefined;
-  if (itemSlugMap[name]) return itemSlugMap[name];
   const lower = name.toLowerCase().trim();
+  const normalized = lower.replace(/[^a-z0-9]+/g, " ").trim();
+  const stem = normalized.replace(/s\b/g, "");
+
+  // 1. Direct priority check: CAFS belongs to oneseven solution
+  if (normalized.includes("cafs") || normalized.includes("compressed air form") || normalized.includes("compressed air foam") || normalized.includes("one seven")) {
+    return "oneseven";
+  }
+
+  // 2. Direct match against dynamic solutionsList from database
+  if (Array.isArray(solutionsList) && solutionsList.length > 0) {
+    // 2a. Exact or stem match on title or id
+    const exact = solutionsList.find(s => {
+      const sTitle = (s.title || "").toLowerCase().trim();
+      const sId = (s.id || "").toLowerCase().trim();
+      const sTitleNorm = sTitle.replace(/[^a-z0-9]+/g, " ").trim();
+      const sStem = sTitleNorm.replace(/s\b/g, "");
+      return sTitle === lower || sId === lower || sTitleNorm === normalized || (stem.length > 3 && sStem === stem);
+    });
+    if (exact) return exact.id;
+
+    // 2b. Check if name matches any feature listed in the solution
+    const featureMatch = solutionsList.find(s => {
+      if (!Array.isArray(s.features)) return false;
+      return s.features.some((f: any) => {
+        const fLower = String(f || "").toLowerCase().trim();
+        const fNorm = fLower.replace(/[^a-z0-9]+/g, " ").trim();
+        return fLower === lower || fNorm === normalized;
+      });
+    });
+    if (featureMatch) return featureMatch.id;
+
+    // 2c. Substring match
+    const subMatch = solutionsList.find(s => {
+      const sTitleNorm = (s.title || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+      return (normalized.length > 4 && sTitleNorm.includes(normalized)) || (sTitleNorm.length > 4 && normalized.includes(sTitleNorm));
+    });
+    if (subMatch) return subMatch.id;
+  }
+
+  // 3. Static itemSlugMap check
+  if (itemSlugMap[name]) return itemSlugMap[name];
   for (const [key, slug] of Object.entries(itemSlugMap)) {
     if (lower === key.toLowerCase().trim()) return slug;
   }
+
+  // 4. Heuristic fallbacks: fleet and emergency vehicles belong to civil-defense solution
   if (lower.includes("truck") || lower.includes("vehicle") || lower.includes("riv") || lower.includes("cbrn") || lower.includes("fire fighting")) {
-    return "fire-truck";
-  }
-  if (lower.includes("cafs") || lower.includes("foam")) {
-    return "one-seven-cafs";
+    return "civil-defense";
   }
   if (lower.includes("gas") || lower.includes("detector") || lower.includes("isa 100")) {
     return "gas-detection";
@@ -126,6 +171,9 @@ function resolveItemSlug(name: string): string | undefined {
   }
   if (lower.includes("diving") || lower.includes("decompression")) {
     return "diving-chambers";
+  }
+  if (lower.includes("shelter") || lower.includes("tgr") || lower.includes("refuge") || lower.includes("ler")) {
+    return "temporary-refuge-shelters";
   }
   if (lower.includes("consultancy") || lower.includes("hse")) {
     return "hse-consultancy";
@@ -827,7 +875,7 @@ function SolutionsPageContent() {
     ? customGroups.map((g: any) => ({
         name: g.name,
         items: (g.items || []).map((it: string) => {
-          const slug = resolveItemSlug(it);
+          const slug = resolveItemSlug(it, solutionsList);
           return { name: it, id: slug };
         })
       }))
@@ -839,7 +887,7 @@ function SolutionsPageContent() {
       : fallbackDefaults.map((s) => ({
           name: s.name,
           items: s.items.map((it) => {
-            const slug = resolveItemSlug(it);
+            const slug = resolveItemSlug(it, solutionsList);
             return { name: it, id: slug };
           })
         }));
@@ -1143,9 +1191,8 @@ function SolutionsPageContent() {
                         <ul className="space-y-2.5 pl-0 list-none m-0">
                           {sol.items.map((item: any, itemIdx: number) => {
                             const isService = ["hse-consultancy", "explosion-proof-design"].includes(item.id || "");
-                            const isProduct = ["fire-truck", "one-seven-cafs", "sione-hood", "gas-detector", "smoke-detector", "heat-detector", "temp-transmitter", "pressure-transmitter", "diving-chambers", "cascade-system", "scba-system", "nardi-compressor"].includes(item.id || "");
                             const path = item.id 
-                              ? (isService ? `/services/${item.id}` : isProduct ? `/products/${item.id}` : `/solutions/${item.id}`)
+                              ? (isService ? `/services/${item.id}` : `/solutions/${item.id}`)
                               : null;
 
                             return (

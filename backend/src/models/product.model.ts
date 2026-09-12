@@ -35,7 +35,31 @@ function cleanProductName(name?: string): string {
 
 export class ProductModel {
   static async getAll(): Promise<any[]> {
-    return await Product.find({}).lean().exec();
+    const list = await Product.find({}).lean().exec();
+    return list.sort((a: any, b: any) => {
+      const orderA = typeof a.order === "number" ? a.order : 99999;
+      const orderB = typeof b.order === "number" ? b.order : 99999;
+      if (orderA !== orderB) return orderA - orderB;
+      return (a.createdAt ? new Date(a.createdAt).getTime() : 0) - (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+    });
+  }
+
+  static async reorder(items: { id: string; order: number }[]): Promise<boolean> {
+    if (!Array.isArray(items) || items.length === 0) {
+      throw new Error("Items must be a non-empty array of { id, order }");
+    }
+
+    const bulkOps = items.map((item, idx) => ({
+      updateOne: {
+        filter: { id: item.id },
+        update: { $set: { order: typeof item.order === "number" ? item.order : idx } }
+      }
+    }));
+
+    await Product.bulkWrite(bulkOps);
+    invalidateCache("product");
+    invalidateCache("brand");
+    return true;
   }
 
   static async getById(id: string): Promise<any | null> {

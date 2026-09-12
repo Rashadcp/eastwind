@@ -10,12 +10,18 @@ interface FooterLink {
   href: string;
 }
 
+export interface FooterLocation {
+  title: string;
+  address: string;
+}
+
 interface FooterData {
   logoUrl: string;
   tagline: string;
   badgeText: string;
   solutionsTitle: string;
   operationsTitle: string;
+  locations: FooterLocation[];
   hqTitle: string;
   hqAddress: string;
   hubTitle: string;
@@ -33,12 +39,22 @@ const DEFAULT_FOOTER: FooterData = {
   badgeText: "Certified Marine & Industrial Safety Partner",
   solutionsTitle: "Safety Solutions",
   operationsTitle: "Operations",
+  locations: [
+    {
+      title: "Dammam, Kingdom of Saudi Arabia",
+      address: "P14, 2nd Industrial City, Dammam\nKingdom of Saudi Arabia"
+    },
+    {
+      title: "Riyadh Technology Hub",
+      address: "Olaya District, Riyadh, Kingdom of Saudi Arabia"
+    }
+  ],
   hqTitle: "Al Khobar Headquarters",
   hqAddress: "King Faisal West Road, Bandariyah District, Al Khobar, Kingdom of Saudi Arabia",
   hubTitle: "Riyadh Technology Hub",
   hubAddress: "Olaya District, Riyadh, Kingdom of Saudi Arabia",
-  telephone: "+966 13 889 XXXX",
-  email: "info@eastwindsafety.com",
+  telephone: "+966 570 833 214",
+  email: "enquiry@eastwind.sa",
   copyright: `© ${new Date().getFullYear()} East Wind Safety. All rights reserved. Premium Safety Products & Solutions Integrator.`,
   solutionsLinks: [
     { name: "Oil & Gas Industry", href: "/solutions/oil-and-gas" },
@@ -48,7 +64,6 @@ const DEFAULT_FOOTER: FooterData = {
     { name: "Utility & Power Grids", href: "/solutions/utility-power" }
   ],
   bottomLinks: [
-    { name: "Marine & Industrial Compliance", href: "/solutions" },
     { name: "Privacy Policy", href: "/about" }
   ]
 };
@@ -67,17 +82,19 @@ export default function Footer() {
           const footerDoc = list.find((item: any) => item.id === "footer");
           const contactDoc = list.find((item: any) => item.id === "contact_info");
 
-          let solutionsResList = DEFAULT_FOOTER.solutionsLinks;
-
-          // Attempt to map solutions links from /api/solutions if footer doc doesn't override them
-          if (!footerDoc?.solutionsLinks || footerDoc.solutionsLinks.length === 0) {
-            const solData = await cachedFetch<any[]>(`${baseUrl}/api/solutions`, { fallback: [] });
-            if (Array.isArray(solData) && solData.length > 0) {
-              solutionsResList = solData.slice(0, 5).map((sol: any) => ({
-                name: sol.title || sol.name,
-                href: `/solutions#${sol.id}`
-              }));
-            }
+          // Determine locations
+          let locs: FooterLocation[] = [];
+          if (footerDoc?.locations && Array.isArray(footerDoc.locations) && footerDoc.locations.length > 0) {
+            locs = footerDoc.locations;
+          } else if (contactDoc?.locations && Array.isArray(contactDoc.locations) && contactDoc.locations.length > 0) {
+            locs = contactDoc.locations;
+          } else {
+            const hqT = footerDoc?.hqTitle || contactDoc?.hqTitle || DEFAULT_FOOTER.hqTitle;
+            const hqA = footerDoc?.hqAddress || contactDoc?.hqAddress || DEFAULT_FOOTER.hqAddress;
+            const hubT = footerDoc?.hubTitle || contactDoc?.hubTitle || DEFAULT_FOOTER.hubTitle;
+            const hubA = footerDoc?.hubAddress || contactDoc?.hubAddress || DEFAULT_FOOTER.hubAddress;
+            if (hqT || hqA) locs.push({ title: hqT, address: hqA });
+            if (hubT || hubA) locs.push({ title: hubT, address: hubA });
           }
 
           setFooter({
@@ -86,16 +103,15 @@ export default function Footer() {
             badgeText: footerDoc?.badgeText || DEFAULT_FOOTER.badgeText,
             solutionsTitle: footerDoc?.solutionsTitle || DEFAULT_FOOTER.solutionsTitle,
             operationsTitle: footerDoc?.operationsTitle || DEFAULT_FOOTER.operationsTitle,
-            hqTitle: footerDoc?.hqTitle || contactDoc?.hqTitle || DEFAULT_FOOTER.hqTitle,
-            hqAddress: footerDoc?.hqAddress || contactDoc?.hqAddress || DEFAULT_FOOTER.hqAddress,
-            hubTitle: footerDoc?.hubTitle || contactDoc?.hubTitle || DEFAULT_FOOTER.hubTitle,
-            hubAddress: footerDoc?.hubAddress || contactDoc?.hubAddress || DEFAULT_FOOTER.hubAddress,
+            locations: locs,
+            hqTitle: locs[0]?.title || footerDoc?.hqTitle || contactDoc?.hqTitle || DEFAULT_FOOTER.hqTitle,
+            hqAddress: locs[0]?.address || footerDoc?.hqAddress || contactDoc?.hqAddress || DEFAULT_FOOTER.hqAddress,
+            hubTitle: locs[1]?.title || footerDoc?.hubTitle || contactDoc?.hubTitle || DEFAULT_FOOTER.hubTitle,
+            hubAddress: locs[1]?.address || footerDoc?.hubAddress || contactDoc?.hubAddress || DEFAULT_FOOTER.hubAddress,
             telephone: footerDoc?.telephone || contactDoc?.telephone || DEFAULT_FOOTER.telephone,
             email: footerDoc?.email || contactDoc?.email || DEFAULT_FOOTER.email,
             copyright: footerDoc?.copyright || DEFAULT_FOOTER.copyright,
-            solutionsLinks: (footerDoc?.solutionsLinks && footerDoc.solutionsLinks.length > 0)
-              ? footerDoc.solutionsLinks
-              : solutionsResList,
+            solutionsLinks: [],
             bottomLinks: (footerDoc?.bottomLinks && footerDoc.bottomLinks.length > 0)
               ? footerDoc.bottomLinks
               : DEFAULT_FOOTER.bottomLinks
@@ -114,10 +130,10 @@ export default function Footer() {
       {/* High-Tech Industrial Grid Backdrop Overlay */}
       <div className="industrial-grid absolute inset-0 opacity-[0.02] pointer-events-none z-0" />
 
-      <div className="max-w-[1360px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 mb-12 relative z-10 items-start">
+      <div className="max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-12 relative z-10 items-start">
         
-        {/* Column 1: Brand & Mission (4 cols) */}
-        <div className="lg:col-span-4 flex flex-col justify-start">
+        {/* Column 1: Brand & Mission (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col justify-start">
           <div className="h-10 flex items-center mb-6">
             <img
               src={formatImageUrl(footer.logoUrl, "/logo.png")}
@@ -126,45 +142,15 @@ export default function Footer() {
             />
           </div>
           <p 
-            className="text-[0.92rem] text-slate-600 max-w-[380px] leading-relaxed m-0 font-normal"
+            className="text-[0.92rem] text-slate-600 max-w-[460px] leading-relaxed m-0 font-normal"
             style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
           >
             {footer.tagline}
           </p>
         </div>
 
-        {/* Column 2: Solutions Navigation Links (4 cols) */}
-        <div className="lg:col-span-4 flex flex-col justify-start">
-          <div className="h-10 flex items-center mb-6">
-            <span 
-              className="text-slate-900 uppercase text-[0.75rem] font-bold tracking-[0.25em]"
-              style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
-            >
-              {footer.solutionsTitle}
-            </span>
-          </div>
-          <ul className="list-none flex flex-col gap-3.5 text-[0.88rem] p-0 m-0">
-            {footer.solutionsLinks.map((link, idx) => (
-              <li key={idx}>
-                <Link 
-                  href={link.href} 
-                  className="group/lnk text-slate-600 hover:text-[#c22026] no-underline transition-colors duration-300 flex items-center font-normal text-[0.88rem]"
-                  style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
-                >
-                  <span className="inline-block transition-all duration-300 transform -translate-x-1 opacity-0 group-hover/lnk:translate-x-0 group-hover/lnk:opacity-100 mr-1.5 text-[#c22026] font-bold text-[0.9rem] leading-none">
-                    ›
-                  </span>
-                  <span className="transition-transform duration-300 group-hover/lnk:translate-x-1">
-                    {link.name}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Column 3: Operations & Contact Info (4 cols) */}
-        <div className="lg:col-span-4 flex flex-col justify-start">
+        {/* Column 2: Operations & Contact Info (7 cols) */}
+        <div className="lg:col-span-7 flex flex-col justify-start">
           <div className="h-10 flex items-center mb-6">
             <span 
               className="text-slate-900 uppercase text-[0.75rem] font-bold tracking-[0.25em]"
@@ -173,59 +159,53 @@ export default function Footer() {
               {footer.operationsTitle}
             </span>
           </div>
-          <div className="flex flex-col gap-5 text-[0.88rem] text-slate-600">
-            {footer.hqTitle && (
-              <div className="flex gap-3.5 items-start">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-50 border border-blue-100 shadow-sm shrink-0 mt-0.5">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#1e3e8f]">
-                    <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                </div>
-                <div>
-                  <strong className="text-slate-900 block mb-0.5 text-[0.88rem] font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
-                    {footer.hqTitle}
-                  </strong>
-                  <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-normal text-slate-500 block text-[0.82rem]">
-                    {footer.hqAddress}
-                  </span>
-                </div>
-              </div>
-            )}
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-[0.88rem] text-slate-600">
+            {/* Hubs & Physical Locations */}
+            <div className="flex flex-col gap-5">
+              {(footer.locations && footer.locations.length > 0 ? footer.locations : [
+                { title: footer.hqTitle, address: footer.hqAddress },
+                { title: footer.hubTitle, address: footer.hubAddress }
+              ].filter(l => l.title || l.address)).map((loc, locIdx) => {
+                const isBlue = locIdx % 2 === 0;
+                return (
+                  <div key={locIdx} className="flex gap-3.5 items-start">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isBlue ? "bg-blue-50 border border-blue-100" : "bg-red-50 border border-red-100"} shadow-sm shrink-0 mt-0.5`}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className={isBlue ? "text-[#1e3e8f]" : "text-[#c22026]"}>
+                        <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                    <div>
+                      <strong className="text-slate-900 block mb-0.5 text-[0.88rem] font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
+                        {loc.title}
+                      </strong>
+                      <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-normal text-slate-500 block text-[0.82rem] whitespace-pre-line">
+                        {loc.address}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
-            {footer.hubTitle && (
+            {/* Direct Routing & Communications */}
+            <div className="flex flex-col gap-5 sm:border-l sm:border-slate-100 sm:pl-6">
               <div className="flex gap-3.5 items-start">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center bg-red-50 border border-red-100 shadow-sm shrink-0 mt-0.5">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#c22026]">
-                    <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z" />
-                    <circle cx="12" cy="10" r="3" />
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                   </svg>
                 </div>
                 <div>
                   <strong className="text-slate-900 block mb-0.5 text-[0.88rem] font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
-                    {footer.hubTitle}
+                    Contact Portal
                   </strong>
                   <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-normal text-slate-500 block text-[0.82rem]">
-                    {footer.hubAddress}
+                    Email: <a href={`mailto:${footer.email}`} className="text-[#c22026] hover:text-[#1e3e8f] transition-colors duration-300 no-underline font-medium">{footer.email}</a><br />
+                    Tel: {footer.telephone}
                   </span>
                 </div>
-              </div>
-            )}
-
-            <div className="border-t border-slate-100 pt-4 flex gap-3.5 items-start">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-red-50 border border-red-100 shadow-sm shrink-0 mt-0.5">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#c22026]">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                </svg>
-              </div>
-              <div>
-                <strong className="text-slate-900 block mb-0.5 text-[0.88rem] font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
-                  Contact Portal
-                </strong>
-                <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-normal text-slate-500 block text-[0.82rem]">
-                  Email: <a href={`mailto:${footer.email}`} className="text-[#c22026] hover:text-[#1e3e8f] transition-colors duration-300 no-underline font-medium">{footer.email}</a><br />
-                  Tel: {footer.telephone}
-                </span>
               </div>
             </div>
           </div>

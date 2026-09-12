@@ -8,6 +8,11 @@ interface FooterLink {
   href: string;
 }
 
+export interface FooterLocation {
+  title: string;
+  address: string;
+}
+
 export default function AdminFooterPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
@@ -21,12 +26,21 @@ export default function AdminFooterPage() {
   const [badgeText, setBadgeText] = useState<string>("Certified Marine & Industrial Safety Partner");
   const [solutionsTitle, setSolutionsTitle] = useState<string>("Safety Solutions");
   const [operationsTitle, setOperationsTitle] = useState<string>("Operations");
-  const [hqTitle, setHqTitle] = useState<string>("Al Khobar Headquarters");
-  const [hqAddress, setHqAddress] = useState<string>("King Faisal West Road, Bandariyah District, Al Khobar, Kingdom of Saudi Arabia");
-  const [hubTitle, setHubTitle] = useState<string>("Riyadh Technology Hub");
-  const [hubAddress, setHubAddress] = useState<string>("Olaya District, Riyadh, Kingdom of Saudi Arabia");
-  const [telephone, setTelephone] = useState<string>("+966 13 889 XXXX");
-  const [email, setEmail] = useState<string>("info@eastwindsafety.com");
+
+  // Dynamic Locations list
+  const [locations, setLocations] = useState<FooterLocation[]>([
+    {
+      title: "Dammam, Kingdom of Saudi Arabia",
+      address: "P14, 2nd Industrial City, Dammam\nKingdom of Saudi Arabia"
+    },
+    {
+      title: "Riyadh Technology Hub",
+      address: "Olaya District, Riyadh, Kingdom of Saudi Arabia"
+    }
+  ]);
+
+  const [telephone, setTelephone] = useState<string>("+966 570 833 214");
+  const [email, setEmail] = useState<string>("enquiry@eastwind.sa");
   const [copyright, setCopyright] = useState<string>(`© ${new Date().getFullYear()} East Wind Safety. All rights reserved. Premium Safety Products & Solutions Integrator.`);
 
   // Custom links
@@ -39,7 +53,6 @@ export default function AdminFooterPage() {
   ]);
 
   const [bottomLinks, setBottomLinks] = useState<FooterLink[]>([
-    { name: "Marine & Industrial Compliance", href: "/solutions" },
     { name: "Privacy Policy", href: "/about" }
   ]);
 
@@ -73,15 +86,30 @@ export default function AdminFooterPage() {
           if (footerDoc.copyright) setCopyright(footerDoc.copyright);
           if (footerDoc.solutionsLinks && Array.isArray(footerDoc.solutionsLinks)) setSolutionsLinks(footerDoc.solutionsLinks);
           if (footerDoc.bottomLinks && Array.isArray(footerDoc.bottomLinks)) setBottomLinks(footerDoc.bottomLinks);
+          if (footerDoc.telephone) setTelephone(footerDoc.telephone);
+          if (footerDoc.email) setEmail(footerDoc.email);
         }
 
         if (contactDoc) {
-          if (contactDoc.hqTitle) setHqTitle(contactDoc.hqTitle);
-          if (contactDoc.hqAddress) setHqAddress(contactDoc.hqAddress);
-          if (contactDoc.hubTitle) setHubTitle(contactDoc.hubTitle);
-          if (contactDoc.hubAddress) setHubAddress(contactDoc.hubAddress);
-          if (contactDoc.telephone) setTelephone(contactDoc.telephone);
-          if (contactDoc.email) setEmail(contactDoc.email);
+          if (!footerDoc?.telephone && contactDoc.telephone) setTelephone(contactDoc.telephone);
+          if (!footerDoc?.email && contactDoc.email) setEmail(contactDoc.email);
+        }
+
+        // Initialize locations from footer, contactDoc or legacy fields
+        if (footerDoc?.locations && Array.isArray(footerDoc.locations) && footerDoc.locations.length > 0) {
+          setLocations(footerDoc.locations);
+        } else if (contactDoc?.locations && Array.isArray(contactDoc.locations) && contactDoc.locations.length > 0) {
+          setLocations(contactDoc.locations);
+        } else {
+          const initialLocs: FooterLocation[] = [];
+          const hqT = footerDoc?.hqTitle || contactDoc?.hqTitle || "Dammam, Kingdom of Saudi Arabia";
+          const hqA = footerDoc?.hqAddress || contactDoc?.hqAddress || "P14, 2nd Industrial City, Dammam\nKingdom of Saudi Arabia";
+          const hubT = footerDoc?.hubTitle || contactDoc?.hubTitle || "Riyadh Technology Hub";
+          const hubA = footerDoc?.hubAddress || contactDoc?.hubAddress || "Olaya District, Riyadh, Kingdom of Saudi Arabia";
+
+          if (hqT || hqA) initialLocs.push({ title: hqT, address: hqA });
+          if (hubT || hubA) initialLocs.push({ title: hubT, address: hubA });
+          setLocations(initialLocs);
         }
       }
     } catch (err: any) {
@@ -181,6 +209,27 @@ export default function AdminFooterPage() {
     setBottomLinks(bottomLinks.filter((_, i) => i !== idx));
   };
 
+  // Dynamic Locations Handlers
+  const handleAddLocation = () => {
+    setLocations([
+      ...locations,
+      {
+        title: "New Office / Hub Location",
+        address: "Address & Industrial Zone, Kingdom of Saudi Arabia"
+      }
+    ]);
+  };
+
+  const handleUpdateLocation = (index: number, field: "title" | "address", value: string) => {
+    const updated = [...locations];
+    updated[index] = { ...updated[index], [field]: value };
+    setLocations(updated);
+  };
+
+  const handleDeleteLocation = (index: number) => {
+    setLocations(locations.filter((_, i) => i !== index));
+  };
+
   // Save Footer Settings to Backend
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -197,10 +246,11 @@ export default function AdminFooterPage() {
         badgeText,
         solutionsTitle,
         operationsTitle,
-        hqTitle,
-        hqAddress,
-        hubTitle,
-        hubAddress,
+        locations,
+        hqTitle: locations[0]?.title || "",
+        hqAddress: locations[0]?.address || "",
+        hubTitle: locations[1]?.title || "",
+        hubAddress: locations[1]?.address || "",
         telephone,
         email,
         copyright,
@@ -221,6 +271,24 @@ export default function AdminFooterPage() {
         const data = await res.json();
         throw new Error(data.error || "Failed to update footer configuration");
       }
+
+      // Keep contact_info synced as well
+      await fetch(`${baseUrl}/api/contact-settings/contact_info`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : ""
+        },
+        body: JSON.stringify({
+          locations,
+          hqTitle: locations[0]?.title || "",
+          hqAddress: locations[0]?.address || "",
+          hubTitle: locations[1]?.title || "",
+          hubAddress: locations[1]?.address || "",
+          telephone,
+          email
+        })
+      }).catch(() => null);
 
       setSuccess("Footer configuration saved permanently to active website!");
     } catch (err: any) {
@@ -334,101 +402,28 @@ export default function AdminFooterPage() {
           </div>
         </div>
 
-        {/* SECTION 2: SOLUTIONS COLUMN */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
-          <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
-            2. Safety Solutions Column
-          </h3>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Column Header Title</label>
-            <input
-              type="text"
-              value={solutionsTitle}
-              onChange={(e) => setSolutionsTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium"
-              placeholder="e.g. Safety Solutions"
-            />
-          </div>
-
-          {/* Solutions Links List */}
-          <div className="space-y-2">
-            <span className="block text-xs font-bold text-slate-700">Quick Links List ({solutionsLinks.length})</span>
-            <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-              {solutionsLinks.map((link, idx) => (
-                <div key={idx} className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs">
-                  <input
-                    type="text"
-                    value={link.name}
-                    onChange={(e) => {
-                      const updated = [...solutionsLinks];
-                      updated[idx].name = e.target.value;
-                      setSolutionsLinks(updated);
-                    }}
-                    className="flex-1 px-2.5 py-1.5 border border-slate-300 rounded-lg font-bold"
-                    placeholder="Link Title"
-                  />
-                  <input
-                    type="text"
-                    value={link.href}
-                    onChange={(e) => {
-                      const updated = [...solutionsLinks];
-                      updated[idx].href = e.target.value;
-                      setSolutionsLinks(updated);
-                    }}
-                    className="flex-1 px-2.5 py-1.5 border border-slate-300 rounded-lg font-mono text-[11px]"
-                    placeholder="/solutions/page"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveSolLink(idx)}
-                    className="p-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg shrink-0 transition-colors"
-                    title="Remove Link"
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                </div>
-              ))}
+        {/* SECTION 2: OPERATIONS & CONTACT DETAILS */}
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 m-0">
+                2. Operations & Contact Hub Details
+              </h3>
+              <p className="text-[11px] text-slate-500 m-0 mt-0.5">
+                Manage operational offices, physical hubs, emergency telephone numbers & emails
+              </p>
             </div>
-
-            {/* Add Solution Link */}
-            <div className="flex gap-2 pt-2">
-              <input
-                type="text"
-                placeholder="Link Title (e.g. Oil & Gas Industry)"
-                value={newSolName}
-                onChange={(e) => setNewSolName(e.target.value)}
-                className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs"
-              />
-              <input
-                type="text"
-                placeholder="URL (e.g. /solutions/oil-and-gas)"
-                value={newSolHref}
-                onChange={(e) => setNewSolHref(e.target.value)}
-                className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono"
-              />
-              <button
-                type="button"
-                onClick={handleAddSolLink}
-                style={{ color: "#ffffff" }}
-                className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#152e6f] !text-white text-xs font-extrabold rounded-xl shrink-0 cursor-pointer shadow-sm active:scale-95 transition-all flex items-center gap-1.5"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                <span>Add Link</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={handleAddLocation}
+              className="px-3.5 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0 self-start sm:self-auto"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>+ Add Location</span>
+            </button>
           </div>
-        </div>
-
-        {/* SECTION 3: OPERATIONS & CONTACT DETAILS */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
-          <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
-            3. Operations & Contact Hub Details
-          </h3>
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1">Column Header Title</label>
@@ -441,43 +436,71 @@ export default function AdminFooterPage() {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">HQ Title</label>
-              <input
-                type="text"
-                value={hqTitle}
-                onChange={(e) => setHqTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium"
-              />
-              <label className="block text-xs font-bold text-slate-700 mt-2 mb-1">HQ Address</label>
-              <textarea
-                rows={2}
-                value={hqAddress}
-                onChange={(e) => setHqAddress(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium resize-y"
-              />
+          {/* Dynamic Locations List */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold text-slate-800">
+                Operational Office & Hub Locations ({locations.length})
+              </label>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Tech Hub Title</label>
-              <input
-                type="text"
-                value={hubTitle}
-                onChange={(e) => setHubTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium"
-              />
-              <label className="block text-xs font-bold text-slate-700 mt-2 mb-1">Tech Hub Address</label>
-              <textarea
-                rows={2}
-                value={hubAddress}
-                onChange={(e) => setHubAddress(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium resize-y"
-              />
-            </div>
+            {locations.length === 0 ? (
+              <div className="p-6 border border-dashed border-slate-200 rounded-2xl text-center text-xs text-slate-400 bg-slate-50/50">
+                No physical locations configured. Click &quot;+ Add Location&quot; above to add one.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {locations.map((loc, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 bg-slate-50/60 border border-slate-200/90 rounded-2xl space-y-3 relative group"
+                  >
+                    <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
+                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-orange-500 inline-block" />
+                        Location #{idx + 1}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteLocation(idx)}
+                        className="text-rose-500 hover:text-rose-700 hover:bg-rose-50 px-2 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
+                        title="Delete this location"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        <span>Delete</span>
+                      </button>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Office / Hub Title</label>
+                      <input
+                        type="text"
+                        value={loc.title}
+                        onChange={(e) => handleUpdateLocation(idx, "title", e.target.value)}
+                        placeholder="e.g. Dammam, Kingdom of Saudi Arabia"
+                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Physical Address</label>
+                      <textarea
+                        rows={2}
+                        value={loc.address}
+                        onChange={(e) => handleUpdateLocation(idx, "address", e.target.value)}
+                        placeholder="e.g. P14, 2nd Industrial City, Dammam Kingdom of Saudi Arabia"
+                        className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-orange-500 resize-y"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">Telephone Number</label>
               <input
@@ -499,10 +522,10 @@ export default function AdminFooterPage() {
           </div>
         </div>
 
-        {/* SECTION 4: BOTTOM LEGAL & COPYRIGHT */}
+        {/* SECTION 3: BOTTOM LEGAL & COPYRIGHT */}
         <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
           <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
-            4. Bottom Copyright & Legal Links
+            3. Bottom Copyright & Legal Links
           </h3>
 
           <div>

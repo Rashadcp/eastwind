@@ -19,6 +19,7 @@ export interface IProduct extends Document {
   datasheetName?: string;
   whitepaperUrl?: string;
   whitepaperName?: string;
+  order?: number;
 }
 
 export interface ISolution extends Document {
@@ -109,6 +110,7 @@ export interface IContactSettings extends Document {
   hqAddress?: string;
   hubTitle?: string;
   hubAddress?: string;
+  locations?: { title: string; address: string }[];
   telephone?: string;
   email?: string;
   workingHours?: string;
@@ -232,7 +234,8 @@ const ProductSchema = new Schema<IProduct>({
   datasheetUrl: { type: String, default: "" },
   datasheetName: { type: String, default: "" },
   whitepaperUrl: { type: String, default: "" },
-  whitepaperName: { type: String, default: "" }
+  whitepaperName: { type: String, default: "" },
+  order: { type: Number, default: 0 }
 });
 
 const SolutionSchema = new Schema<ISolution>({
@@ -323,6 +326,7 @@ const ContactSettingsSchema = new Schema<IContactSettings>({
   hqAddress: { type: String },
   hubTitle: { type: String },
   hubAddress: { type: String },
+  locations: [{ title: String, address: String }],
   telephone: { type: String },
   email: { type: String },
   workingHours: { type: String },

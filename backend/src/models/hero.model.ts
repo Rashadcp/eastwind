@@ -28,7 +28,7 @@ const HeroSchema: Schema = new Schema(
     slide1Desc: { type: String, default: "We engineer intelligent, cyber-physical safety systems. From explosion-proof IIoT mobility to predictive threat analytics, we safeguard heavy industrial infrastructure." },
     slide1Btn1Text: { type: String, default: "Operations Center" },
     slide1Btn1Link: { type: String, default: "/contact" },
-    slide1Btn2Text: { type: String, default: "Our Capabilities" },
+    slide1Btn2Text: { type: String, default: "Talk to our experts" },
     slide1Btn2Link: { type: String, default: "#industry-solutions" },
     slide2Tagline: { type: String, default: "IIoT Data Telemetry Loops" },
     slide2Title: { type: String, default: "Real-time Edge Acquisition" },

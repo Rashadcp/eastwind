@@ -8,6 +8,7 @@ const router = Router();
 router.get("/", ProductController.getAll);
 router.get("/:id", ProductController.getById);
 router.post("/", requireAdmin, validateProduct, ProductController.create);
+router.put("/reorder", requireAdmin, ProductController.reorder);
 router.put("/:id", requireAdmin, ProductController.update);
 router.delete("/:id", requireAdmin, ProductController.delete);
 

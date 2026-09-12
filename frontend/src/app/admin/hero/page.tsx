@@ -23,7 +23,7 @@ export default function AdminHeroPage() {
   const [slide1Desc, setSlide1Desc] = useState<string>("We engineer intelligent, cyber-physical safety systems. From explosion-proof IIoT mobility to predictive threat analytics, we safeguard heavy industrial infrastructure.");
   const [slide1Btn1Text, setSlide1Btn1Text] = useState<string>("Operations Center");
   const [slide1Btn1Link, setSlide1Btn1Link] = useState<string>("#solutions");
-  const [slide1Btn2Text, setSlide1Btn2Text] = useState<string>("Our Capabilities");
+  const [slide1Btn2Text, setSlide1Btn2Text] = useState<string>("Talk to our experts");
   const [slide1Btn2Link, setSlide1Btn2Link] = useState<string>("#solutions");
 
   // Slide 2 Captions & Links

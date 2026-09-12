@@ -20,3 +20,12 @@ yarn-error.log*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Uploaded media and documents
+backend/uploads/*
+!backend/uploads/.gitkeep
+frontend/public/uploads/*
+!frontend/public/uploads/.gitkeep
+**/uploads/*
+!**/uploads/.gitkeep
+

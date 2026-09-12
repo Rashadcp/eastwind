@@ -1360,7 +1360,7 @@ export default function UnifiedAdminSolutionsPage() {
                         setIndustries(updated);
                       }}
                       placeholder="e.g. Metropolitan Safety Infrastructure & Emergency Response"
-                      className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors"
                     />
                   </div>
 
@@ -1375,7 +1375,7 @@ export default function UnifiedAdminSolutionsPage() {
                         setIndustries(updated);
                       }}
                       placeholder="Sector scope description..."
-                      className="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-orange-500"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors placeholder:text-slate-400"
                     />
                   </div>
 
@@ -1388,7 +1388,7 @@ export default function UnifiedAdminSolutionsPage() {
                       <button
                         type="button"
                         onClick={() => handleAddIndustryColumn(idx)}
-                        className="px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-2xs shrink-0"
+                        className="px-2.5 py-1.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0"
                       >
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1397,26 +1397,40 @@ export default function UnifiedAdminSolutionsPage() {
                       </button>
                     </div>
 
+                    {/* Datalist Auto-Suggestions for Solution Items */}
+                    <datalist id="admin-solutions-suggestions">
+                      {solutions.map((s) => (
+                        <option key={s.id} value={s.title}>
+                          {s.subLabel ? `${s.title} (${s.subLabel})` : s.title}
+                        </option>
+                      ))}
+                      {solutions.flatMap(s => s.features || []).filter((f: string, i: number, arr: string[]) => f && arr.indexOf(f) === i).map((feat: string, idx: number) => (
+                        <option key={`feat-${idx}`} value={feat}>
+                          {feat}
+                        </option>
+                      ))}
+                    </datalist>
+
                     <div className="space-y-3">
                       {(Array.isArray(ind.items) ? ind.items : []).map((col: any, colIdx: number) => {
                         const colName = typeof col === "string" ? col : (col?.name || `Column ${colIdx + 1}`);
                         const colItems: string[] = Array.isArray(col?.items) ? col.items : [];
 
                         return (
-                          <div key={colIdx} className="bg-white border border-slate-200 rounded-xl p-3.5 space-y-2.5 shadow-2xs">
+                          <div key={colIdx} className="bg-white border border-slate-200 rounded-xl p-3.5 space-y-3 shadow-2xs">
                             {/* Column Header & Delete button */}
                             <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
                               <input
                                 type="text"
                                 value={colName}
                                 onChange={(e) => handleUpdateColumnTitle(idx, colIdx, e.target.value)}
-                                placeholder="Column Header Title (e.g. Fleet & Specialized Vehicles)"
-                                className="flex-1 min-w-0 px-2.5 py-1.5 text-xs font-bold text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:border-orange-500 focus:bg-white focus:outline-none"
+                                placeholder="Column Header (e.g. Fleet & Specialized Vehicles)"
+                                className="flex-1 min-w-0 px-2.5 py-1.5 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-slate-400 focus:outline-none transition-colors placeholder:text-slate-400 placeholder:font-normal"
                               />
                               <button
                                 type="button"
                                 onClick={() => handleDeleteIndustryColumn(idx, colIdx)}
-                                className="text-rose-500 hover:text-rose-700 p-1.5 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer shrink-0"
+                                className="text-slate-400 hover:text-rose-600 p-1.5 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer shrink-0"
                                 title="Delete this column"
                               >
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -1427,65 +1441,108 @@ export default function UnifiedAdminSolutionsPage() {
 
                             {/* Column Items List */}
                             <div className="space-y-2">
-                              <span className="text-[10px] font-bold text-slate-500">
-                                Bullet Points ({colItems.length})
-                              </span>
-
-                              <div className="space-y-1.5">
-                                {colItems.map((bullet: string, bulletIdx: number) => (
-                                  <div key={bulletIdx} className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-lg px-2.5 py-1 group/item">
-                                    <span className="text-orange-500 text-xs font-bold shrink-0">•</span>
-                                    <input
-                                      type="text"
-                                      value={bullet}
-                                      onChange={(e) => handleUpdateBulletItem(idx, colIdx, bulletIdx, e.target.value)}
-                                      className="flex-1 text-xs text-slate-700 bg-transparent border-0 focus:outline-none py-0.5"
-                                    />
-                                    <button
-                                      type="button"
-                                      onClick={() => handleDeleteBulletItem(idx, colIdx, bulletIdx)}
-                                      className="text-slate-400 hover:text-rose-600 p-1 rounded hover:bg-white transition-colors cursor-pointer"
-                                      title="Remove item"
-                                    >
-                                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                      </svg>
-                                    </button>
-                                  </div>
-                                ))}
+                              <div className="flex items-center justify-between">
+                                <span className="text-[11px] font-semibold text-slate-600">
+                                  Bullet Points ({colItems.length})
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-medium">
+                                  Auto-suggest enabled
+                                </span>
                               </div>
 
-                              {/* Add New Bullet Point Row */}
-                              <div className="flex gap-2 pt-1">
-                                <input
-                                  type="text"
-                                  id={`add-bullet-${idx}-${colIdx}`}
-                                  placeholder="+ Add bullet point & press Enter..."
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      e.preventDefault();
-                                      const inputEl = e.currentTarget;
-                                      if (inputEl.value.trim()) {
+                              {colItems.length > 0 ? (
+                                <div className="bg-slate-50/70 border border-slate-200 rounded-lg divide-y divide-slate-200/70 overflow-hidden">
+                                  {colItems.map((bullet: string, bulletIdx: number) => (
+                                    <div
+                                      key={bulletIdx}
+                                      className="flex items-center gap-2.5 px-3 py-1.5 hover:bg-white transition-colors group/item"
+                                    >
+                                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
+                                      <input
+                                        type="text"
+                                        list="admin-solutions-suggestions"
+                                        value={bullet}
+                                        onChange={(e) => handleUpdateBulletItem(idx, colIdx, bulletIdx, e.target.value)}
+                                        className="flex-1 min-w-0 text-xs text-slate-700 bg-transparent border-0 focus:outline-none focus:ring-0 p-0"
+                                        placeholder="Bullet point..."
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDeleteBulletItem(idx, colIdx, bulletIdx)}
+                                        className="text-slate-400 hover:text-rose-600 p-1 rounded hover:bg-rose-50 transition-colors cursor-pointer shrink-0 opacity-40 group-hover/item:opacity-100"
+                                        title="Remove item"
+                                      >
+                                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="py-2.5 px-3 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded-lg bg-slate-50/50">
+                                  No bullet points yet
+                                </div>
+                              )}
+
+                              {/* Add New Bullet Point Controls */}
+                              <div className="pt-1 space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <input
+                                    type="text"
+                                    list="admin-solutions-suggestions"
+                                    id={`add-bullet-${idx}-${colIdx}`}
+                                    placeholder="Add bullet point..."
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        e.preventDefault();
+                                        const inputEl = e.currentTarget;
+                                        if (inputEl.value.trim()) {
+                                          handleAddBulletItem(idx, colIdx, inputEl.value.trim());
+                                          inputEl.value = "";
+                                        }
+                                      }
+                                    }}
+                                    className="flex-1 min-w-0 px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const inputEl = document.getElementById(`add-bullet-${idx}-${colIdx}`) as HTMLInputElement;
+                                      if (inputEl && inputEl.value.trim()) {
                                         handleAddBulletItem(idx, colIdx, inputEl.value.trim());
                                         inputEl.value = "";
                                       }
-                                    }
-                                  }}
-                                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-50 border border-dashed border-slate-300 rounded-lg focus:bg-white focus:border-orange-500 focus:outline-none"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const inputEl = document.getElementById(`add-bullet-${idx}-${colIdx}`) as HTMLInputElement;
-                                    if (inputEl && inputEl.value.trim()) {
-                                      handleAddBulletItem(idx, colIdx, inputEl.value.trim());
-                                      inputEl.value = "";
-                                    }
-                                  }}
-                                  className="px-3 py-1.5 bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 font-bold text-xs rounded-lg transition-colors cursor-pointer shadow-2xs"
-                                >
-                                  Add
-                                </button>
+                                    }}
+                                    className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs rounded-lg transition-colors cursor-pointer shrink-0 shadow-2xs"
+                                  >
+                                    Add
+                                  </button>
+                                </div>
+
+                                {solutions.length > 0 && (
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-[10px] text-slate-400 shrink-0 font-medium whitespace-nowrap">Or pick:</span>
+                                    <select
+                                      defaultValue=""
+                                      onChange={(e) => {
+                                        if (e.target.value) {
+                                          handleAddBulletItem(idx, colIdx, e.target.value);
+                                          e.target.value = "";
+                                        }
+                                      }}
+                                      className="flex-1 min-w-0 px-2.5 py-1 text-xs bg-white border border-slate-200 text-slate-600 rounded-md focus:outline-none focus:border-orange-500 cursor-pointer transition-colors truncate"
+                                      title="Pick from existing Solution Items"
+                                    >
+                                      <option value="" disabled>Select from catalog ({solutions.length} solutions)...</option>
+                                      {solutions.map((s) => (
+                                        <option key={s.id} value={s.title}>
+                                          {s.title}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -1700,7 +1757,7 @@ export default function UnifiedAdminSolutionsPage() {
                           {name}
                         </h4>
                         <span className={`text-[10px] font-mono truncate block mt-0.5 ${logo ? "text-emerald-600 font-bold" : "text-amber-600 font-bold"}`}>
-                          {logo ? "✓ Logo Attached" : "⚠ No Logo (Hidden on Live Page)"}
+                          {logo ? "Logo Attached" : "No Logo (Hidden on Live Page)"}
                         </span>
                       </div>
                     </div>
