@@ -130,15 +130,27 @@ export default function Footer() {
       {/* High-Tech Industrial Grid Backdrop Overlay */}
       <div className="industrial-grid absolute inset-0 opacity-[0.02] pointer-events-none z-0" />
 
-      <div className="max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-12 relative z-10 items-start">
+      <div className={`max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-12 relative z-10 ${
+        footer.tagline && footer.tagline.trim() ? "items-start" : "items-center"
+      }`}>
         
         {/* Column 1: Brand & Mission (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col justify-start">
-          <div className="h-10 flex items-center mb-6">
+        <div 
+          className={`lg:col-span-5 flex flex-col transition-all duration-300 ${
+            footer.tagline && footer.tagline.trim()
+              ? "justify-start items-start"
+              : "justify-center items-center self-center my-auto text-center"
+          }`}
+        >
+          <div className={`flex items-center justify-center ${
+            footer.tagline && footer.tagline.trim() ? "h-10 mb-6" : "h-auto py-2"
+          }`}>
             <img
               src={formatImageUrl(footer.logoUrl, "/logo.png")}
               alt="East Wind"
-              className="h-10 w-auto object-contain"
+              className={`${
+                footer.tagline && footer.tagline.trim() ? "h-10" : "h-12 sm:h-14"
+              } w-auto object-contain`}
             />
           </div>
           {footer.tagline && footer.tagline.trim() ? (
