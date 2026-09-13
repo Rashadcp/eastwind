@@ -28,16 +28,8 @@ export default function AdminFooterPage() {
   const [operationsTitle, setOperationsTitle] = useState<string>("Operations");
 
   // Dynamic Locations list
-  const [locations, setLocations] = useState<FooterLocation[]>([
-    {
-      title: "Dammam, Kingdom of Saudi Arabia",
-      address: "P14, 2nd Industrial City, Dammam\nKingdom of Saudi Arabia"
-    },
-    {
-      title: "Riyadh Technology Hub",
-      address: "Olaya District, Riyadh, Kingdom of Saudi Arabia"
-    }
-  ]);
+  const [locations, setLocations] = useState<FooterLocation[]>([]);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
 
   const [telephone, setTelephone] = useState<string>("+966 570 833 214");
   const [email, setEmail] = useState<string>("enquiry@eastwind.sa");
@@ -96,19 +88,19 @@ export default function AdminFooterPage() {
         }
 
         // Initialize locations from footer, contactDoc or legacy fields
-        if (footerDoc?.locations && Array.isArray(footerDoc.locations) && footerDoc.locations.length > 0) {
+        if (footerDoc && Array.isArray(footerDoc.locations)) {
           setLocations(footerDoc.locations);
-        } else if (contactDoc?.locations && Array.isArray(contactDoc.locations) && contactDoc.locations.length > 0) {
+        } else if (contactDoc && Array.isArray(contactDoc.locations)) {
           setLocations(contactDoc.locations);
         } else {
           const initialLocs: FooterLocation[] = [];
-          const hqT = footerDoc?.hqTitle || contactDoc?.hqTitle || "Dammam, Kingdom of Saudi Arabia";
-          const hqA = footerDoc?.hqAddress || contactDoc?.hqAddress || "P14, 2nd Industrial City, Dammam\nKingdom of Saudi Arabia";
-          const hubT = footerDoc?.hubTitle || contactDoc?.hubTitle || "Riyadh Technology Hub";
-          const hubA = footerDoc?.hubAddress || contactDoc?.hubAddress || "Olaya District, Riyadh, Kingdom of Saudi Arabia";
+          const hqT = footerDoc?.hqTitle || contactDoc?.hqTitle;
+          const hqA = footerDoc?.hqAddress || contactDoc?.hqAddress;
+          const hubT = footerDoc?.hubTitle || contactDoc?.hubTitle;
+          const hubA = footerDoc?.hubAddress || contactDoc?.hubAddress;
 
-          if (hqT || hqA) initialLocs.push({ title: hqT, address: hqA });
-          if (hubT || hubA) initialLocs.push({ title: hubT, address: hubA });
+          if (hqT || hqA) initialLocs.push({ title: hqT || "", address: hqA || "" });
+          if (hubT || hubA) initialLocs.push({ title: hubT || "", address: hubA || "" });
           setLocations(initialLocs);
         }
       }
@@ -123,6 +115,18 @@ export default function AdminFooterPage() {
   useEffect(() => {
     fetchFooterSettings();
   }, []);
+
+  // Warn user if navigating or refreshing with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   // Upload handler for Logo
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -218,16 +222,19 @@ export default function AdminFooterPage() {
         address: "Address & Industrial Zone, Kingdom of Saudi Arabia"
       }
     ]);
+    setHasUnsavedChanges(true);
   };
 
   const handleUpdateLocation = (index: number, field: "title" | "address", value: string) => {
     const updated = [...locations];
     updated[index] = { ...updated[index], [field]: value };
     setLocations(updated);
+    setHasUnsavedChanges(true);
   };
 
   const handleDeleteLocation = (index: number) => {
     setLocations(locations.filter((_, i) => i !== index));
+    setHasUnsavedChanges(true);
   };
 
   // Save Footer Settings to Backend
@@ -290,6 +297,7 @@ export default function AdminFooterPage() {
         })
       }).catch(() => null);
 
+      setHasUnsavedChanges(false);
       setSuccess("Footer configuration saved permanently to active website!");
     } catch (err: any) {
       console.error(err);
@@ -443,6 +451,15 @@ export default function AdminFooterPage() {
                 Operational Office & Hub Locations ({locations.length})
               </label>
             </div>
+
+            {hasUnsavedChanges && (
+              <div className="p-3.5 bg-amber-50 border border-amber-300 rounded-xl text-xs font-semibold text-amber-900 flex items-center justify-between shadow-2xs">
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping inline-block" />
+                  You have unsaved changes! Click the orange &quot;Save Footer Configuration&quot; button below to persist your changes permanently to the live website.
+                </span>
+              </div>
+            )}
 
             {locations.length === 0 ? (
               <div className="p-6 border border-dashed border-slate-200 rounded-2xl text-center text-xs text-slate-400 bg-slate-50/50">
@@ -613,14 +630,24 @@ export default function AdminFooterPage() {
 
         {/* STICKY SAVE BAR */}
         <div className="sticky bottom-6 z-40 flex justify-end mt-8">
-          <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-orange-100 flex items-center gap-4">
-            <span className="text-xs text-slate-500 font-medium hidden sm:inline-block">
-              Remember to save your footer updates before leaving
+          <div className={`backdrop-blur-md p-4 rounded-2xl shadow-2xl border flex items-center gap-4 transition-all duration-300 ${
+            hasUnsavedChanges
+              ? "bg-amber-50/95 border-amber-300 ring-2 ring-amber-400/40"
+              : "bg-white/95 border-orange-100"
+          }`}>
+            <span className={`text-xs font-medium hidden sm:inline-block ${
+              hasUnsavedChanges ? "text-amber-900 font-bold" : "text-slate-500"
+            }`}>
+              {hasUnsavedChanges
+                ? "⚠️ You have unsaved changes — click to save permanently:"
+                : "Remember to save your footer updates before leaving"}
             </span>
             <button
               type="submit"
               disabled={saving}
-              className="py-3.5 px-8 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg cursor-pointer disabled:opacity-50 transition-all flex items-center gap-2 hover:-translate-y-0.5"
+              className={`py-3.5 px-8 ${
+                hasUnsavedChanges ? "bg-orange-600 hover:bg-orange-700 shadow-orange-500/30 ring-2 ring-orange-400 animate-pulse" : "bg-orange-600 hover:bg-orange-700"
+              } text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg cursor-pointer disabled:opacity-50 transition-all flex items-center gap-2 hover:-translate-y-0.5`}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />

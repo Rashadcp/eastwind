@@ -84,9 +84,9 @@ export default function Footer() {
 
           // Determine locations
           let locs: FooterLocation[] = [];
-          if (footerDoc?.locations && Array.isArray(footerDoc.locations) && footerDoc.locations.length > 0) {
+          if (footerDoc?.locations && Array.isArray(footerDoc.locations)) {
             locs = footerDoc.locations;
-          } else if (contactDoc?.locations && Array.isArray(contactDoc.locations) && contactDoc.locations.length > 0) {
+          } else if (contactDoc?.locations && Array.isArray(contactDoc.locations)) {
             locs = contactDoc.locations;
           } else {
             const hqT = footerDoc?.hqTitle || contactDoc?.hqTitle || DEFAULT_FOOTER.hqTitle;
