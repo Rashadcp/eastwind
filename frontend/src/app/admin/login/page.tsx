@@ -114,35 +114,30 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex items-center justify-center p-4 relative font-sans antialiased">
-      {/* Decorative dynamic glows */}
-      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
-      <div className="absolute w-[400px] h-[400px] rounded-full bg-[#1e3e8f]/8 blur-[120px] top-1/4 left-1/4 pointer-events-none" />
-      <div className="absolute w-[400px] h-[400px] rounded-full bg-[#c22026]/6 blur-[120px] bottom-1/4 right-1/4 pointer-events-none" />
-
-      {/* Light Glassmorphic Login Container */}
-      <div className="w-full max-w-md bg-white border border-slate-200/80 p-8 rounded-xl shadow-[0_20px_50px_rgba(15,23,42,0.06)] relative z-10 space-y-6">
+      {/* Clean Structured Login Container */}
+      <div className="w-full max-w-md bg-white border border-slate-200 p-8 rounded-sm relative z-10 space-y-6">
         
         {/* Brand header */}
         <div className="text-center space-y-3 select-none flex flex-col items-center justify-center">
-          <div className="p-3 bg-white border border-slate-100 rounded-xl shadow-xs inline-flex items-center justify-center max-w-[220px]">
+          <div className="p-2 bg-white border border-slate-200 rounded-sm inline-flex items-center justify-center max-w-[200px]">
             <img
               src={formatImageUrl(logoUrl)}
               alt="East Wind"
-              className="h-11 sm:h-12 w-auto max-w-[190px] object-contain"
+              className="h-10 w-auto max-w-[170px] object-contain"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = "/logo.png";
               }}
             />
           </div>
           <div>
-            <h2 className="text-xl font-bold uppercase tracking-widest text-slate-800 mt-1">East Wind</h2>
-            <p className="text-[10px] font-mono tracking-widest text-slate-400 uppercase">Administration Console</p>
+            <h2 className="text-lg font-bold text-slate-900 mt-1 m-0">East Wind Console</h2>
+            <p className="text-xs text-slate-500 m-0">Secure Administration Access</p>
           </div>
         </div>
 
         {/* Informative message for OTP */}
         {otpRequired && (
-          <div className="bg-blue-50 border border-blue-200 text-[#1e3e8f] p-4 rounded-lg text-xs leading-relaxed text-center font-medium flex items-center justify-center gap-2">
+          <div className="bg-blue-50 border border-blue-200 text-[#1e3e8f] p-3 rounded-sm text-xs leading-relaxed text-center font-medium flex items-center justify-center gap-2">
             <svg className="w-4 h-4 text-[#1e3e8f] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
@@ -154,8 +149,8 @@ export default function AdminLoginPage() {
 
         {/* Error notification */}
         {error && (
-          <div className="bg-rose-50 border border-rose-200 text-rose-600 p-4 rounded-lg text-xs flex items-start gap-3">
-            <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+          <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-sm text-xs flex items-start gap-2.5">
+            <svg className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <span className="leading-relaxed">{error}</span>
@@ -169,9 +164,9 @@ export default function AdminLoginPage() {
             <>
               {/* STAGE 1: CREDENTIALS */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block pl-1">Admin Username</label>
+                <label className="text-xs font-semibold text-slate-700 block">Admin Username</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-3.5 text-slate-400">
+                  <span className="absolute left-3.5 top-3 text-slate-400">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
@@ -182,15 +177,15 @@ export default function AdminLoginPage() {
                     placeholder="Enter username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-all font-medium focus:bg-white"
+                    className="w-full pl-10 pr-3 py-2.5 bg-white border border-slate-300 rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-colors"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block pl-1">Admin Password</label>
+                <label className="text-xs font-semibold text-slate-700 block">Admin Password</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-3.5 text-slate-400">
+                  <span className="absolute left-3.5 top-3 text-slate-400">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -201,7 +196,7 @@ export default function AdminLoginPage() {
                     placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-all font-medium focus:bg-white"
+                    className="w-full pl-10 pr-3 py-2.5 bg-white border border-slate-300 rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -209,7 +204,7 @@ export default function AdminLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 mt-6 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-lg shadow-[#1e3e8f]/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-2.5 mt-4 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed border border-[#1e3e8f]"
               >
                 {loading ? (
                   <>
@@ -218,8 +213,8 @@ export default function AdminLoginPage() {
                   </>
                 ) : (
                   <>
-                    Sign In
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <span>Sign In</span>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </>
@@ -230,9 +225,9 @@ export default function AdminLoginPage() {
             <>
               {/* STAGE 2: OTP VERIFICATION CODE */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block pl-1">6-Digit Verification Code</label>
+                <label className="text-xs font-semibold text-slate-700 block">6-Digit Verification Code</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-3.5 text-slate-400">
+                  <span className="absolute left-3.5 top-3 text-slate-400">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
@@ -244,16 +239,16 @@ export default function AdminLoginPage() {
                     placeholder="Enter 6-digit code"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-all font-medium focus:bg-white tracking-[0.25em] text-center font-bold"
+                    className="w-full pl-10 pr-3 py-2.5 bg-white border border-slate-300 rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-colors tracking-[0.25em] text-center font-bold"
                   />
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 pt-2">
                 <button
                   type="submit"
                   disabled={loading || otp.length !== 6}
-                  className="w-full py-4 mt-4 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-lg shadow-[#1e3e8f]/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed border border-[#1e3e8f]"
                 >
                   {loading ? (
                     <>
@@ -262,8 +257,8 @@ export default function AdminLoginPage() {
                     </>
                   ) : (
                     <>
-                      Verify Security Code
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <span>Verify Security Code</span>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
                       </svg>
                     </>
@@ -273,7 +268,7 @@ export default function AdminLoginPage() {
                 <button
                   type="button"
                   onClick={handleReturn}
-                  className="w-full py-3 text-slate-500 hover:text-slate-850 hover:bg-slate-100 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                  className="w-full py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-sm text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Return to Credentials Login
                 </button>

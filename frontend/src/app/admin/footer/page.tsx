@@ -309,122 +309,136 @@ export default function AdminFooterPage() {
 
   if (loading) {
     return (
-      <div className="py-24 text-center space-y-3">
-        <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-xs font-mono uppercase tracking-widest text-slate-400">Loading Footer Settings...</p>
+      <div className="py-20 text-center space-y-3">
+        <div className="w-8 h-8 border-2 border-[#1e3e8f] border-t-transparent animate-spin mx-auto" />
+        <p className="text-xs text-slate-500 font-medium">Loading Footer Settings...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 font-sans text-slate-800">
+    <div className="space-y-6 pb-16 font-sans text-slate-800">
       
       {/* Title Header */}
-      <div className="flex justify-between items-center w-full">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
-          <h2 className="text-xl font-bold uppercase tracking-tight m-0 text-slate-900">Manage Footer Section</h2>
-          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">
-            Configure dynamic footer content, links, addresses & branding assets
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Footer Settings</h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Configure dynamic footer content, links, locations, and brand assets.
           </p>
         </div>
         <a
           href="/"
           target="_blank"
           rel="noreferrer"
-          className="text-xs font-bold text-[#1e3e8f] hover:text-[#1e3e8f] underline"
+          className="text-xs font-semibold text-[#1e3e8f] hover:underline self-start sm:self-auto"
         >
-          Visit Live Site ↗
+          Preview Live Site ↗
         </a>
       </div>
 
       {/* Notifications */}
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-lg text-xs flex items-center gap-2">
-          <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          <span>{error}</span>
+        <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-sm text-xs flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>{error}</span>
+          </div>
+          <button onClick={() => setError(null)} className="p-1 text-rose-500 hover:text-rose-800 rounded-sm hover:bg-rose-100 transition-colors cursor-pointer">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
       {success && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-lg text-xs flex items-center gap-2">
-          <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-          <span>{success}</span>
+        <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-sm text-xs flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{success}</span>
+          </div>
+          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-500 hover:text-emerald-800 rounded-sm hover:bg-emerald-100 transition-colors cursor-pointer">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
 
       <form onSubmit={handleSave} className="space-y-6">
 
         {/* SECTION 1: BRAND & LOGO */}
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-          <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
-            1. Brand Assets & Mission Text
-          </h3>
+        <div className="bg-white border border-slate-200 rounded-sm p-6 shadow-xs space-y-4">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
+            Brand Assets & Mission Statement
+          </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Footer Brand Logo</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Footer Brand Logo</label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={logoUrl}
                   onChange={(e) => setLogoUrl(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono"
+                  className="flex-1 px-3 py-2 border border-slate-200 rounded-sm text-xs focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                   placeholder="/logo.png or image URL"
                 />
-                <label className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold rounded-lg cursor-pointer shrink-0">
+                <label className="px-3.5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-semibold rounded-sm cursor-pointer shrink-0 transition-colors">
                   {uploading ? "Uploading..." : "Upload Logo"}
                   <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
                 </label>
               </div>
 
               {/* Logo Preview */}
-              <div className="mt-3 h-20 bg-slate-900 rounded-lg border border-slate-200 flex items-center justify-center p-3">
+              <div className="mt-3 h-16 bg-slate-900 rounded-sm border border-slate-200 flex items-center justify-center p-2.5">
                 <img src={formatImageUrl(logoUrl, "/logo.png")} alt="Logo Preview" className="max-h-full object-contain" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Certification Badge Text</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Certification Badge Text</label>
               <input
                 type="text"
                 value={badgeText}
                 onChange={(e) => setBadgeText(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium"
+                className="w-full px-3 py-2 border border-slate-200 rounded-sm text-xs focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 placeholder="e.g. Certified Marine & Industrial Safety Partner"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Footer Mission Paragraph</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Footer Mission Paragraph</label>
             <textarea
               rows={3}
               value={tagline}
               onChange={(e) => setTagline(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium resize-y"
+              className="w-full px-3 py-2 border border-slate-200 rounded-sm text-xs focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 resize-y leading-relaxed"
               placeholder="Enter company description summary for footer"
             />
           </div>
         </div>
 
         {/* SECTION 2: OPERATIONS & CONTACT DETAILS */}
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-5">
+        <div className="bg-white border border-slate-200 rounded-sm p-6 shadow-xs space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
             <div>
-              <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 m-0">
-                2. Operations & Contact Hub Details
-              </h3>
-              <p className="text-[11px] text-slate-500 m-0 mt-0.5">
-                Manage operational offices, physical hubs, emergency telephone numbers & emails
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
+                Operations & Contact Hub Details
+              </h2>
+              <p className="text-xs text-slate-500 m-0 mt-0.5">
+                Manage operational offices, physical hubs, telephone numbers, and email.
               </p>
             </div>
             <button
               type="button"
               onClick={handleAddLocation}
-              className="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-[#1e3e8f] border border-blue-200 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0 self-start sm:self-auto"
+              className="px-3 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -434,12 +448,12 @@ export default function AdminFooterPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Column Header Title</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Column Header Title</label>
             <input
               type="text"
               value={operationsTitle}
               onChange={(e) => setOperationsTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium"
+              className="w-full px-3 py-2 border border-slate-200 rounded-sm text-xs focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               placeholder="e.g. Operations"
             />
           </div>
@@ -447,22 +461,20 @@ export default function AdminFooterPage() {
           {/* Dynamic Locations List */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold text-slate-800">
+              <label className="block text-xs font-semibold text-slate-700">
                 Operational Office & Hub Locations ({locations.length})
               </label>
             </div>
 
             {hasUnsavedChanges && (
-              <div className="p-3.5 bg-amber-50 border border-amber-300 rounded-lg text-xs font-semibold text-amber-900 flex items-center justify-between shadow-2xs">
-                <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping inline-block" />
-                  You have unsaved changes! Click the &quot;Save Footer Configuration&quot; button below to persist your changes permanently to the live website.
-                </span>
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-sm text-xs font-medium text-amber-800 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+                <span>You have unsaved changes! Click &quot;Save Footer Configuration&quot; below to apply your updates.</span>
               </div>
             )}
 
             {locations.length === 0 ? (
-              <div className="p-6 border border-dashed border-slate-200 rounded-lg text-center text-xs text-slate-400 bg-slate-50/50">
+              <div className="p-6 border border-dashed border-slate-200 rounded-sm text-center text-xs text-slate-400 bg-slate-50/50">
                 No physical locations configured. Click &quot;+ Add Location&quot; above to add one.
               </div>
             ) : (
@@ -470,45 +482,42 @@ export default function AdminFooterPage() {
                 {locations.map((loc, idx) => (
                   <div
                     key={idx}
-                    className="p-4 bg-slate-50/60 border border-slate-200/90 rounded-lg space-y-3 relative group"
+                    className="p-4 bg-slate-50/50 border border-slate-200 rounded-sm space-y-3 relative group"
                   >
                     <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-[#1e3e8f] inline-block" />
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#1e3e8f] inline-block" />
                         Location #{idx + 1}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleDeleteLocation(idx)}
-                        className="text-rose-500 hover:text-rose-700 hover:bg-rose-50 px-2 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
+                        className="text-rose-600 hover:text-rose-800 text-xs font-medium cursor-pointer"
                         title="Delete this location"
                       >
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        <span>Delete</span>
+                        Delete
                       </button>
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Office / Hub Title</label>
+                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">Office / Hub Title</label>
                       <input
                         type="text"
                         value={loc.title}
                         onChange={(e) => handleUpdateLocation(idx, "title", e.target.value)}
                         placeholder="e.g. Dammam, Kingdom of Saudi Arabia"
-                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#1e3e8f]"
+                        className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-sm text-xs text-slate-800 focus:outline-none focus:border-[#1e3e8f]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Physical Address</label>
+                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">Physical Address</label>
                       <textarea
                         rows={2}
                         value={loc.address}
                         onChange={(e) => handleUpdateLocation(idx, "address", e.target.value)}
                         placeholder="e.g. P14, 2nd Industrial City, Dammam Kingdom of Saudi Arabia"
-                        className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-[#1e3e8f] resize-y"
+                        className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-sm text-xs text-slate-800 focus:outline-none focus:border-[#1e3e8f] resize-y"
                       />
                     </div>
                   </div>
@@ -519,49 +528,49 @@ export default function AdminFooterPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Telephone Number</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Telephone Number</label>
               <input
                 type="text"
                 value={telephone}
                 onChange={(e) => setTelephone(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono"
+                className="w-full px-3 py-2 border border-slate-200 rounded-sm text-xs focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Contact Email Address</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Contact Email Address</label>
               <input
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono"
+                className="w-full px-3 py-2 border border-slate-200 rounded-sm text-xs focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
           </div>
         </div>
 
         {/* SECTION 3: BOTTOM LEGAL & COPYRIGHT */}
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-          <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
-            3. Bottom Copyright & Legal Links
-          </h3>
+        <div className="bg-white border border-slate-200 rounded-sm p-6 shadow-xs space-y-4">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
+            Bottom Copyright & Legal Links
+          </h2>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Copyright Notice Text</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Copyright Notice Text</label>
             <input
               type="text"
               value={copyright}
               onChange={(e) => setCopyright(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium"
+              className="w-full px-3 py-2 border border-slate-200 rounded-sm text-xs focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               placeholder="e.g. © 2026 East Wind Safety. All rights reserved."
             />
           </div>
 
           {/* Bottom Links */}
           <div className="space-y-2">
-            <span className="block text-xs font-bold text-slate-700">Bottom Quick Links ({bottomLinks.length})</span>
+            <span className="block text-xs font-semibold text-slate-700">Bottom Quick Links ({bottomLinks.length})</span>
             <div className="space-y-2 max-h-44 overflow-y-auto pr-1">
               {bottomLinks.map((link, idx) => (
-                <div key={idx} className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs">
+                <div key={idx} className="flex items-center gap-2 bg-slate-50/50 p-2 rounded-sm border border-slate-200 text-xs">
                   <input
                     type="text"
                     value={link.name}
@@ -570,7 +579,7 @@ export default function AdminFooterPage() {
                       updated[idx].name = e.target.value;
                       setBottomLinks(updated);
                     }}
-                    className="flex-1 px-2.5 py-1.5 border border-slate-300 rounded-lg font-bold"
+                    className="flex-1 px-2.5 py-1.5 border border-slate-200 rounded-sm bg-white font-medium"
                     placeholder="Link Name"
                   />
                   <input
@@ -581,13 +590,13 @@ export default function AdminFooterPage() {
                       updated[idx].href = e.target.value;
                       setBottomLinks(updated);
                     }}
-                    className="flex-1 px-2.5 py-1.5 border border-slate-300 rounded-lg font-mono text-[11px]"
+                    className="flex-1 px-2.5 py-1.5 border border-slate-200 rounded-sm bg-white font-mono text-[11px]"
                     placeholder="/path"
                   />
                   <button
                     type="button"
                     onClick={() => handleRemoveBtmLink(idx)}
-                    className="p-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg shrink-0 transition-colors"
+                    className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-sm shrink-0 transition-colors cursor-pointer"
                     title="Remove Link"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -604,20 +613,19 @@ export default function AdminFooterPage() {
                 placeholder="Link Name (e.g. Privacy Policy)"
                 value={newBtmName}
                 onChange={(e) => setNewBtmName(e.target.value)}
-                className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs"
+                className="flex-1 px-3 py-1.5 border border-slate-200 rounded-sm text-xs bg-white"
               />
               <input
                 type="text"
                 placeholder="URL (e.g. /privacy)"
                 value={newBtmHref}
                 onChange={(e) => setNewBtmHref(e.target.value)}
-                className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono"
+                className="flex-1 px-3 py-1.5 border border-slate-200 rounded-sm text-xs font-mono bg-white"
               />
               <button
                 type="button"
                 onClick={handleAddBtmLink}
-                style={{ color: "#ffffff" }}
-                className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#152e6f] !text-white text-xs font-extrabold rounded-lg shrink-0 cursor-pointer shadow-sm active:scale-95 transition-all flex items-center gap-1.5"
+                className="px-3.5 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-semibold rounded-sm shrink-0 cursor-pointer transition-colors flex items-center gap-1.5"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -628,33 +636,26 @@ export default function AdminFooterPage() {
           </div>
         </div>
 
-        {/* STICKY SAVE BAR */}
-        <div className="sticky bottom-6 z-40 flex justify-end mt-8">
-          <div className={`backdrop-blur-md p-4 rounded-lg shadow-2xl border flex items-center gap-4 transition-all duration-300 ${
-            hasUnsavedChanges
-              ? "bg-amber-50/95 border-amber-300 ring-2 ring-amber-400/40"
-              : "bg-white/95 border-slate-200"
-          }`}>
-            <span className={`text-xs font-medium hidden sm:inline-block ${
-              hasUnsavedChanges ? "text-amber-900 font-bold" : "text-slate-500"
-            }`}>
+        {/* BOTTOM ACTION BAR */}
+        <div className="mt-6 p-4 bg-white border border-slate-200 rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-center gap-2 text-xs text-slate-600">
+            <span className={`w-2 h-2 rounded-full ${hasUnsavedChanges ? "bg-amber-500" : "bg-emerald-500"} shrink-0`} />
+            <span>
               {hasUnsavedChanges
-                ? "⚠️ You have unsaved changes — click to save permanently:"
-                : "Remember to save your footer updates before leaving"}
+                ? "You have unsaved changes — save now to persist across the live website."
+                : "All footer settings are synced."}
             </span>
-            <button
-              type="submit"
-              disabled={saving}
-              className={`py-3.5 px-8 ${
-                hasUnsavedChanges ? "bg-[#1e3e8f] hover:bg-[#162f6d] shadow-[#1e3e8f]/30 ring-2 ring-[#1e3e8f]/40 animate-pulse" : "bg-[#1e3e8f] hover:bg-[#162f6d]"
-              } text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg cursor-pointer disabled:opacity-50 transition-all flex items-center gap-2 hover:-translate-y-0.5`}
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>{saving ? "Saving Changes..." : "Save Footer Configuration"}</span>
-            </button>
           </div>
+          <button
+            type="submit"
+            disabled={saving}
+            className="w-full sm:w-auto px-6 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm shadow-xs cursor-pointer transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{saving ? "Saving Changes..." : "Save Footer Configuration"}</span>
+          </button>
         </div>
       </form>
     </div>

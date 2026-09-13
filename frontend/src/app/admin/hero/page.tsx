@@ -211,15 +211,15 @@ export default function AdminHeroPage() {
   return (
     <div className="space-y-6 font-sans text-slate-800">
       {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-sm border border-slate-200">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#1e3e8f] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#1e3e8f] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200">
               Homepage CMS
             </span>
-            <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Manage Hero Section Captions</h1>
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight m-0">Manage Hero Section Captions</h1>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1 m-0">
             Edit text titles, sub-taglines, descriptions, and call-to-action button labels for both homepage hero slides.
           </p>
         </div>
@@ -227,7 +227,7 @@ export default function AdminHeroPage() {
         <button
           onClick={handleSaveHero}
           disabled={saving}
-          className="px-6 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-md cursor-pointer transition-all shrink-0"
+          className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs uppercase tracking-wider rounded-sm transition-colors shrink-0 border border-[#1e3e8f] cursor-pointer"
         >
           {saving ? "Saving Changes..." : "Save Hero Slide Captions"}
         </button>
@@ -235,80 +235,80 @@ export default function AdminHeroPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-lg flex justify-between items-center">
+        <div className="p-3 px-4 bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold rounded-sm flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="p-1 text-red-500 hover:text-red-800 rounded-lg hover:bg-red-100 transition-colors">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <button onClick={() => setError(null)} className="p-1 text-rose-500 hover:text-rose-800 rounded-sm transition-colors cursor-pointer">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
       )}
       {success && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-lg flex justify-between items-center">
+        <div className="p-3 px-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-sm flex justify-between items-center">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             <span>{success}</span>
           </div>
-          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-500 hover:text-emerald-800 rounded-lg hover:bg-emerald-100 transition-colors">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-600 hover:text-emerald-900 rounded-sm transition-colors cursor-pointer">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
       )}
 
-      <form onSubmit={handleSaveHero} className="space-y-8">
+      <form onSubmit={handleSaveHero} className="space-y-6">
         
         {/* ================= HERO MEDIA ================= */}
-        <div className="bg-white p-8 border border-slate-200 rounded-xl space-y-6 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+        <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
             <div>
-              <span className="text-[10px] font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2.5 py-1 rounded border border-blue-200">
+              <span className="text-[10px] font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200">
                 HERO MEDIA ASSETS
               </span>
-              <h2 className="text-lg font-bold text-slate-800 mt-2">Banner Image & Background Video</h2>
+              <h2 className="text-base font-bold text-slate-900 mt-1.5 m-0">Banner Image & Background Video</h2>
             </div>
             <button
               type="button"
               onClick={() => handleSaveHero(undefined, "Hero Media Assets")}
               disabled={saving}
-              className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+              className="px-3.5 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-semibold uppercase tracking-wider rounded-sm cursor-pointer transition-colors disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto border border-[#1e3e8f]"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              <span>{saving && savingSection === "Hero Media Assets" ? "Saving..." : "Save Media Assets"}</span>
+              <span className="text-white">{saving && savingSection === "Hero Media Assets" ? "Saving..." : "Save Media"}</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
             {/* 1. Poster Banner Image Upload */}
-            <div className="space-y-3">
-              <label className="block font-bold text-slate-800 text-sm">
+            <div className="space-y-2">
+              <label className="block font-semibold text-slate-900 text-xs">
                 Poster / Banner Image (Slide 1)
               </label>
-              <div className="flex gap-2.5 items-center">
+              <div className="flex gap-2 items-center">
                 <input
                   type="text"
                   value={bannerImg}
                   onChange={(e) => setBannerImg(e.target.value)}
-                  className="flex-1 px-4 py-3 border border-slate-300 rounded-lg font-mono text-slate-800 bg-slate-50 text-xs focus:ring-2 focus:ring-[#1e3e8f]/20 focus:border-[#1e3e8f] focus:outline-none"
+                  className="flex-1 px-3 py-2 border border-slate-300 rounded-sm font-mono text-slate-900 bg-white text-xs focus:border-[#1e3e8f] focus:outline-none transition-colors"
                   placeholder="/hero-section.webp"
                 />
-                <label className="px-5 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] active:scale-95 text-white font-bold rounded-lg cursor-pointer text-xs shrink-0 flex items-center justify-center gap-2 transition-all shadow-md">
-                  <svg className="w-4 h-4 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <label className="px-3.5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold rounded-sm cursor-pointer text-xs shrink-0 flex items-center justify-center gap-1.5 transition-colors border border-[#1e3e8f]">
+                  <svg className="w-3.5 h-3.5 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   </svg>
-                  <span className="text-white font-bold tracking-wide">
-                    {uploadingImage ? "Uploading..." : "Upload Image"}
+                  <span className="text-white font-semibold">
+                    {uploadingImage ? "Uploading..." : "Upload"}
                   </span>
                   <input
                     type="file"
@@ -319,11 +319,11 @@ export default function AdminHeroPage() {
                   />
                 </label>
               </div>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-slate-500 m-0">
                 Supports JPG, PNG, WEBP, SVG. Images are automatically compressed to high-efficiency WebP.
               </p>
               {bannerImg && (
-                <div className="mt-2 w-full h-36 rounded-lg overflow-hidden border border-slate-200 bg-slate-950 relative shadow-inner">
+                <div className="mt-2 w-full h-32 rounded-sm overflow-hidden border border-slate-200 bg-slate-950 relative">
                   <img
                     src={formatImageUrl(bannerImg)}
                     alt="Hero Banner Preview"

@@ -391,42 +391,42 @@ export default function AdminAboutPage() {
   if (loading) {
     return (
       <div className="py-20 text-center space-y-4">
-        <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
+        <div className="w-8 h-8 border-2 border-[#1e3e8f] border-t-transparent animate-spin mx-auto" />
         <p className="text-xs text-slate-500 font-medium">Loading About Section Content...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="space-y-6 pb-16">
       
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/60 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 m-0">Manage About Section Content</h1>
-          <p className="text-xs text-slate-500 mt-1 m-0">
-            Configure dynamic titles, narratives, visual assets, metrics, and engineering disciplines for the Home Page and About Page independently.
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">About Section Content</h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Configure dynamic titles, narratives, visual assets, metrics, and engineering disciplines for Home and Dedicated About Page.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
           {/* Tab Selector Buttons */}
-          <div className="flex items-center gap-1.5 bg-slate-200/60 p-1.5 rounded-lg">
+          <div className="flex items-center gap-1 bg-slate-100 p-1 border border-slate-200 rounded-sm">
             <button
               onClick={() => { setActiveTab("home"); clearMessages(); }}
-              className={`px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === "home"
-                  ? "bg-white text-[#1e3e8f] shadow-sm font-bold"
+                  ? "bg-white text-[#1e3e8f] shadow-xs font-bold border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Home Page About Section
+              Home About Section
             </button>
             <button
               onClick={() => { setActiveTab("about_page"); clearMessages(); }}
-              className={`px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === "about_page"
-                  ? "bg-white text-[#1e3e8f] shadow-sm font-bold"
+                  ? "bg-white text-[#1e3e8f] shadow-xs font-bold border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -438,7 +438,7 @@ export default function AdminAboutPage() {
             type="button"
             onClick={activeTab === "home" ? handleSaveHome : handleSaveAboutPage}
             disabled={saving}
-            className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0"
+            className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm shadow-xs cursor-pointer transition-colors disabled:opacity-50 flex items-center gap-1.5 shrink-0"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>
@@ -447,14 +447,14 @@ export default function AdminAboutPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs flex items-center justify-between">
+        <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-sm text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="p-1 text-rose-500 hover:text-rose-800 rounded-lg hover:bg-rose-100 transition-colors cursor-pointer">
+          <button onClick={() => setError(null)} className="p-1 text-rose-500 hover:text-rose-800 rounded-sm hover:bg-rose-100 transition-colors cursor-pointer">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -462,14 +462,14 @@ export default function AdminAboutPage() {
         </div>
       )}
       {success && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs flex items-center justify-between">
+        <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-sm text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             <span>{success}</span>
           </div>
-          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-500 hover:text-emerald-800 rounded-lg hover:bg-emerald-100 transition-colors cursor-pointer">
+          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-500 hover:text-emerald-800 rounded-sm hover:bg-emerald-100 transition-colors cursor-pointer">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -479,45 +479,45 @@ export default function AdminAboutPage() {
 
       {/* TAB 1: HOME PAGE ABOUT SECTION */}
       {activeTab === "home" && (
-        <div className="space-y-8">
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+        <div className="space-y-6">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
                 Home Page About Header & Asset
               </h2>
               <button
                 type="button"
                 disabled={saving}
                 onClick={() => handleSaveHome("About Header & Asset")}
-                className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
+                className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                <span>{saving && savingSection === "About Header & Asset" ? "Saving..." : "Save About Header"}</span>
+                <span>{saving && savingSection === "About Header & Asset" ? "Saving..." : "Save Header"}</span>
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Main Header Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Main Header Title</label>
                 <input
                   type="text"
                   value={homeTitle}
                   onChange={(e) => setHomeTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                   placeholder="e.g. Sustaining Regional Safety Infrastructure"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Main Image Path or URL</label>
-                <div className="flex gap-3">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Main Image Path or URL</label>
+                <div className="flex gap-2">
                   <input
                     type="text"
                     value={homeImage}
                     onChange={(e) => setHomeImage(e.target.value)}
-                    className="flex-1 px-4 py-3 text-xs border rounded-lg"
+                    className="flex-1 px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     placeholder="e.g. /about.png or /uploads/image.png"
                   />
                   <input
@@ -529,14 +529,14 @@ export default function AdminAboutPage() {
                   />
                   <label
                     htmlFor="home-image-upload"
-                    className="px-4 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                    className="px-3.5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1.5 transition-colors"
                   >
                     {uploadingField === "homeImage" ? "Uploading..." : "Upload File"}
                   </label>
                 </div>
                 {/* Home Image Preview */}
                 {homeImage && homeImage.trim() !== "" && (
-                  <div className="mt-3 w-fit max-w-xl rounded-lg border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                  <div className="mt-3 w-fit max-w-xl rounded-sm border border-slate-200 bg-slate-50 p-1.5">
                     <img
                       src={formatImageUrl(homeImage)}
                       alt="Home About Preview"
@@ -544,32 +544,32 @@ export default function AdminAboutPage() {
                         const el = e.currentTarget as HTMLImageElement;
                         el.style.display = "none";
                       }}
-                      className="h-44 sm:h-52 w-auto max-w-full rounded-lg object-contain block"
+                      className="h-36 sm:h-44 w-auto max-w-full rounded-sm object-contain block"
                     />
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Primary Overview Text Paragraph</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Primary Overview Paragraph</label>
                 <textarea
                   rows={4}
                   value={homeOverview}
                   onChange={(e) => setHomeOverview(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg leading-relaxed"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 leading-relaxed"
                   placeholder="Overview text..."
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Secondary Lifecycle Narrative Paragraph</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Secondary Lifecycle Narrative</label>
                 <textarea
                   rows={4}
                   value={homeSecondary}
                   onChange={(e) => setHomeSecondary(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg leading-relaxed"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 leading-relaxed"
                   placeholder="Secondary text..."
                 />
               </div>
@@ -577,14 +577,16 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Metrics Section */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Quantitative Data Metrics ({homeMetrics.length})</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+                Quantitative Data Metrics ({homeMetrics.length})
+              </h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
                   onClick={() => setHomeMetrics([...homeMetrics, { value: "0%", label: "New Metric", desc: "Metric description text" }])}
-                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -595,7 +597,7 @@ export default function AdminAboutPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveHome("Quantitative Metrics")}
-                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -605,19 +607,19 @@ export default function AdminAboutPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {homeMetrics.map((m, idx) => (
-                <div key={idx} className="p-5 border border-slate-200/60 rounded-lg bg-slate-50/50 space-y-4 relative">
+                <div key={idx} className="p-4 border border-slate-200 rounded-sm bg-slate-50/50 space-y-3 relative">
                   <button
                     type="button"
                     onClick={() => setHomeMetrics(homeMetrics.filter((_, i) => i !== idx))}
-                    className="absolute top-3 right-3 text-rose-500 hover:text-rose-700 font-bold text-xs cursor-pointer"
+                    className="absolute top-3 right-3 text-rose-600 hover:text-rose-800 font-medium text-xs cursor-pointer"
                   >
                     Remove
                   </button>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Metric Value</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Metric Value</label>
                     <input
                       type="text"
                       value={m.value}
@@ -626,13 +628,13 @@ export default function AdminAboutPage() {
                         updated[idx].value = e.target.value;
                         setHomeMetrics(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                       placeholder="e.g. 70% or 10+"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Metric Title / Label</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Metric Title / Label</label>
                     <input
                       type="text"
                       value={m.label}
@@ -641,13 +643,13 @@ export default function AdminAboutPage() {
                         updated[idx].label = e.target.value;
                         setHomeMetrics(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                       placeholder="e.g. Technical Functions Weight"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Metric Description</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Metric Description</label>
                     <textarea
                       rows={2}
                       value={m.desc}
@@ -656,7 +658,7 @@ export default function AdminAboutPage() {
                         updated[idx].desc = e.target.value;
                         setHomeMetrics(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg resize-none"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 resize-none"
                       placeholder="Detail text explaining metric..."
                     />
                   </div>
@@ -666,38 +668,40 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Lifecycle Steps */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Lifecycle Capabilities ({homeLifecycleSteps.length})</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+                Lifecycle Capabilities ({homeLifecycleSteps.length})
+              </h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
                   onClick={() => setHomeLifecycleSteps([...homeLifecycleSteps, "New Lifecycle Capability"])}
-                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
-                  <span>+ Add Lifecycle Step</span>
+                  <span>+ Add Step</span>
                 </button>
                 <button
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveHome("Lifecycle Steps")}
-                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>{saving && savingSection === "Lifecycle Steps" ? "Saving..." : "Save Lifecycle Steps"}</span>
+                  <span>{saving && savingSection === "Lifecycle Steps" ? "Saving..." : "Save Steps"}</span>
                 </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {homeLifecycleSteps.map((step, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-3 border border-slate-200/60 rounded-lg bg-slate-50/40">
-                  <span className="w-6 h-6 rounded-md bg-blue-50 text-[#1e3e8f] border border-blue-200 font-bold text-xs flex items-center justify-center shrink-0">
+                <div key={idx} className="flex items-center gap-2.5 p-2.5 border border-slate-200 rounded-sm bg-slate-50/50">
+                  <span className="w-5 h-5 rounded-xs bg-blue-50 text-[#1e3e8f] border border-blue-200 font-bold text-[11px] flex items-center justify-center shrink-0">
                     {idx + 1}
                   </span>
                   <input
@@ -708,12 +712,12 @@ export default function AdminAboutPage() {
                       updated[idx] = e.target.value;
                       setHomeLifecycleSteps(updated);
                     }}
-                    className="flex-1 px-3 py-2 text-xs border rounded-lg"
+                    className="flex-1 px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                   />
                   <button
                     type="button"
                     onClick={() => setHomeLifecycleSteps(homeLifecycleSteps.filter((_, i) => i !== idx))}
-                    className="text-rose-500 hover:text-rose-700 font-bold text-xs shrink-0 cursor-pointer"
+                    className="text-rose-600 hover:text-rose-800 font-medium text-xs shrink-0 cursor-pointer px-1"
                   >
                     Remove
                   </button>
@@ -723,8 +727,8 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Form Footer Action Bar */}
-          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
-            <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="mt-6 p-4 bg-white border border-slate-200 rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-2 text-xs text-slate-600">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>Ready to save and publish updates to the Home Page About section</span>
             </div>
@@ -732,7 +736,7 @@ export default function AdminAboutPage() {
               type="button"
               onClick={handleSaveHome}
               disabled={saving}
-              className="w-full sm:w-auto px-8 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-6 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm shadow-xs cursor-pointer transition-colors disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Home Page About Changes"}
             </button>
@@ -742,57 +746,57 @@ export default function AdminAboutPage() {
 
       {/* TAB 2: DEDICATED ABOUT PAGE SECTION */}
       {activeTab === "about_page" && (
-        <div className="space-y-8">
+        <div className="space-y-6">
           
           {/* Hero Header Settings */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
               About Page Hero Header & Background Asset
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Hero Tagline / Badge</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Tagline / Badge</label>
                 <input
                   type="text"
                   value={pageHeroTagline}
                   onChange={(e) => setPageHeroTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                   placeholder="e.g. Company Overview"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Hero Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Title</label>
                 <input
                   type="text"
                   value={pageHeroTitle}
                   onChange={(e) => setPageHeroTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                   placeholder="e.g. Mission-Critical Safety Infrastructure"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Hero Description Paragraph</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Description Paragraph</label>
               <textarea
                 rows={2}
                 value={pageHeroDescription}
                 onChange={(e) => setPageHeroDescription(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 placeholder="Hero overview paragraph text..."
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Hero Background Image Path or URL</label>
-              <div className="flex gap-3">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Background Image Path or URL</label>
+              <div className="flex gap-2">
                 <input
                   type="text"
                   value={pageHeroBgImage}
                   onChange={(e) => setPageHeroBgImage(e.target.value)}
-                  className="flex-1 px-4 py-3 text-xs border rounded-lg"
+                  className="flex-1 px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                   placeholder="e.g. /about_hero_bg.png or /uploads/hero.png"
                 />
                 <input
@@ -804,7 +808,7 @@ export default function AdminAboutPage() {
                 />
                 <label
                   htmlFor="page-hero-upload"
-                  className="px-4 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                  className="px-3.5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1.5 transition-colors"
                 >
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload File"}
                 </label>
@@ -812,7 +816,7 @@ export default function AdminAboutPage() {
 
               {/* Hero Image Preview */}
               {pageHeroBgImage && pageHeroBgImage.trim() !== "" && (
-                <div className="mt-3 w-fit max-w-xl rounded-lg border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                <div className="mt-3 w-fit max-w-xl rounded-sm border border-slate-200 bg-slate-50 p-1.5">
                   <img
                     src={formatImageUrl(pageHeroBgImage)}
                     alt="About Hero Background Preview"
@@ -820,7 +824,7 @@ export default function AdminAboutPage() {
                       const el = e.currentTarget as HTMLImageElement;
                       el.style.display = "none";
                     }}
-                    className="h-44 sm:h-52 w-auto max-w-full rounded-lg object-contain block"
+                    className="h-36 sm:h-44 w-auto max-w-full rounded-sm object-contain block"
                   />
                 </div>
               )}
@@ -828,64 +832,64 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Mandate & Facility Section */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
               Core Mandate & Facility Showcase Image
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Mandate Section Badge</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Mandate Section Badge</label>
                 <input
                   type="text"
                   value={pageMandateBadge}
                   onChange={(e) => setPageMandateBadge(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                   placeholder="e.g. Operational Strength"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Mandate Section Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Mandate Section Title</label>
                 <input
                   type="text"
                   value={pageMandateTitle}
                   onChange={(e) => setPageMandateTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                   placeholder="e.g. Our Core Safety Mandate"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Mandate Paragraph 1</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Mandate Paragraph 1</label>
               <textarea
                 rows={3}
                 value={pageMandateParagraph1}
                 onChange={(e) => setPageMandateParagraph1(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Mandate Paragraph 2</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Mandate Paragraph 2</label>
               <textarea
                 rows={3}
                 value={pageMandateParagraph2}
                 onChange={(e) => setPageMandateParagraph2(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-slate-100">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Facility Showcase Image Path or URL</label>
-                <div className="flex gap-3">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Facility Showcase Image Path or URL</label>
+                <div className="flex gap-2">
                   <input
                     type="text"
                     value={pageFacilityImage}
                     onChange={(e) => setPageFacilityImage(e.target.value)}
-                    className="flex-1 px-4 py-3 text-xs border rounded-lg"
+                    className="flex-1 px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     placeholder="e.g. /analyzer_shelter.webp or /uploads/facility.png"
                   />
                   <input
@@ -897,7 +901,7 @@ export default function AdminAboutPage() {
                   />
                   <label
                     htmlFor="page-facility-upload"
-                    className="px-4 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                    className="px-3.5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1.5 transition-colors"
                   >
                     {uploadingField === "facilityImage" ? "Uploading..." : "Upload File"}
                   </label>
@@ -905,7 +909,7 @@ export default function AdminAboutPage() {
 
                 {/* Facility Image Preview */}
                 {pageFacilityImage && pageFacilityImage.trim() !== "" && (
-                  <div className="mt-3 w-fit max-w-xl rounded-lg border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                  <div className="mt-3 w-fit max-w-xl rounded-sm border border-slate-200 bg-slate-50 p-1.5">
                     <img
                       src={formatImageUrl(pageFacilityImage)}
                       alt="Facility Showcase Preview"
@@ -913,19 +917,19 @@ export default function AdminAboutPage() {
                         const el = e.currentTarget as HTMLImageElement;
                         el.style.display = "none";
                       }}
-                      className="h-44 sm:h-52 w-auto max-w-full rounded-lg object-contain block"
+                      className="h-36 sm:h-44 w-auto max-w-full rounded-sm object-contain block"
                     />
                   </div>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Facility Technical Reference Code</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Facility Technical Reference Code</label>
                 <input
                   type="text"
                   value={pageFacilityCode}
                   onChange={(e) => setPageFacilityCode(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                   placeholder="e.g. SYS.FACILITY.IMG.01"
                 />
               </div>
@@ -933,14 +937,16 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Positioning Pillars */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Core Market Positioning Pillars ({pagePositioning.length})</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+                Core Market Positioning Pillars ({pagePositioning.length})
+              </h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
                   onClick={() => setPagePositioning([...pagePositioning, { title: "New Pillar", text: "Pillar description text" }])}
-                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -951,7 +957,7 @@ export default function AdminAboutPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveAboutPage("Positioning Pillars")}
-                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -961,19 +967,19 @@ export default function AdminAboutPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {pagePositioning.map((pos, idx) => (
-                <div key={idx} className="p-4 border border-slate-200/60 rounded-lg bg-slate-50/50 space-y-3 relative">
+                <div key={idx} className="p-4 border border-slate-200 rounded-sm bg-slate-50/50 space-y-3 relative">
                   <button
                     type="button"
                     onClick={() => setPagePositioning(pagePositioning.filter((_, i) => i !== idx))}
-                    className="absolute top-2 right-2 text-rose-500 font-bold text-xs cursor-pointer"
+                    className="absolute top-2 right-2 text-rose-600 hover:text-rose-800 font-medium text-xs cursor-pointer"
                   >
                     Remove
                   </button>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Pillar Title</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Pillar Title</label>
                     <input
                       type="text"
                       value={pos.title}
@@ -982,12 +988,12 @@ export default function AdminAboutPage() {
                         updated[idx].title = e.target.value;
                         setPagePositioning(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Pillar Text</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Pillar Text</label>
                     <textarea
                       rows={3}
                       value={pos.text}
@@ -996,7 +1002,7 @@ export default function AdminAboutPage() {
                         updated[idx].text = e.target.value;
                         setPagePositioning(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     />
                   </div>
                 </div>
@@ -1005,14 +1011,16 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Corporate Metrics */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Corporate Metrics Cards ({pageMetrics.length})</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+                Corporate Metrics Cards ({pageMetrics.length})
+              </h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
                   onClick={() => setPageMetrics([...pageMetrics, { value: "100%", label: "New Metric", desc: "Description text", accent: "#1e3e8f" }])}
-                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1023,7 +1031,7 @@ export default function AdminAboutPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveAboutPage("Corporate Metrics")}
-                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1033,19 +1041,19 @@ export default function AdminAboutPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {pageMetrics.map((m, idx) => (
-                <div key={idx} className="p-4 border border-slate-200/60 rounded-lg bg-slate-50/50 space-y-3 relative">
+                <div key={idx} className="p-4 border border-slate-200 rounded-sm bg-slate-50/50 space-y-3 relative">
                   <button
                     type="button"
                     onClick={() => setPageMetrics(pageMetrics.filter((_, i) => i !== idx))}
-                    className="absolute top-2 right-2 text-rose-500 font-bold text-xs cursor-pointer"
+                    className="absolute top-2 right-2 text-rose-600 hover:text-rose-800 font-medium text-xs cursor-pointer"
                   >
                     Remove
                   </button>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Metric Value</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Metric Value</label>
                     <input
                       type="text"
                       value={m.value}
@@ -1054,12 +1062,12 @@ export default function AdminAboutPage() {
                         updated[idx].value = e.target.value;
                         setPageMetrics(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Metric Title</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Metric Title</label>
                     <input
                       type="text"
                       value={m.label}
@@ -1068,12 +1076,12 @@ export default function AdminAboutPage() {
                         updated[idx].label = e.target.value;
                         setPageMetrics(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Metric Description</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Metric Description</label>
                     <textarea
                       rows={2}
                       value={m.desc}
@@ -1082,12 +1090,12 @@ export default function AdminAboutPage() {
                         updated[idx].desc = e.target.value;
                         setPageMetrics(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Accent Hex Color</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Accent Hex Color</label>
                     <input
                       type="text"
                       value={m.accent}
@@ -1096,7 +1104,7 @@ export default function AdminAboutPage() {
                         updated[idx].accent = e.target.value;
                         setPageMetrics(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-mono"
                       placeholder="#1e3e8f or #c22026"
                     />
                   </div>
@@ -1106,14 +1114,16 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Engineering Disciplines */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Engineering Disciplines Matrix ({pageDisciplines.length})</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+                Engineering Disciplines Matrix ({pageDisciplines.length})
+              </h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
                   onClick={() => setPageDisciplines([...pageDisciplines, { title: "New Discipline", desc: "Discipline overview desc", accent: "#1e3e8f" }])}
-                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1124,7 +1134,7 @@ export default function AdminAboutPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveAboutPage("Engineering Disciplines")}
-                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1134,19 +1144,19 @@ export default function AdminAboutPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {pageDisciplines.map((d, idx) => (
-                <div key={idx} className="p-4 border border-slate-200/60 rounded-lg bg-slate-50/50 space-y-3 relative">
+                <div key={idx} className="p-4 border border-slate-200 rounded-sm bg-slate-50/50 space-y-3 relative">
                   <button
                     type="button"
                     onClick={() => setPageDisciplines(pageDisciplines.filter((_, i) => i !== idx))}
-                    className="absolute top-3 right-3 text-rose-500 hover:text-rose-700 font-bold text-xs cursor-pointer"
+                    className="absolute top-3 right-3 text-rose-600 hover:text-rose-800 font-medium text-xs cursor-pointer"
                   >
                     Remove
                   </button>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Discipline Name</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Discipline Name</label>
                     <input
                       type="text"
                       value={d.title}
@@ -1155,13 +1165,13 @@ export default function AdminAboutPage() {
                         updated[idx].title = e.target.value;
                         setPageDisciplines(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                       placeholder="e.g. Structural Engineering"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Scope Description</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Scope Description</label>
                     <textarea
                       rows={2}
                       value={d.desc}
@@ -1170,13 +1180,13 @@ export default function AdminAboutPage() {
                         updated[idx].desc = e.target.value;
                         setPageDisciplines(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg resize-none"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 resize-none"
                       placeholder="Engineering discipline scope text..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Accent Hex (#1e3e8f or #c22026)</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Accent Hex (#1e3e8f or #c22026)</label>
                     <input
                       type="text"
                       value={d.accent}
@@ -1185,7 +1195,7 @@ export default function AdminAboutPage() {
                         updated[idx].accent = e.target.value;
                         setPageDisciplines(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg font-mono"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-mono"
                       placeholder="#1e3e8f or #c22026"
                     />
                   </div>
@@ -1195,47 +1205,47 @@ export default function AdminAboutPage() {
           </div>
 
           {/* CTA Box Settings */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
               Footer Call-to-Action Consultation Box
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">CTA Banner Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">CTA Banner Title</label>
                 <input
                   type="text"
                   value={pageCtaTitle}
                   onChange={(e) => setPageCtaTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">CTA Button Label</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">CTA Button Label</label>
                 <input
                   type="text"
                   value={pageCtaButtonText}
                   onChange={(e) => setPageCtaButtonText(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">CTA Paragraph Description</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">CTA Paragraph Description</label>
               <textarea
                 rows={2}
                 value={pageCtaDescription}
                 onChange={(e) => setPageCtaDescription(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
           </div>
 
           {/* Form Footer Action Bar */}
-          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
-            <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="mt-6 p-4 bg-white border border-slate-200 rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-2 text-xs text-slate-600">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>Ready to save and publish updates to the Dedicated About Page</span>
             </div>
@@ -1243,7 +1253,7 @@ export default function AdminAboutPage() {
               type="button"
               onClick={handleSaveAboutPage}
               disabled={saving}
-              className="w-full sm:w-auto px-8 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-6 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm shadow-xs cursor-pointer transition-colors disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Dedicated About Page Changes"}
             </button>

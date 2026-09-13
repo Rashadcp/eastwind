@@ -344,7 +344,7 @@ export default function AdminSolutionsPage() {
             logo: b.logoUrl || b.imageUrl || ""
           }));
           setPartners(synced);
-          setSuccess(`Successfully imported ${synced.length} brands and photos from Brands Portfolio! Remember to click 'Save Partner Brands'.`);
+          setSuccess(`Successfully imported ${synced.length} brands from Brands Portfolio! Remember to click 'Save Partner Brands'.`);
         } else {
           setError("No brands found in Brands Portfolio.");
         }
@@ -358,54 +358,54 @@ export default function AdminSolutionsPage() {
   if (loading) {
     return (
       <div className="py-20 text-center space-y-4">
-        <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
+        <div className="w-8 h-8 border-2 border-[#1e3e8f] border-t-transparent animate-spin mx-auto" />
         <p className="text-xs text-slate-500 font-medium">Loading Solutions Page Content...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="space-y-6 pb-16">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/60 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 m-0">Manage Solutions Page Content</h1>
-          <p className="text-xs text-slate-500 mt-1 m-0">
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Solutions Page Content</h1>
+          <p className="text-xs text-slate-500 mt-1">
             Dynamically customize Hero banner, Operating Industry categories, Core Capability portfolios, Partner logos, and Gateway form options.
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-2 bg-slate-200/60 p-1.5 rounded-lg flex-wrap self-start md:self-auto">
+        <div className="flex items-center gap-1 bg-slate-100 p-1 border border-slate-200 rounded-sm flex-wrap self-start md:self-auto">
           <button
             onClick={() => { setActiveTab("hero_industries"); clearMessages(); }}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "hero_industries" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
+            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === "hero_industries" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            Hero & Operating Industries
+            Hero & Industries
           </button>
           <button
             onClick={() => { setActiveTab("capabilities"); clearMessages(); }}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "capabilities" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
+            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === "capabilities" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Core Capabilities
           </button>
           <button
             onClick={() => { setActiveTab("partners"); clearMessages(); }}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "partners" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
+            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === "partners" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Partner Brands
           </button>
           <button
             onClick={() => { setActiveTab("gateway"); clearMessages(); }}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "gateway" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
+            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === "gateway" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Enquiry Gateway
@@ -415,14 +415,14 @@ export default function AdminSolutionsPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs flex items-center justify-between">
+        <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-sm text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="p-1 text-rose-500 hover:text-rose-800 rounded-lg hover:bg-rose-100 transition-colors cursor-pointer">
+          <button onClick={() => setError(null)} className="p-1 text-rose-500 hover:text-rose-800 rounded-sm hover:bg-rose-100 transition-colors cursor-pointer">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -430,14 +430,14 @@ export default function AdminSolutionsPage() {
         </div>
       )}
       {success && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs flex items-center justify-between">
+        <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-sm text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             <span>{success}</span>
           </div>
-          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-500 hover:text-emerald-800 rounded-lg hover:bg-emerald-100 transition-colors cursor-pointer">
+          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-500 hover:text-emerald-800 rounded-sm hover:bg-emerald-100 transition-colors cursor-pointer">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -447,66 +447,66 @@ export default function AdminSolutionsPage() {
 
       {/* TAB 1: HERO & OPERATING INDUSTRIES */}
       {activeTab === "hero_industries" && (
-        <div className="space-y-8">
+        <div className="space-y-6">
           
           {/* Hero Section Card */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
                 Solutions Page Hero Banner
               </h2>
               <button
                 type="button"
                 disabled={saving}
                 onClick={() => handleSaveConfig("Hero Banner")}
-                className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
+                className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                <span>{saving && savingSection === "Hero Banner" ? "Saving..." : "Save Hero Banner"}</span>
+                <span>{saving && savingSection === "Hero Banner" ? "Saving..." : "Save Banner"}</span>
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Tagline Badge</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Tagline Badge</label>
                 <input
                   type="text"
                   value={heroTagline}
                   onChange={(e) => setHeroTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Main Hero Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Main Hero Title</label>
                 <input
                   type="text"
                   value={heroTitle}
                   onChange={(e) => setHeroTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Hero Overview Description</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Overview Description</label>
               <textarea
                 rows={3}
                 value={heroDescription}
                 onChange={(e) => setHeroDescription(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 leading-relaxed"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Hero Background Image Path or URL</label>
-              <div className="flex gap-3">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Background Image Path or URL</label>
+              <div className="flex gap-2">
                 <input
                   type="text"
                   value={heroBgImage}
                   onChange={(e) => setHeroBgImage(e.target.value)}
-                  className="flex-1 px-4 py-3 text-xs border rounded-lg"
+                  className="flex-1 px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
                 <input
                   type="file"
@@ -517,7 +517,7 @@ export default function AdminSolutionsPage() {
                 />
                 <label
                   htmlFor="solutions-hero-upload"
-                  className="px-4 py-3 bg-slate-800 text-white rounded-lg text-xs font-medium hover:bg-slate-900 cursor-pointer shrink-0 flex items-center gap-1.5"
+                  className="px-3.5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1.5 transition-colors"
                 >
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload Image"}
                 </label>
@@ -525,7 +525,7 @@ export default function AdminSolutionsPage() {
 
               {/* Hero Image Preview */}
               {heroBgImage && heroBgImage.trim() !== "" && (
-                <div className="mt-3 w-fit max-w-xl rounded-lg border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                <div className="mt-3 w-fit max-w-xl rounded-sm border border-slate-200 bg-slate-50 p-1.5">
                   <img
                     src={formatImageUrl(heroBgImage, "/solution.png")}
                     alt="Hero Background Preview"
@@ -533,7 +533,7 @@ export default function AdminSolutionsPage() {
                       const el = e.currentTarget as HTMLImageElement;
                       el.style.display = "none";
                     }}
-                    className="h-44 sm:h-52 w-auto max-w-full rounded-lg object-contain block"
+                    className="h-36 sm:h-44 w-auto max-w-full rounded-sm object-contain block"
                   />
                 </div>
               )}
@@ -541,47 +541,49 @@ export default function AdminSolutionsPage() {
           </div>
 
           {/* Operating Industry Categories Header */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
               Operating Industry Section Header
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Section Tagline</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section Tagline</label>
                 <input
                   type="text"
                   value={industriesTagline}
                   onChange={(e) => setIndustriesTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Section Heading Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section Heading Title</label>
                 <input
                   type="text"
                   value={industriesTitle}
                   onChange={(e) => setIndustriesTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg font-bold"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-bold"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Section Description</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section Description</label>
               <textarea
                 rows={2}
                 value={industriesDesc}
                 onChange={(e) => setIndustriesDesc(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
           </div>
 
           {/* Industry Categories List */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Operating Industry Categories ({industries.length})</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+                Operating Industry Categories ({industries.length})
+              </h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
@@ -596,7 +598,7 @@ export default function AdminSolutionsPage() {
                       description: "High-level risk mitigation narrative for this operating environment..."
                     }
                   ])}
-                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -607,33 +609,33 @@ export default function AdminSolutionsPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveConfig("Operating Industries")}
-                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>{saving && savingSection === "Operating Industries" ? "Saving..." : "Save Operating Industries"}</span>
+                  <span>{saving && savingSection === "Operating Industries" ? "Saving..." : "Save Industries"}</span>
                 </button>
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {industries.map((ind, idx) => (
-                <div key={idx} className="p-6 border border-slate-200/80 rounded-lg bg-slate-50/50 space-y-4">
+                <div key={idx} className="p-4 border border-slate-200 rounded-sm bg-slate-50/50 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-slate-500">CATEGORY #{idx + 1}</span>
+                    <span className="text-[11px] font-mono font-bold text-slate-500">CATEGORY #{idx + 1}</span>
                     <button
                       type="button"
                       onClick={() => setIndustries(industries.filter((_, i) => i !== idx))}
-                      className="text-rose-500 hover:text-rose-700 text-xs font-bold cursor-pointer"
+                      className="text-rose-600 hover:text-rose-800 text-xs font-medium cursor-pointer"
                     >
                       Delete Category
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">ID Slug</label>
+                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">ID Slug</label>
                       <input
                         type="text"
                         value={ind.id}
@@ -642,11 +644,11 @@ export default function AdminSolutionsPage() {
                           updated[idx].id = e.target.value;
                           setIndustries(updated);
                         }}
-                        className="w-full px-3 py-2 text-xs border rounded-lg"
+                        className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-mono"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Display Name</label>
+                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">Display Name</label>
                       <input
                         type="text"
                         value={ind.name}
@@ -655,11 +657,11 @@ export default function AdminSolutionsPage() {
                           updated[idx].name = e.target.value;
                           setIndustries(updated);
                         }}
-                        className="w-full px-3 py-2 text-xs border rounded-lg"
+                        className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Accent Hex Color</label>
+                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">Accent Hex Color</label>
                       <input
                         type="text"
                         value={ind.accent}
@@ -668,13 +670,13 @@ export default function AdminSolutionsPage() {
                           updated[idx].accent = e.target.value;
                           setIndustries(updated);
                         }}
-                        className="w-full px-3 py-2 text-xs border rounded-lg font-mono"
+                        className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-mono"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Risk Kicker Badge</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Risk Kicker Badge</label>
                     <input
                       type="text"
                       value={ind.riskKicker}
@@ -683,12 +685,12 @@ export default function AdminSolutionsPage() {
                         updated[idx].riskKicker = e.target.value;
                         setIndustries(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Description</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Description</label>
                     <textarea
                       rows={2}
                       value={ind.description}
@@ -697,12 +699,12 @@ export default function AdminSolutionsPage() {
                         updated[idx].description = e.target.value;
                         setIndustries(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Category Image Path / URL</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Category Image Path / URL</label>
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -712,7 +714,7 @@ export default function AdminSolutionsPage() {
                           updated[idx].image = e.target.value;
                           setIndustries(updated);
                         }}
-                        className="flex-1 px-3 py-2 text-xs border rounded-lg"
+                        className="flex-1 px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                       />
                       <input
                         type="file"
@@ -727,7 +729,7 @@ export default function AdminSolutionsPage() {
                       />
                       <label
                         htmlFor={`ind-img-${idx}`}
-                        className="px-3 py-2 bg-slate-800 text-white rounded-lg text-xs font-medium cursor-pointer"
+                        className="px-3 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold cursor-pointer transition-colors"
                       >
                         Upload
                       </label>
@@ -735,7 +737,7 @@ export default function AdminSolutionsPage() {
 
                     {/* Category Image Preview */}
                     {ind.image && ind.image.trim() !== "" && (
-                      <div className="mt-2 w-fit max-w-full rounded-lg border border-slate-200 bg-slate-100 p-1 shadow-2xs">
+                      <div className="mt-2 w-fit max-w-full rounded-sm border border-slate-200 bg-slate-100 p-1">
                         <img
                           src={formatImageUrl(ind.image)}
                           alt={ind.name}
@@ -743,7 +745,7 @@ export default function AdminSolutionsPage() {
                             const el = e.currentTarget as HTMLImageElement;
                             el.style.display = "none";
                           }}
-                          className="h-28 w-auto max-w-full rounded-md object-contain block"
+                          className="h-24 w-auto max-w-full rounded-sm object-contain block"
                         />
                       </div>
                     )}
@@ -758,7 +760,7 @@ export default function AdminSolutionsPage() {
               type="button"
               disabled={saving}
               onClick={handleSaveConfig}
-              className="px-8 py-3.5 bg-[#1e3e8f] text-white font-semibold text-sm rounded-lg shadow-lg shadow-[#1e3e8f]/20 hover:bg-[#162f6d] cursor-pointer transition-all disabled:opacity-50"
+              className="px-6 py-2 bg-[#1e3e8f] text-white font-semibold text-xs rounded-sm shadow-xs hover:bg-[#162f6d] cursor-pointer transition-colors disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Solutions Page Content"}
             </button>
@@ -768,49 +770,51 @@ export default function AdminSolutionsPage() {
 
       {/* TAB 2: CORE CAPABILITIES PORTFOLIOS */}
       {activeTab === "capabilities" && (
-        <div className="space-y-8">
+        <div className="space-y-6">
           
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
               Core Capabilities Section Header
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Section Tagline</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section Tagline</label>
                 <input
                   type="text"
                   value={capabilitiesTagline}
                   onChange={(e) => setCapabilitiesTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Section Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section Title</label>
                 <input
                   type="text"
                   value={capabilitiesTitle}
                   onChange={(e) => setCapabilitiesTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Section Description</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section Description</label>
               <textarea
                 rows={2}
                 value={capabilitiesDesc}
                 onChange={(e) => setCapabilitiesDesc(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
           </div>
 
           {/* Portfolios Cards List */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Core Capability Portfolio Cards ({corePortfolios.length})</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+                Core Capability Portfolio Cards ({corePortfolios.length})
+              </h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
@@ -823,7 +827,7 @@ export default function AdminSolutionsPage() {
                       icon: "🛡️"
                     }
                   ])}
-                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -834,33 +838,33 @@ export default function AdminSolutionsPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveConfig("Core Capabilities")}
-                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>{saving && savingSection === "Core Capabilities" ? "Saving..." : "Save Core Capabilities"}</span>
+                  <span>{saving && savingSection === "Core Capabilities" ? "Saving..." : "Save Capabilities"}</span>
                 </button>
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {corePortfolios.map((port, idx) => (
-                <div key={idx} className="p-6 border border-slate-200/80 rounded-lg bg-slate-50/50 space-y-4">
+                <div key={idx} className="p-4 border border-slate-200 rounded-sm bg-slate-50/50 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-slate-500">CARD #{idx + 1}</span>
+                    <span className="text-[11px] font-mono font-bold text-slate-500">CARD #{idx + 1}</span>
                     <button
                       type="button"
                       onClick={() => setCorePortfolios(corePortfolios.filter((_, i) => i !== idx))}
-                      className="text-rose-500 hover:text-rose-700 text-xs font-bold cursor-pointer"
+                      className="text-rose-600 hover:text-rose-800 text-xs font-medium cursor-pointer"
                     >
                       Delete Card
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                     <div className="sm:col-span-1">
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Icon Emoji</label>
+                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">Icon Emoji</label>
                       <input
                         type="text"
                         value={port.icon}
@@ -869,11 +873,11 @@ export default function AdminSolutionsPage() {
                           updated[idx].icon = e.target.value;
                           setCorePortfolios(updated);
                         }}
-                        className="w-full px-3 py-2 text-xs border rounded-lg text-center"
+                        className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 text-center"
                       />
                     </div>
                     <div className="sm:col-span-3">
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Card Title</label>
+                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">Card Title</label>
                       <input
                         type="text"
                         value={port.title}
@@ -882,13 +886,13 @@ export default function AdminSolutionsPage() {
                           updated[idx].title = e.target.value;
                           setCorePortfolios(updated);
                         }}
-                        className="w-full px-3 py-2 text-xs border rounded-lg"
+                        className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Card Description</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Card Description</label>
                     <textarea
                       rows={2}
                       value={port.description}
@@ -897,13 +901,13 @@ export default function AdminSolutionsPage() {
                         updated[idx].description = e.target.value;
                         setCorePortfolios(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                     />
                   </div>
 
                   {/* Bullet items */}
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Bullet Items (One per line)</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Bullet Items (One per line)</label>
                     <textarea
                       rows={3}
                       value={port.items.join("\n")}
@@ -912,7 +916,7 @@ export default function AdminSolutionsPage() {
                         updated[idx].items = e.target.value.split("\n").filter(Boolean);
                         setCorePortfolios(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg font-mono"
+                      className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-mono"
                     />
                   </div>
                 </div>
@@ -925,7 +929,7 @@ export default function AdminSolutionsPage() {
               type="button"
               disabled={saving}
               onClick={handleSaveConfig}
-              className="px-8 py-3.5 bg-[#1e3e8f] text-white font-semibold text-sm rounded-lg shadow-lg shadow-[#1e3e8f]/20 hover:bg-[#162f6d] cursor-pointer transition-all disabled:opacity-50"
+              className="px-6 py-2 bg-[#1e3e8f] text-white font-semibold text-xs rounded-sm shadow-xs hover:bg-[#162f6d] cursor-pointer transition-colors disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Solutions Page Content"}
             </button>
@@ -935,62 +939,62 @@ export default function AdminSolutionsPage() {
 
       {/* TAB 3: TECHNOLOGY PARTNER BRANDS */}
       {activeTab === "partners" && (
-        <div className="space-y-8">
+        <div className="space-y-6">
           
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
               Technology Partners Section Header
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Section Tagline</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section Tagline</label>
                 <input
                   type="text"
                   value={partnersTagline}
                   onChange={(e) => setPartnersTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Section Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section Title</label>
                 <input
                   type="text"
                   value={partnersTitle}
                   onChange={(e) => setPartnersTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Section Description</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section Description</label>
               <textarea
                 rows={2}
                 value={partnersDesc}
                 onChange={(e) => setPartnersDesc(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
           </div>
 
           {/* Partner Brands Cards Editor with View, Edit, Add, and Delete Actions */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-3">
               <div>
-                <h2 className="text-lg font-bold text-slate-800 m-0 flex items-center gap-2">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0 flex items-center gap-2">
                   <span>Integrated Partner Brands & Logos</span>
-                  <span className="text-xs font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
+                  <span className="text-[11px] font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200">
                     {partners.length} Brands
                   </span>
                 </h2>
-                <p className="text-xs text-slate-500 m-0 mt-1">Manage brand names and logo images displayed on the auto-scrolling solutions carousel.</p>
+                <p className="text-xs text-slate-500 m-0 mt-0.5">Manage brand names and logo images displayed on the solutions carousel.</p>
               </div>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
                   onClick={handleSyncFromBrandsPortfolio}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 text-[#1e3e8f] text-xs font-bold rounded-lg border border-blue-200 cursor-pointer transition-all shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#1e3e8f] text-xs font-semibold rounded-sm border border-blue-200 cursor-pointer transition-colors shrink-0"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -1003,66 +1007,66 @@ export default function AdminSolutionsPage() {
                     const newBrand = { name: "New Partner Brand", logo: "" };
                     setPartners([...partners, newBrand]);
                   }}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg shadow-xs cursor-pointer transition-all shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-sm cursor-pointer transition-colors shrink-0"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
-                  <span>+ Add Partner Brand</span>
+                  <span>+ Add Brand</span>
                 </button>
                 <button
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveConfig("Partner Brands")}
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 shrink-0"
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-semibold rounded-sm cursor-pointer transition-colors disabled:opacity-50 shrink-0"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>{saving && savingSection === "Partner Brands" ? "Saving..." : "Save Partner Brands"}</span>
+                  <span>{saving && savingSection === "Partner Brands" ? "Saving..." : "Save Brands"}</span>
                 </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
               {partners.map((partnerItem, idx) => {
                 const name = typeof partnerItem === "string" ? partnerItem : partnerItem?.name || "Partner Brand";
                 const logo = typeof partnerItem === "object" ? partnerItem?.logo || partnerItem?.image || "" : "";
 
                 return (
-                  <div key={idx} className="p-4 border border-slate-200 rounded-xl bg-slate-50 hover:bg-white hover:border-slate-300 transition-all duration-200 flex flex-col justify-between space-y-3 shadow-3xs hover:shadow-sm group">
-                    <div className="space-y-3">
+                  <div key={idx} className="p-3 border border-slate-200 rounded-sm bg-white flex flex-col justify-between space-y-2.5 shadow-xs">
+                    <div className="space-y-2">
                       {/* Logo Preview Box */}
-                      <div className="h-20 w-full bg-white border border-slate-200 rounded-lg p-2 flex items-center justify-center relative overflow-hidden shadow-2xs">
+                      <div className="h-16 w-full bg-slate-50 border border-slate-200 rounded-sm p-1.5 flex items-center justify-center relative overflow-hidden">
                         {logo && logo.trim() !== "" ? (
                           <img
                             src={formatImageUrl(logo)}
                             alt={name}
-                            className="max-h-14 max-w-[120px] object-contain"
+                            className="max-h-12 max-w-[110px] object-contain"
                             onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
                           />
                         ) : (
-                          <div className="flex flex-col items-center justify-center text-center p-2 text-slate-400">
-                            <span className="text-[11px] font-semibold text-slate-400">No Logo Uploaded</span>
+                          <div className="flex flex-col items-center justify-center text-center text-slate-400">
+                            <span className="text-[10px] font-medium text-slate-400">No Logo</span>
                           </div>
                         )}
                       </div>
 
                       {/* Brand Name */}
                       <div>
-                        <h3 className="text-sm font-extrabold text-slate-900 m-0 truncate group-hover:text-[#1e3e8f] transition-colors">
+                        <h3 className="text-xs font-bold text-slate-900 m-0 truncate">
                           {name}
                         </h3>
-                        <span className={`text-[10px] font-mono truncate block mt-0.5 ${logo ? "text-emerald-600 font-bold" : "text-amber-600 font-bold"}`}>
-                          {logo ? "✓ Logo Attached" : "⚠ No Logo (Hidden on Live Page)"}
+                        <span className={`text-[10px] font-mono truncate block mt-0.5 ${logo ? "text-emerald-700 font-semibold" : "text-amber-700 font-semibold"}`}>
+                          {logo ? "✓ Logo Attached" : "⚠ No Logo"}
                         </span>
                       </div>
                     </div>
 
                     {/* Inline Quick Field Edits */}
-                    <div className="space-y-2 pt-2 border-t border-slate-200/60">
+                    <div className="space-y-2 pt-2 border-t border-slate-100">
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">Brand Name</label>
+                        <label className="block text-[10px] font-semibold text-slate-600 mb-1">Brand Name</label>
                         <input
                           type="text"
                           value={name}
@@ -1075,14 +1079,14 @@ export default function AdminSolutionsPage() {
                             }
                             setPartners(updated);
                           }}
-                          className="w-full px-3 py-1.5 text-xs border rounded-lg bg-white font-medium focus:ring-1 focus:ring-[#1e3e8f]/20 focus:outline-none"
+                          className="w-full px-2 py-1 text-xs border border-slate-200 rounded-sm bg-white text-slate-900 focus:border-[#1e3e8f] focus:outline-none"
                           placeholder="Brand Name"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">Logo Image</label>
-                        <div className="flex gap-1.5">
+                        <label className="block text-[10px] font-semibold text-slate-600 mb-1">Logo Image</label>
+                        <div className="flex gap-1">
                           <input
                             type="text"
                             value={logo}
@@ -1095,7 +1099,7 @@ export default function AdminSolutionsPage() {
                               }
                               setPartners(updated);
                             }}
-                            className="flex-1 px-2.5 py-1.5 text-[11px] border rounded-lg bg-white font-mono focus:ring-1 focus:ring-[#1e3e8f]/20 focus:outline-none"
+                            className="flex-1 px-2 py-1 text-[11px] border border-slate-200 rounded-sm bg-white font-mono focus:border-[#1e3e8f] focus:outline-none"
                             placeholder="/brands/logo.png"
                           />
                           <input
@@ -1115,7 +1119,7 @@ export default function AdminSolutionsPage() {
                           />
                           <label
                             htmlFor={`partner-file-${idx}`}
-                            className="px-3.5 py-2 bg-slate-900 hover:bg-[#1e3e8f] !text-white text-[11px] font-extrabold uppercase tracking-wider rounded-lg cursor-pointer shrink-0 flex items-center shadow-sm transition-colors"
+                            className="px-2.5 py-1 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-[11px] font-semibold rounded-sm cursor-pointer shrink-0 transition-colors"
                           >
                             Upload
                           </label>
@@ -1127,12 +1131,9 @@ export default function AdminSolutionsPage() {
                         <button
                           type="button"
                           onClick={() => setPartners(partners.filter((_, i) => i !== idx))}
-                          className="text-rose-600 hover:text-rose-700 text-[11px] font-bold py-1 px-2.5 rounded-md hover:bg-rose-50 cursor-pointer transition-colors flex items-center gap-1"
+                          className="text-rose-600 hover:text-rose-800 text-[11px] font-medium cursor-pointer"
                         >
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                          <span>Delete</span>
+                          Delete
                         </button>
                       </div>
                     </div>
@@ -1147,7 +1148,7 @@ export default function AdminSolutionsPage() {
               type="button"
               disabled={saving}
               onClick={handleSaveConfig}
-              className="px-8 py-3.5 bg-[#1e3e8f] text-white font-semibold text-sm rounded-lg shadow-lg shadow-[#1e3e8f]/20 hover:bg-[#162f6d] cursor-pointer transition-all disabled:opacity-50"
+              className="px-6 py-2 bg-[#1e3e8f] text-white font-semibold text-xs rounded-sm shadow-xs hover:bg-[#162f6d] cursor-pointer transition-colors disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Solutions Page Content"}
             </button>
@@ -1157,59 +1158,61 @@ export default function AdminSolutionsPage() {
 
       {/* TAB 4: ENQUIRY GATEWAY & FORM SCOPES */}
       {activeTab === "gateway" && (
-        <div className="space-y-8">
+        <div className="space-y-6">
           
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
               Enquiry Gateway Section Header & Button
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Gateway Tagline</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Gateway Tagline</label>
                 <input
                   type="text"
                   value={gatewayTagline}
                   onChange={(e) => setGatewayTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">Gateway Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Gateway Title</label>
                 <input
                   type="text"
                   value={gatewayTitle}
                   onChange={(e) => setGatewayTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Gateway Description</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Gateway Description</label>
               <textarea
                 rows={2}
                 value={gatewayDesc}
                 onChange={(e) => setGatewayDesc(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Form Submit Button Label</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Form Submit Button Label</label>
               <input
                 type="text"
                 value={submitButtonText}
                 onChange={(e) => setSubmitButtonText(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-lg"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
               />
             </div>
           </div>
 
           {/* Primary Solution Scope Dropdown Options */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Primary Solution Scope Dropdown Choices ({solutionScopeOptions.length})</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+                Primary Solution Scope Dropdown Choices ({solutionScopeOptions.length})
+              </h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
@@ -1217,7 +1220,7 @@ export default function AdminSolutionsPage() {
                     ...solutionScopeOptions,
                     { value: `scope-${Date.now()}`, label: "New Solution Scope Option" }
                   ])}
-                  className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1228,7 +1231,7 @@ export default function AdminSolutionsPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveConfig("Enquiry Gateway")}
-                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1238,11 +1241,11 @@ export default function AdminSolutionsPage() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {solutionScopeOptions.map((opt, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-slate-200/60 rounded-lg bg-slate-50/50">
+                <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 p-3.5 border border-slate-200 rounded-sm bg-slate-50/50">
                   <div className="flex-1 w-full">
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Option Value Key</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Option Value Key</label>
                     <input
                       type="text"
                       value={opt.value}
@@ -1251,11 +1254,11 @@ export default function AdminSolutionsPage() {
                         updated[idx].value = e.target.value;
                         setSolutionScopeOptions(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg font-mono"
+                      className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-mono"
                     />
                   </div>
                   <div className="flex-1 w-full">
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Option Display Label</label>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">Option Display Label</label>
                     <input
                       type="text"
                       value={opt.label}
@@ -1264,13 +1267,13 @@ export default function AdminSolutionsPage() {
                         updated[idx].label = e.target.value;
                         setSolutionScopeOptions(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg font-medium"
+                      className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-medium"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={() => setSolutionScopeOptions(solutionScopeOptions.filter((_, i) => i !== idx))}
-                    className="text-rose-500 hover:text-rose-700 font-bold text-xs shrink-0 cursor-pointer self-end sm:self-center py-2"
+                    className="text-rose-600 hover:text-rose-800 font-medium text-xs shrink-0 cursor-pointer self-end sm:self-center px-1"
                   >
                     Remove Option
                   </button>
@@ -1284,7 +1287,7 @@ export default function AdminSolutionsPage() {
               type="button"
               disabled={saving}
               onClick={handleSaveConfig}
-              className="px-8 py-3.5 bg-[#1e3e8f] text-white font-semibold text-sm rounded-lg shadow-lg shadow-[#1e3e8f]/20 hover:bg-[#162f6d] cursor-pointer transition-all disabled:opacity-50"
+              className="px-6 py-2 bg-[#1e3e8f] text-white font-semibold text-xs rounded-sm shadow-xs hover:bg-[#162f6d] cursor-pointer transition-colors disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Solutions Page Content"}
             </button>

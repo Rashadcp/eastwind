@@ -101,59 +101,59 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="space-y-8 font-sans antialiased text-slate-800 select-none">
+    <div className="space-y-6 font-sans antialiased text-slate-800">
       
-      {/* Welcome Banner */}
-      <div className="bg-white border border-slate-200/80 p-8 rounded-xl relative overflow-hidden shadow-3xs">
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(#1e3e8f_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none" />
-        <div className="space-y-2 max-w-2xl relative z-10">
+      {/* Welcome Header */}
+      <div className="bg-white border border-slate-200 p-6 rounded-sm">
+        <div className="space-y-2 max-w-3xl">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono tracking-widest text-[#1e3e8f] uppercase font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200/60 inline-flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Console Online
+            <span className="text-[11px] font-medium text-[#1e3e8f] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200 inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              Console Active
             </span>
           </div>
-          <h2 className="text-2xl font-bold uppercase tracking-tight text-slate-800 m-0">Welcome to East Wind Console</h2>
-          <p className="text-xs text-slate-500 leading-relaxed font-light m-0 pt-1">
-            Manage your website content, product catalog, industry solutions, and customer inquiry settings. All changes saved here update the live public website immediately.
+          <h2 className="text-xl font-bold text-slate-900 tracking-tight m-0">Welcome to East Wind Console</h2>
+          <p className="text-xs text-slate-600 leading-relaxed m-0 pt-0.5">
+            Manage your product catalog, industry solutions, operational applications, and site content. All modifications synchronize live with the public storefront.
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-600 p-5 rounded-lg text-xs leading-relaxed">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-sm text-xs leading-relaxed">
           {error}
         </div>
       )}
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((card) => (
           <div
             key={card.name}
-            className={`bg-white border ${card.color} p-6 rounded-xl flex flex-col justify-between hover:shadow-md transition-all duration-300 group`}
+            className="bg-white border border-slate-200 p-5 rounded-sm flex flex-col justify-between hover:border-[#1e3e8f] transition-colors group"
           >
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex justify-between items-start">
-                <span className="text-[10px] font-mono tracking-widest text-slate-400 uppercase font-bold">{card.name}</span>
-                <span className={`text-4xl font-extrabold tracking-tight ${card.accent} leading-none`}>
+                <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">{card.name}</span>
+                <span className="text-3xl font-bold tracking-tight text-[#1e3e8f] leading-none">
                   {loading ? (
-                    <div className="w-8 h-8 border-2 border-slate-200 border-t-[#1e3e8f] rounded-full animate-spin" />
+                    <div className="w-6 h-6 border-2 border-slate-200 border-t-[#1e3e8f] rounded-full animate-spin" />
                   ) : (
                     card.count
                   )}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 leading-relaxed font-light m-0">
+              <p className="text-xs text-slate-600 leading-normal m-0">
                 {card.description}
               </p>
             </div>
             
             <Link
               href={card.link}
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 group-hover:text-[#1e3e8f] mt-6 no-underline transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1e3e8f] group-hover:text-[#162f6d] mt-5 no-underline transition-colors"
             >
-              {card.actionLabel}
-              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <span>{card.actionLabel}</span>
+              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </Link>

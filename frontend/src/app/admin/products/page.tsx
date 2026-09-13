@@ -960,21 +960,21 @@ export default function AdminProductsPage() {
   const paginatedProducts = filteredProducts;
 
   return (
-    <div className="space-y-6 font-sans text-white select-none">
+    <div className="space-y-6 font-sans text-slate-800">
       
       {/* Title Header */}
-      <div className="flex justify-between items-center w-full">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full">
         <div>
-          <h2 className="text-xl font-bold uppercase tracking-tight m-0 text-slate-900">Product Inventory</h2>
-          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">Manage product inventory, specifications, and categories</p>
+          <h2 className="text-xl font-bold tracking-tight m-0 text-slate-900">Product Inventory</h2>
+          <p className="text-xs text-slate-500 mt-0.5">Manage product inventory, specifications, and categories</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={handleOpenCategoryManager}
-            className="flex items-center gap-2 py-2.5 px-4 rounded-lg bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-[#1e3e8f] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs active:translate-y-0.5"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-sm bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-[#1e3e8f] text-xs font-semibold transition-colors cursor-pointer"
           >
-            <svg className="w-4 h-4 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
             </svg>
             <span>Edit Categories</span>
@@ -982,21 +982,21 @@ export default function AdminProductsPage() {
 
           <button
             onClick={handleOpenCreate}
-            className="flex items-center gap-2 py-2.5 px-5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md shadow-[#1e3e8f]/15 active:translate-y-0.5"
+            className="flex items-center gap-2 py-2 px-4 rounded-sm bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer border border-[#1e3e8f]"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
-            Add Product
+            <span className="text-white">Add Product</span>
           </button>
         </div>
       </div>
 
       {/* Notifications */}
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-3.5 px-4 rounded-lg text-xs flex items-center justify-between gap-3 shadow-xs">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <svg className="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 px-4 rounded-sm text-xs flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <span className="font-medium truncate">{error}</span>
@@ -1004,19 +1004,19 @@ export default function AdminProductsPage() {
           <button
             type="button"
             onClick={() => setError(null)}
-            className="p-1 text-rose-400 hover:text-rose-200 hover:bg-rose-500/15 rounded-lg transition-colors cursor-pointer shrink-0"
+            className="p-1 text-rose-500 hover:text-rose-800 rounded-sm transition-colors cursor-pointer shrink-0"
             title="Dismiss"
           >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
       )}
       {success && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-3.5 px-4 rounded-lg text-xs flex items-center justify-between gap-3 shadow-xs">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <svg className="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3 px-4 rounded-sm text-xs flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="font-medium truncate">{success}</span>
@@ -1024,10 +1024,10 @@ export default function AdminProductsPage() {
           <button
             type="button"
             onClick={() => setSuccess(null)}
-            className="p-1 text-emerald-400 hover:text-emerald-200 hover:bg-emerald-500/15 rounded-lg transition-colors cursor-pointer shrink-0"
+            className="p-1 text-emerald-600 hover:text-emerald-900 rounded-sm transition-colors cursor-pointer shrink-0"
             title="Dismiss"
           >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -1035,10 +1035,10 @@ export default function AdminProductsPage() {
       )}
 
       {/* Search & Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full">
         {/* Search Input Bar */}
         <div className="relative max-w-md w-full">
-          <span className="absolute left-4 top-3 text-slate-400">
+          <span className="absolute left-3.5 top-2.5 text-slate-400">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -1048,17 +1048,17 @@ export default function AdminProductsPage() {
             placeholder="Search products by name, category or ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none focus:ring-1 focus:ring-[#1e3e8f]/20 transition-all font-medium"
+            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-sm text-xs text-slate-900 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-colors"
           />
         </div>
 
         {/* Filter By Category Dropdown & Order Controls */}
-        <div className="flex items-center gap-2.5 shrink-0 max-sm:w-full flex-wrap justify-end">
-          <span className="text-xs font-bold text-slate-700 uppercase tracking-wider shrink-0">Filter Category:</span>
+        <div className="flex items-center gap-2 shrink-0 max-sm:w-full flex-wrap justify-end">
+          <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider shrink-0">Category:</span>
           <select
             value={selectedBrandFilter}
             onChange={(e) => setSelectedBrandFilter(e.target.value)}
-            className="px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:border-[#1e3e8f] focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none cursor-pointer max-sm:w-full shadow-xs"
+            className="px-3 py-2 bg-white border border-slate-300 rounded-sm text-xs font-semibold text-slate-900 focus:border-[#1e3e8f] focus:outline-none cursor-pointer max-sm:w-full"
           >
             {availableBrands.map((b) => (
               <option key={b} value={b} className="bg-white text-slate-900 font-medium py-1">
@@ -1071,10 +1071,10 @@ export default function AdminProductsPage() {
             <button
               type="button"
               onClick={() => setShowProductOrderModal(true)}
-              className="px-3.5 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-[#1e3e8f] rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-xs active:translate-y-0.5"
+              className="px-3 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-[#1e3e8f] rounded-sm text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
               title={selectedBrandFilter === "All" ? "Reorder all products in catalog" : `Reorder products in ${selectedBrandFilter}`}
             >
-              <svg className="w-4 h-4 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
               </svg>
               <span>Reorder ({orderedCategoryProducts.length})</span>
@@ -1085,13 +1085,13 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => handleSaveProductOrder()}
                 disabled={savingProductOrder}
-                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-600/20 animate-pulse"
+                className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-sm text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
                 title="Save order changes to database"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                <span>{savingProductOrder ? "Saving..." : "Save Order"}</span>
+                <span className="text-white">{savingProductOrder ? "Saving..." : "Save Order"}</span>
               </button>
             )}
           </div>
@@ -1099,32 +1099,32 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Products Table Card */}
-      <div className="bg-white/[0.02] border border-white/5 rounded-xl overflow-hidden backdrop-blur-md">
+      <div className="bg-white border border-slate-200 rounded-sm overflow-hidden">
         
         {loading ? (
-          <div className="py-24 text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-[10px] font-mono uppercase tracking-widest text-slate-400">Loading products...</p>
+          <div className="py-20 text-center space-y-3">
+            <div className="w-8 h-8 border-2 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-xs text-slate-500">Loading products catalog...</p>
           </div>
         ) : products.length === 0 ? (
-          <div className="py-20 text-center text-slate-400 text-xs font-medium">
+          <div className="py-16 text-center text-slate-500 text-xs font-medium">
             No products found. Click "Add Product" to begin.
           </div>
         ) : (
           <div className="overflow-x-auto w-full">
             <table className="w-full border-collapse text-left m-0">
               <thead>
-                <tr className="bg-white/[0.02] border-b border-white/5">
-                  <th className="px-5 py-4.5 text-[10px] font-bold uppercase tracking-wider text-[#1e3e8f] w-36">
-                    Order &amp; Drag
+                <tr className="bg-slate-50 border-b border-slate-200">
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600 w-32">
+                    Order
                   </th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Name</th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Equipment Category</th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600">Product Name</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600">Equipment Category</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600">Category</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-sans">
+              <tbody className="divide-y divide-slate-100 font-sans">
                 {paginatedProducts.map((item, idx) => {
                   const itemOrderIdx = orderedCategoryProducts.findIndex((p) => p.id === item.id);
                   const displaySeq = itemOrderIdx !== -1 ? itemOrderIdx + 1 : idx + 1;
@@ -1199,27 +1199,27 @@ export default function AdminProductsPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-xs font-bold text-slate-100 max-w-xs truncate">{item.name}</td>
-                      <td className="px-6 py-4 text-xs font-semibold text-slate-400">{item.brand}</td>
-                      <td className="px-6 py-4 text-xs font-semibold text-slate-400 max-w-[180px] truncate">
+                      <td className="px-5 py-3.5 text-xs font-semibold text-slate-900 max-w-xs truncate">{item.name}</td>
+                      <td className="px-5 py-3.5 text-xs text-slate-600">{item.brand}</td>
+                      <td className="px-5 py-3.5 text-xs text-slate-600 max-w-[180px] truncate">
                         {PRODUCT_CATEGORIES.find((c) => c.id === item.category)?.name || item.category}
                       </td>
-                    <td className="px-6 py-4 text-right flex items-center justify-end gap-2.5">
+                    <td className="px-5 py-3.5 text-right flex items-center justify-end gap-2">
                       <button
                         onClick={() => setViewItem(item)}
-                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-500/5 hover:bg-emerald-600 hover:text-white transition-all cursor-pointer border border-emerald-500/20"
+                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer border border-emerald-200"
                       >
                         View
                       </button>
                       <button
                         onClick={() => handleOpenEdit(item)}
-                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-[#1e3e8f] bg-blue-500/10 hover:bg-[#162f6d] hover:text-white transition-all cursor-pointer"
+                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#1e3e8f] bg-blue-50 hover:bg-[#1e3e8f] hover:text-white transition-colors cursor-pointer border border-blue-200"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => setDeleteTarget(item.id)}
-                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50/5 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
+                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#c22026] bg-rose-50 hover:bg-[#c22026] hover:text-white transition-colors cursor-pointer border border-rose-200"
                       >
                         Delete
                       </button>
@@ -1231,18 +1231,18 @@ export default function AdminProductsPage() {
             </table>
 
             {/* Catalog Count & Drag Guidance Footer (Continuous full display, no pagination) */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-white/5 bg-white/[0.01]">
-              <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Showing all <strong className="text-white font-bold">{totalItems}</strong> products</span>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 border-t border-slate-200 bg-slate-50">
+              <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span>Showing all <strong className="text-slate-900 font-bold">{totalItems}</strong> products</span>
                 {selectedBrandFilter !== "All" && (
                   <span className="text-slate-500">
                     in category <span className="text-[#1e3e8f] font-semibold">{selectedBrandFilter}</span>
                   </span>
                 )}
               </div>
-              <div className="text-[11px] text-slate-500 font-mono flex items-center gap-2">
-                <span className="text-slate-400 font-bold">Tip:</span> Drag rows with the <span className="text-[#1e3e8f] font-bold">⋮⋮</span> handle or click ▲ ▼ to reorder
+              <div className="text-xs text-slate-500 flex items-center gap-1.5">
+                <span className="font-semibold text-slate-700">Tip:</span> Drag rows with the <span className="text-[#1e3e8f] font-bold">⋮⋮</span> handle or click ▲ ▼ to reorder
               </div>
             </div>
           </div>

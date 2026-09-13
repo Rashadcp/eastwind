@@ -241,40 +241,40 @@ export default function AdminServicesPage() {
   );
 
   return (
-    <div className="space-y-6 font-sans text-white select-none">
+    <div className="space-y-6 font-sans text-slate-800">
       
       {/* Header */}
-      <div className="flex justify-between items-center w-full">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full">
         <div>
-          <h2 className="text-xl font-bold uppercase tracking-tight m-0 text-white">Consultancy Services</h2>
-          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">Manage safety consultancy programs, audit scopes, and deliverables</p>
+          <h2 className="text-xl font-bold tracking-tight m-0 text-slate-900">Consultancy Services</h2>
+          <p className="text-xs text-slate-500 mt-0.5">Manage safety consultancy programs, audit scopes, and deliverables</p>
         </div>
         <button
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 py-3 px-6 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-[#1e3e8f]/20 active:translate-y-0.5"
+          className="flex items-center gap-2 py-2 px-4 rounded-sm bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer border border-[#1e3e8f]"
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+          <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          Add New Service
+          <span className="text-white">Add New Service</span>
         </button>
       </div>
 
       {/* Notifications */}
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-4 rounded-lg text-xs">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 px-4 rounded-sm text-xs">
           {error}
         </div>
       )}
       {success && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-4 rounded-lg text-xs">
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3 px-4 rounded-sm text-xs">
           {success}
         </div>
       )}
 
       {/* Search Input Bar */}
       <div className="relative max-w-md w-full">
-        <span className="absolute left-4 top-3 text-slate-400">
+        <span className="absolute left-3.5 top-2.5 text-slate-400">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -284,61 +284,61 @@ export default function AdminServicesPage() {
           placeholder="Search services by title, category or ID..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-all font-medium"
+          className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-sm text-xs text-slate-900 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-colors"
         />
       </div>
 
       {/* Services List Table */}
-      <div className="bg-white/[0.02] border border-white/5 rounded-xl overflow-hidden backdrop-blur-md">
+      <div className="bg-white border border-slate-200 rounded-sm overflow-hidden">
         {loading ? (
-          <div className="py-24 text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-[10px] font-mono uppercase tracking-widest text-slate-400">Loading services database...</p>
+          <div className="py-20 text-center space-y-3">
+            <div className="w-8 h-8 border-2 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-xs text-slate-500">Loading services database...</p>
           </div>
         ) : services.length === 0 ? (
-          <div className="py-20 text-center text-slate-400 text-xs font-medium">
+          <div className="py-16 text-center text-slate-500 text-xs font-medium">
             No consultancy services found. Click &quot;Add New Service&quot; to begin.
           </div>
         ) : (
           <div className="overflow-x-auto w-full">
             <table className="w-full border-collapse text-left m-0">
               <thead>
-                <tr className="bg-white/[0.02] border-b border-white/5">
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Service Code (ID)</th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Service Title</th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Accent Color</th>
-                  <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
+                <tr className="bg-slate-50 border-b border-slate-200">
+                  <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600">Service Code (ID)</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600">Service Title</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600">Category</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600">Accent Color</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-sans">
+              <tbody className="divide-y divide-slate-100 font-sans">
                 {paginatedServices.map((item) => (
-                  <tr key={item.id} className="hover:bg-white/[0.01] transition-colors">
-                    <td className="px-6 py-4 text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{item.id}</td>
-                    <td className="px-6 py-4 text-xs font-bold text-slate-100 max-w-xs truncate">{item.title}</td>
-                    <td className="px-6 py-4 text-xs font-semibold text-slate-400">{item.category}</td>
-                    <td className="px-6 py-4 text-xs">
-                      <div className="flex items-center gap-2 font-mono text-[10px]">
-                        <span className="w-3.5 h-3.5 rounded-full border border-white/10" style={{ backgroundColor: item.accentHex }} />
+                  <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-5 py-3.5 text-xs font-mono font-semibold text-slate-700 uppercase tracking-wider">{item.id}</td>
+                    <td className="px-5 py-3.5 text-xs font-semibold text-slate-900 max-w-xs truncate">{item.title}</td>
+                    <td className="px-5 py-3.5 text-xs text-slate-600">{item.category}</td>
+                    <td className="px-5 py-3.5 text-xs">
+                      <div className="flex items-center gap-2 font-mono text-[11px] text-slate-700">
+                        <span className="w-3.5 h-3.5 rounded-sm border border-slate-300" style={{ backgroundColor: item.accentHex }} />
                         {item.accentHex}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right flex items-center justify-end gap-2.5">
+                    <td className="px-5 py-3.5 text-right flex items-center justify-end gap-2">
                       <button
                         onClick={() => setViewItem(item)}
-                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-500/5 hover:bg-emerald-600 hover:text-white transition-all cursor-pointer border border-emerald-500/20"
+                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer border border-emerald-200"
                       >
                         View
                       </button>
                       <button
                         onClick={() => handleOpenEdit(item)}
-                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-[#1e3e8f] bg-blue-500/10 hover:bg-[#162f6d] hover:text-white transition-all cursor-pointer"
+                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#1e3e8f] bg-blue-50 hover:bg-[#1e3e8f] hover:text-white transition-colors cursor-pointer border border-blue-200"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => setDeleteTarget(item.id)}
-                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50/5 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
+                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#c22026] bg-rose-50 hover:bg-[#c22026] hover:text-white transition-colors cursor-pointer border border-rose-200"
                       >
                         Delete
                       </button>
@@ -350,15 +350,15 @@ export default function AdminServicesPage() {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-white/5 bg-white/[0.01]">
-                <span className="text-xs text-slate-400 font-medium">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3 border-t border-slate-200 bg-slate-50">
+                <span className="text-xs text-slate-600 font-medium">
                   Showing {Math.min((currentPage - 1) * ITEMS_PER_PAGE + 1, totalItems)} to {Math.min(currentPage * ITEMS_PER_PAGE, totalItems)} of {totalItems} entries
                 </span>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="py-1.5 px-3.5 rounded-lg border border-white/10 hover:border-white/20 text-[10px] font-bold uppercase tracking-wider text-slate-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
+                    className="py-1 px-2.5 rounded-sm border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40 disabled:pointer-events-none hover:bg-slate-50 transition-colors cursor-pointer"
                   >
                     Previous
                   </button>
@@ -366,10 +366,10 @@ export default function AdminServicesPage() {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`w-7.5 h-7.5 rounded-lg flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${
+                      className={`w-7 h-7 rounded-sm flex items-center justify-center text-xs font-semibold transition-colors cursor-pointer ${
                         currentPage === page
-                          ? "bg-[#1e3e8f] text-white shadow-md shadow-[#1e3e8f]/20"
-                          : "border border-white/10 hover:border-white/20 text-slate-300 hover:bg-white/5"
+                          ? "bg-[#1e3e8f] text-white border border-[#1e3e8f]"
+                          : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
                       }`}
                     >
                       {page}
@@ -378,7 +378,7 @@ export default function AdminServicesPage() {
                   <button
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="py-1.5 px-3.5 rounded-lg border border-white/10 hover:border-white/20 text-[10px] font-bold uppercase tracking-wider text-slate-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
+                    className="py-1 px-2.5 rounded-sm border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40 disabled:pointer-events-none hover:bg-slate-50 transition-colors cursor-pointer"
                   >
                     Next
                   </button>
