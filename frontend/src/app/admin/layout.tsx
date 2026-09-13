@@ -489,39 +489,99 @@ export default function AdminLayout({
           font-size: 13px !important;
         }
 
-        /* Text Contrast Rules: Pure White Text on ANY Dark/Brand Element */
-        .admin-light-theme [class*="bg-[#1e3e8f]"],
-        .admin-light-theme [class*="bg-[#162f6d]"],
-        .admin-light-theme [class*="bg-[#c22026]"],
-        .admin-light-theme [class*="bg-[#9e1a1f]"],
-        .admin-light-theme [class*="bg-slate-900"],
-        .admin-light-theme [class*="bg-slate-950"],
-        .admin-light-theme [class*="bg-black"],
+        /* Text Contrast Rules: High Contrast Text by Background Tone */
+        /* 1. Buttons & Action Links with Dark/Brand backgrounds: Crisp White Text */
         .admin-light-theme button[class*="bg-[#1e3e8f]"],
+        .admin-light-theme button[class*="bg-[#162f6d]"],
         .admin-light-theme button[class*="bg-[#c22026]"],
-        .admin-light-theme a[class*="bg-[#1e3e8f]"] {
-          color: #ffffff !important;
-        }
-        .admin-light-theme [class*="bg-[#1e3e8f]"] *,
-        .admin-light-theme [class*="bg-[#162f6d]"] *,
-        .admin-light-theme [class*="bg-[#c22026]"] *,
-        .admin-light-theme [class*="bg-[#9e1a1f]"] *,
-        .admin-light-theme [class*="bg-slate-900"] *,
-        .admin-light-theme button[class*="bg-[#1e3e8f]"] *,
-        .admin-light-theme button[class*="bg-[#c22026]"] * {
+        .admin-light-theme button[class*="bg-[#9e1a1f]"],
+        .admin-light-theme button[class*="bg-red-600"],
+        .admin-light-theme button[class*="bg-rose-600"],
+        .admin-light-theme button[class*="bg-slate-900"],
+        .admin-light-theme button[class*="bg-slate-800"],
+        .admin-light-theme a[class*="bg-[#1e3e8f]"],
+        .admin-light-theme label[class*="bg-[#1e3e8f]"],
+        .admin-light-theme label[class*="bg-slate-900"],
+        .admin-light-theme div[class*="bg-black/"] {
           color: #ffffff !important;
         }
 
-        /* Regular Light Surface Text */
-        .admin-light-theme [class*="text-slate-4"] {
-          color: #475569 !important;
+        /* Direct text/icons inside dark buttons get white text, UNLESS it is an inner badge with light bg */
+        .admin-light-theme button[class*="bg-[#1e3e8f]"] > span:not([class*="bg-"]),
+        .admin-light-theme button[class*="bg-[#1e3e8f]"] > svg,
+        .admin-light-theme button[class*="bg-[#c22026]"] > span:not([class*="bg-"]),
+        .admin-light-theme button[class*="bg-[#c22026]"] > svg,
+        .admin-light-theme button[class*="bg-red-600"] > span:not([class*="bg-"]),
+        .admin-light-theme button[class*="bg-red-600"] > svg,
+        .admin-light-theme button[class*="bg-slate-900"] > span:not([class*="bg-"]),
+        .admin-light-theme button[class*="bg-slate-900"] > svg,
+        .admin-light-theme a[class*="bg-[#1e3e8f]"] > span:not([class*="bg-"]),
+        .admin-light-theme a[class*="bg-[#1e3e8f]"] > svg,
+        .admin-light-theme label[class*="bg-[#1e3e8f]"] > span:not([class*="bg-"]),
+        .admin-light-theme label[class*="bg-[#1e3e8f]"] > svg {
+          color: #ffffff !important;
         }
-        .admin-light-theme [class*="text-slate-5"] {
+
+        /* 2. Light & White Surfaces: NEVER USE WHITE TEXT HERE. High Contrast Dark Text Only! */
+        .admin-light-theme [class*="bg-white"],
+        .admin-light-theme [class*="bg-slate-50"],
+        .admin-light-theme [class*="bg-slate-100"],
+        .admin-light-theme [class*="bg-slate-200"],
+        .admin-light-theme [class*="bg-blue-50"],
+        .admin-light-theme [class*="bg-emerald-50"],
+        .admin-light-theme [class*="bg-amber-50"],
+        .admin-light-theme [class*="bg-rose-50"] {
+          color: #1e293b;
+        }
+
+        /* Explicit Brand & Status Text on Light Backgrounds */
+        .admin-light-theme [class*="text-[#1e3e8f]"],
+        .admin-light-theme span[class*="text-[#1e3e8f]"],
+        .admin-light-theme p[class*="text-[#1e3e8f]"],
+        .admin-light-theme a[class*="text-[#1e3e8f]"]:not([class*="bg-[#1e3e8f]"]) {
+          color: #1e3e8f !important;
+        }
+        .admin-light-theme [class*="text-[#c22026]"],
+        .admin-light-theme span[class*="text-[#c22026]"],
+        .admin-light-theme p[class*="text-[#c22026]"] {
+          color: #c22026 !important;
+        }
+
+        /* Badges & Pills with White or Light BG: Dark/Brand Text */
+        .admin-light-theme span[class*="bg-white"][class*="text-[#1e3e8f]"],
+        .admin-light-theme span[class*="bg-blue-50"][class*="text-[#1e3e8f]"] {
+          color: #1e3e8f !important;
+        }
+        .admin-light-theme span[class*="bg-white"]:not([class*="text-"]):not([class*="hover:text-"]) {
+          color: #0f172a !important;
+        }
+
+        /* Standard Slate Text Scales */
+        .admin-light-theme [class*="text-slate-900"],
+        .admin-light-theme [class*="text-slate-800"] {
+          color: #0f172a !important;
+        }
+        .admin-light-theme [class*="text-slate-700"],
+        .admin-light-theme [class*="text-slate-600"] {
+          color: #334155 !important;
+        }
+        .admin-light-theme [class*="text-slate-500"] {
           color: #64748b !important;
         }
-        .admin-light-theme [class*="text-slate-2"],
-        .admin-light-theme [class*="text-slate-3"] {
-          color: #1e293b !important;
+        .admin-light-theme [class*="text-slate-400"] {
+          color: #94a3b8 !important;
+        }
+        .admin-light-theme [class*="text-emerald-700"],
+        .admin-light-theme [class*="text-emerald-800"] {
+          color: #047857 !important;
+        }
+        .admin-light-theme [class*="text-rose-700"],
+        .admin-light-theme [class*="text-rose-800"] {
+          color: #be123c !important;
+        }
+        .admin-light-theme [class*="text-amber-700"],
+        .admin-light-theme [class*="text-amber-800"] {
+          color: #b45309 !important;
         }
 
         /* Clean Flat Shadows (Eliminate bulky glow & heavy drop shadows) */

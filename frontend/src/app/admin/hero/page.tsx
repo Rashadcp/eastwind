@@ -316,7 +316,7 @@ export default function AdminHeroPage() {
                 Supports JPG, PNG, WEBP, SVG. Images are automatically compressed to high-efficiency WebP.
               </p>
               {bannerImg && (
-                <div className="mt-2 w-full h-32 rounded-sm overflow-hidden border border-slate-200 bg-slate-950 relative">
+                <div className="mt-2 w-full h-32 rounded-sm overflow-hidden border border-slate-200 bg-slate-100 relative">
                   <img
                     src={formatImageUrl(bannerImg)}
                     alt="Hero Banner Preview"
@@ -372,7 +372,7 @@ export default function AdminHeroPage() {
                 Supports MP4, WebM, MOV. Fast-start WebM conversion applied automatically.
               </p>
               {videoSrc && (
-                <div className="mt-2 w-full h-36 rounded-sm overflow-hidden border border-slate-200 bg-slate-950 relative shadow-inner">
+                <div className="mt-2 w-full h-36 rounded-sm overflow-hidden border border-slate-200 bg-slate-100 relative shadow-inner">
                   <video
                     src={formatImageUrl(videoSrc)}
                     muted

@@ -378,7 +378,7 @@ export default function AdminBrandsPage() {
                 </div>
 
                 {/* Brand Logo / Asset Image Display Box */}
-                <div className="h-28 w-full bg-slate-900 rounded-sm mb-3 flex items-center justify-center p-2 border border-slate-800 relative overflow-hidden">
+                <div className="h-28 w-full bg-slate-50 rounded-sm mb-3 flex items-center justify-center p-2 border border-slate-200 relative overflow-hidden">
                   {brand.logoUrl && brand.logoUrl.trim() !== "" ? (
                     <img
                       key={brand.logoUrl}
@@ -574,7 +574,7 @@ export default function AdminBrandsPage() {
               <div className="space-y-2">
                 <label className="block text-xs font-bold text-slate-700">Brand Logo / Asset Image</label>
                 
-                <div className="h-36 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-slate-800 relative">
+                <div className="h-36 w-full bg-slate-50 rounded-sm overflow-hidden flex items-center justify-center p-2 border border-slate-200 relative">
                   {formLogoUrl && formLogoUrl.trim() !== "" ? (
                     <img
                       key={formLogoUrl}
@@ -637,7 +637,7 @@ export default function AdminBrandsPage() {
                       >
                         <div className="flex items-center gap-3 min-w-0 flex-1">
                           {/* Image Thumbnail Box */}
-                          <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-200 overflow-hidden flex items-center justify-center p-0.5 shrink-0 shadow-2xs">
+                          <div className="w-10 h-10 rounded-sm bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center p-0.5 shrink-0">
                             {p.imageUrl && p.imageUrl.trim() !== "" ? (
                               <img
                                 src={formatImageUrl(p.imageUrl)}
@@ -790,7 +790,7 @@ export default function AdminBrandsPage() {
                   {(viewItem.products || []).map((p, idx) => (
                     <div key={idx} className="text-xs bg-slate-50 p-2 rounded-lg border border-slate-100 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-200 overflow-hidden flex items-center justify-center p-0.5 shrink-0">
+                        <div className="w-8 h-8 rounded-sm bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center p-0.5 shrink-0">
                           {p.imageUrl && p.imageUrl.trim() !== "" ? (
                             <img
                               src={formatImageUrl(p.imageUrl)}

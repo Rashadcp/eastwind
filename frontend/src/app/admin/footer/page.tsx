@@ -408,7 +408,7 @@ export default function AdminFooterPage() {
               </div>
 
               {/* Logo Preview */}
-              <div className="mt-3 h-16 bg-slate-900 rounded-sm border border-slate-200 flex items-center justify-center p-2.5">
+              <div className="mt-3 h-16 bg-slate-50 rounded-sm border border-slate-200 flex items-center justify-center p-2.5">
                 <img src={formatImageUrl(logoUrl, "/logo.png")} alt="Logo Preview" className="max-h-full object-contain" />
               </div>
             </div>

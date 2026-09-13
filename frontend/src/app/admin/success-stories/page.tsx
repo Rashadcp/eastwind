@@ -319,19 +319,19 @@ export default function AdminSuccessStoriesPage() {
           {filteredStories.map((story) => (
             <div key={story.id} className="bg-white border border-slate-200 rounded-sm overflow-hidden flex flex-col justify-between group hover:border-[#1e3e8f] transition-colors">
               {/* IMAGE THUMBNAIL BANNER */}
-              <div className="h-44 relative overflow-hidden bg-slate-900 flex items-center justify-center p-2">
+              <div className="h-44 relative overflow-hidden bg-slate-100 border-b border-slate-200 flex items-center justify-center p-2">
                 <img
                   src={story.imageUrl || "/emergency_vehicle.webp"}
                   alt={story.title}
                   className="max-h-full max-w-full object-contain"
                 />
                 <div className="absolute top-2.5 left-2.5">
-                  <span className="text-[10px] font-mono font-bold uppercase text-[#1e3e8f] bg-white border border-blue-200 px-2 py-0.5 rounded-sm">
+                  <span className="text-[11px] font-mono font-bold uppercase text-[#1e3e8f] bg-white border border-slate-300 px-2.5 py-0.5 rounded-sm shadow-2xs">
                     {story.category}
                   </span>
                 </div>
                 <div className="absolute top-2.5 right-2.5">
-                  <span className="text-[10px] font-mono font-semibold text-slate-700 bg-white border border-slate-200 px-2 py-0.5 rounded-sm flex items-center gap-1">
+                  <span className="text-[11px] font-mono font-semibold text-slate-700 bg-white border border-slate-300 px-2.5 py-0.5 rounded-sm flex items-center gap-1 shadow-2xs">
                     <svg className="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
@@ -516,7 +516,7 @@ export default function AdminSuccessStoriesPage() {
                   <label className="block font-bold text-slate-700">Story Cover Image</label>
                   
                   {formImageUrl && formImageUrl.trim() !== "" && (
-                    <div className="h-36 w-full rounded-lg overflow-hidden border border-slate-200 bg-slate-900 flex items-center justify-center p-2 relative">
+                    <div className="h-36 w-full rounded-sm overflow-hidden border border-slate-200 bg-slate-100 flex items-center justify-center p-2 relative">
                       <img
                         src={formImageUrl}
                         alt="Story Preview"
@@ -640,7 +640,7 @@ export default function AdminSuccessStoriesPage() {
             {/* Scrollable Body */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {/* IMAGE BANNER IN MODAL */}
-              <div className="h-56 relative overflow-hidden bg-slate-950 rounded-lg flex items-center justify-center p-3 border border-slate-800 shrink-0">
+              <div className="h-56 relative overflow-hidden bg-slate-100 rounded-sm flex items-center justify-center p-3 border border-slate-200 shrink-0">
                 <img
                   src={viewStory.imageUrl || "/emergency_vehicle.webp"}
                   alt={viewStory.title}

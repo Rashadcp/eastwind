@@ -1347,7 +1347,7 @@ export default function AdminProductsPage() {
               <div className="space-y-2">
                 <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Product Visual Image</label>
                 
-                <div className="h-40 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-white/10 relative">
+                <div className="h-40 w-full bg-slate-100 rounded-sm overflow-hidden flex items-center justify-center p-2 border border-slate-200 relative">
                   {formImageUrl && formImageUrl.trim() !== "" ? (
                     <img
                       key={formImageUrl}
