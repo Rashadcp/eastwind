@@ -5,70 +5,19 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { formatImageUrl } from "@/utils/image";
 
-const ROUTE_LOCATION_MAP: Record<
-  string,
-  { path: string; label: string; description: string }
-> = {
-  "/admin": {
-    path: "/",
-    label: "Home Page",
-    description: "Controls main website overview, mission highlights, and operational stats",
-  },
-  "/admin/hero": {
-    path: "/",
-    label: "Home Hero",
-    description: "Edits homepage hero slider banners, titles, captions, and call-to-action buttons",
-  },
-  "/admin/products": {
-    path: "/products",
-    label: "Products Page",
-    description: "Edits product hardware inventory, technical specs, brochures, and photos",
-  },
-  "/admin/solutions": {
-    path: "/solutions",
-    label: "Solutions Page",
-    description: "Edits solutions catalog items, page banners, industry sectors, and integration workflows",
-  },
-  "/admin/solutions-page": {
-    path: "/solutions",
-    label: "Solutions Layout",
-    description: "Edits dedicated solutions landing page banners, sector matrices, and partner ecosystems",
-  },
-  "/admin/applications": {
-    path: "/applications",
-    label: "Applications Page",
-    description: "Edits sector applications, critical systems, and mission-readiness engineering",
-  },
-  "/admin/services": {
-    path: "/services",
-    label: "Services Page",
-    description: "Edits technical service lifecycle, maintenance protocols, and SLA offerings",
-  },
-  "/admin/about": {
-    path: "/about",
-    label: "About Page",
-    description: "Edits corporate overview, executive team, credentials, and homepage about section",
-  },
-  "/admin/contact": {
-    path: "/contact",
-    label: "Contact Page",
-    description: "Edits contact information, headquarters locations, email channels, and intake forms",
-  },
-  "/admin/footer": {
-    path: "/",
-    label: "Global Footer",
-    description: "Edits global website footer across all pages (links, compliance accreditations, corporate address)",
-  },
-  "/admin/brands": {
-    path: "/",
-    label: "Brand Partners",
-    description: "Edits technology partner brand logos displayed across the homepage and solutions",
-  },
-  "/admin/success-stories": {
-    path: "/about",
-    label: "Success Stories",
-    description: "Edits regional field case studies, deployment metrics, and engineering achievements",
-  },
+const ROUTE_LOCATION_MAP: Record<string, { path: string; label: string }> = {
+  "/admin": { path: "/", label: "Home Page" },
+  "/admin/hero": { path: "/", label: "Home Hero" },
+  "/admin/products": { path: "/products", label: "Products Page" },
+  "/admin/solutions": { path: "/solutions", label: "Solutions Page" },
+  "/admin/solutions-page": { path: "/solutions", label: "Solutions Layout" },
+  "/admin/applications": { path: "/applications", label: "Applications Page" },
+  "/admin/services": { path: "/services", label: "Services Page" },
+  "/admin/about": { path: "/about", label: "About Page" },
+  "/admin/contact": { path: "/contact", label: "Contact Page" },
+  "/admin/footer": { path: "/", label: "Global Footer" },
+  "/admin/brands": { path: "/", label: "Brand Partners" },
+  "/admin/success-stories": { path: "/about", label: "Success Stories" },
 };
 
 export default function AdminLayout({
@@ -217,8 +166,8 @@ export default function AdminLayout({
     return (
       <div className="min-h-screen bg-slate-50 text-slate-800 flex items-center justify-center font-sans antialiased">
         <div className="space-y-4 text-center">
-          <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs tracking-wider text-slate-550 font-medium">Verifying Authorization Node...</p>
+          <div className="w-12 h-12 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-xs tracking-wider text-slate-500 font-medium">Loading East Wind Console...</p>
         </div>
       </div>
     );
@@ -404,26 +353,31 @@ export default function AdminLayout({
           padding: 8px 12px !important;
         }
         .admin-light-theme select option:checked {
-          background-color: #fed7aa !important;
-          color: #9a3412 !important;
+          background-color: #e0e7ff !important;
+          color: #1e3e8f !important;
           font-weight: 700 !important;
         }
         .admin-light-theme input:focus,
         .admin-light-theme select:focus,
         .admin-light-theme textarea:focus {
-          border-color: #ea580c !important;
+          border-color: #1e3e8f !important;
           outline: none !important;
           background-color: #ffffff !important;
+          box-shadow: 0 0 0 1px #1e3e8f !important;
         }
         .admin-light-theme input::placeholder,
         .admin-light-theme textarea::placeholder {
           color: #94a3b8 !important;
         }
-        /* Orange accents replacing blue sky buttons - semi-curved (8px) */
+        /* East Wind Royal Blue (#1e3e8f) Primary Buttons & Accents - semi-curved (8px) */
         .admin-light-theme button[class*="bg-sky-"],
         .admin-light-theme label[class*="bg-sky-"],
-        .admin-light-theme a[class*="bg-sky-"] {
-          background-color: #ea580c !important;
+        .admin-light-theme a[class*="bg-sky-"],
+        .admin-light-theme button[class*="bg-orange-600"],
+        .admin-light-theme button[class*="bg-orange-500"],
+        .admin-light-theme label[class*="bg-orange-600"],
+        .admin-light-theme label[class*="bg-orange-500"] {
+          background-color: #1e3e8f !important;
           color: #ffffff !important;
           text-transform: none !important;
           letter-spacing: normal !important;
@@ -431,13 +385,45 @@ export default function AdminLayout({
           font-weight: 600 !important;
         }
         .admin-light-theme button[class*="bg-sky-"]:hover,
-        .admin-light-theme label[class*="bg-sky-"]:hover {
-          background-color: #ea580c !important;
-          opacity: 0.9;
+        .admin-light-theme label[class*="bg-sky-"]:hover,
+        .admin-light-theme button[class*="bg-orange-600"]:hover,
+        .admin-light-theme button[class*="bg-orange-500"]:hover {
+          background-color: #162f6d !important;
+          opacity: 1;
         }
         .admin-light-theme [class*="text-sky-"],
-        .admin-light-theme [class*="hover:text-sky-"]:hover {
-          color: #ea580c !important;
+        .admin-light-theme [class*="hover:text-sky-"]:hover,
+        .admin-light-theme [class*="text-orange-600"],
+        .admin-light-theme [class*="text-orange-500"] {
+          color: #1e3e8f !important;
+        }
+        .admin-light-theme [class*="border-orange-500"],
+        .admin-light-theme [class*="border-orange-600"] {
+          border-color: #1e3e8f !important;
+        }
+        .admin-light-theme [class*="bg-orange-50"],
+        .admin-light-theme [class*="bg-orange-50/"] {
+          background-color: #f0f4ff !important;
+          border-color: #dbe4ff !important;
+        }
+        .admin-light-theme [class*="text-orange-700"],
+        .admin-light-theme [class*="text-orange-800"],
+        .admin-light-theme [class*="text-orange-900"],
+        .admin-light-theme [class*="text-orange-950"] {
+          color: #1e3e8f !important;
+        }
+        .admin-light-theme [class*="bg-orange-100"] {
+          background-color: #e0e7ff !important;
+          color: #1e3e8f !important;
+        }
+        /* East Wind Crimson Red (#c22026) for destructive & danger actions */
+        .admin-light-theme button[class*="bg-red-600"],
+        .admin-light-theme button[class*="bg-rose-600"] {
+          background-color: #c22026 !important;
+        }
+        .admin-light-theme button[class*="bg-red-600"]:hover,
+        .admin-light-theme button[class*="bg-rose-600"]:hover {
+          background-color: #9e1a1f !important;
         }
         /* Soft borders */
         .admin-light-theme [class*="border-white/"],
@@ -530,7 +516,7 @@ export default function AdminLayout({
       <aside className={`fixed inset-y-0 left-0 z-50 md:relative md:translate-x-0 w-64 bg-white border-r border-slate-200/60 flex flex-col justify-between flex-shrink-0 h-screen select-none overflow-hidden transition-transform duration-300 ${
         mobileSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:translate-x-0"
       }`}>
-        <div className="flex flex-col flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-orange-500">
+        <div className="flex flex-col flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#1e3e8f]">
           {/* Brand header */}
           <div className="h-20 flex items-center justify-between px-6 border-b border-slate-200/60 shrink-0 sticky top-0 bg-white z-10">
             <Link href="/admin" className="flex items-center gap-3 no-underline">
@@ -571,8 +557,8 @@ export default function AdminLayout({
                   href={link.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-orange-600 text-white shadow-lg shadow-orange-600/15"
-                      : "text-slate-500 hover:text-slate-850 hover:bg-slate-100"
+                      ? "bg-[#1e3e8f] text-white shadow-md shadow-[#1e3e8f]/20"
+                      : "text-slate-600 hover:text-[#1e3e8f] hover:bg-blue-50/60"
                   }`}
                 >
                   {link.icon}
@@ -628,7 +614,7 @@ export default function AdminLayout({
                 {navLinks.find((l) => l.href === pathname)?.name || "Dashboard"}
               </h1>
               <span className="text-[10px] sm:text-xs text-slate-500 mt-0.5 hidden xs:block">
-                Dammam Operations Command Center
+                East Wind Administration Console
               </span>
             </div>
           </div>
@@ -636,11 +622,11 @@ export default function AdminLayout({
           <Link
             href={locationInfo ? locationInfo.path : "/"}
             target="_blank"
-            className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-slate-500 hover:text-orange-600 transition-colors no-underline whitespace-nowrap"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-[#1e3e8f] transition-colors no-underline whitespace-nowrap bg-slate-100 hover:bg-blue-50 px-3 py-1.5 rounded-lg border border-slate-200/80"
           >
             <span>{locationInfo && locationInfo.path !== "/" ? `Visit Live ${locationInfo.label}` : "Visit Live Site"}</span>
-            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 00-2 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
           </Link>
         </header>
@@ -649,52 +635,6 @@ export default function AdminLayout({
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-slate-50 relative w-full">
           <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
           <div className="relative max-w-7xl mx-auto w-full admin-light-theme space-y-6">
-            {/* Universal Website Location Banner across ALL admin pages */}
-            {locationInfo && (
-              <div className="p-4 bg-orange-50/90 border border-orange-200 rounded-xl text-orange-950 text-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
-                <div className="flex items-start sm:items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 text-xs">Website Location:</span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 bg-orange-100 px-2 py-0.5 rounded-md border border-orange-200/50">
-                        {locationInfo.label}
-                      </span>
-                    </div>
-                    <p className="text-slate-600 text-xs mt-0.5">
-                      {locationInfo.description} on{" "}
-                      <a
-                        href={locationInfo.path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline font-bold text-orange-700 hover:text-orange-900 transition-colors"
-                        suppressHydrationWarning
-                      >
-                        {fullLiveUrl || locationInfo.path}
-                      </a>
-                    </p>
-                  </div>
-                </div>
-
-                <a
-                  href={locationInfo.path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs shadow-xs hover:shadow-md transition-all shrink-0 self-start md:self-center cursor-pointer"
-                >
-                  <span>Open Live Page</span>
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 00-2 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              </div>
-            )}
-
             {children}
           </div>
         </div>

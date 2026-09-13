@@ -875,10 +875,10 @@ export default function UnifiedAdminSolutionsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
-              Full Dynamic CMS
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#1e3e8f] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+              Solutions
             </span>
-            <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Solutions Management Portal</h1>
+            <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Solutions Management</h1>
           </div>
           <p className="text-xs text-slate-500 mt-1">
             Complete View, Add, Edit, and Delete controls for all solution items, photos, headings, and page sections.
@@ -888,7 +888,7 @@ export default function UnifiedAdminSolutionsPage() {
         <div className="flex gap-2">
           <button
             onClick={handleOpenCreate}
-            className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-md cursor-pointer transition-all shrink-0"
+            className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-md cursor-pointer transition-all shrink-0"
           >
             + Add Solution Item
           </button>
@@ -933,13 +933,13 @@ export default function UnifiedAdminSolutionsPage() {
           onClick={() => setActiveTab("catalog")}
           className={`px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider rounded-lg transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === "catalog"
-              ? "bg-white text-orange-600 shadow-xs border border-slate-200"
+              ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200"
               : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
           }`}
         >
           <span>Manage Solution Items</span>
           <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold ${
-            activeTab === "catalog" ? "bg-orange-100 text-orange-700" : "bg-slate-200 text-slate-600"
+            activeTab === "catalog" ? "bg-blue-100 text-[#1e3e8f]" : "bg-slate-200 text-slate-600"
           }`}>
             {solutions.length}
           </span>
@@ -948,7 +948,7 @@ export default function UnifiedAdminSolutionsPage() {
           onClick={() => setActiveTab("page_layout")}
           className={`px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
             activeTab === "page_layout"
-              ? "bg-white text-orange-600 shadow-xs border border-slate-200"
+              ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200"
               : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
           }`}
         >
@@ -971,7 +971,7 @@ export default function UnifiedAdminSolutionsPage() {
                 placeholder="Search solutions by title, ID (e.g. gas, fire, mimes)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:bg-white focus:border-orange-500 focus:outline-none transition-colors"
+                className="w-full pl-9 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:bg-white focus:border-[#1e3e8f] focus:outline-none transition-colors"
               />
               {searchQuery && (
                 <button
@@ -986,7 +986,7 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
             <div className="flex items-center gap-3">
               {searchQuery && (
-                <span className="text-xs text-orange-600 font-bold bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
+                <span className="text-xs text-[#1e3e8f] font-bold bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
                   Filtering: &ldquo;{searchQuery}&rdquo;
                 </span>
               )}
@@ -999,13 +999,13 @@ export default function UnifiedAdminSolutionsPage() {
           {/* Solutions Catalog Grid with View, Edit, Delete Actions */}
 
           {loading ? (
-            <div className="p-12 text-center text-slate-400 text-xs font-mono">Loading Solution Catalog...</div>
+            <div className="p-12 text-center text-slate-400 text-xs font-mono">Loading Solutions...</div>
           ) : filteredSolutions.length === 0 ? (
             <div className="p-12 bg-white rounded-xl border border-slate-200 text-center space-y-3">
               <p className="text-xs text-slate-500 font-medium">No solution items found. Click "+ Add Solution Item" to create one.</p>
               <button
                 onClick={handleOpenCreate}
-                className="px-5 py-2.5 bg-orange-600 text-white font-bold text-xs rounded-lg shadow-md"
+                className="px-5 py-2.5 bg-[#1e3e8f] text-white font-bold text-xs rounded-lg shadow-md"
               >
                 + Add Solution Item
               </button>
@@ -1013,7 +1013,7 @@ export default function UnifiedAdminSolutionsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredSolutions.map((item: any) => (
-                <div key={item.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group hover:border-orange-500/50 transition-all">
+                <div key={item.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group hover:border-[#1e3e8f]/50 transition-all">
                   {/* Photo Display Banner */}
                   <div className="h-44 bg-slate-950 relative overflow-hidden flex items-center justify-center p-2">
                     {item.imageUrl && item.imageUrl.trim() !== "" ? (
@@ -1040,7 +1040,7 @@ export default function UnifiedAdminSolutionsPage() {
                       </svg>
                       <span className="text-xs font-mono font-medium text-slate-400">No Image Found</span>
                     </div>
-                    <span className="absolute top-3 left-3 text-[10px] font-mono font-bold uppercase text-orange-600 bg-white/95 border border-orange-200 px-2.5 py-1 rounded-md shadow-sm">
+                    <span className="absolute top-3 left-3 text-[10px] font-mono font-bold uppercase text-[#1e3e8f] bg-white/95 border border-blue-200 px-2.5 py-1 rounded-md shadow-sm">
                       {item.id}
                     </span>
                   </div>
@@ -1078,10 +1078,10 @@ export default function UnifiedAdminSolutionsPage() {
                       </button>
                       <button
                         onClick={() => handleOpenEdit(item)}
-                        className="px-3 py-1.5 text-xs font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
+                        className="px-3 py-1.5 text-xs font-bold text-[#1e3e8f] bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
                         title="Edit solution item"
                       >
-                        <svg className="w-3.5 h-3.5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                         <span>Edit</span>
@@ -1105,15 +1105,15 @@ export default function UnifiedAdminSolutionsPage() {
         </div>
       ) : (
         <div className="space-y-8">
-          <div className="p-4 bg-orange-50/60 border border-orange-200/60 rounded-lg text-orange-950 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="p-4 bg-blue-50/60 border border-blue-200/60 rounded-lg text-slate-800 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <span className="font-medium text-slate-700">
-              Configuring the dedicated <strong className="text-orange-900 font-bold">/solutions</strong> landing page banners, sector matrices, capability portfolios, and partner logos.
+              Configuring the dedicated <strong className="text-[#1e3e8f] font-bold">/solutions</strong> landing page banners, sector matrices, capability portfolios, and partner logos.
             </span>
             <button
               type="button"
               onClick={() => handleSaveSolutionsPageLayout()}
               disabled={savingPage}
-              className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 shrink-0 flex items-center gap-1.5 self-start sm:self-auto"
+              className="px-5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 shrink-0 flex items-center gap-1.5 self-start sm:self-auto"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1133,7 +1133,7 @@ export default function UnifiedAdminSolutionsPage() {
                 type="button"
                 onClick={() => handleSaveSolutionsPageLayout("Hero Banner")}
                 disabled={savingPage}
-                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+                className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1191,7 +1191,7 @@ export default function UnifiedAdminSolutionsPage() {
                 type="button"
                 onClick={() => handleSaveSolutionsPageLayout("Hero Banner")}
                 disabled={savingPage}
-                className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
+                className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1223,7 +1223,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Operating Industries")}
                   disabled={savingPage}
-                  className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1245,11 +1245,11 @@ export default function UnifiedAdminSolutionsPage() {
                         setIndustries(updated);
                       }}
                       placeholder="Industry Sector Name"
-                      className="flex-1 min-w-0 px-3 py-1.5 font-extrabold text-slate-800 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-sm shadow-2xs"
+                      className="flex-1 min-w-0 px-3 py-1.5 font-extrabold text-slate-800 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f] focus:ring-1 focus:ring-[#1e3e8f]/20 text-sm shadow-2xs"
                     />
                     
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="whitespace-nowrap shrink-0 text-orange-600 font-mono text-[11px] bg-orange-50 border border-orange-200/80 px-2.5 py-1 rounded-md font-bold tracking-tight">
+                      <span className="whitespace-nowrap shrink-0 text-[#1e3e8f] font-mono text-[11px] bg-blue-50 border border-blue-200/80 px-2.5 py-1 rounded-md font-bold tracking-tight">
                         {ind.id}
                       </span>
                       <button
@@ -1316,9 +1316,9 @@ export default function UnifiedAdminSolutionsPage() {
                               setIndustries(updated);
                             }}
                             placeholder="/uploads/... or paste image URL"
-                            className="flex-1 min-w-0 px-2.5 py-1.5 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-orange-500"
+                            className="flex-1 min-w-0 px-2.5 py-1.5 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-[#1e3e8f]"
                           />
-                          <label className="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg cursor-pointer shrink-0 transition-colors shadow-2xs">
+                          <label className="px-3 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs rounded-lg cursor-pointer shrink-0 transition-colors shadow-2xs">
                             Upload
                             <input
                               type="file"
@@ -1360,7 +1360,7 @@ export default function UnifiedAdminSolutionsPage() {
                         setIndustries(updated);
                       }}
                       placeholder="e.g. Metropolitan Safety Infrastructure & Emergency Response"
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:border-[#1e3e8f] focus:ring-1 focus:ring-[#1e3e8f]/20 transition-colors"
                     />
                   </div>
 
@@ -1375,7 +1375,7 @@ export default function UnifiedAdminSolutionsPage() {
                         setIndustries(updated);
                       }}
                       placeholder="Sector scope description..."
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors placeholder:text-slate-400"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-[#1e3e8f] focus:ring-1 focus:ring-[#1e3e8f]/20 transition-colors placeholder:text-slate-400"
                     />
                   </div>
 
@@ -1457,7 +1457,7 @@ export default function UnifiedAdminSolutionsPage() {
                                       key={bulletIdx}
                                       className="flex items-center gap-2.5 px-3 py-1.5 hover:bg-white transition-colors group/item"
                                     >
-                                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#1e3e8f] shrink-0" />
                                       <input
                                         type="text"
                                         list="admin-solutions-suggestions"
@@ -1503,7 +1503,7 @@ export default function UnifiedAdminSolutionsPage() {
                                         }
                                       }
                                     }}
-                                    className="flex-1 min-w-0 px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors"
+                                    className="flex-1 min-w-0 px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#1e3e8f] focus:ring-1 focus:ring-[#1e3e8f]/20 transition-colors"
                                   />
                                   <button
                                     type="button"
@@ -1531,7 +1531,7 @@ export default function UnifiedAdminSolutionsPage() {
                                           e.target.value = "";
                                         }
                                       }}
-                                      className="flex-1 min-w-0 px-2.5 py-1 text-xs bg-white border border-slate-200 text-slate-600 rounded-md focus:outline-none focus:border-orange-500 cursor-pointer transition-colors truncate"
+                                      className="flex-1 min-w-0 px-2.5 py-1 text-xs bg-white border border-slate-200 text-slate-600 rounded-md focus:outline-none focus:border-[#1e3e8f] cursor-pointer transition-colors truncate"
                                       title="Pick from existing Solution Items"
                                     >
                                       <option value="" disabled>Select from catalog ({solutions.length} solutions)...</option>
@@ -1555,7 +1555,7 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
 
             {/* Section 2 Bottom Save Action Bar */}
-            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+            <div className="mt-4 p-4 bg-blue-50/70 border border-blue-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
               <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                 <span>Ready to save updates to all {industries.length} Operating Industry sectors, columns & bullet points</span>
@@ -1575,7 +1575,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Operating Industries")}
                   disabled={savingPage}
-                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1608,7 +1608,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Core Capabilities")}
                   disabled={savingPage}
-                  className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1655,7 +1655,7 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
 
             {/* Section 3 Bottom Save Action Bar */}
-            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+            <div className="mt-4 p-4 bg-blue-50/70 border border-blue-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
               <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                 <span>Ready to save updates to {corePortfolios.length} Technical Core Capabilities</span>
@@ -1675,7 +1675,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Core Capabilities")}
                   disabled={savingPage}
-                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1692,7 +1692,7 @@ export default function UnifiedAdminSolutionsPage() {
               <div>
                 <h3 className="text-base font-bold text-slate-800 m-0 flex items-center gap-2">
                   <span>4. Integrated Partner Brands & Logos</span>
-                  <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-md border border-orange-200">
+                  <span className="text-xs font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
                     {partners.length} Brands
                   </span>
                 </h3>
@@ -1717,7 +1717,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Partner Brands")}
                   disabled={savingPage}
-                  className="inline-flex items-center gap-1.5 px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 shrink-0"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 shrink-0"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1753,7 +1753,7 @@ export default function UnifiedAdminSolutionsPage() {
 
                       {/* Brand Name */}
                       <div>
-                        <h4 className="text-sm font-extrabold text-slate-900 m-0 truncate group-hover:text-orange-600 transition-colors">
+                        <h4 className="text-sm font-extrabold text-slate-900 m-0 truncate group-hover:text-[#1e3e8f] transition-colors">
                           {name}
                         </h4>
                         <span className={`text-[10px] font-mono truncate block mt-0.5 ${logo ? "text-emerald-600 font-bold" : "text-amber-600 font-bold"}`}>
@@ -1778,7 +1778,7 @@ export default function UnifiedAdminSolutionsPage() {
                             }
                             setPartners(updated);
                           }}
-                          className="w-full px-3 py-1.5 text-xs border rounded-lg bg-white font-medium focus:ring-1 focus:ring-orange-500 focus:outline-none"
+                          className="w-full px-3 py-1.5 text-xs border rounded-lg bg-white font-medium focus:ring-1 focus:ring-[#1e3e8f]/20 focus:outline-none"
                           placeholder="Brand Name"
                         />
                       </div>
@@ -1798,7 +1798,7 @@ export default function UnifiedAdminSolutionsPage() {
                               }
                               setPartners(updated);
                             }}
-                            className="flex-1 px-2.5 py-1.5 text-[11px] border rounded-lg bg-white font-mono focus:ring-1 focus:ring-orange-500 focus:outline-none"
+                            className="flex-1 px-2.5 py-1.5 text-[11px] border rounded-lg bg-white font-mono focus:ring-1 focus:ring-[#1e3e8f]/20 focus:outline-none"
                             placeholder="/brands/logo.png"
                           />
                           <input
@@ -1818,7 +1818,7 @@ export default function UnifiedAdminSolutionsPage() {
                           />
                           <label
                             htmlFor={`partner-file-${idx}`}
-                            className="px-3.5 py-2 bg-slate-900 hover:bg-orange-600 !text-white text-[11px] font-extrabold uppercase tracking-wider rounded-lg cursor-pointer shrink-0 flex items-center shadow-sm transition-colors"
+                            className="px-3.5 py-2 bg-slate-900 hover:bg-[#1e3e8f] !text-white text-[11px] font-extrabold uppercase tracking-wider rounded-lg cursor-pointer shrink-0 flex items-center shadow-sm transition-colors"
                           >
                             Upload
                           </label>
@@ -1845,7 +1845,7 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
 
             {/* Section 4 Bottom Save Action Bar */}
-            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+            <div className="mt-4 p-4 bg-blue-50/70 border border-blue-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
               <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                 <span>Ready to save updates to {partners.length} Integrated Partner Brands & Logos</span>
@@ -1865,7 +1865,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Partner Brands")}
                   disabled={savingPage}
-                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1963,7 +1963,7 @@ export default function UnifiedAdminSolutionsPage() {
                       placeholder="Enter image path (e.g. /uploads/image.webp) or upload file"
                       className="w-full p-2.5 border rounded-lg font-mono text-[11px]"
                     />
-                    <label className="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg cursor-pointer shrink-0 transition-colors shadow-xs">
+                    <label className="px-4 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold rounded-lg cursor-pointer shrink-0 transition-colors shadow-xs">
                       {uploading ? "Uploading..." : "Upload Photo"}
                       <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, setFormImageUrl)} className="hidden" />
                     </label>
@@ -2088,7 +2088,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="submit"
                   form="solution-item-form"
                   disabled={uploading || savingItem}
-                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
+                  className="px-6 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
                 >
                   <span>{savingItem ? "Saving..." : (isEdit ? "Save Solution Item & Photo" : "Create Solution Item")}</span>
                 </button>
@@ -2110,7 +2110,7 @@ export default function UnifiedAdminSolutionsPage() {
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 shrink-0">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
+                <span className="text-xs font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
                   ID: {viewItem.id}
                 </span>
                 <span className="text-xs font-bold text-slate-700 truncate max-w-xs">{viewItem.title}</span>
@@ -2173,7 +2173,7 @@ export default function UnifiedAdminSolutionsPage() {
               {viewItem.integrationSteps && viewItem.integrationSteps.length > 0 && (
                 <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-3">
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-orange-600 font-bold block">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#1e3e8f] font-bold block">
                       {viewItem.integrationTagline || "LIFECYCLE SEQUENCE"}
                     </span>
                     <h4 className="text-xs font-extrabold text-slate-900 mt-0.5">
@@ -2187,7 +2187,7 @@ export default function UnifiedAdminSolutionsPage() {
                     {viewItem.integrationSteps.map((step, idx) => (
                       <div key={idx} className="p-2.5 bg-white border border-slate-200 rounded-lg text-xs space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="w-6 h-6 rounded bg-orange-100 text-orange-700 font-mono font-bold flex items-center justify-center text-[10px]">
+                          <span className="w-6 h-6 rounded bg-blue-100 text-[#1e3e8f] font-mono font-bold flex items-center justify-center text-[10px]">
                             {step.stepNumber || `0${idx + 1}`}
                           </span>
                           <strong className="text-slate-800">{step.title}</strong>
@@ -2223,7 +2223,7 @@ export default function UnifiedAdminSolutionsPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
+                className="px-6 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
               >
                 <span>Close Details</span>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

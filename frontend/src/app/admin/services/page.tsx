@@ -251,7 +251,7 @@ export default function AdminServicesPage() {
         </div>
         <button
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 py-3 px-6 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-600/10 active:translate-y-0.5"
+          className="flex items-center gap-2 py-3 px-6 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-[#1e3e8f]/20 active:translate-y-0.5"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -284,7 +284,7 @@ export default function AdminServicesPage() {
           placeholder="Search services by title, category or ID..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium"
+          className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-all font-medium"
         />
       </div>
 
@@ -292,7 +292,7 @@ export default function AdminServicesPage() {
       <div className="bg-white/[0.02] border border-white/5 rounded-xl overflow-hidden backdrop-blur-md">
         {loading ? (
           <div className="py-24 text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
             <p className="text-[10px] font-mono uppercase tracking-widest text-slate-400">Loading services database...</p>
           </div>
         ) : services.length === 0 ? (
@@ -332,7 +332,7 @@ export default function AdminServicesPage() {
                       </button>
                       <button
                         onClick={() => handleOpenEdit(item)}
-                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/5 hover:bg-sky-500 hover:text-white transition-all cursor-pointer"
+                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-[#1e3e8f] bg-blue-500/10 hover:bg-[#162f6d] hover:text-white transition-all cursor-pointer"
                       >
                         Edit
                       </button>
@@ -368,7 +368,7 @@ export default function AdminServicesPage() {
                       onClick={() => setCurrentPage(page)}
                       className={`w-7.5 h-7.5 rounded-lg flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${
                         currentPage === page
-                          ? "bg-sky-600 text-white shadow-md shadow-sky-600/10"
+                          ? "bg-[#1e3e8f] text-white shadow-md shadow-[#1e3e8f]/20"
                           : "border border-white/10 hover:border-white/20 text-slate-300 hover:bg-white/5"
                       }`}
                     >
@@ -423,7 +423,7 @@ export default function AdminServicesPage() {
                     placeholder="e.g. hse-consultancy"
                     value={formId}
                     onChange={(e) => setFormId(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium disabled:opacity-45"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none font-medium disabled:opacity-45"
                   />
                 </div>
 
@@ -435,7 +435,7 @@ export default function AdminServicesPage() {
                     placeholder="Enter visual title"
                     value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none font-medium"
                   />
                 </div>
 
@@ -447,7 +447,7 @@ export default function AdminServicesPage() {
                     placeholder="e.g. Risk Audit Programs"
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none font-medium"
                   />
                 </div>
 
@@ -459,7 +459,7 @@ export default function AdminServicesPage() {
                     placeholder="Enter service tagline statement"
                     value={formTagline}
                     onChange={(e) => setFormTagline(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none font-medium"
                   />
                 </div>
 
@@ -477,7 +477,7 @@ export default function AdminServicesPage() {
                       placeholder="#10b981"
                       value={formAccentHex}
                       onChange={(e) => setFormAccentHex(e.target.value)}
-                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-mono"
+                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none font-mono"
                     />
                   </div>
                 </div>
@@ -492,7 +492,7 @@ export default function AdminServicesPage() {
                   placeholder="Enter detailed service overview statement"
                   value={formOverview}
                   onChange={(e) => setFormOverview(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none transition-colors"
                 />
               </div>
 
@@ -505,7 +505,7 @@ export default function AdminServicesPage() {
                     placeholder="Capability Title"
                     value={capTitle}
                     onChange={(e) => setCapTitle(e.target.value)}
-                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none"
+                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none"
                   />
                   <div className="md:col-span-2 flex gap-4">
                     <input
@@ -513,7 +513,7 @@ export default function AdminServicesPage() {
                       placeholder="Capability description statement"
                       value={capBody}
                       onChange={(e) => setCapBody(e.target.value)}
-                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none"
+                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none"
                     />
                     <button
                       type="button"
@@ -552,7 +552,7 @@ export default function AdminServicesPage() {
                     placeholder="Enter deliverable output (e.g. 3D Ray Tracing Report)"
                     value={deliverableInput}
                     onChange={(e) => setDeliverableInput(e.target.value)}
-                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500"
+                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f]"
                   />
                   <button
                     type="button"
@@ -587,7 +587,7 @@ export default function AdminServicesPage() {
                     placeholder="Metric Value (e.g. 100%)"
                     value={metricValue}
                     onChange={(e) => setMetricValue(e.target.value)}
-                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none"
+                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none"
                   />
                   <div className="md:col-span-2 flex gap-4">
                     <input
@@ -595,7 +595,7 @@ export default function AdminServicesPage() {
                       placeholder="Metric label description"
                       value={metricLabel}
                       onChange={(e) => setMetricLabel(e.target.value)}
-                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none"
+                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none"
                     />
                     <button
                       type="button"
@@ -640,7 +640,7 @@ export default function AdminServicesPage() {
               <button
                 type="submit"
                 form="service-form"
-                className="px-8 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
+                className="px-8 py-2.5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-[#1e3e8f]/20"
               >
                 {isEdit ? "Update Service" : "Save Service"}
               </button>
@@ -763,7 +763,7 @@ export default function AdminServicesPage() {
                     <ul className="space-y-2 pl-0 list-none m-0 text-xs text-slate-650">
                       {viewItem.deliverables.map((del: string, idx: number) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0 mt-1.5" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#1e3e8f] shrink-0 mt-1.5" />
                           <span>{del}</span>
                         </li>
                       ))}
@@ -788,7 +788,7 @@ export default function AdminServicesPage() {
                           {viewItem.metrics.map((met: any, idx: number) => (
                             <tr key={idx} className="hover:bg-slate-50/50">
                               <td className="px-4 py-2 text-slate-600 font-light">{met.label}</td>
-                              <td className="px-4 py-2 text-orange-600 font-bold text-right">{met.value}</td>
+                              <td className="px-4 py-2 text-[#1e3e8f] font-bold text-right">{met.value}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -807,7 +807,7 @@ export default function AdminServicesPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 rounded-lg bg-sky-600 text-white hover:bg-sky-500 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-sky-600/10"
+                className="px-6 py-2.5 rounded-lg bg-[#1e3e8f] text-white hover:bg-[#162f6d] text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-[#1e3e8f]/20"
               >
                 Close View
               </button>

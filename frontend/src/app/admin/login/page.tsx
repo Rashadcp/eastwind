@@ -116,8 +116,8 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-slate-50 text-slate-800 flex items-center justify-center p-4 relative font-sans antialiased">
       {/* Decorative dynamic glows */}
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
-      <div className="absolute w-[400px] h-[400px] rounded-full bg-orange-500/5 blur-[120px] top-1/4 left-1/4 pointer-events-none" />
-      <div className="absolute w-[400px] h-[400px] rounded-full bg-amber-500/5 blur-[120px] bottom-1/4 right-1/4 pointer-events-none" />
+      <div className="absolute w-[400px] h-[400px] rounded-full bg-[#1e3e8f]/8 blur-[120px] top-1/4 left-1/4 pointer-events-none" />
+      <div className="absolute w-[400px] h-[400px] rounded-full bg-[#c22026]/6 blur-[120px] bottom-1/4 right-1/4 pointer-events-none" />
 
       {/* Light Glassmorphic Login Container */}
       <div className="w-full max-w-md bg-white border border-slate-200/80 p-8 rounded-xl shadow-[0_20px_50px_rgba(15,23,42,0.06)] relative z-10 space-y-6">
@@ -127,7 +127,7 @@ export default function AdminLoginPage() {
           <div className="p-3 bg-white border border-slate-100 rounded-xl shadow-xs inline-flex items-center justify-center max-w-[220px]">
             <img
               src={formatImageUrl(logoUrl)}
-              alt="Eastwind Safety"
+              alt="East Wind"
               className="h-11 sm:h-12 w-auto max-w-[190px] object-contain"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = "/logo.png";
@@ -135,20 +135,19 @@ export default function AdminLoginPage() {
             />
           </div>
           <div>
-            <h2 className="text-xl font-bold uppercase tracking-widest text-slate-800 mt-1">Eastwind Safety</h2>
-            <p className="text-[10px] font-mono tracking-widest text-slate-400 uppercase">Operational Security Gateway</p>
+            <h2 className="text-xl font-bold uppercase tracking-widest text-slate-800 mt-1">East Wind</h2>
+            <p className="text-[10px] font-mono tracking-widest text-slate-400 uppercase">Administration Console</p>
           </div>
         </div>
 
         {/* Informative message for OTP */}
         {otpRequired && (
-          <div className="bg-orange-50 border border-orange-200 text-orange-800 p-4 rounded-lg text-xs leading-relaxed text-center font-medium flex items-center justify-center gap-2">
-            <svg className="w-4 h-4 text-orange-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <div className="bg-blue-50 border border-blue-200 text-[#1e3e8f] p-4 rounded-lg text-xs leading-relaxed text-center font-medium flex items-center justify-center gap-2">
+            <svg className="w-4 h-4 text-[#1e3e8f] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             <span>
-              Verification code sent to <strong className="text-orange-950">harik2021a@gmail.com</strong>.<br/>
-              Please inspect your inbox or command console registers.
+              A 6-digit verification code has been dispatched to your administrator email address.
             </span>
           </div>
         )}
@@ -183,7 +182,7 @@ export default function AdminLoginPage() {
                     placeholder="Enter username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium focus:bg-white"
+                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-all font-medium focus:bg-white"
                   />
                 </div>
               </div>
@@ -202,7 +201,7 @@ export default function AdminLoginPage() {
                     placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium focus:bg-white"
+                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-all font-medium focus:bg-white"
                   />
                 </div>
               </div>
@@ -210,16 +209,16 @@ export default function AdminLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 mt-6 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-lg shadow-orange-600/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 mt-6 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-lg shadow-[#1e3e8f]/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Signing Session...
+                    Signing In...
                   </>
                 ) : (
                   <>
-                    Authenticate Console
+                    Sign In
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -245,7 +244,7 @@ export default function AdminLoginPage() {
                     placeholder="Enter 6-digit code"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium focus:bg-white tracking-[0.25em] text-center font-bold"
+                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none transition-all font-medium focus:bg-white tracking-[0.25em] text-center font-bold"
                   />
                 </div>
               </div>
@@ -254,7 +253,7 @@ export default function AdminLoginPage() {
                 <button
                   type="submit"
                   disabled={loading || otp.length !== 6}
-                  className="w-full py-4 mt-4 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-lg shadow-orange-600/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 mt-4 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-lg shadow-[#1e3e8f]/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <>

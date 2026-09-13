@@ -310,7 +310,7 @@ export default function AdminFooterPage() {
   if (loading) {
     return (
       <div className="py-24 text-center space-y-3">
-        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" />
+        <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
         <p className="text-xs font-mono uppercase tracking-widest text-slate-400">Loading Footer Settings...</p>
       </div>
     );
@@ -331,7 +331,7 @@ export default function AdminFooterPage() {
           href="/"
           target="_blank"
           rel="noreferrer"
-          className="text-xs font-bold text-orange-600 hover:text-orange-700 underline"
+          className="text-xs font-bold text-[#1e3e8f] hover:text-[#1e3e8f] underline"
         >
           Visit Live Site ↗
         </a>
@@ -374,7 +374,7 @@ export default function AdminFooterPage() {
                   className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono"
                   placeholder="/logo.png or image URL"
                 />
-                <label className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg cursor-pointer shrink-0">
+                <label className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold rounded-lg cursor-pointer shrink-0">
                   {uploading ? "Uploading..." : "Upload Logo"}
                   <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
                 </label>
@@ -424,7 +424,7 @@ export default function AdminFooterPage() {
             <button
               type="button"
               onClick={handleAddLocation}
-              className="px-3.5 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0 self-start sm:self-auto"
+              className="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-[#1e3e8f] border border-blue-200 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0 self-start sm:self-auto"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -456,7 +456,7 @@ export default function AdminFooterPage() {
               <div className="p-3.5 bg-amber-50 border border-amber-300 rounded-lg text-xs font-semibold text-amber-900 flex items-center justify-between shadow-2xs">
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping inline-block" />
-                  You have unsaved changes! Click the orange &quot;Save Footer Configuration&quot; button below to persist your changes permanently to the live website.
+                  You have unsaved changes! Click the &quot;Save Footer Configuration&quot; button below to persist your changes permanently to the live website.
                 </span>
               </div>
             )}
@@ -474,7 +474,7 @@ export default function AdminFooterPage() {
                   >
                     <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
                       <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-orange-500 inline-block" />
+                        <span className="w-2 h-2 rounded-full bg-[#1e3e8f] inline-block" />
                         Location #{idx + 1}
                       </span>
                       <button
@@ -497,7 +497,7 @@ export default function AdminFooterPage() {
                         value={loc.title}
                         onChange={(e) => handleUpdateLocation(idx, "title", e.target.value)}
                         placeholder="e.g. Dammam, Kingdom of Saudi Arabia"
-                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500"
+                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#1e3e8f]"
                       />
                     </div>
 
@@ -508,7 +508,7 @@ export default function AdminFooterPage() {
                         value={loc.address}
                         onChange={(e) => handleUpdateLocation(idx, "address", e.target.value)}
                         placeholder="e.g. P14, 2nd Industrial City, Dammam Kingdom of Saudi Arabia"
-                        className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-orange-500 resize-y"
+                        className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-[#1e3e8f] resize-y"
                       />
                     </div>
                   </div>
@@ -633,7 +633,7 @@ export default function AdminFooterPage() {
           <div className={`backdrop-blur-md p-4 rounded-lg shadow-2xl border flex items-center gap-4 transition-all duration-300 ${
             hasUnsavedChanges
               ? "bg-amber-50/95 border-amber-300 ring-2 ring-amber-400/40"
-              : "bg-white/95 border-orange-100"
+              : "bg-white/95 border-slate-200"
           }`}>
             <span className={`text-xs font-medium hidden sm:inline-block ${
               hasUnsavedChanges ? "text-amber-900 font-bold" : "text-slate-500"
@@ -646,7 +646,7 @@ export default function AdminFooterPage() {
               type="submit"
               disabled={saving}
               className={`py-3.5 px-8 ${
-                hasUnsavedChanges ? "bg-orange-600 hover:bg-orange-700 shadow-orange-500/30 ring-2 ring-orange-400 animate-pulse" : "bg-orange-600 hover:bg-orange-700"
+                hasUnsavedChanges ? "bg-[#1e3e8f] hover:bg-[#162f6d] shadow-[#1e3e8f]/30 ring-2 ring-[#1e3e8f]/40 animate-pulse" : "bg-[#1e3e8f] hover:bg-[#162f6d]"
               } text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg cursor-pointer disabled:opacity-50 transition-all flex items-center gap-2 hover:-translate-y-0.5`}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">

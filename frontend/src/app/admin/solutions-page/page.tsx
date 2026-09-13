@@ -358,8 +358,8 @@ export default function AdminSolutionsPage() {
   if (loading) {
     return (
       <div className="py-20 text-center space-y-4">
-        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-xs text-slate-500 font-medium">Loading Solutions Page Data Nodes...</p>
+        <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-xs text-slate-500 font-medium">Loading Solutions Page Content...</p>
       </div>
     );
   }
@@ -381,7 +381,7 @@ export default function AdminSolutionsPage() {
           <button
             onClick={() => { setActiveTab("hero_industries"); clearMessages(); }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "hero_industries" ? "bg-white text-orange-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
+              activeTab === "hero_industries" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Hero & Operating Industries
@@ -389,7 +389,7 @@ export default function AdminSolutionsPage() {
           <button
             onClick={() => { setActiveTab("capabilities"); clearMessages(); }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "capabilities" ? "bg-white text-orange-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
+              activeTab === "capabilities" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Core Capabilities
@@ -397,7 +397,7 @@ export default function AdminSolutionsPage() {
           <button
             onClick={() => { setActiveTab("partners"); clearMessages(); }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "partners" ? "bg-white text-orange-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
+              activeTab === "partners" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Partner Brands
@@ -405,7 +405,7 @@ export default function AdminSolutionsPage() {
           <button
             onClick={() => { setActiveTab("gateway"); clearMessages(); }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "gateway" ? "bg-white text-orange-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
+              activeTab === "gateway" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Enquiry Gateway
@@ -459,7 +459,7 @@ export default function AdminSolutionsPage() {
                 type="button"
                 disabled={saving}
                 onClick={() => handleSaveConfig("Hero Banner")}
-                className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
+                className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -607,7 +607,7 @@ export default function AdminSolutionsPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveConfig("Operating Industries")}
-                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -758,7 +758,7 @@ export default function AdminSolutionsPage() {
               type="button"
               disabled={saving}
               onClick={handleSaveConfig}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-lg shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="px-8 py-3.5 bg-[#1e3e8f] text-white font-semibold text-sm rounded-lg shadow-lg shadow-[#1e3e8f]/20 hover:bg-[#162f6d] cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Solutions Page Content"}
             </button>
@@ -834,7 +834,7 @@ export default function AdminSolutionsPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveConfig("Core Capabilities")}
-                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -925,7 +925,7 @@ export default function AdminSolutionsPage() {
               type="button"
               disabled={saving}
               onClick={handleSaveConfig}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-lg shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="px-8 py-3.5 bg-[#1e3e8f] text-white font-semibold text-sm rounded-lg shadow-lg shadow-[#1e3e8f]/20 hover:bg-[#162f6d] cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Solutions Page Content"}
             </button>
@@ -980,7 +980,7 @@ export default function AdminSolutionsPage() {
               <div>
                 <h2 className="text-lg font-bold text-slate-800 m-0 flex items-center gap-2">
                   <span>Integrated Partner Brands & Logos</span>
-                  <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-md border border-orange-200">
+                  <span className="text-xs font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
                     {partners.length} Brands
                   </span>
                 </h2>
@@ -1014,7 +1014,7 @@ export default function AdminSolutionsPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveConfig("Partner Brands")}
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 shrink-0"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 shrink-0"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1050,7 +1050,7 @@ export default function AdminSolutionsPage() {
 
                       {/* Brand Name */}
                       <div>
-                        <h3 className="text-sm font-extrabold text-slate-900 m-0 truncate group-hover:text-orange-600 transition-colors">
+                        <h3 className="text-sm font-extrabold text-slate-900 m-0 truncate group-hover:text-[#1e3e8f] transition-colors">
                           {name}
                         </h3>
                         <span className={`text-[10px] font-mono truncate block mt-0.5 ${logo ? "text-emerald-600 font-bold" : "text-amber-600 font-bold"}`}>
@@ -1075,7 +1075,7 @@ export default function AdminSolutionsPage() {
                             }
                             setPartners(updated);
                           }}
-                          className="w-full px-3 py-1.5 text-xs border rounded-lg bg-white font-medium focus:ring-1 focus:ring-orange-500 focus:outline-none"
+                          className="w-full px-3 py-1.5 text-xs border rounded-lg bg-white font-medium focus:ring-1 focus:ring-[#1e3e8f]/20 focus:outline-none"
                           placeholder="Brand Name"
                         />
                       </div>
@@ -1095,7 +1095,7 @@ export default function AdminSolutionsPage() {
                               }
                               setPartners(updated);
                             }}
-                            className="flex-1 px-2.5 py-1.5 text-[11px] border rounded-lg bg-white font-mono focus:ring-1 focus:ring-orange-500 focus:outline-none"
+                            className="flex-1 px-2.5 py-1.5 text-[11px] border rounded-lg bg-white font-mono focus:ring-1 focus:ring-[#1e3e8f]/20 focus:outline-none"
                             placeholder="/brands/logo.png"
                           />
                           <input
@@ -1115,7 +1115,7 @@ export default function AdminSolutionsPage() {
                           />
                           <label
                             htmlFor={`partner-file-${idx}`}
-                            className="px-3.5 py-2 bg-slate-900 hover:bg-orange-600 !text-white text-[11px] font-extrabold uppercase tracking-wider rounded-lg cursor-pointer shrink-0 flex items-center shadow-sm transition-colors"
+                            className="px-3.5 py-2 bg-slate-900 hover:bg-[#1e3e8f] !text-white text-[11px] font-extrabold uppercase tracking-wider rounded-lg cursor-pointer shrink-0 flex items-center shadow-sm transition-colors"
                           >
                             Upload
                           </label>
@@ -1147,7 +1147,7 @@ export default function AdminSolutionsPage() {
               type="button"
               disabled={saving}
               onClick={handleSaveConfig}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-lg shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="px-8 py-3.5 bg-[#1e3e8f] text-white font-semibold text-sm rounded-lg shadow-lg shadow-[#1e3e8f]/20 hover:bg-[#162f6d] cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Solutions Page Content"}
             </button>
@@ -1228,7 +1228,7 @@ export default function AdminSolutionsPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveConfig("Enquiry Gateway")}
-                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1284,7 +1284,7 @@ export default function AdminSolutionsPage() {
               type="button"
               disabled={saving}
               onClick={handleSaveConfig}
-              className="px-8 py-3.5 bg-orange-600 text-white font-semibold text-sm rounded-lg shadow-lg shadow-orange-600/20 hover:bg-orange-700 cursor-pointer transition-all disabled:opacity-50"
+              className="px-8 py-3.5 bg-[#1e3e8f] text-white font-semibold text-sm rounded-lg shadow-lg shadow-[#1e3e8f]/20 hover:bg-[#162f6d] cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Solutions Page Content"}
             </button>

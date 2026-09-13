@@ -208,7 +208,7 @@ export default function AdminAboutPage() {
       }
     } catch (err: any) {
       console.error(err);
-      setError("Unable to connect to About backend node. Showing local defaults.");
+      setError("Unable to load About section data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -299,17 +299,17 @@ export default function AdminAboutPage() {
     const label = typeof sectionLabel === "string" ? sectionLabel : undefined;
     clearMessages();
     setSaving(true);
-    setSavingSection(label || "all");
+    if (label) setSavingSection(label);
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const token = localStorage.getItem("admin_token");
 
       const payload = {
-        imageUrl: homeImage,
+        image: homeImage,
         title: homeTitle,
-        overviewText: homeOverview,
-        secondaryText: homeSecondary,
+        overview: homeOverview,
+        secondary: homeSecondary,
         metrics: homeMetrics,
         lifecycleSteps: homeLifecycleSteps,
       };
@@ -324,7 +324,7 @@ export default function AdminAboutPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || `Failed to update ${label || "Home Page About section"}`);
+      if (!res.ok) throw new Error(data.error || `Failed to update ${label || "Home About section"}`);
 
       setSuccess(label ? `${label} updated and saved successfully!` : "Home Page About section updated successfully!");
     } catch (err: any) {
@@ -341,7 +341,7 @@ export default function AdminAboutPage() {
     const label = typeof sectionLabel === "string" ? sectionLabel : undefined;
     clearMessages();
     setSaving(true);
-    setSavingSection(label || "all");
+    if (label) setSavingSection(label);
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -391,8 +391,8 @@ export default function AdminAboutPage() {
   if (loading) {
     return (
       <div className="py-20 text-center space-y-4">
-        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-xs text-slate-500 font-medium">Loading About Section Data Node...</p>
+        <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-xs text-slate-500 font-medium">Loading About Section Content...</p>
       </div>
     );
   }
@@ -416,7 +416,7 @@ export default function AdminAboutPage() {
               onClick={() => { setActiveTab("home"); clearMessages(); }}
               className={`px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === "home"
-                  ? "bg-white text-orange-600 shadow-sm"
+                  ? "bg-white text-[#1e3e8f] shadow-sm font-bold"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -426,7 +426,7 @@ export default function AdminAboutPage() {
               onClick={() => { setActiveTab("about_page"); clearMessages(); }}
               className={`px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === "about_page"
-                  ? "bg-white text-orange-600 shadow-sm"
+                  ? "bg-white text-[#1e3e8f] shadow-sm font-bold"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -438,7 +438,7 @@ export default function AdminAboutPage() {
             type="button"
             onClick={activeTab === "home" ? handleSaveHome : handleSaveAboutPage}
             disabled={saving}
-            className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0"
+            className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>
@@ -489,7 +489,7 @@ export default function AdminAboutPage() {
                 type="button"
                 disabled={saving}
                 onClick={() => handleSaveHome("About Header & Asset")}
-                className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
+                className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -529,7 +529,7 @@ export default function AdminAboutPage() {
                   />
                   <label
                     htmlFor="home-image-upload"
-                    className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                    className="px-4 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
                   >
                     {uploadingField === "homeImage" ? "Uploading..." : "Upload File"}
                   </label>
@@ -595,7 +595,7 @@ export default function AdminAboutPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveHome("Quantitative Metrics")}
-                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -656,7 +656,7 @@ export default function AdminAboutPage() {
                         updated[idx].desc = e.target.value;
                         setHomeMetrics(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-2 text-xs border rounded-lg resize-none"
                       placeholder="Detail text explaining metric..."
                     />
                   </div>
@@ -665,14 +665,14 @@ export default function AdminAboutPage() {
             </div>
           </div>
 
-          {/* Turnkey Lifecycle Steps */}
+          {/* Lifecycle Steps */}
           <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-800 m-0">Turnkey Lifecycle Delivery Steps ({homeLifecycleSteps.length})</h2>
+              <h2 className="text-lg font-bold text-slate-800 m-0">Lifecycle Capabilities ({homeLifecycleSteps.length})</h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
                 <button
                   type="button"
-                  onClick={() => setHomeLifecycleSteps([...homeLifecycleSteps, "New Lifecycle Scope Step"])}
+                  onClick={() => setHomeLifecycleSteps([...homeLifecycleSteps, "New Lifecycle Capability"])}
                   className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -684,7 +684,7 @@ export default function AdminAboutPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveHome("Lifecycle Steps")}
-                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -697,7 +697,7 @@ export default function AdminAboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {homeLifecycleSteps.map((step, idx) => (
                 <div key={idx} className="flex items-center gap-3 p-3 border border-slate-200/60 rounded-lg bg-slate-50/40">
-                  <span className="w-6 h-6 rounded-md bg-orange-100 text-orange-600 font-bold text-xs flex items-center justify-center shrink-0">
+                  <span className="w-6 h-6 rounded-md bg-blue-50 text-[#1e3e8f] border border-blue-200 font-bold text-xs flex items-center justify-center shrink-0">
                     {idx + 1}
                   </span>
                   <input
@@ -732,7 +732,7 @@ export default function AdminAboutPage() {
               type="button"
               onClick={handleSaveHome}
               disabled={saving}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Home Page About Changes"}
             </button>
@@ -804,7 +804,7 @@ export default function AdminAboutPage() {
                 />
                 <label
                   htmlFor="page-hero-upload"
-                  className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                  className="px-4 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
                 >
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload File"}
                 </label>
@@ -897,7 +897,7 @@ export default function AdminAboutPage() {
                   />
                   <label
                     htmlFor="page-facility-upload"
-                    className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                    className="px-4 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
                   >
                     {uploadingField === "facilityImage" ? "Uploading..." : "Upload File"}
                   </label>
@@ -951,7 +951,7 @@ export default function AdminAboutPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveAboutPage("Positioning Pillars")}
-                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1023,7 +1023,7 @@ export default function AdminAboutPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveAboutPage("Corporate Metrics")}
-                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1124,7 +1124,7 @@ export default function AdminAboutPage() {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSaveAboutPage("Engineering Disciplines")}
-                  className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold uppercase rounded-lg hover:bg-orange-700 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold uppercase rounded-lg hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1140,7 +1140,7 @@ export default function AdminAboutPage() {
                   <button
                     type="button"
                     onClick={() => setPageDisciplines(pageDisciplines.filter((_, i) => i !== idx))}
-                    className="absolute top-2 right-2 text-rose-500 font-bold text-xs cursor-pointer"
+                    className="absolute top-3 right-3 text-rose-500 hover:text-rose-700 font-bold text-xs cursor-pointer"
                   >
                     Remove
                   </button>
@@ -1156,11 +1156,12 @@ export default function AdminAboutPage() {
                         setPageDisciplines(updated);
                       }}
                       className="w-full px-3 py-2 text-xs border rounded-lg"
+                      placeholder="e.g. Structural Engineering"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Description</label>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Scope Description</label>
                     <textarea
                       rows={2}
                       value={d.desc}
@@ -1169,7 +1170,8 @@ export default function AdminAboutPage() {
                         updated[idx].desc = e.target.value;
                         setPageDisciplines(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-2 text-xs border rounded-lg resize-none"
+                      placeholder="Engineering discipline scope text..."
                     />
                   </div>
 
@@ -1183,7 +1185,8 @@ export default function AdminAboutPage() {
                         updated[idx].accent = e.target.value;
                         setPageDisciplines(updated);
                       }}
-                      className="w-full px-3 py-2 text-xs border rounded-lg"
+                      className="w-full px-3 py-2 text-xs border rounded-lg font-mono"
+                      placeholder="#1e3e8f or #c22026"
                     />
                   </div>
                 </div>
@@ -1240,7 +1243,7 @@ export default function AdminAboutPage() {
               type="button"
               onClick={handleSaveAboutPage}
               disabled={saving}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Dedicated About Page Changes"}
             </button>

@@ -243,7 +243,7 @@ export default function AdminSuccessStoriesPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#1e3e8f] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
               CMS Module
             </span>
             <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Success Stories Management</h1>
@@ -254,7 +254,7 @@ export default function AdminSuccessStoriesPage() {
         </div>
         <button
           onClick={handleOpenAddModal}
-          className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md transition-all flex items-center justify-center gap-2 shrink-0"
+          className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md transition-all flex items-center justify-center gap-2 shrink-0"
         >
           <span>+ Add New Story</span>
         </button>
@@ -300,7 +300,7 @@ export default function AdminSuccessStoriesPage() {
           value={searchQuery}
           aria-label="Search case studies"
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full max-w-md px-4 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500"
+          className="w-full max-w-md px-4 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f]"
         />
         <span className="text-xs font-mono font-bold text-slate-400">
           Showing {filteredStories.length} Stories
@@ -326,7 +326,7 @@ export default function AdminSuccessStoriesPage() {
                   className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute top-3 left-3">
-                  <span className="text-[10px] font-mono font-bold uppercase text-orange-600 bg-white/95 backdrop-blur-md border border-orange-200 px-2.5 py-1 rounded-md shadow-sm">
+                  <span className="text-[10px] font-mono font-bold uppercase text-[#1e3e8f] bg-white/95 backdrop-blur-md border border-blue-200 px-2.5 py-1 rounded-md shadow-sm">
                     {story.category}
                   </span>
                 </div>
@@ -355,7 +355,7 @@ export default function AdminSuccessStoriesPage() {
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {story.results.map((r, idx) => (
                       <span key={idx} className="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded">
-                        {r.label}: <strong className="text-orange-600">{r.value}</strong>
+                        {r.label}: <strong className="text-[#1e3e8f]">{r.value}</strong>
                       </span>
                     ))}
                   </div>
@@ -379,9 +379,9 @@ export default function AdminSuccessStoriesPage() {
                   <button
                     type="button"
                     onClick={() => handleOpenEditModal(story)}
-                    className="px-3.5 py-1.5 text-xs font-bold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200/80 rounded-lg transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 text-xs font-bold text-[#1e3e8f] hover:text-[#1e3e8f] bg-blue-50 hover:bg-blue-100 border border-blue-200/80 rounded-lg transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
                   >
-                    <svg className="w-3.5 h-3.5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                     <span>Edit</span>
@@ -442,7 +442,7 @@ export default function AdminSuccessStoriesPage() {
                       value={formTitle}
                       onChange={(e) => setFormTitle(e.target.value)}
                       placeholder="e.g. One Seven CAFS Deployment for Petrochemical Depot"
-                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f] font-bold"
                     />
                   </div>
 
@@ -454,7 +454,7 @@ export default function AdminSuccessStoriesPage() {
                       value={formClient}
                       onChange={(e) => setFormClient(e.target.value)}
                       placeholder="e.g. Major Energy Terminal, Jubail"
-                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f] font-bold"
                     />
                   </div>
 
@@ -465,7 +465,7 @@ export default function AdminSuccessStoriesPage() {
                       value={formCategory}
                       onChange={(e) => setFormCategory(e.target.value)}
                       placeholder="e.g. Fire Fighting & Suppression"
-                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f] font-bold"
                     />
                   </div>
 
@@ -476,7 +476,7 @@ export default function AdminSuccessStoriesPage() {
                       value={formYear}
                       onChange={(e) => setFormYear(e.target.value)}
                       placeholder="e.g. 2025"
-                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-bold"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f] font-bold"
                     />
                   </div>
                 </div>
@@ -489,7 +489,7 @@ export default function AdminSuccessStoriesPage() {
                     value={formSummary}
                     onChange={(e) => setFormSummary(e.target.value)}
                     placeholder="Short 2-3 sentence overview..."
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500"
+                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f]"
                   />
                 </div>
 
@@ -501,7 +501,7 @@ export default function AdminSuccessStoriesPage() {
                       value={formChallenge}
                       onChange={(e) => setFormChallenge(e.target.value)}
                       placeholder="What was the high-risk operational obstacle?"
-                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f]"
                     />
                   </div>
 
@@ -512,7 +512,7 @@ export default function AdminSuccessStoriesPage() {
                       value={formSolution}
                       onChange={(e) => setFormSolution(e.target.value)}
                       placeholder="How did East Wind architect the resolution?"
-                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f]"
                     />
                   </div>
                 </div>
@@ -540,9 +540,9 @@ export default function AdminSuccessStoriesPage() {
                       value={formImageUrl}
                       onChange={(e) => setFormImageUrl(e.target.value)}
                       placeholder="/emergency_vehicle.webp"
-                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-mono text-[11px]"
+                      className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1e3e8f] font-mono text-[11px]"
                     />
-                    <label className="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer shrink-0 shadow-md transition-all flex items-center justify-center gap-1.5 active:translate-y-0.5">
+                    <label className="px-4 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer shrink-0 shadow-md transition-all flex items-center justify-center gap-1.5 active:translate-y-0.5">
                       <svg className="w-3.5 h-3.5 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                       </svg>
@@ -573,7 +573,7 @@ export default function AdminSuccessStoriesPage() {
                     <button
                       type="button"
                       onClick={handleAddResultMetric}
-                      className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg shadow-sm hover:shadow transition-all shrink-0 cursor-pointer"
+                      className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs rounded-lg shadow-sm hover:shadow transition-all shrink-0 cursor-pointer"
                     >
                       + Add
                     </button>
@@ -582,7 +582,7 @@ export default function AdminSuccessStoriesPage() {
                   <div className="flex flex-wrap gap-2 pt-1">
                     {formResults.map((res, i) => (
                       <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg font-mono">
-                        <strong>{res.label}:</strong> <span className="text-orange-600">{res.value}</span>
+                        <strong>{res.label}:</strong> <span className="text-[#1e3e8f]">{res.value}</span>
                         <button type="button" onClick={() => handleRemoveResultMetric(i)} className="text-red-500 hover:text-red-700 font-bold ml-1 p-0.5 rounded hover:bg-red-50 cursor-pointer">
                           <svg className="w-3 3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -609,7 +609,7 @@ export default function AdminSuccessStoriesPage() {
                 <button
                   type="submit"
                   form="story-form"
-                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg shadow-md cursor-pointer transition-all text-xs"
+                  className="px-6 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold rounded-lg shadow-md cursor-pointer transition-all text-xs"
                 >
                   {isEdit ? "Save Changes" : "Create Story"}
                 </button>
@@ -630,7 +630,7 @@ export default function AdminSuccessStoriesPage() {
           <div className="bg-white border border-slate-200 rounded-xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
-              <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded border border-orange-200">
+              <span className="text-xs font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200">
                 {viewStory.category} ({viewStory.year || "2025"})
               </span>
               <button
@@ -667,8 +667,8 @@ export default function AdminSuccessStoriesPage() {
               )}
 
               {viewStory.solution && (
-                <div className="bg-sky-50/60 p-3 rounded-lg border border-sky-100 text-xs">
-                  <strong className="block text-sky-700 mb-1">Solution:</strong>
+                <div className="bg-blue-50/60 p-3 rounded-lg border border-blue-100 text-xs">
+                  <strong className="block text-[#1e3e8f] mb-1">Solution:</strong>
                   <p className="text-slate-600 m-0">{viewStory.solution}</p>
                 </div>
               )}
@@ -679,7 +679,7 @@ export default function AdminSuccessStoriesPage() {
               <button
                 type="button"
                 onClick={() => setViewStory(null)}
-                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
+                className="px-6 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
               >
                 <span>Close Details</span>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

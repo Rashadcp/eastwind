@@ -252,8 +252,8 @@ export default function AdminContactPage() {
   if (loading) {
     return (
       <div className="py-20 text-center space-y-4">
-        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-xs text-slate-500 font-medium">Loading Contact Settings Nodes...</p>
+        <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-xs text-slate-500 font-medium">Loading Contact Information...</p>
       </div>
     );
   }
@@ -275,7 +275,7 @@ export default function AdminContactPage() {
           <button
             onClick={() => { setActiveTab("info"); clearMessages(); }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "info" ? "bg-white text-orange-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
+              activeTab === "info" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Office Locations & Channels
@@ -283,7 +283,7 @@ export default function AdminContactPage() {
           <button
             onClick={() => { setActiveTab("home"); clearMessages(); }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "home" ? "bg-white text-orange-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
+              activeTab === "home" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Home Contact Section
@@ -291,7 +291,7 @@ export default function AdminContactPage() {
           <button
             onClick={() => { setActiveTab("contact_page"); clearMessages(); }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "contact_page" ? "bg-white text-orange-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
+              activeTab === "contact_page" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Contact Page
@@ -299,7 +299,7 @@ export default function AdminContactPage() {
           <button
             onClick={() => { setActiveTab("enquiry_page"); clearMessages(); }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "enquiry_page" ? "bg-white text-orange-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
+              activeTab === "enquiry_page" ? "bg-white text-[#1e3e8f] shadow-sm" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Enquiry Page
@@ -454,7 +454,7 @@ export default function AdminContactPage() {
               onClick={() => saveSection("contact_info", {
                 hqTitle, hqAddress, hubTitle, hubAddress, telephone, email, workingHours, gatewayText, gatewayStatus
               }, "Office Addresses & Channels")}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Office Addresses Changes"}
             </button>
@@ -540,7 +540,7 @@ export default function AdminContactPage() {
               <button
                 type="button"
                 onClick={() => setHomeSectors([...homeSectors, { value: `sector-${Date.now()}`, label: "New Operational Sector" }])}
-                className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold rounded-lg hover:bg-orange-700 cursor-pointer"
+                className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold rounded-lg hover:bg-[#162f6d] cursor-pointer"
               >
                 + Add Sector Option
               </button>
@@ -605,7 +605,7 @@ export default function AdminContactPage() {
                 successTitle: homeSuccessTitle,
                 successMessage: homeSuccessMessage,
               }, "Home Contact Section")}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Home Contact Changes"}
             </button>
@@ -670,7 +670,7 @@ export default function AdminContactPage() {
                 />
                 <label
                   htmlFor="contact-hero-upload"
-                  className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                  className="px-4 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
                 >
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload File"}
                 </label>
@@ -776,7 +776,7 @@ export default function AdminContactPage() {
               <button
                 type="button"
                 onClick={() => setPageMarketSegments([...pageMarketSegments, { value: `segment-${Date.now()}`, label: "New Market Segment" }])}
-                className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold rounded-lg hover:bg-orange-700 cursor-pointer"
+                className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold rounded-lg hover:bg-[#162f6d] cursor-pointer"
               >
                 + Add Segment Option
               </button>
@@ -847,7 +847,7 @@ export default function AdminContactPage() {
                 successTitle: pageSuccessTitle,
                 successMessage: pageSuccessMessage,
               }, "Contact Page Settings")}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Contact Page Changes"}
             </button>
@@ -933,7 +933,7 @@ export default function AdminContactPage() {
               <button
                 type="button"
                 onClick={() => setEnquiryPurposes([...enquiryPurposes, { value: `purpose-${Date.now()}`, label: "New Application Purpose" }])}
-                className="px-4 py-2 bg-orange-600 text-white text-xs font-semibold rounded-lg hover:bg-orange-700 cursor-pointer"
+                className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold rounded-lg hover:bg-[#162f6d] cursor-pointer"
               >
                 + Add Purpose Option
               </button>
@@ -998,7 +998,7 @@ export default function AdminContactPage() {
                 successTitle: enquirySuccessTitle,
                 successMessage: enquirySuccessMessage,
               }, "Enquiry Page Settings")}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Enquiry Page Changes"}
             </button>

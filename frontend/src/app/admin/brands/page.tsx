@@ -44,7 +44,7 @@ export default function AdminBrandsPage() {
   const [formSolutionName, setFormSolutionName] = useState<string>("");
   const [formDescription, setFormDescription] = useState<string>("");
   const [formLogoUrl, setFormLogoUrl] = useState<string>("");
-  const [formAccent, setFormAccent] = useState<string>("orange");
+  const [formAccent, setFormAccent] = useState<string>("blue");
 
   // Form Products array & editing state
   // Brand Products selector state
@@ -104,7 +104,7 @@ export default function AdminBrandsPage() {
     setFormSolutionName("");
     setFormDescription("");
     setFormLogoUrl("");
-    setFormAccent("orange");
+    setFormAccent("blue");
     setFormProducts([]);
     setSelectedMasterProdId("");
     setShowModal(true);
@@ -120,7 +120,7 @@ export default function AdminBrandsPage() {
     setFormSolutionName(item.solutionName || "");
     setFormDescription(item.description || "");
     setFormLogoUrl(item.logoUrl || "");
-    setFormAccent(item.accent || "orange");
+    setFormAccent(item.accent || "blue");
     setFormProducts(item.products || []);
     setSelectedMasterProdId("");
     setShowModal(true);
@@ -290,7 +290,7 @@ export default function AdminBrandsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#1e3e8f] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
               CMS Module
             </span>
             <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Brand Portfolio Management</h1>
@@ -301,7 +301,7 @@ export default function AdminBrandsPage() {
         </div>
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -349,7 +349,7 @@ export default function AdminBrandsPage() {
           placeholder="Search brands by name or solution area..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full max-w-md px-4 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
+          className="w-full max-w-md px-4 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none"
         />
         <span className="text-xs font-mono font-bold text-slate-500">
           Showing {filteredBrands.length} Brands
@@ -371,7 +371,7 @@ export default function AdminBrandsPage() {
             <div key={brand.id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-start mb-3">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#1e3e8f] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
                     {brand.solutionName || "General Solution"}
                   </span>
                   <span className="text-[10px] font-mono text-slate-400">ID: {brand.id}</span>
@@ -412,7 +412,7 @@ export default function AdminBrandsPage() {
                 <div className="bg-slate-50 border border-slate-100 rounded-lg p-3 mb-4">
                   <div className="text-[11px] font-bold text-slate-700 mb-1 flex justify-between">
                     <span>Associated Brand Products</span>
-                    <span className="text-orange-600 font-mono">({brand.products?.length || 0})</span>
+                    <span className="text-[#1e3e8f] font-mono">({brand.products?.length || 0})</span>
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {(brand.products || []).slice(0, 3).map((p, idx) => (
@@ -439,7 +439,7 @@ export default function AdminBrandsPage() {
                 </button>
                 <button
                   onClick={() => handleOpenEdit(brand)}
-                  className="flex-1 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-semibold rounded-lg transition-colors border border-orange-200"
+                  className="flex-1 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#1e3e8f] text-xs font-semibold rounded-lg transition-colors border border-blue-200"
                 >
                   Edit Brand
                 </button>
@@ -518,7 +518,7 @@ export default function AdminBrandsPage() {
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="e.g. One Seven"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -528,7 +528,7 @@ export default function AdminBrandsPage() {
                     value={formTagline}
                     onChange={(e) => setFormTagline(e.target.value)}
                     placeholder="e.g. Compressed Air Foam Systems"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none"
                   />
                 </div>
               </div>
@@ -541,7 +541,7 @@ export default function AdminBrandsPage() {
                     value={formSolutionName}
                     onChange={(e) => setFormSolutionName(e.target.value)}
                     placeholder="e.g. Vehicle Fire Fighting"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -549,12 +549,12 @@ export default function AdminBrandsPage() {
                   <select
                     value={formAccent}
                     onChange={(e) => setFormAccent(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none"
                   >
-                    <option value="orange">Orange (Tactical Response)</option>
-                    <option value="blue">Blue (Wireless & Mobile)</option>
-                    <option value="red">Red (Fire Suites & Cables)</option>
-                    <option value="green">Green (Process Safety)</option>
+                    <option value="blue">East Wind Blue (#1e3e8f)</option>
+                    <option value="red">East Wind Red (#c22026)</option>
+                    <option value="orange">Amber Accent</option>
+                    <option value="green">Safety Green</option>
                   </select>
                 </div>
               </div>
@@ -566,7 +566,7 @@ export default function AdminBrandsPage() {
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
                   placeholder="Overview of the brand's core engineering capabilities..."
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none"
                 />
               </div>
 
@@ -607,7 +607,7 @@ export default function AdminBrandsPage() {
                     value={formLogoUrl}
                     onChange={(e) => setFormLogoUrl(e.target.value)}
                     placeholder="Enter image URL or upload photo"
-                    className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none font-mono"
+                    className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none font-mono"
                   />
                   <label className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg cursor-pointer transition-colors border border-slate-300">
                     {uploading ? "Processing..." : "Browse..."}
@@ -684,7 +684,7 @@ export default function AdminBrandsPage() {
                 {/* Attach Product From Master Inventory */}
                 <div className="bg-white border border-slate-200 rounded-lg p-4 space-y-3 shadow-2xs">
                   <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
                     <span>Attach Product from Inventory</span>
@@ -694,7 +694,7 @@ export default function AdminBrandsPage() {
                     <select
                       value={selectedMasterProdId}
                       onChange={(e) => setSelectedMasterProdId(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none bg-white text-slate-800"
+                      className="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none bg-white text-slate-800"
                     >
                       <option value="">-- Select Product from Inventory --</option>
                       {allMasterProducts.map((mp) => (
@@ -736,7 +736,7 @@ export default function AdminBrandsPage() {
                 <button
                   type="submit"
                   form="brand-form"
-                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg shadow-md cursor-pointer transition-all"
+                  className="px-6 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold rounded-lg shadow-md cursor-pointer transition-all"
                 >
                   {isEdit ? "Update Brand Record" : "Save New Brand"}
                 </button>
@@ -758,7 +758,7 @@ export default function AdminBrandsPage() {
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
               <div>
-                <span className="text-[10px] font-mono font-bold uppercase text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-200">
+                <span className="text-[10px] font-mono font-bold uppercase text-[#1e3e8f] bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
                   {viewItem.solutionName}
                 </span>
                 <h3 className="text-base font-bold text-slate-900 mt-1 m-0">{viewItem.name}</h3>
@@ -818,7 +818,7 @@ export default function AdminBrandsPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
+                className="px-6 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
               >
                 <span>Close Details</span>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

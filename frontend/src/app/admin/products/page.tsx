@@ -965,16 +965,16 @@ export default function AdminProductsPage() {
       {/* Title Header */}
       <div className="flex justify-between items-center w-full">
         <div>
-          <h2 className="text-xl font-bold uppercase tracking-tight m-0 text-white">Product Inventory</h2>
-          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">Manage physical hardware database records</p>
+          <h2 className="text-xl font-bold uppercase tracking-tight m-0 text-slate-900">Product Inventory</h2>
+          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">Manage product inventory, specifications, and categories</p>
         </div>
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={handleOpenCategoryManager}
-            className="flex items-center gap-2 py-3 px-5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-orange-400 hover:text-orange-300 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md active:translate-y-0.5"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-lg bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-[#1e3e8f] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs active:translate-y-0.5"
           >
-            <svg className="w-4 h-4 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <svg className="w-4 h-4 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
             </svg>
             <span>Edit Categories</span>
@@ -982,12 +982,12 @@ export default function AdminProductsPage() {
 
           <button
             onClick={handleOpenCreate}
-            className="flex items-center gap-2 py-3 px-6 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-600/10 active:translate-y-0.5"
+            className="flex items-center gap-2 py-2.5 px-5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md shadow-[#1e3e8f]/15 active:translate-y-0.5"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
-            Add Product Node
+            Add Product
           </button>
         </div>
       </div>
@@ -1048,7 +1048,7 @@ export default function AdminProductsPage() {
             placeholder="Search products by name, category or ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium"
+            className="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none focus:ring-1 focus:ring-[#1e3e8f]/20 transition-all font-medium"
           />
         </div>
 
@@ -1058,10 +1058,10 @@ export default function AdminProductsPage() {
           <select
             value={selectedBrandFilter}
             onChange={(e) => setSelectedBrandFilter(e.target.value)}
-            className="px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-extrabold text-slate-900 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none cursor-pointer max-sm:w-full shadow-sm"
+            className="px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:border-[#1e3e8f] focus:ring-2 focus:ring-[#1e3e8f]/20 focus:outline-none cursor-pointer max-sm:w-full shadow-xs"
           >
             {availableBrands.map((b) => (
-              <option key={b} value={b} className="bg-white text-slate-900 font-bold py-1">
+              <option key={b} value={b} className="bg-white text-slate-900 font-medium py-1">
                 {b === "All" ? "All Categories (Show All)" : b}
               </option>
             ))}
@@ -1071,10 +1071,10 @@ export default function AdminProductsPage() {
             <button
               type="button"
               onClick={() => setShowProductOrderModal(true)}
-              className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-sky-400 hover:text-sky-300 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:translate-y-0.5"
+              className="px-3.5 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-[#1e3e8f] rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-xs active:translate-y-0.5"
               title={selectedBrandFilter === "All" ? "Reorder all products in catalog" : `Reorder products in ${selectedBrandFilter}`}
             >
-              <svg className="w-4 h-4 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <svg className="w-4 h-4 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
               </svg>
               <span>Reorder ({orderedCategoryProducts.length})</span>
@@ -1103,19 +1103,19 @@ export default function AdminProductsPage() {
         
         {loading ? (
           <div className="py-24 text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-[10px] font-mono uppercase tracking-widest text-slate-400">Loading catalog modules...</p>
+            <div className="w-10 h-10 border-4 border-[#1e3e8f] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-[10px] font-mono uppercase tracking-widest text-slate-400">Loading products...</p>
           </div>
         ) : products.length === 0 ? (
           <div className="py-20 text-center text-slate-400 text-xs font-medium">
-            No hardware products registered in this database. Click &quot;Add Product Node&quot; to begin.
+            No products found. Click "Add Product" to begin.
           </div>
         ) : (
           <div className="overflow-x-auto w-full">
             <table className="w-full border-collapse text-left m-0">
               <thead>
                 <tr className="bg-white/[0.02] border-b border-white/5">
-                  <th className="px-5 py-4.5 text-[10px] font-bold uppercase tracking-wider text-orange-400 w-36">
+                  <th className="px-5 py-4.5 text-[10px] font-bold uppercase tracking-wider text-[#1e3e8f] w-36">
                     Order &amp; Drag
                   </th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Name</th>
@@ -1143,9 +1143,9 @@ export default function AdminProductsPage() {
                       onDragEnd={handleProductDragEnd}
                       className={`transition-all group ${
                         isDragging
-                          ? "opacity-35 bg-orange-500/10 border-y-2 border-dashed border-orange-500/60"
+                          ? "opacity-35 bg-blue-500/10 border-y-2 border-dashed border-[#1e3e8f]/60"
                           : isDragOver
-                          ? "border-t-2 border-t-orange-500 bg-orange-500/20"
+                          ? "border-t-2 border-t-[#1e3e8f] bg-blue-500/20"
                           : "hover:bg-white/[0.02]"
                       }`}
                     >
@@ -1153,20 +1153,22 @@ export default function AdminProductsPage() {
                         <div className="flex items-center gap-1.5">
                           {/* Drag Grip Handle */}
                           <div
-                            className="cursor-grab active:cursor-grabbing p-1.5 -ml-1.5 rounded-lg text-slate-500 hover:text-orange-400 hover:bg-white/5 transition-colors shrink-0"
-                            title="Drag to change order"
+                            draggable
+                            onDragStart={(e) => itemOrderIdx !== -1 && handleProductDragStart(e, itemOrderIdx)}
+                            title="Drag to reorder product display priority"
+                            className="cursor-grab active:cursor-grabbing p-1.5 -ml-1 text-slate-500 hover:text-white hover:bg-slate-700/60 rounded-lg transition-colors shrink-0"
                           >
-                            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                              <circle cx="8" cy="6" r="2" />
-                              <circle cx="16" cy="6" r="2" />
-                              <circle cx="8" cy="12" r="2" />
-                              <circle cx="16" cy="12" r="2" />
-                              <circle cx="8" cy="18" r="2" />
-                              <circle cx="16" cy="18" r="2" />
+                            <svg className="w-3.5 h-3.5 text-slate-400 hover:text-white" viewBox="0 0 24 24" fill="currentColor">
+                              <circle cx="9" cy="5" r="1.5" />
+                              <circle cx="15" cy="5" r="1.5" />
+                              <circle cx="9" cy="12" r="1.5" />
+                              <circle cx="15" cy="12" r="1.5" />
+                              <circle cx="9" cy="19" r="1.5" />
+                              <circle cx="15" cy="19" r="1.5" />
                             </svg>
                           </div>
 
-                          <span className="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 text-orange-700 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                          <span className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-[#1e3e8f] font-mono text-xs font-bold flex items-center justify-center shrink-0">
                             #{displaySeq}
                           </span>
                           <div className="flex items-center gap-1">
@@ -1174,7 +1176,7 @@ export default function AdminProductsPage() {
                               type="button"
                               disabled={!canMoveUp}
                               onClick={() => handleMoveProduct(itemOrderIdx, "up")}
-                              className="p-1.5 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                              className="p-1.5 rounded-lg bg-white hover:bg-[#1e3e8f] hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                               title="Move Up"
                               style={{ color: "#334155" }}
                             >
@@ -1186,7 +1188,7 @@ export default function AdminProductsPage() {
                               type="button"
                               disabled={!canMoveDown}
                               onClick={() => handleMoveProduct(itemOrderIdx, "down")}
-                              className="p-1.5 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                              className="p-1.5 rounded-lg bg-white hover:bg-[#1e3e8f] hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                               title="Move Down"
                               style={{ color: "#334155" }}
                             >
@@ -1211,7 +1213,7 @@ export default function AdminProductsPage() {
                       </button>
                       <button
                         onClick={() => handleOpenEdit(item)}
-                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/5 hover:bg-sky-500 hover:text-white transition-all cursor-pointer"
+                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-[#1e3e8f] bg-blue-500/10 hover:bg-[#162f6d] hover:text-white transition-all cursor-pointer"
                       >
                         Edit
                       </button>
@@ -1235,12 +1237,12 @@ export default function AdminProductsPage() {
                 <span>Showing all <strong className="text-white font-bold">{totalItems}</strong> products</span>
                 {selectedBrandFilter !== "All" && (
                   <span className="text-slate-500">
-                    in category <span className="text-orange-400 font-semibold">{selectedBrandFilter}</span>
+                    in category <span className="text-[#1e3e8f] font-semibold">{selectedBrandFilter}</span>
                   </span>
                 )}
               </div>
               <div className="text-[11px] text-slate-500 font-mono flex items-center gap-2">
-                <span className="text-slate-400 font-bold">Tip:</span> Drag rows with the <span className="text-orange-400 font-bold">⋮⋮</span> handle or click ▲ ▼ to reorder
+                <span className="text-slate-400 font-bold">Tip:</span> Drag rows with the <span className="text-[#1e3e8f] font-bold">⋮⋮</span> handle or click ▲ ▼ to reorder
               </div>
             </div>
           </div>
@@ -1256,7 +1258,7 @@ export default function AdminProductsPage() {
             {/* Modal Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-white/5 flex-shrink-0">
               <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
-                {isEdit ? `Configure Product: ${formName || formId}` : "Create New Product Catalog Node"}
+                {isEdit ? `Configure Product: ${formName || formId}` : "Create New Product"}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
@@ -1282,7 +1284,7 @@ export default function AdminProductsPage() {
                     placeholder="Enter visual product name"
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium"
                   />
                 </div>
 
@@ -1292,7 +1294,7 @@ export default function AdminProductsPage() {
                   <select
                     value={formBrand}
                     onChange={(e) => setFormBrand(e.target.value)}
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-[#1e3e8f] focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium cursor-pointer"
                   >
                     {formBrand && !availableBrandsList.includes(formBrand) && (
                       <option value={formBrand} className="bg-white text-slate-900 py-1.5 font-bold">
@@ -1313,7 +1315,7 @@ export default function AdminProductsPage() {
                   <select
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-[#1e3e8f] focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium cursor-pointer"
                   >
                     {formCategory && !PRODUCT_CATEGORIES.some((c) => c.id === formCategory || c.name === formCategory) && (
                       <option value={formCategory} className="bg-white text-slate-900 py-1.5 font-bold">
@@ -1337,7 +1339,7 @@ export default function AdminProductsPage() {
                   placeholder="Enter detailed technical product summary"
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium resize-y"
+                  className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium resize-y"
                 />
               </div>
 
@@ -1379,7 +1381,7 @@ export default function AdminProductsPage() {
                       placeholder="e.g. /uploads/image.png"
                       value={formImageUrl}
                       onChange={(e) => setFormImageUrl(e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                      className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium"
                     />
                   </div>
                   <div className="md:col-span-4 relative">
@@ -1392,7 +1394,7 @@ export default function AdminProductsPage() {
                     />
                     <label
                       htmlFor="product-file-upload"
-                      className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-dashed border-sky-500/30 text-sky-400 text-xs font-bold uppercase tracking-wider bg-sky-500/5 hover:bg-sky-500/10 transition-all cursor-pointer"
+                      className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-dashed border-[#1e3e8f]/30 text-[#1e3e8f] text-xs font-bold uppercase tracking-wider bg-blue-500/10 hover:bg-[#162f6d]/10 transition-all cursor-pointer"
                     >
                       {uploading ? "Processing..." : "Upload File"}
                     </label>
@@ -1410,7 +1412,7 @@ export default function AdminProductsPage() {
                     placeholder="Enter a features bullet point"
                     value={featureInput}
                     onChange={(e) => setFeatureInput(e.target.value)}
-                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium"
                   />
                   <button
                     type="button"
@@ -1446,7 +1448,7 @@ export default function AdminProductsPage() {
                   <button
                     type="button"
                     onClick={loadDefaultCertifications}
-                    className="text-[10px] font-mono font-bold text-sky-400 hover:text-sky-300 underline cursor-pointer bg-transparent border-none"
+                    className="text-[10px] font-mono font-bold text-[#1e3e8f] hover:text-blue-300 underline cursor-pointer bg-transparent border-none"
                   >
                     + Load Default 4 Badges (ATEX / IECEx / SIL / IP67)
                   </button>
@@ -1472,7 +1474,7 @@ export default function AdminProductsPage() {
                       className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
                         formCertifications.includes(cert)
                           ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 opacity-50 cursor-not-allowed"
-                          : "bg-slate-900 hover:bg-slate-800 text-slate-300 border-white/10 hover:border-sky-500/50 hover:text-white"
+                          : "bg-slate-900 hover:bg-slate-800 text-slate-300 border-white/10 hover:border-[#1e3e8f]/50 hover:text-white"
                       }`}
                     >
                       + {cert}
@@ -1493,7 +1495,7 @@ export default function AdminProductsPage() {
                         addCertification();
                       }
                     }}
-                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium"
                   />
                   <button
                     type="button"
@@ -1520,8 +1522,8 @@ export default function AdminProductsPage() {
                         tagStyle = "bg-emerald-950/50 text-emerald-300 border-emerald-500/40";
                         dotColor = "bg-emerald-400 shadow-sm shadow-emerald-500/50";
                       } else if (cLower.includes("iecex") || cLower.includes("ul") || cLower.includes("fm") || cLower.includes("cert") || cLower.includes("ce")) {
-                        tagStyle = "bg-sky-950/50 text-sky-300 border-sky-500/40";
-                        dotColor = "bg-sky-400 shadow-sm shadow-sky-500/50";
+                        tagStyle = "bg-blue-950/50 text-blue-300 border-[#1e3e8f]/40";
+                        dotColor = "bg-[#1e3e8f] shadow-sm shadow-[#1e3e8f]/50";
                       } else if (cLower.includes("sil")) {
                         tagStyle = "bg-purple-950/50 text-purple-300 border-purple-500/40";
                         dotColor = "bg-purple-400 shadow-sm shadow-purple-500/50";
@@ -1561,7 +1563,7 @@ export default function AdminProductsPage() {
                   <button
                     type="button"
                     onClick={loadDefaultSpecs}
-                    className="text-[10px] font-mono font-bold text-sky-400 hover:text-sky-300 underline cursor-pointer bg-transparent border-none"
+                    className="text-[10px] font-mono font-bold text-[#1e3e8f] hover:text-blue-300 underline cursor-pointer bg-transparent border-none"
                   >
                     + Load Standard Safety Specs Template
                   </button>
@@ -1585,7 +1587,7 @@ export default function AdminProductsPage() {
                       key={label}
                       type="button"
                       onClick={() => setSpecPreset(label)}
-                      className="text-[10px] font-bold px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-white/10 hover:border-sky-500/50 hover:text-white rounded-lg transition-all cursor-pointer"
+                      className="text-[10px] font-bold px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-white/10 hover:border-[#1e3e8f]/50 hover:text-white rounded-lg transition-all cursor-pointer"
                     >
                       + {label}
                     </button>
@@ -1603,7 +1605,7 @@ export default function AdminProductsPage() {
                       placeholder="e.g. Operating Temperature or Dimensions"
                       value={specLabel}
                       onChange={(e) => setSpecLabel(e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                      className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium"
                     />
                   </div>
 
@@ -1623,12 +1625,12 @@ export default function AdminProductsPage() {
                             addSpec();
                           }
                         }}
-                        className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                        className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium"
                       />
                       <button
                         type="button"
                         onClick={addSpec}
-                        className="px-5 py-3 rounded-lg bg-orange-600 hover:bg-orange-500 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer text-white shrink-0 shadow-sm"
+                        className="px-5 py-3 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer text-white shrink-0 shadow-sm"
                       >
                         + Add Spec
                       </button>
@@ -1645,7 +1647,7 @@ export default function AdminProductsPage() {
                   ) : (
                     formSpecs.map((spec, idx) => (
                       <div key={idx} className="flex justify-between items-center p-3.5 hover:bg-white/[0.02] transition-colors">
-                        <span className="text-sky-400 font-bold uppercase tracking-wider text-[10px] w-2/5 pr-2">
+                        <span className="text-[#1e3e8f] font-bold uppercase tracking-wider text-[10px] w-2/5 pr-2">
                           {spec.label}
                         </span>
                         <div className="flex items-center justify-between flex-1 gap-4">
@@ -1679,7 +1681,7 @@ export default function AdminProductsPage() {
                   {/* Datasheet Upload */}
                   <div className="bg-slate-900/80 border border-white/5 rounded-lg p-5 space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
+                      <span className="text-xs font-bold text-[#1e3e8f] uppercase tracking-wider flex items-center gap-2">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
@@ -1701,9 +1703,9 @@ export default function AdminProductsPage() {
                     />
 
                     {formDatasheetUrl ? (
-                      <div className="bg-slate-950 border border-sky-500/30 rounded-lg p-3.5 space-y-3">
+                      <div className="bg-slate-950 border border-[#1e3e8f]/30 rounded-lg p-3.5 space-y-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 shrink-0">
+                          <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-[#1e3e8f]/30 flex items-center justify-center text-[#1e3e8f] shrink-0">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                             </svg>
@@ -1753,9 +1755,9 @@ export default function AdminProductsPage() {
                     ) : (
                       <label
                         htmlFor="datasheet-upload-file"
-                        className="block py-6 px-4 rounded-lg border-2 border-dashed border-white/10 hover:border-sky-500/50 hover:bg-sky-500/5 text-center cursor-pointer transition-all group"
+                        className="block py-6 px-4 rounded-lg border-2 border-dashed border-white/10 hover:border-[#1e3e8f]/50 hover:bg-[#162f6d]/5 text-center cursor-pointer transition-all group"
                       >
-                        <svg className="w-6 h-6 mx-auto mb-2 text-slate-400 group-hover:text-sky-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <svg className="w-6 h-6 mx-auto mb-2 text-slate-400 group-hover:text-[#1e3e8f] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                         </svg>
                         <span className="text-xs font-bold text-slate-200 group-hover:text-white block uppercase tracking-wider">
@@ -1877,9 +1879,9 @@ export default function AdminProductsPage() {
               <button
                 type="submit"
                 form="product-form"
-                className="px-8 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
+                className="px-8 py-2.5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-[#1e3e8f]/20"
               >
-                {isEdit ? "Update Catalog Node" : "Save Catalog Node"}
+                {isEdit ? "Update Product" : "Save Product"}
               </button>
             </div>
 
@@ -1898,9 +1900,9 @@ export default function AdminProductsPage() {
             </div>
             
             <div className="space-y-2">
-              <h3 className="text-lg font-bold text-white uppercase tracking-tight m-0">Confirm Node Deletion</h3>
+              <h3 className="text-lg font-bold text-white uppercase tracking-tight m-0">Confirm Product Deletion</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-light m-0">
-                Are you sure you want to permanently delete product code `{deleteTarget}`? This action cuts active dynamic assets and cannot be undone.
+                Are you sure you want to permanently delete product code `{deleteTarget}`? This action cannot be undone.
               </p>
             </div>
 
@@ -1915,7 +1917,7 @@ export default function AdminProductsPage() {
                 onClick={handleDelete}
                 className="px-7 py-2.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
               >
-                Delete Node
+                Delete Product
               </button>
             </div>
           </div>
@@ -1930,7 +1932,7 @@ export default function AdminProductsPage() {
             {/* Modal Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-slate-100 flex-shrink-0">
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
-                Product Details Node: {viewItem.id}
+                Product Details: {viewItem.id}
               </h3>
               <button
                 onClick={() => setViewItem(null)}
@@ -2007,7 +2009,7 @@ export default function AdminProductsPage() {
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-0 list-none m-0">
                     {viewItem.features.map((feat, idx) => (
                       <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-650">
-                        <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0 mt-1.5" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 mt-1.5" />
                         <span>{feat}</span>
                       </li>
                     ))}
@@ -2051,7 +2053,7 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 rounded-lg bg-sky-600 text-white hover:bg-sky-500 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-sky-600/10"
+                className="px-6 py-2.5 rounded-lg bg-[#1e3e8f] text-white hover:bg-[#162f6d] text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-[#1e3e8f]/20"
               >
                 Close View
               </button>
@@ -2069,7 +2071,7 @@ export default function AdminProductsPage() {
             {/* Modal Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-white/10 flex-shrink-0 bg-slate-950/40">
               <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
                     Manage Equipment Categories
@@ -2113,12 +2115,12 @@ export default function AdminProductsPage() {
                       }
                     }}
                     placeholder="e.g. Explosion-Proof Detection Arrays"
-                    className="flex-1 px-4 py-2.5 bg-slate-900 border border-white/10 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 font-medium"
+                    className="flex-1 px-4 py-2.5 bg-slate-900 border border-white/10 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1e3e8f] font-medium"
                   />
                   <button
                     type="button"
                     onClick={handleAddCategory}
-                    className="px-5 py-2.5 bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all cursor-pointer shadow-sm active:translate-y-0.5 shrink-0"
+                    className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all cursor-pointer shadow-sm active:translate-y-0.5 shrink-0"
                   >
                     Add Category
                   </button>
@@ -2127,8 +2129,8 @@ export default function AdminProductsPage() {
 
               {/* Instructions Tip */}
               <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono">
-                <span>Drag with the <strong className="text-orange-400">⋮⋮</strong> handle or use ▲ ▼ to reorder</span>
-                <span className="text-orange-400 font-bold">Display Order</span>
+                <span>Drag with the <strong className="text-[#1e3e8f]">⋮⋮</strong> handle or use ▲ ▼ to reorder</span>
+                <span className="text-[#1e3e8f] font-bold">Display Order</span>
               </div>
 
               {/* Categories Reorderable List */}
@@ -2151,9 +2153,9 @@ export default function AdminProductsPage() {
                       onDragEnd={handleCategoryDragEnd}
                       className={`flex items-center justify-between gap-3 p-3 rounded-lg border transition-all group ${
                         isDragging
-                          ? "opacity-35 bg-orange-500/10 border-dashed border-orange-400"
+                          ? "opacity-35 bg-blue-500/10 border-dashed border-[#1e3e8f]/60"
                           : isDragOver
-                          ? "border-t-2 border-t-orange-500 bg-orange-500/20 shadow-md"
+                          ? "border-t-2 border-t-[#1e3e8f] bg-blue-500/20 shadow-md"
                           : "bg-slate-950/40 border-white/5 hover:border-white/15"
                       }`}
                     >
@@ -2161,7 +2163,7 @@ export default function AdminProductsPage() {
                       <div className="flex items-center gap-2">
                         {/* Drag Handle */}
                         <div
-                          className="cursor-grab active:cursor-grabbing p-1 -ml-1 text-slate-500 hover:text-orange-400 hover:bg-white/5 rounded-md transition-colors shrink-0"
+                          className="cursor-grab active:cursor-grabbing p-1 -ml-1 text-slate-500 hover:text-[#1e3e8f] hover:bg-white/5 rounded-md transition-colors shrink-0"
                           title="Drag to change category order"
                         >
                           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
@@ -2184,7 +2186,7 @@ export default function AdminProductsPage() {
                             onClick={() => handleMoveCategory(idx, "up")}
                             disabled={isFirst || savingCategories}
                             className={`p-1 rounded bg-white/5 border border-white/5 transition-colors ${
-                              isFirst || savingCategories ? "opacity-20 cursor-not-allowed" : "hover:bg-orange-500/20 hover:text-orange-400 cursor-pointer"
+                              isFirst || savingCategories ? "opacity-20 cursor-not-allowed" : "hover:bg-[#162f6d]/20 hover:text-[#1e3e8f] cursor-pointer"
                             }`}
                             title="Move Up"
                           >
@@ -2197,7 +2199,7 @@ export default function AdminProductsPage() {
                             onClick={() => handleMoveCategory(idx, "down")}
                             disabled={isLast || savingCategories}
                             className={`p-1 rounded bg-white/5 border border-white/5 transition-colors ${
-                              isLast || savingCategories ? "opacity-20 cursor-not-allowed" : "hover:bg-orange-500/20 hover:text-orange-400 cursor-pointer"
+                              isLast || savingCategories ? "opacity-20 cursor-not-allowed" : "hover:bg-[#162f6d]/20 hover:text-[#1e3e8f] cursor-pointer"
                             }`}
                             title="Move Down"
                           >
@@ -2224,7 +2226,7 @@ export default function AdminProductsPage() {
                                   setEditingCatId(null);
                                 }
                               }}
-                              className="flex-1 px-3 py-1.5 bg-slate-900 border border-orange-500 rounded-lg text-xs text-white focus:outline-none font-medium"
+                              className="flex-1 px-3 py-1.5 bg-slate-900 border border-[#1e3e8f] rounded-lg text-xs text-white focus:outline-none font-medium"
                               autoFocus
                             />
                             <button
@@ -2263,7 +2265,7 @@ export default function AdminProductsPage() {
                               setEditingCatId(cat.id);
                               setEditingCatName(cat.name);
                             }}
-                            className="p-2 text-slate-400 hover:text-orange-400 hover:bg-orange-500/10 rounded-lg transition-colors cursor-pointer"
+                            className="p-2 text-slate-400 hover:text-[#1e3e8f] hover:bg-[#162f6d]/10 rounded-lg transition-colors cursor-pointer"
                             title="Edit Category Name"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -2307,7 +2309,7 @@ export default function AdminProductsPage() {
                   type="button"
                   onClick={handleSaveCategoriesOrder}
                   disabled={savingCategories}
-                  className="px-6 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-orange-600/20 active:translate-y-0.5 font-mono"
+                  className="px-6 py-2.5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-[#1e3e8f]/20 active:translate-y-0.5 font-mono"
                 >
                   {savingCategories ? "Saving..." : "Save Order"}
                 </button>
@@ -2368,7 +2370,7 @@ export default function AdminProductsPage() {
             {/* Modal Header */}
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white">
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-orange-600 font-bold">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#1e3e8f] font-bold">
                   {selectedBrandFilter === "All" ? "Catalog Sequence" : "Category Sequence"}
                 </span>
                 <h3 className="text-lg font-bold text-slate-900 mt-0.5" style={{ color: "#0f172a" }}>
@@ -2413,16 +2415,16 @@ export default function AdminProductsPage() {
                       onDragEnd={handleProductDragEnd}
                       className={`flex items-center justify-between gap-3 p-3.5 rounded-lg border transition-all ${
                         isDragging
-                          ? "opacity-35 bg-orange-50 border-dashed border-orange-400"
+                          ? "opacity-35 bg-blue-50 border-dashed border-[#1e3e8f]/60"
                           : isDragOver
-                          ? "border-t-2 border-t-orange-500 bg-orange-50/90 shadow-md"
+                          ? "border-t-2 border-t-[#1e3e8f] bg-blue-50/90 shadow-md"
                           : "bg-slate-50 hover:bg-slate-100/80 border-slate-200"
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         {/* Drag Grip Handle */}
                         <div
-                          className="cursor-grab active:cursor-grabbing p-1.5 -ml-1 text-slate-400 hover:text-orange-600 hover:bg-orange-100/60 rounded-lg transition-colors shrink-0"
+                          className="cursor-grab active:cursor-grabbing p-1.5 -ml-1 text-slate-400 hover:text-[#1e3e8f] hover:bg-blue-100/60 rounded-lg transition-colors shrink-0"
                           title="Drag to change sequence"
                         >
                           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -2435,7 +2437,7 @@ export default function AdminProductsPage() {
                           </svg>
                         </div>
 
-                        <span className="w-8 h-8 rounded-lg bg-orange-50 border border-orange-200 text-orange-600 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                        <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 text-[#1e3e8f] font-mono text-xs font-bold flex items-center justify-center shrink-0">
                           #{idx + 1}
                         </span>
                         <div className="min-w-0">
@@ -2450,7 +2452,7 @@ export default function AdminProductsPage() {
                             style={{ color: "#64748b" }}
                           >
                             {selectedBrandFilter === "All" && item.brand ? (
-                              <span className="text-orange-600 font-semibold mr-1.5 font-sans">[{item.brand}]</span>
+                              <span className="text-[#1e3e8f] font-semibold mr-1.5 font-sans">[{item.brand}]</span>
                             ) : null}
                             {item.id}
                           </p>
@@ -2462,7 +2464,7 @@ export default function AdminProductsPage() {
                           type="button"
                           disabled={idx === 0 || savingProductOrder}
                           onClick={() => handleMoveProduct(idx, "up")}
-                          className="p-2 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                          className="p-2 rounded-lg bg-white hover:bg-[#1e3e8f] hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
                           title="Move Up"
                           style={{ color: "#334155" }}
                         >
@@ -2474,7 +2476,7 @@ export default function AdminProductsPage() {
                           type="button"
                           disabled={idx === orderedCategoryProducts.length - 1 || savingProductOrder}
                           onClick={() => handleMoveProduct(idx, "down")}
-                          className="p-2 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                          className="p-2 rounded-lg bg-white hover:bg-[#1e3e8f] hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
                           title="Move Down"
                           style={{ color: "#334155" }}
                         >
@@ -2507,8 +2509,8 @@ export default function AdminProductsPage() {
                   type="button"
                   disabled={savingProductOrder || orderedCategoryProducts.length === 0}
                   onClick={() => handleSaveProductOrder()}
-                  className="px-6 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-orange-600/20 active:translate-y-0.5 font-mono flex items-center gap-2"
-                  style={{ color: "#ffffff", backgroundColor: "#ea580c" }}
+                  className="px-6 py-2.5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-[#1e3e8f]/20 active:translate-y-0.5 font-mono flex items-center gap-2"
+                  style={{ color: "#ffffff", backgroundColor: "#1e3e8f" }}
                 >
                   {savingProductOrder ? (
                     <span>Saving...</span>

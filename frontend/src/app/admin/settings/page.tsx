@@ -69,7 +69,7 @@ export default function AdminSettingsPage() {
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold uppercase tracking-tight m-0 text-slate-800">System Settings</h2>
-        <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1">Configure credentials and console keys</p>
+        <p className="text-xs text-slate-500 mt-1">Manage administrator account security and password</p>
       </div>
 
       {/* Notifications */}
@@ -89,8 +89,8 @@ export default function AdminSettingsPage() {
         
         <div>
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 m-0">Change Administrator Password</h3>
-          <p className="text-[10px] text-slate-455 leading-relaxed font-light mt-1">
-            Updating your password modifies the security database immediately. Make sure to keep note of your new credentials.
+          <p className="text-xs text-slate-500 leading-relaxed mt-1">
+            Ensure you use a secure, strong password to protect the East Wind administration portal.
           </p>
         </div>
 
@@ -98,40 +98,40 @@ export default function AdminSettingsPage() {
           
           {/* Current Password */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block pl-1">Current Password *</label>
+            <label className="text-xs font-semibold text-slate-600 block pl-1">Current Password *</label>
             <input
               type="password"
               required
               placeholder="••••••••"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none focus:bg-white transition-all font-medium"
+              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none focus:bg-white transition-all font-medium"
             />
           </div>
 
           {/* New Password */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block pl-1">New Secure Password *</label>
+            <label className="text-xs font-semibold text-slate-600 block pl-1">New Password *</label>
             <input
               type="password"
               required
               placeholder="••••••••"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none focus:bg-white transition-all font-medium"
+              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none focus:bg-white transition-all font-medium"
             />
           </div>
 
           {/* Confirm Password */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block pl-1">Confirm New Password *</label>
+            <label className="text-xs font-semibold text-slate-600 block pl-1">Confirm New Password *</label>
             <input
               type="password"
               required
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none focus:bg-white transition-all font-medium"
+              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none focus:bg-white transition-all font-medium"
             />
           </div>
 
@@ -139,16 +139,16 @@ export default function AdminSettingsPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 py-3.5 px-8 mt-6 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-600/10 active:translate-y-0.5 disabled:opacity-50 transition-all"
+            className="flex items-center gap-2 py-3.5 px-8 mt-6 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-lg shadow-[#1e3e8f]/20 active:translate-y-0.5 disabled:opacity-50 transition-all"
           >
             {loading ? (
               <>
                 <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Commiting Credentials...
+                Updating Password...
               </>
             ) : (
               <>
-                Update Password Registers
+                Update Password
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
