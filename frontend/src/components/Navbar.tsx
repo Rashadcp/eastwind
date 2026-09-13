@@ -376,14 +376,17 @@ export default function Navbar() {
       } catch (err) {
         console.error("Navbar failed to fetch services:", err);
       }
-      // Fetch footer data to get unified logoUrl
+      // Fetch footer / contact settings data to get unified logoUrl
       try {
-        const footerRes = await cachedFetch<any>(`${baseUrl}/api/footer`, { fallback: null });
-        if (footerRes && footerRes.logoUrl) {
-          setLogoUrl(footerRes.logoUrl);
+        const settings = await cachedFetch<any[]>(`${baseUrl}/api/contact-settings`, { fallback: [] });
+        if (Array.isArray(settings)) {
+          const footerDoc = settings.find((item: any) => item.id === "footer");
+          if (footerDoc && footerDoc.logoUrl) {
+            setLogoUrl(footerDoc.logoUrl);
+          }
         }
       } catch (err) {
-        console.warn("Navbar failed to fetch logo from footer:", err);
+        console.warn("Navbar failed to fetch logo from contact settings:", err);
       }
     }
 

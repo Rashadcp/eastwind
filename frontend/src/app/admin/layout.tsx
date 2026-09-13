@@ -93,11 +93,14 @@ export default function AdminLayout({
     async function fetchLogo() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${baseUrl}/api/footer`);
+        const res = await fetch(`${baseUrl}/api/contact-settings`);
         if (res.ok) {
           const data = await res.json();
-          if (data && data.logoUrl) {
-            setLogoUrl(data.logoUrl);
+          if (Array.isArray(data)) {
+            const footerDoc = data.find((item: any) => item.id === "footer");
+            if (footerDoc && footerDoc.logoUrl) {
+              setLogoUrl(footerDoc.logoUrl);
+            }
           }
         }
       } catch (e) {
