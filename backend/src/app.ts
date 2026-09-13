@@ -88,6 +88,13 @@ app.use("/auth", authRouter);
 app.post("/api/enquiry", EnquiryController.submitEnquiry);
 app.post("/enquiry", EnquiryController.submitEnquiry);
 
+app.get(["/api/footer", "/footer"], (req, res) => {
+  res.json({
+    logoUrl: "/logo.png",
+    companyName: "Eastwind Energy Arabia"
+  });
+});
+
 // 5. Fallback 404 handler
 app.use((req, res, next) => {
   res.status(404).json({ error: "Endpoint not found" });

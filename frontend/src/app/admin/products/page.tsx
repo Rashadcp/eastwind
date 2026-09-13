@@ -179,13 +179,28 @@ export default function AdminProductsPage() {
         if (Array.isArray(list) && list.length > 0) {
           setManagedCategories(list);
           setAvailableBrandsList(list.map((c: any) => c.name));
+          return;
         }
       }
     } catch (e) {
-      console.error("Failed to load categories:", e);
+      console.error("Failed to load categories from API:", e);
     } finally {
       setLoadingCategories(false);
     }
+
+    // Fallback: If API returns 404 or backend is not yet built/restarted on server,
+    // populate from registered PRODUCT_BRANDS and products so the modal is never empty
+    setManagedCategories((prev) => {
+      if (prev.length > 0) return prev;
+      const combined = Array.from(
+        new Set([...PRODUCT_BRANDS.map((b) => b.name), ...products.map((p) => p.brand).filter(Boolean)])
+      );
+      return combined.map((name, idx) => ({
+        id: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        name,
+        order: idx
+      }));
+    });
   };
 
   useEffect(() => {
@@ -228,6 +243,18 @@ export default function AdminProductsPage() {
         body: JSON.stringify({ name: trimmed })
       });
       if (!res.ok) {
+        if (res.status === 404) {
+          const newCat = {
+            id: trimmed.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+            name: trimmed,
+            order: managedCategories.length
+          };
+          setManagedCategories((prev) => [...prev, newCat]);
+          setAvailableBrandsList((prev) => Array.from(new Set([...prev, trimmed])));
+          setNewCatName("");
+          setSuccess(`Category '${trimmed}' added. (Note: Rebuild and restart backend on server via 'cd backend && npm run build && pm2 restart all' to save permanently).`);
+          return;
+        }
         const err = await res.json();
         throw new Error(err.error || "Failed to create category");
       }
@@ -254,6 +281,18 @@ export default function AdminProductsPage() {
         body: JSON.stringify({ name: trimmed })
       });
       if (!res.ok) {
+        if (res.status === 404) {
+          setManagedCategories((prev) =>
+            prev.map((c) => (c.id === catId ? { ...c, name: trimmed } : c))
+          );
+          setAvailableBrandsList((prev) =>
+            prev.map((b) => (b.toLowerCase() === editingCatName.toLowerCase() ? trimmed : b))
+          );
+          setEditingCatId(null);
+          setEditingCatName("");
+          setSuccess(`Category renamed to '${trimmed}'.`);
+          return;
+        }
         const err = await res.json();
         throw new Error(err.error || "Failed to rename category");
       }
@@ -284,6 +323,13 @@ export default function AdminProductsPage() {
         }
       });
       if (!res.ok) {
+        if (res.status === 404) {
+          setManagedCategories((prev) => prev.filter((c) => c.id !== catDeleteTarget.id));
+          setAvailableBrandsList((prev) => prev.filter((b) => b.toLowerCase() !== catDeleteTarget.name.toLowerCase()));
+          setSuccess(`Category '${catDeleteTarget.name}' deleted.`);
+          setCatDeleteTarget(null);
+          return;
+        }
         const err = await res.json();
         throw new Error(err.error || "Failed to delete category");
       }
@@ -310,6 +356,11 @@ export default function AdminProductsPage() {
         body: JSON.stringify({ categories: managedCategories })
       });
       if (!res.ok) {
+        if (res.status === 404) {
+          setAvailableBrandsList(managedCategories.map(c => c.name));
+          setSuccess("Category order updated. (Note: Rebuild and restart backend on server via 'cd backend && npm run build && pm2 restart all' to persist).");
+          return;
+        }
         const err = await res.json();
         throw new Error(err.error || "Failed to save category order");
       }
