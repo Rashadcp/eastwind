@@ -732,78 +732,23 @@ function ProductsCatalogContent() {
                   )}
                 </div>
 
-                {/* Horizontal Scrollable Category Pills */}
-                <div>
-                  <div className="flex items-center justify-between mb-2 px-0.5">
-                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500">
-                      Equipment Categories
-                    </span>
-                    <span className="text-[10px] font-mono text-slate-400">
-                      Scroll to browse →
-                    </span>
-                  </div>
-                  
-                  <div 
-                    className="flex gap-2 overflow-x-auto pb-2 pt-0.5 -mx-5 px-5 scroll-smooth [&::-webkit-scrollbar]:hidden"
-                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                  >
-                    {/* All Categories Pill */}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedBrand("All")}
-                      className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                        selectedBrand === "All"
-                          ? "bg-slate-900 text-white shadow-xs"
-                          : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 shadow-2xs"
-                      }`}
-                    >
-                      <span>All Categories</span>
-                      <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md ${
-                        selectedBrand === "All" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
-                      }`}>
-                        {products.length}
-                      </span>
-                    </button>
-
-                    {/* Dynamic Category Pills */}
-                    {productCategoriesList.map((catName) => {
-                      const count = products.filter((p) => p.brand.toLowerCase() === catName.toLowerCase()).length;
-                      const isSelected = selectedBrand.toLowerCase() === catName.toLowerCase();
-                      return (
-                        <button
-                          key={catName}
-                          type="button"
-                          onClick={() => setSelectedBrand(catName)}
-                          className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
-                            isSelected
-                              ? "bg-orange-600 text-white shadow-xs"
-                              : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 shadow-2xs"
-                          }`}
-                        >
-                          <span>{catName}</span>
-                          <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md ${
-                            isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
-                          }`}>
-                            {count}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
                 {/* Mobile Dropdowns for Quick Jump */}
                 <div className="grid grid-cols-2 gap-2">
                   <div className="relative">
                     <select
                       value={selectedBrand}
                       onChange={(e) => setSelectedBrand(e.target.value)}
-                      className="w-full appearance-none bg-white border border-slate-200 text-slate-800 text-[11px] font-medium rounded-xl pl-3 pr-7 py-2.5 shadow-2xs focus:outline-none focus:border-orange-500 truncate cursor-pointer"
+                      className="w-full appearance-none bg-white border border-slate-200 text-slate-800 text-xs font-medium rounded-xl pl-3 pr-7 py-2.5 shadow-2xs focus:outline-none focus:border-orange-500 truncate cursor-pointer"
                     >
                       <option value="All">All Categories ({products.length})</option>
-                      {productCategoriesList.map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
-                      ))}
+                      {productCategoriesList.map((cat) => {
+                        const count = products.filter((p) => p.brand.toLowerCase() === cat.toLowerCase()).length;
+                        return (
+                          <option key={cat} value={cat}>
+                            {cat} ({count})
+                          </option>
+                        );
+                      })}
                     </select>
                     <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
@@ -812,7 +757,7 @@ function ProductsCatalogContent() {
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full appearance-none bg-white border border-slate-200 text-slate-800 text-[11px] font-medium rounded-xl pl-3 pr-7 py-2.5 shadow-2xs focus:outline-none focus:border-orange-500 truncate cursor-pointer"
+                      className="w-full appearance-none bg-white border border-slate-200 text-slate-800 text-xs font-medium rounded-xl pl-3 pr-7 py-2.5 shadow-2xs focus:outline-none focus:border-orange-500 truncate cursor-pointer"
                     >
                       <option value="All">All Solutions</option>
                       {SOLUTIONS_LIST.map((sol) => (
