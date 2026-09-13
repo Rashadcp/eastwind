@@ -327,14 +327,27 @@ export default function AdminFooterPage() {
             Configure dynamic footer content, links, locations, and brand assets.
           </p>
         </div>
-        <a
-          href="/"
-          target="_blank"
-          rel="noreferrer"
-          className="text-xs font-semibold text-[#1e3e8f] hover:underline self-start sm:self-auto"
-        >
-          Preview Live Site ↗
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href="/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs font-semibold text-[#1e3e8f] hover:underline self-start sm:self-auto"
+          >
+            Preview Live Site ↗
+          </a>
+          <button
+            type="button"
+            disabled={saving}
+            onClick={handleSave}
+            className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-xs"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{saving ? "Saving Changes..." : "Save Changes"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Notifications */}

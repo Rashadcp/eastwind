@@ -225,11 +225,15 @@ export default function AdminHeroPage() {
         </div>
 
         <button
-          onClick={handleSaveHero}
+          type="button"
+          onClick={() => handleSaveHero()}
           disabled={saving}
-          className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs uppercase tracking-wider rounded-sm transition-colors shrink-0 border border-[#1e3e8f] cursor-pointer"
+          className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
         >
-          {saving ? "Saving Changes..." : "Save Hero Slide Captions"}
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <span>{saving ? "Saving Changes..." : "Save Hero Changes"}</span>
         </button>
       </div>
 
@@ -276,17 +280,6 @@ export default function AdminHeroPage() {
               </span>
               <h2 className="text-base font-bold text-slate-900 mt-1.5 m-0">Banner Image & Background Video</h2>
             </div>
-            <button
-              type="button"
-              onClick={() => handleSaveHero(undefined, "Hero Media Assets")}
-              disabled={saving}
-              className="px-3.5 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-semibold uppercase tracking-wider rounded-sm cursor-pointer transition-colors disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto border border-[#1e3e8f]"
-            >
-              <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span className="text-white">{saving && savingSection === "Hero Media Assets" ? "Saving..." : "Save Media"}</span>
-            </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
@@ -356,14 +349,14 @@ export default function AdminHeroPage() {
                   type="text"
                   value={videoSrc}
                   onChange={(e) => setVideoSrc(e.target.value)}
-                  className="flex-1 px-4 py-3 border border-slate-300 rounded-lg font-mono text-slate-800 bg-slate-50 text-xs focus:ring-2 focus:ring-[#1e3e8f]/20 focus:border-[#1e3e8f] focus:outline-none"
+                  className="flex-1 px-3 py-2 border border-slate-300 rounded-sm font-mono text-slate-800 bg-slate-50 text-xs focus:border-[#1e3e8f] focus:outline-none"
                   placeholder="/hero-video.mp4"
                 />
-                <label className="px-5 py-3 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold rounded-lg cursor-pointer text-xs shrink-0 flex items-center justify-center gap-2 transition-all shadow-md">
+                <label className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-sm cursor-pointer text-xs shrink-0 flex items-center justify-center gap-2 transition-colors">
                   <svg className="w-4 h-4 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
-                  <span className="text-white font-bold tracking-wide">
+                  <span className="text-white font-semibold tracking-wide">
                     {uploadingVideo ? "Compressing & Uploading..." : "Upload Video"}
                   </span>
                   <input
@@ -379,7 +372,7 @@ export default function AdminHeroPage() {
                 Supports MP4, WebM, MOV. Fast-start WebM conversion applied automatically.
               </p>
               {videoSrc && (
-                <div className="mt-2 w-full h-36 rounded-lg overflow-hidden border border-slate-200 bg-slate-950 relative shadow-inner">
+                <div className="mt-2 w-full h-36 rounded-sm overflow-hidden border border-slate-200 bg-slate-950 relative shadow-inner">
                   <video
                     src={formatImageUrl(videoSrc)}
                     muted
@@ -388,113 +381,81 @@ export default function AdminHeroPage() {
                     playsInline
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-2 left-2 px-2.5 py-1 bg-black/75 text-[10px] text-white font-mono rounded-md backdrop-blur-xs pointer-events-none">
+                  <div className="absolute top-2 left-2 px-2.5 py-1 bg-black/75 text-[10px] text-white font-mono rounded-sm backdrop-blur-xs pointer-events-none">
                     Slide 2 Video Player Preview
                   </div>
                 </div>
               )}
             </div>
           </div>
-
-          {/* Media Assets Bottom Save Bar */}
-          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-              <span>Ready to save updates to Hero Banner Image & Background Video</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleSaveHero(undefined, "Hero Media Assets")}
-              disabled={saving}
-              className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>{saving && savingSection === "Hero Media Assets" ? "Saving..." : "Save Media Assets"}</span>
-            </button>
-          </div>
         </div>
 
         {/* ================= HERO SLIDE 1 ================= */}
-        <div className="bg-white p-8 border border-slate-200 rounded-xl space-y-6 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-            <div>
-              <span className="text-[10px] font-mono font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded border border-amber-200">
-                SLIDE 1 CAPTIONS
-              </span>
-              <h2 className="text-lg font-bold text-slate-800 mt-2">Hero Slide 1 (Safety Arabia Infrastructure)</h2>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleSaveHero(undefined, "Slide 1")}
-              disabled={saving}
-              className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>{saving && savingSection === "Slide 1" ? "Saving..." : "Save Slide 1"}</span>
-            </button>
+        <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5">
+          <div className="border-b border-slate-100 pb-3">
+            <span className="text-[10px] font-mono font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-sm border border-amber-200">
+              SLIDE 1 CAPTIONS
+            </span>
+            <h2 className="text-base font-bold text-slate-900 mt-1.5 m-0">Hero Slide 1 (Safety Arabia Infrastructure)</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
             <div>
-              <label className="block font-bold text-slate-700 mb-2">Top Tagline / Sub-label *</label>
+              <label className="block font-semibold text-slate-700 mb-1.5">Top Tagline / Sub-label *</label>
               <input
                 type="text"
                 required
                 value={slide1Tagline}
                 onChange={(e) => setSlide1Tagline(e.target.value)}
-                className="w-full px-4 py-3 border rounded-lg font-mono text-amber-700 bg-slate-50"
+                className="w-full px-3 py-2 border border-slate-200 rounded-sm font-mono text-amber-700 bg-slate-50 focus:border-[#1e3e8f] focus:outline-none"
                 placeholder="e.g. SAFETY ARABIA INFRASTRUCTURE"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 mb-2">Main Slide Title *</label>
+              <label className="block font-semibold text-slate-700 mb-1.5">Main Slide Title *</label>
               <input
                 type="text"
                 required
                 value={slide1Title}
                 onChange={(e) => setSlide1Title(e.target.value)}
-                className="w-full px-4 py-3 border rounded-lg font-bold text-slate-900"
+                className="w-full px-3 py-2 border border-slate-200 rounded-sm font-bold text-slate-900 focus:border-[#1e3e8f] focus:outline-none"
                 placeholder="e.g. FUSING INDUSTRY AI & CRITICAL SAFETY"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-bold text-slate-700 mb-2">Description Paragraph *</label>
+            <label className="block font-semibold text-slate-700 mb-1.5">Description Paragraph *</label>
             <textarea
               rows={3}
               required
               value={slide1Desc}
               onChange={(e) => setSlide1Desc(e.target.value)}
-              className="w-full px-4 py-3 border rounded-lg text-xs leading-relaxed"
+              className="w-full px-3 py-2 border border-slate-200 rounded-sm text-xs leading-relaxed focus:border-[#1e3e8f] focus:outline-none"
               placeholder="Enter slide 1 description text..."
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs pt-4 border-t border-slate-100">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs pt-3 border-t border-slate-100">
             <div className="space-y-3">
               <div>
-                <label className="block font-bold text-slate-700 mb-2">Primary Button Text</label>
+                <label className="block font-semibold text-slate-700 mb-1.5">Primary Button Text</label>
                 <input
                   type="text"
                   value={slide1Btn1Text}
                   onChange={(e) => setSlide1Btn1Text(e.target.value)}
-                  className="w-full px-4 py-3 border rounded-lg font-bold text-red-600"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-sm font-semibold text-red-600 focus:border-[#1e3e8f] focus:outline-none"
                   placeholder="e.g. OPERATIONS CENTER"
                 />
               </div>
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Primary Button Link / URL</label>
+                <label className="block font-semibold text-slate-700 mb-1">Primary Button Link / URL</label>
                 <input
                   type="text"
                   value={slide1Btn1Link}
                   onChange={(e) => setSlide1Btn1Link(e.target.value)}
-                  className="w-full px-4 py-2.5 border rounded-lg font-mono text-slate-700 bg-slate-50 text-xs"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-sm font-mono text-slate-700 bg-slate-50 text-xs focus:border-[#1e3e8f] focus:outline-none"
                   placeholder="#solutions or /products"
                 />
               </div>
@@ -502,166 +463,115 @@ export default function AdminHeroPage() {
 
             <div className="space-y-3">
               <div>
-                <label className="block font-bold text-slate-700 mb-2">Secondary Button Text</label>
+                <label className="block font-semibold text-slate-700 mb-1.5">Secondary Button Text</label>
                 <input
                   type="text"
                   value={slide1Btn2Text}
                   onChange={(e) => setSlide1Btn2Text(e.target.value)}
-                  className="w-full px-4 py-3 border rounded-lg font-bold text-slate-700"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-sm font-semibold text-slate-700 focus:border-[#1e3e8f] focus:outline-none"
                   placeholder="e.g. OUR CAPABILITIES"
                 />
               </div>
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Secondary Button Link / URL</label>
+                <label className="block font-semibold text-slate-700 mb-1">Secondary Button Link / URL</label>
                 <input
                   type="text"
                   value={slide1Btn2Link}
                   onChange={(e) => setSlide1Btn2Link(e.target.value)}
-                  className="w-full px-4 py-2.5 border rounded-lg font-mono text-slate-700 bg-slate-50 text-xs"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-sm font-mono text-slate-700 bg-slate-50 text-xs focus:border-[#1e3e8f] focus:outline-none"
                   placeholder="#solutions or /about"
                 />
               </div>
             </div>
           </div>
-
-          {/* Slide 1 Bottom Save Bar */}
-          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-              <span>Ready to save updates to Slide 1 Captions & Buttons</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleSaveHero(undefined, "Slide 1")}
-              disabled={saving}
-              className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>{saving && savingSection === "Slide 1" ? "Saving..." : "Save Slide 1"}</span>
-            </button>
-          </div>
         </div>
 
         {/* ================= HERO SLIDE 2 ================= */}
-        <div className="bg-white p-8 border border-slate-200 rounded-xl space-y-6 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-            <div>
-              <span className="text-[10px] font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2.5 py-1 rounded border border-blue-200">
-                SLIDE 2 CAPTIONS
-              </span>
-              <h2 className="text-lg font-bold text-slate-800 mt-2">Hero Slide 2 (IIoT Edge Telemetry)</h2>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleSaveHero(undefined, "Slide 2")}
-              disabled={saving}
-              className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>{saving && savingSection === "Slide 2" ? "Saving..." : "Save Slide 2"}</span>
-            </button>
+        <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5">
+          <div className="border-b border-slate-100 pb-3">
+            <span className="text-[10px] font-mono font-bold text-[#1e3e8f] bg-blue-50 px-2.5 py-1 rounded-sm border border-blue-200">
+              SLIDE 2 CAPTIONS
+            </span>
+            <h2 className="text-base font-bold text-slate-900 mt-1.5 m-0">Hero Slide 2 (IIoT Edge Telemetry)</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
             <div>
-              <label className="block font-bold text-slate-700 mb-2">Top Tagline / Sub-label *</label>
+              <label className="block font-semibold text-slate-700 mb-1.5">Top Tagline / Sub-label *</label>
               <input
                 type="text"
                 required
                 value={slide2Tagline}
                 onChange={(e) => setSlide2Tagline(e.target.value)}
-                className="w-full px-4 py-3 border rounded-lg font-mono text-slate-800 bg-slate-50"
+                className="w-full px-3 py-2 border border-slate-200 rounded-sm font-mono text-slate-800 bg-slate-50 focus:border-[#1e3e8f] focus:outline-none"
                 placeholder="e.g. IIOT DATA TELEMETRY LOOPS"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 mb-2">Main Slide Title *</label>
+              <label className="block font-semibold text-slate-700 mb-1.5">Main Slide Title *</label>
               <input
                 type="text"
                 required
                 value={slide2Title}
                 onChange={(e) => setSlide2Title(e.target.value)}
-                className="w-full px-4 py-3 border rounded-lg font-bold text-slate-900"
+                className="w-full px-3 py-2 border border-slate-200 rounded-sm font-bold text-slate-900 focus:border-[#1e3e8f] focus:outline-none"
                 placeholder="e.g. REAL-TIME EDGE ACQUISITION"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-bold text-slate-700 mb-2">Description Paragraph *</label>
+            <label className="block font-semibold text-slate-700 mb-1.5">Description Paragraph *</label>
             <textarea
               rows={3}
               required
               value={slide2Desc}
               onChange={(e) => setSlide2Desc(e.target.value)}
-              className="w-full px-4 py-3 border rounded-lg text-xs leading-relaxed"
+              className="w-full px-3 py-2 border border-slate-200 rounded-sm text-xs leading-relaxed focus:border-[#1e3e8f] focus:outline-none"
               placeholder="Enter slide 2 description text..."
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs pt-4 border-t border-slate-100">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs pt-3 border-t border-slate-100">
             <div>
-              <label className="block font-bold text-slate-700 mb-2">Primary Button Text</label>
+              <label className="block font-semibold text-slate-700 mb-1.5">Primary Button Text</label>
               <input
                 type="text"
                 value={slide2Btn1Text}
                 onChange={(e) => setSlide2Btn1Text(e.target.value)}
-                className="w-full max-w-md px-4 py-3 border rounded-lg font-bold text-red-600"
+                className="w-full max-w-md px-3 py-2 border border-slate-200 rounded-sm font-semibold text-red-600 focus:border-[#1e3e8f] focus:outline-none"
                 placeholder="e.g. EXPLORE MIMES WIRELESS"
               />
             </div>
             <div>
-              <label className="block font-bold text-slate-700 mb-1">Primary Button Link / URL</label>
+              <label className="block font-semibold text-slate-700 mb-1">Primary Button Link / URL</label>
               <input
                 type="text"
                 value={slide2Btn1Link}
                 onChange={(e) => setSlide2Btn1Link(e.target.value)}
-                className="w-full max-w-md px-4 py-2.5 border rounded-lg font-mono text-slate-700 bg-slate-50 text-xs"
+                className="w-full max-w-md px-3 py-2 border border-slate-200 rounded-sm font-mono text-slate-700 bg-slate-50 text-xs focus:border-[#1e3e8f] focus:outline-none"
                 placeholder="/solutions/mimes"
               />
             </div>
           </div>
-
-          {/* Slide 2 Bottom Save Bar */}
-          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-              <span>Ready to save updates to Slide 2 Captions & Buttons</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleSaveHero(undefined, "Slide 2")}
-              disabled={saving}
-              className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>{saving && savingSection === "Slide 2" ? "Saving..." : "Save Slide 2"}</span>
-            </button>
-          </div>
         </div>
 
         {/* Action Save Button */}
-        <div className="p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
-          <div className="flex items-center gap-2.5 text-xs text-slate-600 font-medium">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
+        <div className="p-4 bg-white border border-slate-200 rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
             <span>Ready to save and publish all updates across Homepage Hero media & slide captions</span>
           </div>
           <button
             type="submit"
             disabled={saving}
-            className="w-full sm:w-auto px-8 py-3 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase rounded-lg shadow-md cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-6 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm cursor-pointer transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-xs"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
-            <span>{saving && savingSection === "all" ? "Saving All Hero Changes..." : "Save All Hero Changes"}</span>
+            <span>{saving && savingSection === "all" ? "Saving All Hero Changes..." : "Save Hero Changes"}</span>
           </button>
         </div>
 

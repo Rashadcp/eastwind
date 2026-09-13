@@ -295,7 +295,8 @@ export default function AdminLayout({
       
       {/* Dynamic Theme Override Injection - Swiss Minimal / Data-Dense Clean SaaS */}
       <style dangerouslySetInnerHTML={{ __html: `
-        /* Enforce normal clean font style, disable uppercase, reset letter-spacing */
+        /* Enforce Plus Jakarta Sans clean font style with tabular figures */
+        .admin-light-theme,
         .admin-light-theme *,
         .admin-light-theme input,
         .admin-light-theme button,
@@ -305,8 +306,15 @@ export default function AdminLayout({
         .admin-light-theme label,
         .admin-light-theme th,
         .admin-light-theme td {
-          font-family: var(--font-sans) !important;
-          letter-spacing: normal !important;
+          font-family: var(--font-admin), "Plus Jakarta Sans", var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+          letter-spacing: -0.011em !important;
+        }
+        .admin-light-theme table,
+        .admin-light-theme th,
+        .admin-light-theme td,
+        .admin-light-theme input,
+        .admin-light-theme select {
+          font-feature-settings: 'cv02' 1, 'cv03' 1, 'cv04' 1, 'cv11' 1, 'tnum' 1 !important;
         }
 
         .admin-light-theme {

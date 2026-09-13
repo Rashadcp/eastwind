@@ -481,21 +481,10 @@ export default function AdminAboutPage() {
       {activeTab === "home" && (
         <div className="space-y-6">
           <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
                 Home Page About Header & Asset
               </h2>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => handleSaveHome("About Header & Asset")}
-                className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span>{saving && savingSection === "About Header & Asset" ? "Saving..." : "Save Header"}</span>
-              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -579,32 +568,19 @@ export default function AdminAboutPage() {
           {/* Metrics Section */}
           <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
                 Quantitative Data Metrics ({homeMetrics.length})
               </h2>
-              <div className="flex items-center gap-2 shrink-0 flex-wrap">
-                <button
-                  type="button"
-                  onClick={() => setHomeMetrics([...homeMetrics, { value: "0%", label: "New Metric", desc: "Metric description text" }])}
-                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                  </svg>
-                  <span>+ Add Metric</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleSaveHome("Quantitative Metrics")}
-                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>{saving && savingSection === "Quantitative Metrics" ? "Saving..." : "Save Metrics"}</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setHomeMetrics([...homeMetrics, { value: "0%", label: "New Metric", desc: "Metric description text" }])}
+                className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>+ Add Metric</span>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -670,32 +646,19 @@ export default function AdminAboutPage() {
           {/* Lifecycle Steps */}
           <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
                 Lifecycle Capabilities ({homeLifecycleSteps.length})
               </h2>
-              <div className="flex items-center gap-2 shrink-0 flex-wrap">
-                <button
-                  type="button"
-                  onClick={() => setHomeLifecycleSteps([...homeLifecycleSteps, "New Lifecycle Capability"])}
-                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                  </svg>
-                  <span>+ Add Step</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleSaveHome("Lifecycle Steps")}
-                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>{saving && savingSection === "Lifecycle Steps" ? "Saving..." : "Save Steps"}</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setHomeLifecycleSteps([...homeLifecycleSteps, "New Lifecycle Capability"])}
+                className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>+ Add Step</span>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -939,32 +902,19 @@ export default function AdminAboutPage() {
           {/* Positioning Pillars */}
           <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
                 Core Market Positioning Pillars ({pagePositioning.length})
               </h2>
-              <div className="flex items-center gap-2 shrink-0 flex-wrap">
-                <button
-                  type="button"
-                  onClick={() => setPagePositioning([...pagePositioning, { title: "New Pillar", text: "Pillar description text" }])}
-                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                  </svg>
-                  <span>+ Add Pillar</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleSaveAboutPage("Positioning Pillars")}
-                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>{saving && savingSection === "Positioning Pillars" ? "Saving..." : "Save Pillars"}</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setPagePositioning([...pagePositioning, { title: "New Pillar", text: "Pillar description text" }])}
+                className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>+ Add Pillar</span>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1013,32 +963,19 @@ export default function AdminAboutPage() {
           {/* Corporate Metrics */}
           <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
                 Corporate Metrics Cards ({pageMetrics.length})
               </h2>
-              <div className="flex items-center gap-2 shrink-0 flex-wrap">
-                <button
-                  type="button"
-                  onClick={() => setPageMetrics([...pageMetrics, { value: "100%", label: "New Metric", desc: "Description text", accent: "#1e3e8f" }])}
-                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                  </svg>
-                  <span>+ Add Metric Card</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleSaveAboutPage("Corporate Metrics")}
-                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>{saving && savingSection === "Corporate Metrics" ? "Saving..." : "Save Metrics"}</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setPageMetrics([...pageMetrics, { value: "100%", label: "New Metric", desc: "Description text", accent: "#1e3e8f" }])}
+                className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>+ Add Metric Card</span>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1116,32 +1053,19 @@ export default function AdminAboutPage() {
           {/* Engineering Disciplines */}
           <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
                 Engineering Disciplines Matrix ({pageDisciplines.length})
               </h2>
-              <div className="flex items-center gap-2 shrink-0 flex-wrap">
-                <button
-                  type="button"
-                  onClick={() => setPageDisciplines([...pageDisciplines, { title: "New Discipline", desc: "Discipline overview desc", accent: "#1e3e8f" }])}
-                  className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                  </svg>
-                  <span>+ Add Discipline</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleSaveAboutPage("Engineering Disciplines")}
-                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>{saving && savingSection === "Engineering Disciplines" ? "Saving..." : "Save Disciplines"}</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setPageDisciplines([...pageDisciplines, { title: "New Discipline", desc: "Discipline overview desc", accent: "#1e3e8f" }])}
+                className="px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-sm hover:bg-slate-800 cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>+ Add Discipline</span>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

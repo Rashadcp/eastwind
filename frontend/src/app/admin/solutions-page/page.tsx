@@ -376,39 +376,53 @@ export default function AdminSolutionsPage() {
           </p>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 border border-slate-200 rounded-sm flex-wrap self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
+          {/* Tab Switcher */}
+          <div className="flex items-center gap-1 bg-slate-100 p-1 border border-slate-200 rounded-sm flex-wrap">
+            <button
+              onClick={() => { setActiveTab("hero_industries"); clearMessages(); }}
+              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "hero_industries" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Hero & Industries
+            </button>
+            <button
+              onClick={() => { setActiveTab("capabilities"); clearMessages(); }}
+              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "capabilities" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Core Capabilities
+            </button>
+            <button
+              onClick={() => { setActiveTab("partners"); clearMessages(); }}
+              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "partners" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Partner Brands
+            </button>
+            <button
+              onClick={() => { setActiveTab("gateway"); clearMessages(); }}
+              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "gateway" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Enquiry Gateway
+            </button>
+          </div>
+
           <button
-            onClick={() => { setActiveTab("hero_industries"); clearMessages(); }}
-            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "hero_industries" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
-            }`}
+            type="button"
+            onClick={() => handleSaveConfig()}
+            disabled={saving}
+            className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm shadow-xs cursor-pointer transition-colors disabled:opacity-50 flex items-center gap-1.5 shrink-0"
           >
-            Hero & Industries
-          </button>
-          <button
-            onClick={() => { setActiveTab("capabilities"); clearMessages(); }}
-            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "capabilities" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Core Capabilities
-          </button>
-          <button
-            onClick={() => { setActiveTab("partners"); clearMessages(); }}
-            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "partners" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Partner Brands
-          </button>
-          <button
-            onClick={() => { setActiveTab("gateway"); clearMessages(); }}
-            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "gateway" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Enquiry Gateway
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{saving ? "Saving..." : "Save Changes"}</span>
           </button>
         </div>
       </div>
@@ -451,21 +465,10 @@ export default function AdminSolutionsPage() {
           
           {/* Hero Section Card */}
           <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 m-0">
                 Solutions Page Hero Banner
               </h2>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => handleSaveConfig("Hero Banner")}
-                className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span>{saving && savingSection === "Hero Banner" ? "Saving..." : "Save Banner"}</span>
-              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -604,17 +607,6 @@ export default function AdminSolutionsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
                   <span>+ Add Industry Category</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleSaveConfig("Operating Industries")}
-                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>{saving && savingSection === "Operating Industries" ? "Saving..." : "Save Industries"}</span>
                 </button>
               </div>
             </div>
@@ -834,17 +826,6 @@ export default function AdminSolutionsPage() {
                   </svg>
                   <span>+ Add Capability Card</span>
                 </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleSaveConfig("Core Capabilities")}
-                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>{saving && savingSection === "Core Capabilities" ? "Saving..." : "Save Capabilities"}</span>
-                </button>
               </div>
             </div>
 
@@ -1013,17 +994,6 @@ export default function AdminSolutionsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
                   <span>+ Add Brand</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleSaveConfig("Partner Brands")}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-semibold rounded-sm cursor-pointer transition-colors disabled:opacity-50 shrink-0"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>{saving && savingSection === "Partner Brands" ? "Saving..." : "Save Brands"}</span>
                 </button>
               </div>
             </div>
@@ -1226,17 +1196,6 @@ export default function AdminSolutionsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
                   <span>+ Add Scope Option</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleSaveConfig("Enquiry Gateway")}
-                  className="px-3 py-1.5 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>{saving && savingSection === "Enquiry Gateway" ? "Saving..." : "Save Gateway"}</span>
                 </button>
               </div>
             </div>

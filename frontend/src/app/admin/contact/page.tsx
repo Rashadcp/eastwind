@@ -249,6 +249,50 @@ export default function AdminContactPage() {
     }
   };
 
+  const handleSaveCurrentTab = () => {
+    if (activeTab === "info") {
+      saveSection("contact_info", {
+        hqTitle, hqAddress, hubTitle, hubAddress, telephone, email, workingHours, gatewayText, gatewayStatus
+      }, "Office Addresses & Channels");
+    } else if (activeTab === "home") {
+      saveSection("home_contact", {
+        tagline: homeTagline,
+        title: homeTitle,
+        description: homeDescription,
+        operationalSectors: homeSectors,
+        submitButtonText: homeSubmitBtn,
+        successTitle: homeSuccessTitle,
+        successMessage: homeSuccessMessage,
+      }, "Home Contact Section");
+    } else if (activeTab === "contact_page") {
+      saveSection("contact_page", {
+        heroBgImage: pageHeroBgImage,
+        heroTagline: pageHeroTagline,
+        heroTitle: pageHeroTitle,
+        heroDescription: pageHeroDescription,
+        communicationsTagline: pageCommsTagline,
+        communicationsTitle: pageCommsTitle,
+        communicationsDesc: pageCommsDesc,
+        formSubHeaderTagline: pageFormTagline,
+        formSubHeaderTitle: pageFormTitle,
+        marketSegments: pageMarketSegments,
+        submitButtonText: pageSubmitBtn,
+        successTitle: pageSuccessTitle,
+        successMessage: pageSuccessMessage,
+      }, "Contact Page Settings");
+    } else if (activeTab === "enquiry_page") {
+      saveSection("enquiry_page", {
+        enquiryTagline,
+        enquiryTitle,
+        enquiryDescription,
+        applicationPurposes: enquiryPurposes,
+        submitButtonText: enquirySubmitBtn,
+        successTitle: enquirySuccessTitle,
+        successMessage: enquirySuccessMessage,
+      }, "Enquiry Page Settings");
+    }
+  };
+
   if (loading) {
     return (
       <div className="py-20 text-center space-y-4">
@@ -270,39 +314,53 @@ export default function AdminContactPage() {
           </p>
         </div>
 
-        {/* Tab Selector */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 border border-slate-200 rounded-sm self-start md:self-auto flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Tab Selector */}
+          <div className="flex items-center gap-1 bg-slate-100 p-1 border border-slate-200 rounded-sm self-start md:self-auto flex-wrap">
+            <button
+              onClick={() => { setActiveTab("info"); clearMessages(); }}
+              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "info" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Office Locations
+            </button>
+            <button
+              onClick={() => { setActiveTab("home"); clearMessages(); }}
+              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "home" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Home Contact
+            </button>
+            <button
+              onClick={() => { setActiveTab("contact_page"); clearMessages(); }}
+              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "contact_page" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Contact Page
+            </button>
+            <button
+              onClick={() => { setActiveTab("enquiry_page"); clearMessages(); }}
+              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "enquiry_page" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Enquiry Page
+            </button>
+          </div>
+
           <button
-            onClick={() => { setActiveTab("info"); clearMessages(); }}
-            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "info" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
-            }`}
+            type="button"
+            disabled={saving}
+            onClick={handleSaveCurrentTab}
+            className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-xs shrink-0"
           >
-            Office Locations
-          </button>
-          <button
-            onClick={() => { setActiveTab("home"); clearMessages(); }}
-            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "home" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Home Contact
-          </button>
-          <button
-            onClick={() => { setActiveTab("contact_page"); clearMessages(); }}
-            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "contact_page" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Contact Page
-          </button>
-          <button
-            onClick={() => { setActiveTab("enquiry_page"); clearMessages(); }}
-            className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === "enquiry_page" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Enquiry Page
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{saving ? "Saving..." : "Save Changes"}</span>
           </button>
         </div>
       </div>
