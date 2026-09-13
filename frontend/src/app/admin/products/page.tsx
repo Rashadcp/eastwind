@@ -11,17 +11,17 @@ export default function AdminProductsPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const ITEMS_PER_PAGE = 10;
+
+  // Drag and drop state for products and categories
+  const [draggedProductIdx, setDraggedProductIdx] = useState<number | null>(null);
+  const [dragOverProductIdx, setDragOverProductIdx] = useState<number | null>(null);
+  const [draggedCatIdx, setDraggedCatIdx] = useState<number | null>(null);
+  const [dragOverCatIdx, setDragOverCatIdx] = useState<number | null>(null);
 
   const [selectedBrandFilter, setSelectedBrandFilter] = useState<string>("All");
   const [availableBrandsList, setAvailableBrandsList] = useState<string[]>(
     PRODUCT_BRANDS.map((b) => b.name)
   );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedBrandFilter]);
 
   // Auto-dismiss success notification after 3.5 seconds
   useEffect(() => {
@@ -214,14 +214,47 @@ export default function AdminProductsPage() {
     fetchCategories();
   };
 
-  const handleMoveCategory = (index: number, direction: "up" | "down") => {
-    const newIdx = direction === "up" ? index - 1 : index + 1;
-    if (newIdx < 0 || newIdx >= managedCategories.length) return;
+  const handleReorderCategoryPositions = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+    if (fromIndex >= managedCategories.length || toIndex >= managedCategories.length) return;
     const copy = [...managedCategories];
-    const [moved] = copy.splice(index, 1);
-    copy.splice(newIdx, 0, moved);
+    const [moved] = copy.splice(fromIndex, 1);
+    copy.splice(toIndex, 0, moved);
     const updated = copy.map((item, idx) => ({ ...item, order: idx }));
     setManagedCategories(updated);
+  };
+
+  const handleMoveCategory = (index: number, direction: "up" | "down") => {
+    const newIdx = direction === "up" ? index - 1 : index + 1;
+    handleReorderCategoryPositions(index, newIdx);
+  };
+
+  const handleCategoryDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedCatIdx(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  const handleCategoryDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverCatIdx !== index) {
+      setDragOverCatIdx(index);
+    }
+  };
+
+  const handleCategoryDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedCatIdx !== null && draggedCatIdx !== dropIndex) {
+      handleReorderCategoryPositions(draggedCatIdx, dropIndex);
+    }
+    setDraggedCatIdx(null);
+    setDragOverCatIdx(null);
+  };
+
+  const handleCategoryDragEnd = () => {
+    setDraggedCatIdx(null);
+    setDragOverCatIdx(null);
   };
 
   const handleAddCategory = async () => {
@@ -393,13 +426,15 @@ export default function AdminProductsPage() {
     }
   }, [selectedBrandFilter, products]);
 
-  const handleMoveProduct = (index: number, direction: "up" | "down") => {
-    const newIdx = direction === "up" ? index - 1 : index + 1;
-    if (newIdx < 0 || newIdx >= orderedCategoryProducts.length) return;
+  const handleReorderProductPositions = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+    if (fromIndex >= orderedCategoryProducts.length || toIndex >= orderedCategoryProducts.length) return;
+
     const copy = [...orderedCategoryProducts];
-    const [moved] = copy.splice(index, 1);
-    copy.splice(newIdx, 0, moved);
+    const [moved] = copy.splice(fromIndex, 1);
+    copy.splice(toIndex, 0, moved);
     const updated = copy.map((item, idx) => ({ ...item, order: idx }));
+
     isLocalReorderRef.current = true;
     setOrderedCategoryProducts(updated);
     setHasPendingProductOrderChanges(true);
@@ -413,6 +448,39 @@ export default function AdminProductsPage() {
     } else {
       setProducts(updated);
     }
+  };
+
+  const handleMoveProduct = (index: number, direction: "up" | "down") => {
+    const newIdx = direction === "up" ? index - 1 : index + 1;
+    handleReorderProductPositions(index, newIdx);
+  };
+
+  const handleProductDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedProductIdx(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  const handleProductDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverProductIdx !== index) {
+      setDragOverProductIdx(index);
+    }
+  };
+
+  const handleProductDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedProductIdx !== null && draggedProductIdx !== dropIndex) {
+      handleReorderProductPositions(draggedProductIdx, dropIndex);
+    }
+    setDraggedProductIdx(null);
+    setDragOverProductIdx(null);
+  };
+
+  const handleProductDragEnd = () => {
+    setDraggedProductIdx(null);
+    setDragOverProductIdx(null);
   };
 
   const handleSaveProductOrder = async (overrideList?: ProductItem[]) => {
@@ -846,14 +914,8 @@ export default function AdminProductsPage() {
     .sort((a, b) => (a.order ?? 99999) - (b.order ?? 99999));
   
   const totalItems = filteredProducts.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const paginatedProducts =
-    selectedBrandFilter !== "All"
-      ? filteredProducts
-      : filteredProducts.slice(
-          (currentPage - 1) * ITEMS_PER_PAGE,
-          currentPage * ITEMS_PER_PAGE
-        );
+  // Continuous full list display - no pagination limit so all products can be viewed and reordered smoothly
+  const paginatedProducts = filteredProducts;
 
   return (
     <div className="space-y-6 font-sans text-white select-none">
@@ -1011,8 +1073,8 @@ export default function AdminProductsPage() {
             <table className="w-full border-collapse text-left m-0">
               <thead>
                 <tr className="bg-white/[0.02] border-b border-white/5">
-                  <th className="px-5 py-4.5 text-[10px] font-bold uppercase tracking-wider text-orange-400 w-28">
-                    Order
+                  <th className="px-5 py-4.5 text-[10px] font-bold uppercase tracking-wider text-orange-400 w-36">
+                    Order &amp; Drag
                   </th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Name</th>
                   <th className="px-6 py-4.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Equipment Category</th>
@@ -1023,14 +1085,45 @@ export default function AdminProductsPage() {
               <tbody className="divide-y divide-white/5 font-sans">
                 {paginatedProducts.map((item, idx) => {
                   const itemOrderIdx = orderedCategoryProducts.findIndex((p) => p.id === item.id);
-                  const displaySeq = itemOrderIdx !== -1 ? itemOrderIdx + 1 : (currentPage - 1) * ITEMS_PER_PAGE + idx + 1;
+                  const displaySeq = itemOrderIdx !== -1 ? itemOrderIdx + 1 : idx + 1;
                   const canMoveUp = itemOrderIdx > 0 && !savingProductOrder;
                   const canMoveDown = itemOrderIdx !== -1 && itemOrderIdx < orderedCategoryProducts.length - 1 && !savingProductOrder;
+                  const isDragging = draggedProductIdx === itemOrderIdx;
+                  const isDragOver = dragOverProductIdx === itemOrderIdx && draggedProductIdx !== itemOrderIdx;
 
                   return (
-                    <tr key={item.id} className="hover:bg-white/[0.01] transition-colors">
+                    <tr
+                      key={item.id}
+                      draggable={itemOrderIdx !== -1 && !savingProductOrder}
+                      onDragStart={(e) => itemOrderIdx !== -1 && handleProductDragStart(e, itemOrderIdx)}
+                      onDragOver={(e) => itemOrderIdx !== -1 && handleProductDragOver(e, itemOrderIdx)}
+                      onDrop={(e) => itemOrderIdx !== -1 && handleProductDrop(e, itemOrderIdx)}
+                      onDragEnd={handleProductDragEnd}
+                      className={`transition-all group ${
+                        isDragging
+                          ? "opacity-35 bg-orange-500/10 border-y-2 border-dashed border-orange-500/60"
+                          : isDragOver
+                          ? "border-t-2 border-t-orange-500 bg-orange-500/20"
+                          : "hover:bg-white/[0.02]"
+                      }`}
+                    >
                       <td className="px-5 py-3.5 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
+                          {/* Drag Grip Handle */}
+                          <div
+                            className="cursor-grab active:cursor-grabbing p-1.5 -ml-1.5 rounded-lg text-slate-500 hover:text-orange-400 hover:bg-white/5 transition-colors shrink-0"
+                            title="Drag to change order"
+                          >
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                              <circle cx="8" cy="6" r="2" />
+                              <circle cx="16" cy="6" r="2" />
+                              <circle cx="8" cy="12" r="2" />
+                              <circle cx="16" cy="12" r="2" />
+                              <circle cx="8" cy="18" r="2" />
+                              <circle cx="16" cy="18" r="2" />
+                            </svg>
+                          </div>
+
                           <span className="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 text-orange-700 font-mono text-xs font-bold flex items-center justify-center shrink-0">
                             #{displaySeq}
                           </span>
@@ -1093,43 +1186,21 @@ export default function AdminProductsPage() {
               </tbody>
             </table>
 
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-white/5 bg-white/[0.01]">
-                <span className="text-xs text-slate-400 font-medium">
-                  Showing {Math.min((currentPage - 1) * ITEMS_PER_PAGE + 1, totalItems)} to {Math.min(currentPage * ITEMS_PER_PAGE, totalItems)} of {totalItems} entries
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                    className="py-1.5 px-3.5 rounded-xl border border-white/10 hover:border-white/20 text-[10px] font-bold uppercase tracking-wider text-slate-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
-                  >
-                    Previous
-                  </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`w-7.5 h-7.5 rounded-full flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${
-                        currentPage === page
-                          ? "bg-sky-600 text-white shadow-md shadow-sky-600/10"
-                          : "border border-white/10 hover:border-white/20 text-slate-300 hover:bg-white/5"
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                  <button
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    className="py-1.5 px-3.5 rounded-xl border border-white/10 hover:border-white/20 text-[10px] font-bold uppercase tracking-wider text-slate-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
-                  >
-                    Next
-                  </button>
-                </div>
+            {/* Catalog Count & Drag Guidance Footer (Continuous full display, no pagination) */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-white/5 bg-white/[0.01]">
+              <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Showing all <strong className="text-white font-bold">{totalItems}</strong> products</span>
+                {selectedBrandFilter !== "All" && (
+                  <span className="text-slate-500">
+                    in category <span className="text-orange-400 font-semibold">{selectedBrandFilter}</span>
+                  </span>
+                )}
               </div>
-            )}
+              <div className="text-[11px] text-slate-500 font-mono flex items-center gap-2">
+                <span className="text-slate-400 font-bold">Tip:</span> Drag rows with the <span className="text-orange-400 font-bold">⋮⋮</span> handle or click ▲ ▼ to reorder
+              </div>
+            </div>
           </div>
         )}
 
@@ -2014,7 +2085,7 @@ export default function AdminProductsPage() {
 
               {/* Instructions Tip */}
               <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono">
-                <span>Use ▲ and ▼ to rearrange sequence</span>
+                <span>Drag with the <strong className="text-orange-400">⋮⋮</strong> handle or use ▲ ▼ to reorder</span>
                 <span className="text-orange-400 font-bold">Display Order</span>
               </div>
 
@@ -2025,14 +2096,42 @@ export default function AdminProductsPage() {
                   const prodCount = products.filter(p => (p.brand || "").toLowerCase() === cat.name.toLowerCase()).length;
                   const isFirst = idx === 0;
                   const isLast = idx === managedCategories.length - 1;
+                  const isDragging = draggedCatIdx === idx;
+                  const isDragOver = dragOverCatIdx === idx && draggedCatIdx !== idx;
 
                   return (
                     <div
                       key={cat.id || idx}
-                      className="flex items-center justify-between gap-3 p-3 bg-slate-950/40 border border-white/5 hover:border-white/15 rounded-2xl transition-colors group"
+                      draggable={!isEditing && !savingCategories}
+                      onDragStart={(e) => !isEditing && handleCategoryDragStart(e, idx)}
+                      onDragOver={(e) => !isEditing && handleCategoryDragOver(e, idx)}
+                      onDrop={(e) => !isEditing && handleCategoryDrop(e, idx)}
+                      onDragEnd={handleCategoryDragEnd}
+                      className={`flex items-center justify-between gap-3 p-3 rounded-2xl border transition-all group ${
+                        isDragging
+                          ? "opacity-35 bg-orange-500/10 border-dashed border-orange-400"
+                          : isDragOver
+                          ? "border-t-2 border-t-orange-500 bg-orange-500/20 shadow-md"
+                          : "bg-slate-950/40 border-white/5 hover:border-white/15"
+                      }`}
                     >
-                      {/* Left: Position index + Reorder arrows */}
+                      {/* Left: Drag Handle + Position index + Reorder arrows */}
                       <div className="flex items-center gap-2">
+                        {/* Drag Handle */}
+                        <div
+                          className="cursor-grab active:cursor-grabbing p-1 -ml-1 text-slate-500 hover:text-orange-400 hover:bg-white/5 rounded-md transition-colors shrink-0"
+                          title="Drag to change category order"
+                        >
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="8" cy="6" r="2" />
+                            <circle cx="16" cy="6" r="2" />
+                            <circle cx="8" cy="12" r="2" />
+                            <circle cx="16" cy="12" r="2" />
+                            <circle cx="8" cy="18" r="2" />
+                            <circle cx="16" cy="18" r="2" />
+                          </svg>
+                        </div>
+
                         <span className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center font-mono font-bold text-[10px] text-slate-400 shrink-0">
                           #{idx + 1}
                         </span>
@@ -2041,9 +2140,9 @@ export default function AdminProductsPage() {
                           <button
                             type="button"
                             onClick={() => handleMoveCategory(idx, "up")}
-                            disabled={isFirst}
+                            disabled={isFirst || savingCategories}
                             className={`p-1 rounded bg-white/5 border border-white/5 transition-colors ${
-                              isFirst ? "opacity-20 cursor-not-allowed" : "hover:bg-orange-500/20 hover:text-orange-400 cursor-pointer"
+                              isFirst || savingCategories ? "opacity-20 cursor-not-allowed" : "hover:bg-orange-500/20 hover:text-orange-400 cursor-pointer"
                             }`}
                             title="Move Up"
                           >
@@ -2054,9 +2153,9 @@ export default function AdminProductsPage() {
                           <button
                             type="button"
                             onClick={() => handleMoveCategory(idx, "down")}
-                            disabled={isLast}
+                            disabled={isLast || savingCategories}
                             className={`p-1 rounded bg-white/5 border border-white/5 transition-colors ${
-                              isLast ? "opacity-20 cursor-not-allowed" : "hover:bg-orange-500/20 hover:text-orange-400 cursor-pointer"
+                              isLast || savingCategories ? "opacity-20 cursor-not-allowed" : "hover:bg-orange-500/20 hover:text-orange-400 cursor-pointer"
                             }`}
                             title="Move Down"
                           >
@@ -2235,8 +2334,8 @@ export default function AdminProductsPage() {
                 </h3>
                 <p className="text-xs text-slate-500 mt-1" style={{ color: "#64748b" }}>
                   {selectedBrandFilter === "All"
-                    ? "Adjust the global display order of all products in the catalog."
-                    : "Adjust the display order of products in this category on the public website."}
+                    ? "Drag items by the ⋮⋮ handle or use ▲ ▼ to arrange the global catalog order."
+                    : "Drag items by the ⋮⋮ handle or use ▲ ▼ to arrange the display order in this category."}
                 </p>
               </div>
               <button
@@ -2258,62 +2357,93 @@ export default function AdminProductsPage() {
                   {selectedBrandFilter === "All" ? "No products found in catalog." : `No products found under "${selectedBrandFilter}".`}
                 </div>
               ) : (
-                orderedCategoryProducts.map((item, idx) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between gap-3 p-3.5 bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-2xl transition-colors"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                        #{idx + 1}
-                      </span>
-                      <div className="min-w-0">
-                        <p
-                          className="text-xs font-bold text-slate-900 truncate m-0 block"
-                          style={{ color: "#0f172a" }}
+                orderedCategoryProducts.map((item, idx) => {
+                  const isDragging = draggedProductIdx === idx;
+                  const isDragOver = dragOverProductIdx === idx && draggedProductIdx !== idx;
+
+                  return (
+                    <div
+                      key={item.id}
+                      draggable={!savingProductOrder}
+                      onDragStart={(e) => handleProductDragStart(e, idx)}
+                      onDragOver={(e) => handleProductDragOver(e, idx)}
+                      onDrop={(e) => handleProductDrop(e, idx)}
+                      onDragEnd={handleProductDragEnd}
+                      className={`flex items-center justify-between gap-3 p-3.5 rounded-2xl border transition-all ${
+                        isDragging
+                          ? "opacity-35 bg-orange-50 border-dashed border-orange-400"
+                          : isDragOver
+                          ? "border-t-2 border-t-orange-500 bg-orange-50/90 shadow-md"
+                          : "bg-slate-50 hover:bg-slate-100/80 border-slate-200"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {/* Drag Grip Handle */}
+                        <div
+                          className="cursor-grab active:cursor-grabbing p-1.5 -ml-1 text-slate-400 hover:text-orange-600 hover:bg-orange-100/60 rounded-lg transition-colors shrink-0"
+                          title="Drag to change sequence"
                         >
-                          {item.name}
-                        </p>
-                        <p
-                          className="text-[11px] font-mono text-slate-500 truncate m-0 block mt-0.5"
-                          style={{ color: "#64748b" }}
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="8" cy="6" r="2" />
+                            <circle cx="16" cy="6" r="2" />
+                            <circle cx="8" cy="12" r="2" />
+                            <circle cx="16" cy="12" r="2" />
+                            <circle cx="8" cy="18" r="2" />
+                            <circle cx="16" cy="18" r="2" />
+                          </svg>
+                        </div>
+
+                        <span className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                          #{idx + 1}
+                        </span>
+                        <div className="min-w-0">
+                          <p
+                            className="text-xs font-bold text-slate-900 truncate m-0 block"
+                            style={{ color: "#0f172a" }}
+                          >
+                            {item.name}
+                          </p>
+                          <p
+                            className="text-[11px] font-mono text-slate-500 truncate m-0 block mt-0.5"
+                            style={{ color: "#64748b" }}
+                          >
+                            {selectedBrandFilter === "All" && item.brand ? (
+                              <span className="text-orange-600 font-semibold mr-1.5 font-sans">[{item.brand}]</span>
+                            ) : null}
+                            {item.id}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button
+                          type="button"
+                          disabled={idx === 0 || savingProductOrder}
+                          onClick={() => handleMoveProduct(idx, "up")}
+                          className="p-2 rounded-xl bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                          title="Move Up"
+                          style={{ color: "#334155" }}
                         >
-                          {selectedBrandFilter === "All" && item.brand ? (
-                            <span className="text-orange-600 font-semibold mr-1.5 font-sans">[{item.brand}]</span>
-                          ) : null}
-                          {item.id}
-                        </p>
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          disabled={idx === orderedCategoryProducts.length - 1 || savingProductOrder}
+                          onClick={() => handleMoveProduct(idx, "down")}
+                          className="p-2 rounded-xl bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                          title="Move Down"
+                          style={{ color: "#334155" }}
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <button
-                        type="button"
-                        disabled={idx === 0 || savingProductOrder}
-                        onClick={() => handleMoveProduct(idx, "up")}
-                        className="p-2 rounded-xl bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
-                        title="Move Up"
-                        style={{ color: "#334155" }}
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        disabled={idx === orderedCategoryProducts.length - 1 || savingProductOrder}
-                        onClick={() => handleMoveProduct(idx, "down")}
-                        className="p-2 rounded-xl bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
-                        title="Move Down"
-                        style={{ color: "#334155" }}
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
 
