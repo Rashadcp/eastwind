@@ -112,7 +112,7 @@ export default function Footer() {
             email: footerDoc?.email || contactDoc?.email || DEFAULT_FOOTER.email,
             copyright: typeof footerDoc?.copyright === "string" ? footerDoc.copyright : DEFAULT_FOOTER.copyright,
             solutionsLinks: [],
-            bottomLinks: (footerDoc?.bottomLinks && footerDoc.bottomLinks.length > 0)
+            bottomLinks: Array.isArray(footerDoc?.bottomLinks)
               ? footerDoc.bottomLinks
               : DEFAULT_FOOTER.bottomLinks
           });

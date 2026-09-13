@@ -524,8 +524,8 @@ export async function seedDatabase(): Promise<void> {
       console.log(`Seeding ${seed.solutions_page.length} Solutions Page Configuration to MongoDB...`);
       await SolutionPage.insertMany(seed.solutions_page);
     }
-    if (seed.brands && seed.brands.length > 0) {
-      console.log(`Upserting ${seed.brands.length} Brands into MongoDB...`);
+    if (counts.brands === 0 && seed.brands && seed.brands.length > 0) {
+      console.log(`Seeding ${seed.brands.length} Brands into MongoDB...`);
       for (const b of seed.brands) {
         await Brand.findOneAndUpdate({ id: b.id }, b, { upsert: true, new: true });
       }

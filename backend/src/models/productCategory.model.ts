@@ -72,9 +72,13 @@ export class ProductCategoryModel {
         try {
           const raw = fs.readFileSync(DB_FILE, "utf-8");
           const data = JSON.parse(raw);
-          if (Array.isArray(data.product_categories) && data.product_categories.length > 0) {
-            await ProductCategory.insertMany(data.product_categories);
-            return data.product_categories.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+          if (Array.isArray(data.product_categories)) {
+            if (data.product_categories.length > 0) {
+              await ProductCategory.insertMany(data.product_categories);
+              return data.product_categories.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+            } else {
+              return [];
+            }
           }
         } catch (e) {
           // fallback to defaults
@@ -195,7 +199,7 @@ export class ProductCategoryModel {
       await remaining[i].save();
     }
 
-    const all = await this.getAll();
+    const all = await ProductCategory.find({}).sort({ order: 1 }).lean().exec();
     syncToDatabaseJson(all);
 
     invalidateCache("product-categories");

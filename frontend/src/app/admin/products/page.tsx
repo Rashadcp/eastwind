@@ -185,7 +185,7 @@ export default function AdminProductsPage() {
       const res = await fetch(`${baseUrl}/api/product-categories?t=${Date.now()}`, { cache: "no-store" });
       if (res.ok) {
         const list = await res.json();
-        if (Array.isArray(list) && list.length > 0) {
+        if (Array.isArray(list)) {
           setManagedCategories(list);
           setAvailableBrandsList(list.map((c: any) => c.name));
           return;

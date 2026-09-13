@@ -76,8 +76,8 @@ export default function AdminFooterPage() {
           if (typeof footerDoc.solutionsTitle === "string") setSolutionsTitle(footerDoc.solutionsTitle);
           if (typeof footerDoc.operationsTitle === "string") setOperationsTitle(footerDoc.operationsTitle);
           if (typeof footerDoc.copyright === "string") setCopyright(footerDoc.copyright);
-          if (footerDoc.solutionsLinks && Array.isArray(footerDoc.solutionsLinks)) setSolutionsLinks(footerDoc.solutionsLinks);
-          if (footerDoc.bottomLinks && Array.isArray(footerDoc.bottomLinks)) setBottomLinks(footerDoc.bottomLinks);
+          if (Array.isArray(footerDoc.solutionsLinks)) setSolutionsLinks(footerDoc.solutionsLinks);
+          if (Array.isArray(footerDoc.bottomLinks)) setBottomLinks(footerDoc.bottomLinks);
           if (typeof footerDoc.telephone === "string") setTelephone(footerDoc.telephone);
           if (typeof footerDoc.email === "string") setEmail(footerDoc.email);
         }

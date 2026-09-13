@@ -203,31 +203,31 @@ export default function AdminSolutionsPage() {
       if (!res.ok) throw new Error("Failed to fetch Solutions Page config");
       const data = await res.json();
 
-      if (data.heroBgImage) setHeroBgImage(data.heroBgImage);
-      if (data.heroTagline) setHeroTagline(data.heroTagline);
-      if (data.heroTitle) setHeroTitle(data.heroTitle);
-      if (data.heroDescription) setHeroDescription(data.heroDescription);
+      if (data.heroBgImage !== undefined) setHeroBgImage(data.heroBgImage);
+      if (data.heroTagline !== undefined) setHeroTagline(data.heroTagline);
+      if (data.heroTitle !== undefined) setHeroTitle(data.heroTitle);
+      if (data.heroDescription !== undefined) setHeroDescription(data.heroDescription);
 
-      if (data.industriesTagline) setIndustriesTagline(data.industriesTagline);
-      if (data.industriesTitle) setIndustriesTitle(data.industriesTitle);
-      if (data.industriesDesc) setIndustriesDesc(data.industriesDesc);
-      if (data.industries && data.industries.length > 0) setIndustries(data.industries);
+      if (data.industriesTagline !== undefined) setIndustriesTagline(data.industriesTagline);
+      if (data.industriesTitle !== undefined) setIndustriesTitle(data.industriesTitle);
+      if (data.industriesDesc !== undefined) setIndustriesDesc(data.industriesDesc);
+      if (Array.isArray(data.industries)) setIndustries(data.industries);
 
-      if (data.capabilitiesTagline) setCapabilitiesTagline(data.capabilitiesTagline);
-      if (data.capabilitiesTitle) setCapabilitiesTitle(data.capabilitiesTitle);
-      if (data.capabilitiesDesc) setCapabilitiesDesc(data.capabilitiesDesc);
-      if (data.corePortfolios && data.corePortfolios.length > 0) setCorePortfolios(data.corePortfolios);
+      if (data.capabilitiesTagline !== undefined) setCapabilitiesTagline(data.capabilitiesTagline);
+      if (data.capabilitiesTitle !== undefined) setCapabilitiesTitle(data.capabilitiesTitle);
+      if (data.capabilitiesDesc !== undefined) setCapabilitiesDesc(data.capabilitiesDesc);
+      if (Array.isArray(data.corePortfolios)) setCorePortfolios(data.corePortfolios);
 
-      if (data.partnersTagline) setPartnersTagline(data.partnersTagline);
-      if (data.partnersTitle) setPartnersTitle(data.partnersTitle);
-      if (data.partnersDesc) setPartnersDesc(data.partnersDesc);
-      if (data.partners && data.partners.length > 0) setPartners(data.partners);
+      if (data.partnersTagline !== undefined) setPartnersTagline(data.partnersTagline);
+      if (data.partnersTitle !== undefined) setPartnersTitle(data.partnersTitle);
+      if (data.partnersDesc !== undefined) setPartnersDesc(data.partnersDesc);
+      if (Array.isArray(data.partners)) setPartners(data.partners);
 
-      if (data.gatewayTagline) setGatewayTagline(data.gatewayTagline);
-      if (data.gatewayTitle) setGatewayTitle(data.gatewayTitle);
-      if (data.gatewayDesc) setGatewayDesc(data.gatewayDesc);
-      if (data.solutionScopeOptions && data.solutionScopeOptions.length > 0) setSolutionScopeOptions(data.solutionScopeOptions);
-      if (data.submitButtonText) setSubmitButtonText(data.submitButtonText);
+      if (data.gatewayTagline !== undefined) setGatewayTagline(data.gatewayTagline);
+      if (data.gatewayTitle !== undefined) setGatewayTitle(data.gatewayTitle);
+      if (data.gatewayDesc !== undefined) setGatewayDesc(data.gatewayDesc);
+      if (Array.isArray(data.solutionScopeOptions)) setSolutionScopeOptions(data.solutionScopeOptions);
+      if (data.submitButtonText !== undefined) setSubmitButtonText(data.submitButtonText);
 
     } catch (err: any) {
       console.error(err);

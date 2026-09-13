@@ -68,8 +68,12 @@ export default function SuccessStoriesSection() {
         const res = await fetch(`${baseUrl}/api/success-stories`);
         if (res.ok) {
           const apiStories = await res.json();
-          if (Array.isArray(apiStories) && apiStories.length > 0) {
-            setStories(apiStories);
+          if (Array.isArray(apiStories)) {
+            if (apiStories.length > 0) {
+              setStories(apiStories);
+            } else {
+              setStories([]);
+            }
           }
         }
       } catch (err) {

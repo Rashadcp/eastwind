@@ -180,21 +180,25 @@ export default function TechnologyEcosystem() {
         const res = await fetch(`${baseUrl}/api/brands`);
         if (res.ok) {
           const apiBrands = await res.json();
-          if (Array.isArray(apiBrands) && apiBrands.length > 0) {
-            const mappedApiBrands: BrandPortfolioItem[] = apiBrands.map((b: any) => ({
-              id: b.id,
-              name: b.name,
-              tagline: b.solutionName || b.tagline || "Brand Products",
-              logoUrl: b.logoUrl || b.imageUrl || "",
-              accentTone: b.accent === "orange" ? "orange" : b.accent === "red" ? "red" : "blue",
-              products: (b.products || []).map((p: any) => ({
-                id: p.id,
-                name: p.name,
-                imageUrl: p.imageUrl || "/products/default-fire-fighting-rescue.png"
-              }))
-            }));
+          if (Array.isArray(apiBrands)) {
+            if (apiBrands.length > 0) {
+              const mappedApiBrands: BrandPortfolioItem[] = apiBrands.map((b: any) => ({
+                id: b.id,
+                name: b.name,
+                tagline: b.solutionName || b.tagline || "Brand Products",
+                logoUrl: b.logoUrl || b.imageUrl || "",
+                accentTone: b.accent === "orange" ? "orange" : b.accent === "red" ? "red" : "blue",
+                products: (b.products || []).map((p: any) => ({
+                  id: p.id,
+                  name: p.name,
+                  imageUrl: p.imageUrl || "/products/default-fire-fighting-rescue.png"
+                }))
+              }));
 
-            setBrands(mappedApiBrands);
+              setBrands(mappedApiBrands);
+            } else {
+              setBrands([]);
+            }
           }
         }
       } catch (err) {
