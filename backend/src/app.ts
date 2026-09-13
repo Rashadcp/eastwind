@@ -23,6 +23,7 @@ import successStoriesRouter from "./routes/successStories.js";
 import heroRouter from "./routes/hero.js";
 import productCategoriesRouter from "./routes/productCategories.js";
 import { EnquiryController } from "./controllers/enquiry.controller.js";
+import { ContactSettingsModel } from "./models/contact.model.js";
 
 const app = express();
 
@@ -88,7 +89,19 @@ app.use("/auth", authRouter);
 app.post("/api/enquiry", EnquiryController.submitEnquiry);
 app.post("/enquiry", EnquiryController.submitEnquiry);
 
-app.get(["/api/footer", "/footer"], (req, res) => {
+app.get(["/api/footer", "/footer"], async (req, res) => {
+  try {
+    const footerDoc = await ContactSettingsModel.getBySection("footer");
+    if (footerDoc) {
+      return res.json({
+        logoUrl: footerDoc.logoUrl || "/logo.png",
+        companyName: "Eastwind Energy Arabia",
+        ...footerDoc
+      });
+    }
+  } catch {
+    // Fallback if DB is unavailable
+  }
   res.json({
     logoUrl: "/logo.png",
     companyName: "Eastwind Energy Arabia"
