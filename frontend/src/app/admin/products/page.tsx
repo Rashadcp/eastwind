@@ -972,7 +972,7 @@ export default function AdminProductsPage() {
           <button
             type="button"
             onClick={handleOpenCategoryManager}
-            className="flex items-center gap-2 py-3 px-5 rounded-full bg-slate-800 hover:bg-slate-750 border border-slate-700 text-orange-400 hover:text-orange-300 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md active:translate-y-0.5"
+            className="flex items-center gap-2 py-3 px-5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-orange-400 hover:text-orange-300 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md active:translate-y-0.5"
           >
             <svg className="w-4 h-4 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -982,7 +982,7 @@ export default function AdminProductsPage() {
 
           <button
             onClick={handleOpenCreate}
-            className="flex items-center gap-2 py-3 px-6 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-600/10 active:translate-y-0.5"
+            className="flex items-center gap-2 py-3 px-6 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-600/10 active:translate-y-0.5"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -994,7 +994,7 @@ export default function AdminProductsPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-3.5 px-4 rounded-2xl text-xs flex items-center justify-between gap-3 shadow-xs">
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-3.5 px-4 rounded-lg text-xs flex items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-2.5 min-w-0">
             <svg className="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -1014,7 +1014,7 @@ export default function AdminProductsPage() {
         </div>
       )}
       {success && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-3.5 px-4 rounded-2xl text-xs flex items-center justify-between gap-3 shadow-xs">
+        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-3.5 px-4 rounded-lg text-xs flex items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-2.5 min-w-0">
             <svg className="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -1048,7 +1048,7 @@ export default function AdminProductsPage() {
             placeholder="Search products by name, category or ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-2xl text-xs text-white placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium"
+            className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium"
           />
         </div>
 
@@ -1058,7 +1058,7 @@ export default function AdminProductsPage() {
           <select
             value={selectedBrandFilter}
             onChange={(e) => setSelectedBrandFilter(e.target.value)}
-            className="px-4 py-2.5 bg-white border border-slate-300 rounded-2xl text-xs font-extrabold text-slate-900 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none cursor-pointer max-sm:w-full shadow-sm"
+            className="px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-extrabold text-slate-900 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none cursor-pointer max-sm:w-full shadow-sm"
           >
             {availableBrands.map((b) => (
               <option key={b} value={b} className="bg-white text-slate-900 font-bold py-1">
@@ -1071,7 +1071,7 @@ export default function AdminProductsPage() {
             <button
               type="button"
               onClick={() => setShowProductOrderModal(true)}
-              className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-sky-400 hover:text-sky-300 rounded-2xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:translate-y-0.5"
+              className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-sky-400 hover:text-sky-300 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:translate-y-0.5"
               title={selectedBrandFilter === "All" ? "Reorder all products in catalog" : `Reorder products in ${selectedBrandFilter}`}
             >
               <svg className="w-4 h-4 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -1085,7 +1085,7 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={() => handleSaveProductOrder()}
                 disabled={savingProductOrder}
-                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-600/20 animate-pulse"
+                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-600/20 animate-pulse"
                 title="Save order changes to database"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -1099,7 +1099,7 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Products Table Card */}
-      <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden backdrop-blur-md">
+      <div className="bg-white/[0.02] border border-white/5 rounded-xl overflow-hidden backdrop-blur-md">
         
         {loading ? (
           <div className="py-24 text-center space-y-3">
@@ -1205,19 +1205,19 @@ export default function AdminProductsPage() {
                     <td className="px-6 py-4 text-right flex items-center justify-end gap-2.5">
                       <button
                         onClick={() => setViewItem(item)}
-                        className="py-2 px-4 rounded-xl text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-500/5 hover:bg-emerald-600 hover:text-white transition-all cursor-pointer border border-emerald-500/20"
+                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-500/5 hover:bg-emerald-600 hover:text-white transition-all cursor-pointer border border-emerald-500/20"
                       >
                         View
                       </button>
                       <button
                         onClick={() => handleOpenEdit(item)}
-                        className="py-2 px-4 rounded-xl text-[10px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/5 hover:bg-sky-500 hover:text-white transition-all cursor-pointer"
+                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/5 hover:bg-sky-500 hover:text-white transition-all cursor-pointer"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => setDeleteTarget(item.id)}
-                        className="py-2 px-4 rounded-xl text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50/5 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
+                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50/5 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
                       >
                         Delete
                       </button>
@@ -1251,7 +1251,7 @@ export default function AdminProductsPage() {
       {/* CRUD MODAL OVERLAY */}
       {showModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 w-full max-w-3xl rounded-[32px] shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-slate-950 border border-white/10 w-full max-w-3xl rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
             
             {/* Modal Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-white/5 flex-shrink-0">
@@ -1260,7 +1260,7 @@ export default function AdminProductsPage() {
               </h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/5 text-slate-400 hover:text-white cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 border border-white/5 text-slate-400 hover:text-white cursor-pointer transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -1282,7 +1282,7 @@ export default function AdminProductsPage() {
                     placeholder="Enter visual product name"
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium"
                   />
                 </div>
 
@@ -1292,7 +1292,7 @@ export default function AdminProductsPage() {
                   <select
                     value={formBrand}
                     onChange={(e) => setFormBrand(e.target.value)}
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
                   >
                     {formBrand && !availableBrandsList.includes(formBrand) && (
                       <option value={formBrand} className="bg-white text-slate-900 py-1.5 font-bold">
@@ -1313,7 +1313,7 @@ export default function AdminProductsPage() {
                   <select
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-colors font-medium cursor-pointer"
                   >
                     {formCategory && !PRODUCT_CATEGORIES.some((c) => c.id === formCategory || c.name === formCategory) && (
                       <option value={formCategory} className="bg-white text-slate-900 py-1.5 font-bold">
@@ -1337,7 +1337,7 @@ export default function AdminProductsPage() {
                   placeholder="Enter detailed technical product summary"
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium resize-y"
+                  className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium resize-y"
                 />
               </div>
 
@@ -1345,7 +1345,7 @@ export default function AdminProductsPage() {
               <div className="space-y-2">
                 <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Product Visual Image</label>
                 
-                <div className="h-40 w-full bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center p-2 border border-white/10 relative">
+                <div className="h-40 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-white/10 relative">
                   {formImageUrl && formImageUrl.trim() !== "" ? (
                     <img
                       key={formImageUrl}
@@ -1379,7 +1379,7 @@ export default function AdminProductsPage() {
                       placeholder="e.g. /uploads/image.png"
                       value={formImageUrl}
                       onChange={(e) => setFormImageUrl(e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                      className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium"
                     />
                   </div>
                   <div className="md:col-span-4 relative">
@@ -1392,7 +1392,7 @@ export default function AdminProductsPage() {
                     />
                     <label
                       htmlFor="product-file-upload"
-                      className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border border-dashed border-sky-500/30 text-sky-400 text-xs font-bold uppercase tracking-wider bg-sky-500/5 hover:bg-sky-500/10 transition-all cursor-pointer"
+                      className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-dashed border-sky-500/30 text-sky-400 text-xs font-bold uppercase tracking-wider bg-sky-500/5 hover:bg-sky-500/10 transition-all cursor-pointer"
                     >
                       {uploading ? "Processing..." : "Upload File"}
                     </label>
@@ -1410,12 +1410,12 @@ export default function AdminProductsPage() {
                     placeholder="Enter a features bullet point"
                     value={featureInput}
                     onChange={(e) => setFeatureInput(e.target.value)}
-                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium"
                   />
                   <button
                     type="button"
                     onClick={addFeature}
-                    className="px-5 py-3 rounded-2xl bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 transition-colors cursor-pointer text-slate-200"
+                    className="px-5 py-3 rounded-lg bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 transition-colors cursor-pointer text-slate-200"
                   >
                     Add
                   </button>
@@ -1423,7 +1423,7 @@ export default function AdminProductsPage() {
 
                 <ul className="flex flex-col gap-2 pl-0 list-none m-0">
                   {formFeatures.map((feat, idx) => (
-                    <li key={idx} className="flex justify-between items-center px-4 py-3 bg-white/[0.01] border border-white/5 rounded-xl text-xs">
+                    <li key={idx} className="flex justify-between items-center px-4 py-3 bg-white/[0.01] border border-white/5 rounded-lg text-xs">
                       <span className="text-slate-350 pr-4 leading-relaxed font-light">{feat}</span>
                       <button
                         type="button"
@@ -1493,19 +1493,19 @@ export default function AdminProductsPage() {
                         addCertification();
                       }
                     }}
-                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none transition-colors font-medium"
                   />
                   <button
                     type="button"
                     onClick={addCertification}
-                    className="px-5 py-3 rounded-2xl bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 transition-colors cursor-pointer text-slate-200 shrink-0"
+                    className="px-5 py-3 rounded-lg bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 transition-colors cursor-pointer text-slate-200 shrink-0"
                   >
                     Add Badge
                   </button>
                 </div>
 
                 {/* Active Certifications Badges List */}
-                <div className="p-3 bg-slate-950/70 border border-white/10 rounded-2xl min-h-[52px] flex flex-wrap items-center gap-2">
+                <div className="p-3 bg-slate-950/70 border border-white/10 rounded-lg min-h-[52px] flex flex-wrap items-center gap-2">
                   {formCertifications.length === 0 ? (
                     <span className="text-xs text-slate-400 font-mono pl-1">
                       No custom certifications set. (The product detail page will show standard default safety badges).
@@ -1533,7 +1533,7 @@ export default function AdminProductsPage() {
                       return (
                         <span
                           key={idx}
-                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold tracking-wide transition-all shadow-xs ${tagStyle}`}
+                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold tracking-wide transition-all shadow-xs ${tagStyle}`}
                         >
                           <span className={`w-2 h-2 rounded-full ${dotColor} shrink-0`} />
                           <span>{cert}</span>
@@ -1603,7 +1603,7 @@ export default function AdminProductsPage() {
                       placeholder="e.g. Operating Temperature or Dimensions"
                       value={specLabel}
                       onChange={(e) => setSpecLabel(e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                      className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium"
                     />
                   </div>
 
@@ -1623,12 +1623,12 @@ export default function AdminProductsPage() {
                             addSpec();
                           }
                         }}
-                        className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium"
+                        className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none transition-colors font-medium"
                       />
                       <button
                         type="button"
                         onClick={addSpec}
-                        className="px-5 py-3 rounded-2xl bg-orange-600 hover:bg-orange-500 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer text-white shrink-0 shadow-sm"
+                        className="px-5 py-3 rounded-lg bg-orange-600 hover:bg-orange-500 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer text-white shrink-0 shadow-sm"
                       >
                         + Add Spec
                       </button>
@@ -1637,7 +1637,7 @@ export default function AdminProductsPage() {
                 </div>
 
                 {/* Specs Table */}
-                <div className="divide-y divide-white/5 border border-white/5 rounded-2xl overflow-hidden font-mono text-[11px] bg-white/[0.01]">
+                <div className="divide-y divide-white/5 border border-white/5 rounded-lg overflow-hidden font-mono text-[11px] bg-white/[0.01]">
                   {formSpecs.length === 0 ? (
                     <div className="p-4 text-center text-slate-500 text-xs font-normal">
                       No technical parameters specified. (The product detail page will show standard default parameters).
@@ -1677,7 +1677,7 @@ export default function AdminProductsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Datasheet Upload */}
-                  <div className="bg-slate-900/80 border border-white/5 rounded-2xl p-5 space-y-4">
+                  <div className="bg-slate-900/80 border border-white/5 rounded-lg p-5 space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -1701,7 +1701,7 @@ export default function AdminProductsPage() {
                     />
 
                     {formDatasheetUrl ? (
-                      <div className="bg-slate-950 border border-sky-500/30 rounded-xl p-3.5 space-y-3">
+                      <div className="bg-slate-950 border border-sky-500/30 rounded-lg p-3.5 space-y-3">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 shrink-0">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -1753,7 +1753,7 @@ export default function AdminProductsPage() {
                     ) : (
                       <label
                         htmlFor="datasheet-upload-file"
-                        className="block py-6 px-4 rounded-xl border-2 border-dashed border-white/10 hover:border-sky-500/50 hover:bg-sky-500/5 text-center cursor-pointer transition-all group"
+                        className="block py-6 px-4 rounded-lg border-2 border-dashed border-white/10 hover:border-sky-500/50 hover:bg-sky-500/5 text-center cursor-pointer transition-all group"
                       >
                         <svg className="w-6 h-6 mx-auto mb-2 text-slate-400 group-hover:text-sky-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -1769,7 +1769,7 @@ export default function AdminProductsPage() {
                   </div>
 
                   {/* White Paper Upload */}
-                  <div className="bg-slate-900/80 border border-white/5 rounded-2xl p-5 space-y-4">
+                  <div className="bg-slate-900/80 border border-white/5 rounded-lg p-5 space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-rose-400 uppercase tracking-wider flex items-center gap-2">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -1793,7 +1793,7 @@ export default function AdminProductsPage() {
                     />
 
                     {formWhitepaperUrl ? (
-                      <div className="bg-slate-950 border border-rose-500/30 rounded-xl p-3.5 space-y-3">
+                      <div className="bg-slate-950 border border-rose-500/30 rounded-lg p-3.5 space-y-3">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -1845,7 +1845,7 @@ export default function AdminProductsPage() {
                     ) : (
                       <label
                         htmlFor="whitepaper-upload-file"
-                        className="block py-6 px-4 rounded-xl border-2 border-dashed border-white/10 hover:border-rose-500/50 hover:bg-rose-500/5 text-center cursor-pointer transition-all group"
+                        className="block py-6 px-4 rounded-lg border-2 border-dashed border-white/10 hover:border-rose-500/50 hover:bg-rose-500/5 text-center cursor-pointer transition-all group"
                       >
                         <svg className="w-6 h-6 mx-auto mb-2 text-slate-400 group-hover:text-rose-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -1870,14 +1870,14 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-6 py-2.5 rounded-full text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all"
+                className="px-6 py-2.5 rounded-lg text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 form="product-form"
-                className="px-8 py-2.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
+                className="px-8 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
               >
                 {isEdit ? "Update Catalog Node" : "Save Catalog Node"}
               </button>
@@ -1890,8 +1890,8 @@ export default function AdminProductsPage() {
       {/* DELETE CONFIRMATION MODAL */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 p-8 rounded-3xl w-full max-w-md shadow-2xl text-center space-y-6">
-            <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-500 text-lg mx-auto">
+          <div className="bg-slate-950 border border-white/10 p-8 rounded-xl w-full max-w-md shadow-2xl text-center space-y-6">
+            <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-500 text-lg mx-auto">
               <svg className="w-6 h-6 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
@@ -1907,13 +1907,13 @@ export default function AdminProductsPage() {
             <div className="flex justify-center gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="px-5 py-2.5 rounded-full border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
+                className="px-5 py-2.5 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
               >
                 Abort
               </button>
               <button
                 onClick={handleDelete}
-                className="px-7 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
+                className="px-7 py-2.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
               >
                 Delete Node
               </button>
@@ -1925,7 +1925,7 @@ export default function AdminProductsPage() {
       {/* VIEW MODAL OVERLAY */}
       {viewItem && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200/80 w-full max-w-2xl rounded-[32px] shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-white border border-slate-200/80 w-full max-w-2xl rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
             
             {/* Modal Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-slate-100 flex-shrink-0">
@@ -1934,7 +1934,7 @@ export default function AdminProductsPage() {
               </h3>
               <button
                 onClick={() => setViewItem(null)}
-                className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-400 hover:text-slate-700 cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-400 hover:text-slate-700 cursor-pointer transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -1947,7 +1947,7 @@ export default function AdminProductsPage() {
               
               {/* Product Info Row */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="md:col-span-1 border border-slate-200 rounded-2xl overflow-hidden bg-slate-50 aspect-square flex items-center justify-center p-2 relative">
+                <div className="md:col-span-1 border border-slate-200 rounded-lg overflow-hidden bg-slate-50 aspect-square flex items-center justify-center p-2 relative">
                   {viewItem.imageUrl && viewItem.imageUrl.trim() !== "" ? (
                     <img 
                       key={viewItem.imageUrl}
@@ -2021,7 +2021,7 @@ export default function AdminProductsPage() {
               <div className="border-t border-slate-100 pt-6">
                 <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-3">Technical Specifications Matrix</span>
                 {viewItem.specifications && viewItem.specifications.length > 0 ? (
-                  <div className="border border-slate-200 rounded-2xl overflow-hidden">
+                  <div className="border border-slate-200 rounded-lg overflow-hidden">
                     <table className="w-full border-collapse text-left m-0 text-xs">
                       <thead>
                         <tr className="bg-slate-50 border-b border-slate-200">
@@ -2051,7 +2051,7 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 rounded-full bg-sky-600 text-white hover:bg-sky-500 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-sky-600/10"
+                className="px-6 py-2.5 rounded-lg bg-sky-600 text-white hover:bg-sky-500 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-sky-600/10"
               >
                 Close View
               </button>
@@ -2064,7 +2064,7 @@ export default function AdminProductsPage() {
       {/* CATEGORY MANAGEMENT MODAL */}
       {showCategoryModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-white/10 w-full max-w-2xl rounded-[32px] shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-slate-900 border border-white/10 w-full max-w-2xl rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
             
             {/* Modal Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-white/10 flex-shrink-0 bg-slate-950/40">
@@ -2085,7 +2085,7 @@ export default function AdminProductsPage() {
                   setEditingCatId(null);
                   setCatDeleteTarget(null);
                 }}
-                className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-slate-400 hover:text-white cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 border border-white/10 text-slate-400 hover:text-white cursor-pointer transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -2097,7 +2097,7 @@ export default function AdminProductsPage() {
             <div className="p-6 overflow-y-auto space-y-5 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full">
               
               {/* Add New Category Row */}
-              <div className="bg-slate-950/50 border border-white/10 p-4 rounded-2xl space-y-2">
+              <div className="bg-slate-950/50 border border-white/10 p-4 rounded-lg space-y-2">
                 <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">
                   + Add New Equipment Category
                 </label>
@@ -2113,12 +2113,12 @@ export default function AdminProductsPage() {
                       }
                     }}
                     placeholder="e.g. Explosion-Proof Detection Arrays"
-                    className="flex-1 px-4 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 font-medium"
+                    className="flex-1 px-4 py-2.5 bg-slate-900 border border-white/10 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 font-medium"
                   />
                   <button
                     type="button"
                     onClick={handleAddCategory}
-                    className="px-5 py-2.5 bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm active:translate-y-0.5 shrink-0"
+                    className="px-5 py-2.5 bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all cursor-pointer shadow-sm active:translate-y-0.5 shrink-0"
                   >
                     Add Category
                   </button>
@@ -2149,7 +2149,7 @@ export default function AdminProductsPage() {
                       onDragOver={(e) => !isEditing && handleCategoryDragOver(e, idx)}
                       onDrop={(e) => !isEditing && handleCategoryDrop(e, idx)}
                       onDragEnd={handleCategoryDragEnd}
-                      className={`flex items-center justify-between gap-3 p-3 rounded-2xl border transition-all group ${
+                      className={`flex items-center justify-between gap-3 p-3 rounded-lg border transition-all group ${
                         isDragging
                           ? "opacity-35 bg-orange-500/10 border-dashed border-orange-400"
                           : isDragOver
@@ -2247,7 +2247,7 @@ export default function AdminProductsPage() {
                             <span className="font-semibold text-xs text-white truncate">
                               {cat.name}
                             </span>
-                            <span className="font-mono text-[10px] text-slate-500 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">
+                            <span className="font-mono text-[10px] text-slate-500 bg-white/5 px-2 py-0.5 rounded-md border border-white/5">
                               {prodCount} product{prodCount === 1 ? "" : "s"}
                             </span>
                           </div>
@@ -2299,7 +2299,7 @@ export default function AdminProductsPage() {
                 <button
                   type="button"
                   onClick={() => setShowCategoryModal(false)}
-                  className="px-5 py-2.5 rounded-full border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
+                  className="px-5 py-2.5 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
                 >
                   Close
                 </button>
@@ -2307,7 +2307,7 @@ export default function AdminProductsPage() {
                   type="button"
                   onClick={handleSaveCategoriesOrder}
                   disabled={savingCategories}
-                  className="px-6 py-2.5 rounded-full bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-orange-600/20 active:translate-y-0.5 font-mono"
+                  className="px-6 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-orange-600/20 active:translate-y-0.5 font-mono"
                 >
                   {savingCategories ? "Saving..." : "Save Order"}
                 </button>
@@ -2321,8 +2321,8 @@ export default function AdminProductsPage() {
       {/* CATEGORY DELETE CONFIRMATION MODAL */}
       {catDeleteTarget && (
         <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-white/10 max-w-md w-full rounded-3xl p-6 shadow-2xl text-center space-y-4">
-            <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center mx-auto">
+          <div className="bg-slate-900 border border-white/10 max-w-md w-full rounded-xl p-6 shadow-2xl text-center space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center mx-auto">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
@@ -2344,14 +2344,14 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setCatDeleteTarget(null)}
-                className="px-5 py-2 rounded-full border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-5 py-2 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleExecuteDeleteCategory}
-                className="px-6 py-2 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-6 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
                 Confirm Delete
               </button>
@@ -2363,7 +2363,7 @@ export default function AdminProductsPage() {
       {/* PRODUCT ORDER MANAGEMENT MODAL */}
       {showProductOrderModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 w-full max-w-xl rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden text-slate-900">
+          <div className="bg-white border border-slate-200 w-full max-w-xl rounded-xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden text-slate-900">
             
             {/* Modal Header */}
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white">
@@ -2383,7 +2383,7 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setShowProductOrderModal(false)}
-                className="text-slate-400 hover:text-slate-700 p-2 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
                 title="Close"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -2411,7 +2411,7 @@ export default function AdminProductsPage() {
                       onDragOver={(e) => handleProductDragOver(e, idx)}
                       onDrop={(e) => handleProductDrop(e, idx)}
                       onDragEnd={handleProductDragEnd}
-                      className={`flex items-center justify-between gap-3 p-3.5 rounded-2xl border transition-all ${
+                      className={`flex items-center justify-between gap-3 p-3.5 rounded-lg border transition-all ${
                         isDragging
                           ? "opacity-35 bg-orange-50 border-dashed border-orange-400"
                           : isDragOver
@@ -2435,7 +2435,7 @@ export default function AdminProductsPage() {
                           </svg>
                         </div>
 
-                        <span className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                        <span className="w-8 h-8 rounded-lg bg-orange-50 border border-orange-200 text-orange-600 font-mono text-xs font-bold flex items-center justify-center shrink-0">
                           #{idx + 1}
                         </span>
                         <div className="min-w-0">
@@ -2462,7 +2462,7 @@ export default function AdminProductsPage() {
                           type="button"
                           disabled={idx === 0 || savingProductOrder}
                           onClick={() => handleMoveProduct(idx, "up")}
-                          className="p-2 rounded-xl bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                          className="p-2 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
                           title="Move Up"
                           style={{ color: "#334155" }}
                         >
@@ -2474,7 +2474,7 @@ export default function AdminProductsPage() {
                           type="button"
                           disabled={idx === orderedCategoryProducts.length - 1 || savingProductOrder}
                           onClick={() => handleMoveProduct(idx, "down")}
-                          className="p-2 rounded-xl bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                          className="p-2 rounded-lg bg-white hover:bg-orange-600 hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
                           title="Move Down"
                           style={{ color: "#334155" }}
                         >
@@ -2498,7 +2498,7 @@ export default function AdminProductsPage() {
                 <button
                   type="button"
                   onClick={() => setShowProductOrderModal(false)}
-                  className="px-5 py-2.5 rounded-full border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors shadow-2xs"
+                  className="px-5 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors shadow-2xs"
                   style={{ color: "#334155" }}
                 >
                   Close
@@ -2507,7 +2507,7 @@ export default function AdminProductsPage() {
                   type="button"
                   disabled={savingProductOrder || orderedCategoryProducts.length === 0}
                   onClick={() => handleSaveProductOrder()}
-                  className="px-6 py-2.5 rounded-full bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-orange-600/20 active:translate-y-0.5 font-mono flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-orange-600/20 active:translate-y-0.5 font-mono flex items-center gap-2"
                   style={{ color: "#ffffff", backgroundColor: "#ea580c" }}
                 >
                   {savingProductOrder ? (

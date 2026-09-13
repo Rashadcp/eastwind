@@ -395,7 +395,7 @@ export default function AdminLayout({
           background-color: #ffffff !important;
           border: 1px solid #cbd5e1 !important;
           color: #0f172a !important;
-          border-radius: 12px !important;
+          border-radius: 8px !important;
         }
         .admin-light-theme select option,
         .admin-light-theme option {
@@ -419,7 +419,7 @@ export default function AdminLayout({
         .admin-light-theme textarea::placeholder {
           color: #94a3b8 !important;
         }
-        /* Orange accents replacing blue sky buttons */
+        /* Orange accents replacing blue sky buttons - semi-curved (8px) */
         .admin-light-theme button[class*="bg-sky-"],
         .admin-light-theme label[class*="bg-sky-"],
         .admin-light-theme a[class*="bg-sky-"] {
@@ -427,7 +427,7 @@ export default function AdminLayout({
           color: #ffffff !important;
           text-transform: none !important;
           letter-spacing: normal !important;
-          border-radius: 9999px !important;
+          border-radius: 8px !important;
           font-weight: 600 !important;
         }
         .admin-light-theme button[class*="bg-sky-"]:hover,
@@ -466,15 +466,32 @@ export default function AdminLayout({
         .admin-light-theme td {
           color: #334155 !important;
         }
-        /* Secondary buttons (Add, Add feature etc) */
+        /* Secondary buttons (Add, Add feature etc) - semi-curved (8px) */
         .admin-light-theme button[class*="bg-slate-8"] {
           background-color: #f1f5f9 !important;
           color: #475569 !important;
           border: 1px solid #cbd5e1 !important;
-          border-radius: 12px !important;
+          border-radius: 8px !important;
         }
         .admin-light-theme button[class*="bg-slate-8"]:hover {
           background-color: #e2e8f0 !important;
+        }
+        /* Universal Semi-Curved Overrides for clean enterprise admin styling */
+        .admin-light-theme button:not([class*="w-7"]):not([class*="w-8"]):not([class*="w-4"]):not([class*="w-5"]):not([class*="w-6"]):not([class*="rounded-full animate-spin"]) {
+          border-radius: 8px !important;
+        }
+        .admin-light-theme .rounded-full:not([class*="w-"]):not([class*="h-"]):not([class*="animate-spin"]) {
+          border-radius: 8px !important;
+        }
+        .admin-light-theme .rounded-3xl,
+        .admin-light-theme .rounded-\\[32px\\] {
+          border-radius: 12px !important;
+        }
+        .admin-light-theme .rounded-2xl {
+          border-radius: 10px !important;
+        }
+        .admin-light-theme .rounded-xl {
+          border-radius: 8px !important;
         }
         /* Text mutations */
         .admin-light-theme [class*="text-slate-4"] {
@@ -497,6 +514,7 @@ export default function AdminLayout({
         .admin-light-theme div[class*="bg-slate-950"] {
           background-color: #ffffff !important;
           border-color: #cbd5e1 !important;
+          border-radius: 12px !important;
         }
       ` }} />
       
@@ -516,7 +534,7 @@ export default function AdminLayout({
           {/* Brand header */}
           <div className="h-20 flex items-center justify-between px-6 border-b border-slate-200/60 shrink-0 sticky top-0 bg-white z-10">
             <Link href="/admin" className="flex items-center gap-3 no-underline">
-              <div className="p-1 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-center">
+              <div className="p-1 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-center">
                 <img
                   src={formatImageUrl(logoUrl)}
                   alt="Eastwind"
@@ -551,7 +569,7 @@ export default function AdminLayout({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                     isActive
                       ? "bg-orange-600 text-white shadow-lg shadow-orange-600/15"
                       : "text-slate-500 hover:text-slate-850 hover:bg-slate-100"
@@ -579,7 +597,7 @@ export default function AdminLayout({
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200/60 hover:bg-rose-600 hover:text-white transition-all cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200/60 hover:bg-rose-600 hover:text-white transition-all cursor-pointer"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -633,9 +651,9 @@ export default function AdminLayout({
           <div className="relative max-w-7xl mx-auto w-full admin-light-theme space-y-6">
             {/* Universal Website Location Banner across ALL admin pages */}
             {locationInfo && (
-              <div className="p-4 bg-orange-50/90 border border-orange-200 rounded-2xl text-orange-950 text-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
+              <div className="p-4 bg-orange-50/90 border border-orange-200 rounded-xl text-orange-950 text-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
                 <div className="flex items-start sm:items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />

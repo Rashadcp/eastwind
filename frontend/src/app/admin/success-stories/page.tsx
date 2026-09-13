@@ -240,7 +240,7 @@ export default function AdminSuccessStoriesPage() {
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
@@ -254,7 +254,7 @@ export default function AdminSuccessStoriesPage() {
         </div>
         <button
           onClick={handleOpenAddModal}
-          className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center gap-2 shrink-0"
+          className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md transition-all flex items-center justify-center gap-2 shrink-0"
         >
           <span>+ Add New Story</span>
         </button>
@@ -262,7 +262,7 @@ export default function AdminSuccessStoriesPage() {
 
       {/* Alert Notifications */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-xl flex justify-between items-center">
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-lg flex justify-between items-center">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -277,7 +277,7 @@ export default function AdminSuccessStoriesPage() {
         </div>
       )}
       {success && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-xl flex justify-between items-center">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-lg flex justify-between items-center">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -311,13 +311,13 @@ export default function AdminSuccessStoriesPage() {
       {loading ? (
         <div className="p-12 text-center text-slate-400 text-xs font-mono">Loading Success Stories...</div>
       ) : filteredStories.length === 0 ? (
-        <div className="p-12 bg-white rounded-2xl border border-slate-200 text-center text-slate-500 text-xs font-medium">
+        <div className="p-12 bg-white rounded-xl border border-slate-200 text-center text-slate-500 text-xs font-medium">
           No success stories found. Click "+ Add New Story" to create one.
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredStories.map((story) => (
-            <div key={story.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
+            <div key={story.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group">
               {/* IMAGE THUMBNAIL BANNER (WHOLE IMAGE UNCROPPED) */}
               <div className="h-48 relative overflow-hidden bg-slate-950 flex items-center justify-center p-2">
                 <img
@@ -367,7 +367,7 @@ export default function AdminSuccessStoriesPage() {
                 <button
                   type="button"
                   onClick={() => setViewStory(story)}
-                  className="px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
+                  className="px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-100 rounded-lg transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -379,7 +379,7 @@ export default function AdminSuccessStoriesPage() {
                   <button
                     type="button"
                     onClick={() => handleOpenEditModal(story)}
-                    className="px-3.5 py-1.5 text-xs font-bold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200/80 rounded-xl transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 text-xs font-bold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200/80 rounded-lg transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
                   >
                     <svg className="w-3.5 h-3.5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -389,7 +389,7 @@ export default function AdminSuccessStoriesPage() {
                   <button
                     type="button"
                     onClick={() => setDeleteTarget(story.id)}
-                    className="px-3.5 py-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200/80 rounded-xl transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200/80 rounded-lg transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
                   >
                     <svg className="w-3.5 h-3.5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -411,7 +411,7 @@ export default function AdminSuccessStoriesPage() {
           }}
           className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200"
         >
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+          <div className="bg-white border border-slate-200 rounded-xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
               <div>
@@ -522,7 +522,7 @@ export default function AdminSuccessStoriesPage() {
                   <label className="block font-bold text-slate-700">Story Cover Image</label>
                   
                   {formImageUrl && formImageUrl.trim() !== "" && (
-                    <div className="h-36 w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-900 flex items-center justify-center p-2 relative">
+                    <div className="h-36 w-full rounded-lg overflow-hidden border border-slate-200 bg-slate-900 flex items-center justify-center p-2 relative">
                       <img
                         src={formImageUrl}
                         alt="Story Preview"
@@ -542,7 +542,7 @@ export default function AdminSuccessStoriesPage() {
                       placeholder="/emergency_vehicle.webp"
                       className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-orange-500 font-mono text-[11px]"
                     />
-                    <label className="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl cursor-pointer shrink-0 shadow-md transition-all flex items-center justify-center gap-1.5 active:translate-y-0.5">
+                    <label className="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer shrink-0 shadow-md transition-all flex items-center justify-center gap-1.5 active:translate-y-0.5">
                       <svg className="w-3.5 h-3.5 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                       </svg>
@@ -573,7 +573,7 @@ export default function AdminSuccessStoriesPage() {
                     <button
                       type="button"
                       onClick={handleAddResultMetric}
-                      className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-xl shadow-sm hover:shadow transition-all shrink-0 cursor-pointer"
+                      className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg shadow-sm hover:shadow transition-all shrink-0 cursor-pointer"
                     >
                       + Add
                     </button>
@@ -584,7 +584,7 @@ export default function AdminSuccessStoriesPage() {
                       <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg font-mono">
                         <strong>{res.label}:</strong> <span className="text-orange-600">{res.value}</span>
                         <button type="button" onClick={() => handleRemoveResultMetric(i)} className="text-red-500 hover:text-red-700 font-bold ml-1 p-0.5 rounded hover:bg-red-50 cursor-pointer">
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <svg className="w-3 3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
@@ -602,14 +602,14 @@ export default function AdminSuccessStoriesPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold rounded-xl cursor-pointer transition-colors text-xs"
+                  className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold rounded-lg cursor-pointer transition-colors text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   form="story-form"
-                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl shadow-md cursor-pointer transition-all text-xs"
+                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg shadow-md cursor-pointer transition-all text-xs"
                 >
                   {isEdit ? "Save Changes" : "Create Story"}
                 </button>
@@ -627,7 +627,7 @@ export default function AdminSuccessStoriesPage() {
           }}
           className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200"
         >
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+          <div className="bg-white border border-slate-200 rounded-xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
               <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded border border-orange-200">
@@ -646,7 +646,7 @@ export default function AdminSuccessStoriesPage() {
             {/* Scrollable Body */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {/* IMAGE BANNER IN MODAL */}
-              <div className="h-56 relative overflow-hidden bg-slate-950 rounded-xl flex items-center justify-center p-3 border border-slate-800 shrink-0">
+              <div className="h-56 relative overflow-hidden bg-slate-950 rounded-lg flex items-center justify-center p-3 border border-slate-800 shrink-0">
                 <img
                   src={viewStory.imageUrl || "/emergency_vehicle.webp"}
                   alt={viewStory.title}
@@ -679,7 +679,7 @@ export default function AdminSuccessStoriesPage() {
               <button
                 type="button"
                 onClick={() => setViewStory(null)}
-                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-xl shadow-md cursor-pointer transition-all flex items-center gap-2"
+                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
               >
                 <span>Close Details</span>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -694,7 +694,7 @@ export default function AdminSuccessStoriesPage() {
       {/* DELETE CONFIRMATION MODAL */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
+          <div className="bg-white border border-slate-200 rounded-xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
             <h3 className="text-base font-bold text-slate-800">Remove Success Story?</h3>
             <p className="text-xs text-slate-500">
               Are you sure you want to delete this case study? This action cannot be undone.

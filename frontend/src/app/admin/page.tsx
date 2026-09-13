@@ -100,7 +100,7 @@ export default function AdminDashboardPage() {
     <div className="space-y-8 font-sans antialiased text-slate-800 select-none">
       
       {/* Welcome Banner */}
-      <div className="bg-white border border-slate-200/80 p-8 rounded-3xl relative overflow-hidden shadow-3xs">
+      <div className="bg-white border border-slate-200/80 p-8 rounded-xl relative overflow-hidden shadow-3xs">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(#ea580c_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none" />
         <div className="space-y-2 max-w-2xl relative z-10">
           <span className="text-[10px] font-mono tracking-widest text-orange-600 uppercase font-bold">System Status: Active</span>
@@ -112,7 +112,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-600 p-5 rounded-2xl text-xs leading-relaxed">
+        <div className="bg-rose-50 border border-rose-200 text-rose-600 p-5 rounded-lg text-xs leading-relaxed">
           {error}
         </div>
       )}
@@ -122,7 +122,7 @@ export default function AdminDashboardPage() {
         {statCards.map((card) => (
           <div
             key={card.name}
-            className={`bg-white border ${card.color} p-6 rounded-2xl flex flex-col justify-between hover:shadow-md transition-all duration-300 group`}
+            className={`bg-white border ${card.color} p-6 rounded-xl flex flex-col justify-between hover:shadow-md transition-all duration-300 group`}
           >
             <div className="space-y-4">
               <div className="flex justify-between items-start">

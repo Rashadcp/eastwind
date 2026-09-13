@@ -74,18 +74,18 @@ export default function AdminSettingsPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-600 p-4 rounded-2xl text-xs">
+        <div className="bg-rose-50 border border-rose-200 text-rose-600 p-4 rounded-lg text-xs">
           {error}
         </div>
       )}
       {success && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-600 p-4 rounded-2xl text-xs">
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-600 p-4 rounded-lg text-xs">
           {success}
         </div>
       )}
 
       {/* Password Change Card */}
-      <div className="bg-white border border-slate-200/80 p-8 rounded-3xl space-y-6 shadow-3xs">
+      <div className="bg-white border border-slate-200/80 p-8 rounded-xl space-y-6 shadow-3xs">
         
         <div>
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 m-0">Change Administrator Password</h3>
@@ -105,7 +105,7 @@ export default function AdminSettingsPage() {
               placeholder="••••••••"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none focus:bg-white transition-all font-medium"
+              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none focus:bg-white transition-all font-medium"
             />
           </div>
 
@@ -118,7 +118,7 @@ export default function AdminSettingsPage() {
               placeholder="••••••••"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none focus:bg-white transition-all font-medium"
+              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none focus:bg-white transition-all font-medium"
             />
           </div>
 
@@ -131,7 +131,7 @@ export default function AdminSettingsPage() {
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none focus:bg-white transition-all font-medium"
+              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none focus:bg-white transition-all font-medium"
             />
           </div>
 
@@ -139,7 +139,7 @@ export default function AdminSettingsPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 py-3.5 px-8 mt-6 rounded-full bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-600/10 active:translate-y-0.5 disabled:opacity-50 transition-all"
+            className="flex items-center gap-2 py-3.5 px-8 mt-6 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-600/10 active:translate-y-0.5 disabled:opacity-50 transition-all"
           >
             {loading ? (
               <>

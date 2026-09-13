@@ -271,7 +271,7 @@ export default function AdminContactPage() {
         </div>
 
         {/* Tab Selector */}
-        <div className="flex items-center gap-2 bg-slate-200/60 p-1.5 rounded-xl self-start md:self-auto flex-wrap">
+        <div className="flex items-center gap-2 bg-slate-200/60 p-1.5 rounded-lg self-start md:self-auto flex-wrap">
           <button
             onClick={() => { setActiveTab("info"); clearMessages(); }}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
@@ -309,7 +309,7 @@ export default function AdminContactPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-center justify-between">
+        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -324,7 +324,7 @@ export default function AdminContactPage() {
         </div>
       )}
       {success && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs flex items-center justify-between">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -342,7 +342,7 @@ export default function AdminContactPage() {
       {/* TAB 1: OFFICE ADDRESSES & CHANNELS */}
       {activeTab === "info" && (
         <div className="space-y-8">
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
               Office Locations & Direct Contact Channels
             </h2>
@@ -354,7 +354,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={hqTitle}
                   onChange={(e) => setHqTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -363,7 +363,7 @@ export default function AdminContactPage() {
                   rows={2}
                   value={hqAddress}
                   onChange={(e) => setHqAddress(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -375,7 +375,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={hubTitle}
                   onChange={(e) => setHubTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -384,7 +384,7 @@ export default function AdminContactPage() {
                   rows={2}
                   value={hubAddress}
                   onChange={(e) => setHubAddress(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -396,7 +396,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={telephone}
                   onChange={(e) => setTelephone(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -405,7 +405,7 @@ export default function AdminContactPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -414,7 +414,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={workingHours}
                   onChange={(e) => setWorkingHours(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -426,7 +426,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={gatewayText}
                   onChange={(e) => setGatewayText(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -435,7 +435,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={gatewayStatus}
                   onChange={(e) => setGatewayStatus(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -443,7 +443,7 @@ export default function AdminContactPage() {
           </div>
 
           {/* Form Footer Action Bar */}
-          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>Ready to save and publish updates to Office Addresses & Channels</span>
@@ -454,7 +454,7 @@ export default function AdminContactPage() {
               onClick={() => saveSection("contact_info", {
                 hqTitle, hqAddress, hubTitle, hubAddress, telephone, email, workingHours, gatewayText, gatewayStatus
               }, "Office Addresses & Channels")}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Office Addresses Changes"}
             </button>
@@ -465,7 +465,7 @@ export default function AdminContactPage() {
       {/* TAB 2: HOME CONTACT SECTION */}
       {activeTab === "home" && (
         <div className="space-y-8">
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
               Home Page Contact Section Header & Form
             </h2>
@@ -477,7 +477,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={homeTagline}
                   onChange={(e) => setHomeTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -486,7 +486,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={homeTitle}
                   onChange={(e) => setHomeTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -497,7 +497,7 @@ export default function AdminContactPage() {
                 rows={2}
                 value={homeDescription}
                 onChange={(e) => setHomeDescription(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
               />
             </div>
 
@@ -508,7 +508,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={homeSubmitBtn}
                   onChange={(e) => setHomeSubmitBtn(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -517,7 +517,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={homeSuccessTitle}
                   onChange={(e) => setHomeSuccessTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -528,13 +528,13 @@ export default function AdminContactPage() {
                 rows={2}
                 value={homeSuccessMessage}
                 onChange={(e) => setHomeSuccessMessage(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
               />
             </div>
           </div>
 
           {/* Operational Sectors Dropdown Options */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h2 className="text-lg font-bold text-slate-800 m-0">Operational Sector Dropdown Options</h2>
               <button
@@ -548,7 +548,7 @@ export default function AdminContactPage() {
 
             <div className="space-y-4">
               {homeSectors.map((sec, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-slate-200/60 rounded-xl bg-slate-50/50">
+                <div key={idx} className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-slate-200/60 rounded-lg bg-slate-50/50">
                   <div className="flex-1 w-full">
                     <label className="block text-[11px] font-bold text-slate-600 mb-1">Option Value Key</label>
                     <input
@@ -588,7 +588,7 @@ export default function AdminContactPage() {
           </div>
 
           {/* Form Footer Action Bar */}
-          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>Ready to save and publish updates to Home Contact Section</span>
@@ -605,7 +605,7 @@ export default function AdminContactPage() {
                 successTitle: homeSuccessTitle,
                 successMessage: homeSuccessMessage,
               }, "Home Contact Section")}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Home Contact Changes"}
             </button>
@@ -616,7 +616,7 @@ export default function AdminContactPage() {
       {/* TAB 3: DEDICATED CONTACT PAGE */}
       {activeTab === "contact_page" && (
         <div className="space-y-8">
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
               Contact Page Hero Header & Form Titles
             </h2>
@@ -628,7 +628,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={pageHeroTagline}
                   onChange={(e) => setPageHeroTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -637,7 +637,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={pageHeroTitle}
                   onChange={(e) => setPageHeroTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -648,7 +648,7 @@ export default function AdminContactPage() {
                 rows={2}
                 value={pageHeroDescription}
                 onChange={(e) => setPageHeroDescription(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
               />
             </div>
 
@@ -659,7 +659,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={pageHeroBgImage}
                   onChange={(e) => setPageHeroBgImage(e.target.value)}
-                  className="flex-1 px-4 py-3 text-xs border rounded-xl"
+                  className="flex-1 px-4 py-3 text-xs border rounded-lg"
                 />
                 <input
                   type="file"
@@ -670,7 +670,7 @@ export default function AdminContactPage() {
                 />
                 <label
                   htmlFor="contact-hero-upload"
-                  className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                  className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
                 >
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload File"}
                 </label>
@@ -678,7 +678,7 @@ export default function AdminContactPage() {
 
               {/* Contact Hero Background Image Preview */}
               {pageHeroBgImage && pageHeroBgImage.trim() !== "" && (
-                <div className="mt-3 w-fit max-w-xl rounded-xl border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                <div className="mt-3 w-fit max-w-xl rounded-lg border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
                   <img
                     src={formatImageUrl(pageHeroBgImage)}
                     alt="Contact Hero Preview"
@@ -701,7 +701,7 @@ export default function AdminContactPage() {
                   value={pageCommsTitle}
                   onChange={(e) => setPageCommsTitle(e.target.value)}
                   placeholder="e.g. Primary Operation Hubs"
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -711,7 +711,7 @@ export default function AdminContactPage() {
                   value={pageCommsDesc}
                   onChange={(e) => setPageCommsDesc(e.target.value)}
                   placeholder="e.g. Direct routing channels across our regional estimating centers..."
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -723,7 +723,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={pageFormTagline}
                   onChange={(e) => setPageFormTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -732,7 +732,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={pageFormTitle}
                   onChange={(e) => setPageFormTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -744,7 +744,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={pageSubmitBtn}
                   onChange={(e) => setPageSubmitBtn(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -753,7 +753,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={pageSuccessTitle}
                   onChange={(e) => setPageSuccessTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -764,13 +764,13 @@ export default function AdminContactPage() {
                 rows={2}
                 value={pageSuccessMessage}
                 onChange={(e) => setPageSuccessMessage(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
               />
             </div>
           </div>
 
           {/* Market Segments Dropdown Options */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h2 className="text-lg font-bold text-slate-800 m-0">Strategic Market Segment Dropdown Options</h2>
               <button
@@ -784,7 +784,7 @@ export default function AdminContactPage() {
 
             <div className="space-y-4">
               {pageMarketSegments.map((seg, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-slate-200/60 rounded-xl bg-slate-50/50">
+                <div key={idx} className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-slate-200/60 rounded-lg bg-slate-50/50">
                   <div className="flex-1 w-full">
                     <label className="block text-[11px] font-bold text-slate-600 mb-1">Option Value Key</label>
                     <input
@@ -824,7 +824,7 @@ export default function AdminContactPage() {
           </div>
 
           {/* Form Footer Action Bar */}
-          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>Ready to save and publish updates to Contact Page Settings</span>
@@ -847,7 +847,7 @@ export default function AdminContactPage() {
                 successTitle: pageSuccessTitle,
                 successMessage: pageSuccessMessage,
               }, "Contact Page Settings")}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Contact Page Changes"}
             </button>
@@ -858,7 +858,7 @@ export default function AdminContactPage() {
       {/* TAB 4: ENQUIRY PAGE */}
       {activeTab === "enquiry_page" && (
         <div className="space-y-8">
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
               Enquiry Page Header & Response Messages
             </h2>
@@ -870,7 +870,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={enquiryTagline}
                   onChange={(e) => setEnquiryTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -879,7 +879,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={enquiryTitle}
                   onChange={(e) => setEnquiryTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -890,7 +890,7 @@ export default function AdminContactPage() {
                 rows={2}
                 value={enquiryDescription}
                 onChange={(e) => setEnquiryDescription(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
               />
             </div>
 
@@ -901,7 +901,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={enquirySubmitBtn}
                   onChange={(e) => setEnquirySubmitBtn(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
               <div>
@@ -910,7 +910,7 @@ export default function AdminContactPage() {
                   type="text"
                   value={enquirySuccessTitle}
                   onChange={(e) => setEnquirySuccessTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -921,13 +921,13 @@ export default function AdminContactPage() {
                 rows={2}
                 value={enquirySuccessMessage}
                 onChange={(e) => setEnquirySuccessMessage(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
               />
             </div>
           </div>
 
           {/* Application Purposes Dropdown Options */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h2 className="text-lg font-bold text-slate-800 m-0">Application Purpose Dropdown Options</h2>
               <button
@@ -941,7 +941,7 @@ export default function AdminContactPage() {
 
             <div className="space-y-4">
               {enquiryPurposes.map((purp, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-slate-200/60 rounded-xl bg-slate-50/50">
+                <div key={idx} className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-slate-200/60 rounded-lg bg-slate-50/50">
                   <div className="flex-1 w-full">
                     <label className="block text-[11px] font-bold text-slate-600 mb-1">Option Value Key</label>
                     <input
@@ -981,7 +981,7 @@ export default function AdminContactPage() {
           </div>
 
           {/* Form Footer Action Bar */}
-          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>Ready to save and publish updates to Enquiry Page Settings</span>
@@ -998,7 +998,7 @@ export default function AdminContactPage() {
                 successTitle: enquirySuccessTitle,
                 successMessage: enquirySuccessMessage,
               }, "Enquiry Page Settings")}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Enquiry Page Changes"}
             </button>

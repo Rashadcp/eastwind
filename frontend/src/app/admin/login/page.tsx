@@ -120,11 +120,11 @@ export default function AdminLoginPage() {
       <div className="absolute w-[400px] h-[400px] rounded-full bg-amber-500/5 blur-[120px] bottom-1/4 right-1/4 pointer-events-none" />
 
       {/* Light Glassmorphic Login Container */}
-      <div className="w-full max-w-md bg-white border border-slate-200/80 p-8 rounded-[32px] shadow-[0_20px_50px_rgba(15,23,42,0.06)] relative z-10 space-y-6">
+      <div className="w-full max-w-md bg-white border border-slate-200/80 p-8 rounded-xl shadow-[0_20px_50px_rgba(15,23,42,0.06)] relative z-10 space-y-6">
         
         {/* Brand header */}
         <div className="text-center space-y-3 select-none flex flex-col items-center justify-center">
-          <div className="p-3 bg-white border border-slate-100 rounded-2xl shadow-xs inline-flex items-center justify-center max-w-[220px]">
+          <div className="p-3 bg-white border border-slate-100 rounded-xl shadow-xs inline-flex items-center justify-center max-w-[220px]">
             <img
               src={formatImageUrl(logoUrl)}
               alt="Eastwind Safety"
@@ -142,7 +142,7 @@ export default function AdminLoginPage() {
 
         {/* Informative message for OTP */}
         {otpRequired && (
-          <div className="bg-orange-50 border border-orange-200 text-orange-800 p-4 rounded-2xl text-xs leading-relaxed text-center font-medium flex items-center justify-center gap-2">
+          <div className="bg-orange-50 border border-orange-200 text-orange-800 p-4 rounded-lg text-xs leading-relaxed text-center font-medium flex items-center justify-center gap-2">
             <svg className="w-4 h-4 text-orange-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
@@ -155,7 +155,7 @@ export default function AdminLoginPage() {
 
         {/* Error notification */}
         {error && (
-          <div className="bg-rose-50 border border-rose-200 text-rose-600 p-4 rounded-2xl text-xs flex items-start gap-3">
+          <div className="bg-rose-50 border border-rose-200 text-rose-600 p-4 rounded-lg text-xs flex items-start gap-3">
             <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
@@ -183,7 +183,7 @@ export default function AdminLoginPage() {
                     placeholder="Enter username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium focus:bg-white"
+                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium focus:bg-white"
                   />
                 </div>
               </div>
@@ -202,7 +202,7 @@ export default function AdminLoginPage() {
                     placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium focus:bg-white"
+                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium focus:bg-white"
                   />
                 </div>
               </div>
@@ -210,7 +210,7 @@ export default function AdminLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 mt-6 bg-orange-600 hover:bg-orange-500 text-white rounded-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-orange-600/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 mt-6 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-lg shadow-orange-600/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>
@@ -245,7 +245,7 @@ export default function AdminLoginPage() {
                     placeholder="Enter 6-digit code"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium focus:bg-white tracking-[0.25em] text-center font-bold"
+                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium focus:bg-white tracking-[0.25em] text-center font-bold"
                   />
                 </div>
               </div>
@@ -254,7 +254,7 @@ export default function AdminLoginPage() {
                 <button
                   type="submit"
                   disabled={loading || otp.length !== 6}
-                  className="w-full py-4 mt-4 bg-orange-600 hover:bg-orange-500 text-white rounded-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-orange-600/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 mt-4 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-lg shadow-orange-600/15 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <>
@@ -274,7 +274,7 @@ export default function AdminLoginPage() {
                 <button
                   type="button"
                   onClick={handleReturn}
-                  className="w-full py-3 text-slate-500 hover:text-slate-850 hover:bg-slate-100 rounded-2xl text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                  className="w-full py-3 text-slate-500 hover:text-slate-850 hover:bg-slate-100 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
                 >
                   Return to Credentials Login
                 </button>

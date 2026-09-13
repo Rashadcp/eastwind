@@ -411,7 +411,7 @@ export default function AdminAboutPage() {
 
         <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
           {/* Tab Selector Buttons */}
-          <div className="flex items-center gap-1.5 bg-slate-200/60 p-1.5 rounded-xl">
+          <div className="flex items-center gap-1.5 bg-slate-200/60 p-1.5 rounded-lg">
             <button
               onClick={() => { setActiveTab("home"); clearMessages(); }}
               className={`px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
@@ -438,7 +438,7 @@ export default function AdminAboutPage() {
             type="button"
             onClick={activeTab === "home" ? handleSaveHome : handleSaveAboutPage}
             disabled={saving}
-            className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0"
+            className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>
@@ -447,7 +447,7 @@ export default function AdminAboutPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-center justify-between">
+        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -462,7 +462,7 @@ export default function AdminAboutPage() {
         </div>
       )}
       {success && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs flex items-center justify-between">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -480,7 +480,7 @@ export default function AdminAboutPage() {
       {/* TAB 1: HOME PAGE ABOUT SECTION */}
       {activeTab === "home" && (
         <div className="space-y-8">
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <h2 className="text-lg font-bold text-slate-800 m-0">
                 Home Page About Header & Asset
@@ -505,7 +505,7 @@ export default function AdminAboutPage() {
                   type="text"
                   value={homeTitle}
                   onChange={(e) => setHomeTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                   placeholder="e.g. Sustaining Regional Safety Infrastructure"
                 />
               </div>
@@ -517,7 +517,7 @@ export default function AdminAboutPage() {
                     type="text"
                     value={homeImage}
                     onChange={(e) => setHomeImage(e.target.value)}
-                    className="flex-1 px-4 py-3 text-xs border rounded-xl"
+                    className="flex-1 px-4 py-3 text-xs border rounded-lg"
                     placeholder="e.g. /about.png or /uploads/image.png"
                   />
                   <input
@@ -529,14 +529,14 @@ export default function AdminAboutPage() {
                   />
                   <label
                     htmlFor="home-image-upload"
-                    className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                    className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
                   >
                     {uploadingField === "homeImage" ? "Uploading..." : "Upload File"}
                   </label>
                 </div>
                 {/* Home Image Preview */}
                 {homeImage && homeImage.trim() !== "" && (
-                  <div className="mt-3 w-fit max-w-xl rounded-xl border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                  <div className="mt-3 w-fit max-w-xl rounded-lg border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
                     <img
                       src={formatImageUrl(homeImage)}
                       alt="Home About Preview"
@@ -558,7 +558,7 @@ export default function AdminAboutPage() {
                   rows={4}
                   value={homeOverview}
                   onChange={(e) => setHomeOverview(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl leading-relaxed"
+                  className="w-full px-4 py-3 text-xs border rounded-lg leading-relaxed"
                   placeholder="Overview text..."
                 />
               </div>
@@ -569,7 +569,7 @@ export default function AdminAboutPage() {
                   rows={4}
                   value={homeSecondary}
                   onChange={(e) => setHomeSecondary(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl leading-relaxed"
+                  className="w-full px-4 py-3 text-xs border rounded-lg leading-relaxed"
                   placeholder="Secondary text..."
                 />
               </div>
@@ -577,7 +577,7 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Metrics Section */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <h2 className="text-lg font-bold text-slate-800 m-0">Quantitative Data Metrics ({homeMetrics.length})</h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -607,7 +607,7 @@ export default function AdminAboutPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {homeMetrics.map((m, idx) => (
-                <div key={idx} className="p-5 border border-slate-200/60 rounded-xl bg-slate-50/50 space-y-4 relative">
+                <div key={idx} className="p-5 border border-slate-200/60 rounded-lg bg-slate-50/50 space-y-4 relative">
                   <button
                     type="button"
                     onClick={() => setHomeMetrics(homeMetrics.filter((_, i) => i !== idx))}
@@ -666,7 +666,7 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Turnkey Lifecycle Steps */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <h2 className="text-lg font-bold text-slate-800 m-0">Turnkey Lifecycle Delivery Steps ({homeLifecycleSteps.length})</h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -696,8 +696,8 @@ export default function AdminAboutPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {homeLifecycleSteps.map((step, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-3 border border-slate-200/60 rounded-xl bg-slate-50/40">
-                  <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-600 font-bold text-xs flex items-center justify-center shrink-0">
+                <div key={idx} className="flex items-center gap-3 p-3 border border-slate-200/60 rounded-lg bg-slate-50/40">
+                  <span className="w-6 h-6 rounded-md bg-orange-100 text-orange-600 font-bold text-xs flex items-center justify-center shrink-0">
                     {idx + 1}
                   </span>
                   <input
@@ -723,7 +723,7 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Form Footer Action Bar */}
-          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>Ready to save and publish updates to the Home Page About section</span>
@@ -732,7 +732,7 @@ export default function AdminAboutPage() {
               type="button"
               onClick={handleSaveHome}
               disabled={saving}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Home Page About Changes"}
             </button>
@@ -745,7 +745,7 @@ export default function AdminAboutPage() {
         <div className="space-y-8">
           
           {/* Hero Header Settings */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
               About Page Hero Header & Background Asset
             </h2>
@@ -757,7 +757,7 @@ export default function AdminAboutPage() {
                   type="text"
                   value={pageHeroTagline}
                   onChange={(e) => setPageHeroTagline(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                   placeholder="e.g. Company Overview"
                 />
               </div>
@@ -768,7 +768,7 @@ export default function AdminAboutPage() {
                   type="text"
                   value={pageHeroTitle}
                   onChange={(e) => setPageHeroTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                   placeholder="e.g. Mission-Critical Safety Infrastructure"
                 />
               </div>
@@ -780,7 +780,7 @@ export default function AdminAboutPage() {
                 rows={2}
                 value={pageHeroDescription}
                 onChange={(e) => setPageHeroDescription(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
                 placeholder="Hero overview paragraph text..."
               />
             </div>
@@ -792,7 +792,7 @@ export default function AdminAboutPage() {
                   type="text"
                   value={pageHeroBgImage}
                   onChange={(e) => setPageHeroBgImage(e.target.value)}
-                  className="flex-1 px-4 py-3 text-xs border rounded-xl"
+                  className="flex-1 px-4 py-3 text-xs border rounded-lg"
                   placeholder="e.g. /about_hero_bg.png or /uploads/hero.png"
                 />
                 <input
@@ -804,7 +804,7 @@ export default function AdminAboutPage() {
                 />
                 <label
                   htmlFor="page-hero-upload"
-                  className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                  className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
                 >
                   {uploadingField === "heroBgImage" ? "Uploading..." : "Upload File"}
                 </label>
@@ -812,7 +812,7 @@ export default function AdminAboutPage() {
 
               {/* Hero Image Preview */}
               {pageHeroBgImage && pageHeroBgImage.trim() !== "" && (
-                <div className="mt-3 w-fit max-w-xl rounded-xl border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                <div className="mt-3 w-fit max-w-xl rounded-lg border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
                   <img
                     src={formatImageUrl(pageHeroBgImage)}
                     alt="About Hero Background Preview"
@@ -828,7 +828,7 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Mandate & Facility Section */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
               Core Mandate & Facility Showcase Image
             </h2>
@@ -840,7 +840,7 @@ export default function AdminAboutPage() {
                   type="text"
                   value={pageMandateBadge}
                   onChange={(e) => setPageMandateBadge(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                   placeholder="e.g. Operational Strength"
                 />
               </div>
@@ -851,7 +851,7 @@ export default function AdminAboutPage() {
                   type="text"
                   value={pageMandateTitle}
                   onChange={(e) => setPageMandateTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                   placeholder="e.g. Our Core Safety Mandate"
                 />
               </div>
@@ -863,7 +863,7 @@ export default function AdminAboutPage() {
                 rows={3}
                 value={pageMandateParagraph1}
                 onChange={(e) => setPageMandateParagraph1(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
               />
             </div>
 
@@ -873,7 +873,7 @@ export default function AdminAboutPage() {
                 rows={3}
                 value={pageMandateParagraph2}
                 onChange={(e) => setPageMandateParagraph2(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
               />
             </div>
 
@@ -885,7 +885,7 @@ export default function AdminAboutPage() {
                     type="text"
                     value={pageFacilityImage}
                     onChange={(e) => setPageFacilityImage(e.target.value)}
-                    className="flex-1 px-4 py-3 text-xs border rounded-xl"
+                    className="flex-1 px-4 py-3 text-xs border rounded-lg"
                     placeholder="e.g. /analyzer_shelter.webp or /uploads/facility.png"
                   />
                   <input
@@ -897,7 +897,7 @@ export default function AdminAboutPage() {
                   />
                   <label
                     htmlFor="page-facility-upload"
-                    className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
+                    className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-bold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md transition-all"
                   >
                     {uploadingField === "facilityImage" ? "Uploading..." : "Upload File"}
                   </label>
@@ -905,7 +905,7 @@ export default function AdminAboutPage() {
 
                 {/* Facility Image Preview */}
                 {pageFacilityImage && pageFacilityImage.trim() !== "" && (
-                  <div className="mt-3 w-fit max-w-xl rounded-xl border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                  <div className="mt-3 w-fit max-w-xl rounded-lg border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
                     <img
                       src={formatImageUrl(pageFacilityImage)}
                       alt="Facility Showcase Preview"
@@ -925,7 +925,7 @@ export default function AdminAboutPage() {
                   type="text"
                   value={pageFacilityCode}
                   onChange={(e) => setPageFacilityCode(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                   placeholder="e.g. SYS.FACILITY.IMG.01"
                 />
               </div>
@@ -933,7 +933,7 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Positioning Pillars */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <h2 className="text-lg font-bold text-slate-800 m-0">Core Market Positioning Pillars ({pagePositioning.length})</h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -963,7 +963,7 @@ export default function AdminAboutPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {pagePositioning.map((pos, idx) => (
-                <div key={idx} className="p-4 border border-slate-200/60 rounded-xl bg-slate-50/50 space-y-3 relative">
+                <div key={idx} className="p-4 border border-slate-200/60 rounded-lg bg-slate-50/50 space-y-3 relative">
                   <button
                     type="button"
                     onClick={() => setPagePositioning(pagePositioning.filter((_, i) => i !== idx))}
@@ -1005,7 +1005,7 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Corporate Metrics */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <h2 className="text-lg font-bold text-slate-800 m-0">Corporate Metrics Cards ({pageMetrics.length})</h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -1035,7 +1035,7 @@ export default function AdminAboutPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {pageMetrics.map((m, idx) => (
-                <div key={idx} className="p-4 border border-slate-200/60 rounded-xl bg-slate-50/50 space-y-3 relative">
+                <div key={idx} className="p-4 border border-slate-200/60 rounded-lg bg-slate-50/50 space-y-3 relative">
                   <button
                     type="button"
                     onClick={() => setPageMetrics(pageMetrics.filter((_, i) => i !== idx))}
@@ -1106,7 +1106,7 @@ export default function AdminAboutPage() {
           </div>
 
           {/* Engineering Disciplines */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <h2 className="text-lg font-bold text-slate-800 m-0">Engineering Disciplines Matrix ({pageDisciplines.length})</h2>
               <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -1136,7 +1136,7 @@ export default function AdminAboutPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {pageDisciplines.map((d, idx) => (
-                <div key={idx} className="p-4 border border-slate-200/60 rounded-xl bg-slate-50/50 space-y-3 relative">
+                <div key={idx} className="p-4 border border-slate-200/60 rounded-lg bg-slate-50/50 space-y-3 relative">
                   <button
                     type="button"
                     onClick={() => setPageDisciplines(pageDisciplines.filter((_, i) => i !== idx))}
@@ -1192,7 +1192,7 @@ export default function AdminAboutPage() {
           </div>
 
           {/* CTA Box Settings */}
-          <div className="bg-white p-8 border border-slate-200/60 rounded-2xl space-y-6 shadow-sm">
+          <div className="bg-white p-8 border border-slate-200/60 rounded-xl space-y-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 m-0 border-b border-slate-100 pb-3">
               Footer Call-to-Action Consultation Box
             </h2>
@@ -1204,7 +1204,7 @@ export default function AdminAboutPage() {
                   type="text"
                   value={pageCtaTitle}
                   onChange={(e) => setPageCtaTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
 
@@ -1214,7 +1214,7 @@ export default function AdminAboutPage() {
                   type="text"
                   value={pageCtaButtonText}
                   onChange={(e) => setPageCtaButtonText(e.target.value)}
-                  className="w-full px-4 py-3 text-xs border rounded-xl"
+                  className="w-full px-4 py-3 text-xs border rounded-lg"
                 />
               </div>
             </div>
@@ -1225,13 +1225,13 @@ export default function AdminAboutPage() {
                 rows={2}
                 value={pageCtaDescription}
                 onChange={(e) => setPageCtaDescription(e.target.value)}
-                className="w-full px-4 py-3 text-xs border rounded-xl"
+                className="w-full px-4 py-3 text-xs border rounded-lg"
               />
             </div>
           </div>
 
           {/* Form Footer Action Bar */}
-          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="mt-8 p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>Ready to save and publish updates to the Dedicated About Page</span>
@@ -1240,7 +1240,7 @@ export default function AdminAboutPage() {
               type="button"
               onClick={handleSaveAboutPage}
               disabled={saving}
-              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50"
             >
               {saving ? "Saving Changes..." : "Save Dedicated About Page Changes"}
             </button>

@@ -872,7 +872,7 @@ export default function UnifiedAdminSolutionsPage() {
   return (
     <div className="space-y-6 font-sans text-slate-800">
       {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
@@ -888,7 +888,7 @@ export default function UnifiedAdminSolutionsPage() {
         <div className="flex gap-2">
           <button
             onClick={handleOpenCreate}
-            className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-md cursor-pointer transition-all shrink-0"
+            className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-md cursor-pointer transition-all shrink-0"
           >
             + Add Solution Item
           </button>
@@ -897,7 +897,7 @@ export default function UnifiedAdminSolutionsPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-xl flex justify-between items-center">
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-lg flex justify-between items-center">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -912,7 +912,7 @@ export default function UnifiedAdminSolutionsPage() {
         </div>
       )}
       {success && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-xl flex justify-between items-center">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-lg flex justify-between items-center">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -928,17 +928,17 @@ export default function UnifiedAdminSolutionsPage() {
       )}
 
       {/* TAB NAVIGATION */}
-      <div className="flex items-center gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit border border-slate-200/90 shadow-2xs">
+      <div className="flex items-center gap-2 p-1.5 bg-slate-100 rounded-xl w-fit border border-slate-200/90 shadow-2xs">
         <button
           onClick={() => setActiveTab("catalog")}
-          className={`px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider rounded-xl transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider rounded-lg transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === "catalog"
               ? "bg-white text-orange-600 shadow-xs border border-slate-200"
               : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
           }`}
         >
           <span>Manage Solution Items</span>
-          <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+          <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold ${
             activeTab === "catalog" ? "bg-orange-100 text-orange-700" : "bg-slate-200 text-slate-600"
           }`}>
             {solutions.length}
@@ -946,7 +946,7 @@ export default function UnifiedAdminSolutionsPage() {
         </button>
         <button
           onClick={() => setActiveTab("page_layout")}
-          className={`px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
+          className={`px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
             activeTab === "page_layout"
               ? "bg-white text-orange-600 shadow-xs border border-slate-200"
               : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
@@ -959,7 +959,7 @@ export default function UnifiedAdminSolutionsPage() {
       {activeTab === "catalog" ? (
         <div className="space-y-6">
           {/* Controls Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg border border-slate-200 shadow-xs">
             <div className="w-full md:w-96 relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -1001,11 +1001,11 @@ export default function UnifiedAdminSolutionsPage() {
           {loading ? (
             <div className="p-12 text-center text-slate-400 text-xs font-mono">Loading Solution Catalog...</div>
           ) : filteredSolutions.length === 0 ? (
-            <div className="p-12 bg-white rounded-2xl border border-slate-200 text-center space-y-3">
+            <div className="p-12 bg-white rounded-xl border border-slate-200 text-center space-y-3">
               <p className="text-xs text-slate-500 font-medium">No solution items found. Click "+ Add Solution Item" to create one.</p>
               <button
                 onClick={handleOpenCreate}
-                className="px-5 py-2.5 bg-orange-600 text-white font-bold text-xs rounded-xl shadow-md"
+                className="px-5 py-2.5 bg-orange-600 text-white font-bold text-xs rounded-lg shadow-md"
               >
                 + Add Solution Item
               </button>
@@ -1013,7 +1013,7 @@ export default function UnifiedAdminSolutionsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredSolutions.map((item: any) => (
-                <div key={item.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group hover:border-orange-500/50 transition-all">
+                <div key={item.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group hover:border-orange-500/50 transition-all">
                   {/* Photo Display Banner */}
                   <div className="h-44 bg-slate-950 relative overflow-hidden flex items-center justify-center p-2">
                     {item.imageUrl && item.imageUrl.trim() !== "" ? (
@@ -1105,7 +1105,7 @@ export default function UnifiedAdminSolutionsPage() {
         </div>
       ) : (
         <div className="space-y-8">
-          <div className="p-4 bg-orange-50/60 border border-orange-200/60 rounded-xl text-orange-950 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="p-4 bg-orange-50/60 border border-orange-200/60 rounded-lg text-orange-950 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <span className="font-medium text-slate-700">
               Configuring the dedicated <strong className="text-orange-900 font-bold">/solutions</strong> landing page banners, sector matrices, capability portfolios, and partner logos.
             </span>
@@ -1113,7 +1113,7 @@ export default function UnifiedAdminSolutionsPage() {
               type="button"
               onClick={() => handleSaveSolutionsPageLayout()}
               disabled={savingPage}
-              className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 shrink-0 flex items-center gap-1.5 self-start sm:self-auto"
+              className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 shrink-0 flex items-center gap-1.5 self-start sm:self-auto"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1123,7 +1123,7 @@ export default function UnifiedAdminSolutionsPage() {
           </div>
 
           {/* Section 1: Hero Banner Settings & Photo */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div>
                 <h2 className="text-base font-bold text-slate-800">1. Solutions Page Hero Banner & Background Photo</h2>
@@ -1133,7 +1133,7 @@ export default function UnifiedAdminSolutionsPage() {
                 type="button"
                 onClick={() => handleSaveSolutionsPageLayout("Hero Banner")}
                 disabled={savingPage}
-                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1146,7 +1146,7 @@ export default function UnifiedAdminSolutionsPage() {
             <div className="space-y-2">
               <label className="block text-xs font-bold text-slate-700">Hero Background Image</label>
               {heroBgImage && (
-                <div className="w-fit max-w-xl rounded-xl overflow-hidden border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                <div className="w-fit max-w-xl rounded-lg overflow-hidden border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
                   <img
                     src={formatImageUrl(heroBgImage, "/solution.png")}
                     alt="Hero Background"
@@ -1191,7 +1191,7 @@ export default function UnifiedAdminSolutionsPage() {
                 type="button"
                 onClick={() => handleSaveSolutionsPageLayout("Hero Banner")}
                 disabled={savingPage}
-                className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
+                className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1202,7 +1202,7 @@ export default function UnifiedAdminSolutionsPage() {
           </div>
 
           {/* Section 2: Operating Industries Cards with Add & Delete Controls */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div>
                 <h2 className="text-base font-bold text-slate-800">2. Solutions By Operating Industry ({industries.length} Cards)</h2>
@@ -1212,7 +1212,7 @@ export default function UnifiedAdminSolutionsPage() {
                 <button
                   type="button"
                   onClick={handleAddIndustryCard}
-                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl cursor-pointer shadow-xs transition-all flex items-center gap-1.5"
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg cursor-pointer shadow-xs transition-all flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1223,7 +1223,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Operating Industries")}
                   disabled={savingPage}
-                  className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1234,7 +1234,7 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
               {industries.map((ind, idx) => (
-                <div key={idx} className="p-4 border border-slate-200 rounded-xl bg-slate-50 space-y-3 relative group shadow-2xs">
+                <div key={idx} className="p-4 border border-slate-200 rounded-lg bg-slate-50 space-y-3 relative group shadow-2xs">
                   <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-2.5">
                     <input
                       type="text"
@@ -1281,7 +1281,7 @@ export default function UnifiedAdminSolutionsPage() {
                     {/* Compact & Clean Industry Image Upload */}
                     <div>
                       <label className="block text-[11px] font-bold text-slate-700 mb-1">Sector Image</label>
-                      <div className="flex items-center gap-3 p-2 bg-white border border-slate-200 rounded-xl shadow-2xs">
+                      <div className="flex items-center gap-3 p-2 bg-white border border-slate-200 rounded-lg shadow-2xs">
                         <div className="w-16 h-14 rounded-lg bg-slate-900 border border-slate-800 overflow-hidden flex items-center justify-center shrink-0 p-1 relative">
                           {ind.image && ind.image.trim() !== "" ? (
                             <img
@@ -1417,7 +1417,7 @@ export default function UnifiedAdminSolutionsPage() {
                         const colItems: string[] = Array.isArray(col?.items) ? col.items : [];
 
                         return (
-                          <div key={colIdx} className="bg-white border border-slate-200 rounded-xl p-3.5 space-y-3 shadow-2xs">
+                          <div key={colIdx} className="bg-white border border-slate-200 rounded-lg p-3.5 space-y-3 shadow-2xs">
                             {/* Column Header & Delete button */}
                             <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
                               <input
@@ -1555,7 +1555,7 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
 
             {/* Section 2 Bottom Save Action Bar */}
-            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
               <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                 <span>Ready to save updates to all {industries.length} Operating Industry sectors, columns & bullet points</span>
@@ -1564,7 +1564,7 @@ export default function UnifiedAdminSolutionsPage() {
                 <button
                   type="button"
                   onClick={handleAddIndustryCard}
-                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-xl shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-lg shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1575,7 +1575,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Operating Industries")}
                   disabled={savingPage}
-                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1587,7 +1587,7 @@ export default function UnifiedAdminSolutionsPage() {
           </div>
 
           {/* Section 3: Core Capabilities with Add & Delete Controls */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div>
                 <h2 className="text-base font-bold text-slate-800">3. Technical Core Capabilities Portfolio ({corePortfolios.length} Cards)</h2>
@@ -1597,7 +1597,7 @@ export default function UnifiedAdminSolutionsPage() {
                 <button
                   type="button"
                   onClick={handleAddCapabilityCard}
-                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl cursor-pointer shadow-xs transition-all flex items-center gap-1.5"
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg cursor-pointer shadow-xs transition-all flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1608,7 +1608,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Core Capabilities")}
                   disabled={savingPage}
-                  className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1619,7 +1619,7 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               {corePortfolios.map((cp, idx) => (
-                <div key={idx} className="p-4 border rounded-xl bg-slate-50 space-y-2 relative">
+                <div key={idx} className="p-4 border rounded-lg bg-slate-50 space-y-2 relative">
                   <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-2.5">
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       <input type="text" value={cp.icon} onChange={(e) => {
@@ -1655,7 +1655,7 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
 
             {/* Section 3 Bottom Save Action Bar */}
-            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
               <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                 <span>Ready to save updates to {corePortfolios.length} Technical Core Capabilities</span>
@@ -1664,7 +1664,7 @@ export default function UnifiedAdminSolutionsPage() {
                 <button
                   type="button"
                   onClick={handleAddCapabilityCard}
-                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-xl shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-lg shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1675,7 +1675,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Core Capabilities")}
                   disabled={savingPage}
-                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1687,12 +1687,12 @@ export default function UnifiedAdminSolutionsPage() {
           </div>
 
           {/* SECTION 4: INTEGRATED PARTNER BRANDS & LOGOS */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
               <div>
                 <h3 className="text-base font-bold text-slate-800 m-0 flex items-center gap-2">
                   <span>4. Integrated Partner Brands & Logos</span>
-                  <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-full border border-orange-200">
+                  <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-md border border-orange-200">
                     {partners.length} Brands
                   </span>
                 </h3>
@@ -1706,7 +1706,7 @@ export default function UnifiedAdminSolutionsPage() {
                   onClick={() => {
                     setPartners([...partners, { name: "New Partner Brand", logo: "" }]);
                   }}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-xs cursor-pointer transition-all shrink-0"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg shadow-xs cursor-pointer transition-all shrink-0"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1717,7 +1717,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Partner Brands")}
                   disabled={savingPage}
-                  className="inline-flex items-center gap-1.5 px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 shrink-0"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 shrink-0"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1733,10 +1733,10 @@ export default function UnifiedAdminSolutionsPage() {
                 const logo = typeof partnerItem === "object" ? partnerItem?.logo || partnerItem?.image || "" : "";
 
                 return (
-                  <div key={idx} className="p-4 border border-slate-200 rounded-2xl bg-slate-50 hover:bg-white hover:border-slate-300 transition-all duration-200 flex flex-col justify-between space-y-3 shadow-3xs hover:shadow-sm group">
+                  <div key={idx} className="p-4 border border-slate-200 rounded-xl bg-slate-50 hover:bg-white hover:border-slate-300 transition-all duration-200 flex flex-col justify-between space-y-3 shadow-3xs hover:shadow-sm group">
                     <div className="space-y-3">
                       {/* Logo Preview Box */}
-                      <div className="h-20 w-full bg-white border border-slate-200 rounded-xl p-2 flex items-center justify-center relative overflow-hidden shadow-2xs">
+                      <div className="h-20 w-full bg-white border border-slate-200 rounded-lg p-2 flex items-center justify-center relative overflow-hidden shadow-2xs">
                         {logo && logo.trim() !== "" ? (
                           <img
                             src={formatImageUrl(logo)}
@@ -1845,7 +1845,7 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
 
             {/* Section 4 Bottom Save Action Bar */}
-            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+            <div className="mt-4 p-4 bg-orange-50/70 border border-orange-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
               <div className="flex items-center gap-2 text-xs text-slate-700 font-medium">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                 <span>Ready to save updates to {partners.length} Integrated Partner Brands & Logos</span>
@@ -1854,7 +1854,7 @@ export default function UnifiedAdminSolutionsPage() {
                 <button
                   type="button"
                   onClick={() => setPartners([...partners, { name: "New Partner Brand", logo: "" }])}
-                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-xl shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-lg shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -1865,7 +1865,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="button"
                   onClick={() => handleSaveSolutionsPageLayout("Partner Brands")}
                   disabled={savingPage}
-                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1886,7 +1886,7 @@ export default function UnifiedAdminSolutionsPage() {
           }}
           className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200"
         >
-          <div className="bg-white border border-slate-200/80 rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+          <div className="bg-white border border-slate-200/80 rounded-xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
               <div>
@@ -1908,13 +1908,13 @@ export default function UnifiedAdminSolutionsPage() {
             {/* Scrollable Form Body */}
             <div className="flex-1 overflow-y-auto p-6">
               {error && (
-                <div className="mb-4 p-3.5 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs flex items-center justify-between shadow-xs">
+                <div className="mb-4 p-3.5 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs flex items-center justify-between shadow-xs">
                   <span>{error}</span>
                   <button type="button" onClick={clearMessages} className="text-red-500 font-bold ml-2 cursor-pointer">✕</button>
                 </div>
               )}
               {success && (
-                <div className="mb-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs flex items-center justify-between shadow-xs">
+                <div className="mb-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 text-xs flex items-center justify-between shadow-xs">
                   <span>{success}</span>
                   <button type="button" onClick={clearMessages} className="text-emerald-600 font-bold ml-2 cursor-pointer">✕</button>
                 </div>
@@ -1928,7 +1928,7 @@ export default function UnifiedAdminSolutionsPage() {
                 {/* Solution Item Photo with Upload & Preview */}
                 <div className="space-y-2">
                   <label className="block font-bold text-slate-700">Solution Photo / Equipment Image</label>
-                  <div className="h-44 w-full bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center p-2 border relative">
+                  <div className="h-44 w-full bg-slate-950 rounded-lg overflow-hidden flex items-center justify-center p-2 border relative">
                     {formImageUrl && formImageUrl.trim() !== "" ? (
                       <img
                         key={formImageUrl}
@@ -1981,7 +1981,7 @@ export default function UnifiedAdminSolutionsPage() {
                 </div>
 
                 {/* Integration Process / Lifecycle Sequence Section */}
-                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-4">
                   <div className="border-b border-slate-200 pb-2">
                     <h3 className="font-extrabold text-slate-800 text-sm uppercase tracking-wide">
                       Lifecycle Sequence / The Integration Process
@@ -2080,7 +2080,7 @@ export default function UnifiedAdminSolutionsPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl cursor-pointer transition-colors"
+                  className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-lg cursor-pointer transition-colors"
                 >
                   Cancel
                 </button>
@@ -2088,7 +2088,7 @@ export default function UnifiedAdminSolutionsPage() {
                   type="submit"
                   form="solution-item-form"
                   disabled={uploading || savingItem}
-                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md cursor-pointer transition-all flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
                 >
                   <span>{savingItem ? "Saving..." : (isEdit ? "Save Solution Item & Photo" : "Create Solution Item")}</span>
                 </button>
@@ -2106,7 +2106,7 @@ export default function UnifiedAdminSolutionsPage() {
           }}
           className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200"
         >
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+          <div className="bg-white border border-slate-200 rounded-xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 shrink-0">
               <div className="flex items-center gap-2">
@@ -2130,7 +2130,7 @@ export default function UnifiedAdminSolutionsPage() {
             {/* Scrollable Body */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {/* Photo Banner */}
-              <div className="h-56 w-full bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center p-3 border border-slate-800 shrink-0 relative">
+              <div className="h-56 w-full bg-slate-950 rounded-lg overflow-hidden flex items-center justify-center p-3 border border-slate-800 shrink-0 relative">
                 {viewItem.imageUrl && viewItem.imageUrl.trim() !== "" ? (
                   <img
                     key={viewItem.imageUrl}
@@ -2171,7 +2171,7 @@ export default function UnifiedAdminSolutionsPage() {
 
               {/* View Item Integration Steps */}
               {viewItem.integrationSteps && viewItem.integrationSteps.length > 0 && (
-                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-3">
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-widest text-orange-600 font-bold block">
                       {viewItem.integrationTagline || "LIFECYCLE SEQUENCE"}
@@ -2213,7 +2213,7 @@ export default function UnifiedAdminSolutionsPage() {
                 href={`/solutions/${viewItem.id}`}
                 target="_blank"
                 rel="noreferrer"
-                className="px-4 py-2 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold text-xs rounded-xl shadow-2xs cursor-pointer transition-all flex items-center gap-1.5"
+                className="px-4 py-2 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold text-xs rounded-lg shadow-2xs cursor-pointer transition-all flex items-center gap-1.5"
               >
                 <span>Open Live Page</span>
                 <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -2223,7 +2223,7 @@ export default function UnifiedAdminSolutionsPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-xl shadow-md cursor-pointer transition-all flex items-center gap-2"
+                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
               >
                 <span>Close Details</span>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -2243,8 +2243,8 @@ export default function UnifiedAdminSolutionsPage() {
           }}
           className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
         >
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4 my-auto">
-            <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl font-bold mx-auto">
+          <div className="bg-white border border-slate-200 rounded-lg max-w-sm w-full p-6 shadow-2xl text-center space-y-4 my-auto">
+            <div className="w-12 h-12 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-xl font-bold mx-auto">
               <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>

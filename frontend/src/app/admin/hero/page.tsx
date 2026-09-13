@@ -211,7 +211,7 @@ export default function AdminHeroPage() {
   return (
     <div className="space-y-6 font-sans text-slate-800">
       {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
@@ -227,7 +227,7 @@ export default function AdminHeroPage() {
         <button
           onClick={handleSaveHero}
           disabled={saving}
-          className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-md cursor-pointer transition-all shrink-0"
+          className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-md cursor-pointer transition-all shrink-0"
         >
           {saving ? "Saving Changes..." : "Save Hero Slide Captions"}
         </button>
@@ -235,7 +235,7 @@ export default function AdminHeroPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-xl flex justify-between items-center">
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-lg flex justify-between items-center">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -250,7 +250,7 @@ export default function AdminHeroPage() {
         </div>
       )}
       {success && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-xl flex justify-between items-center">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-lg flex justify-between items-center">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -268,7 +268,7 @@ export default function AdminHeroPage() {
       <form onSubmit={handleSaveHero} className="space-y-8">
         
         {/* ================= HERO MEDIA ================= */}
-        <div className="bg-white p-8 border border-slate-200 rounded-2xl space-y-6 shadow-sm">
+        <div className="bg-white p-8 border border-slate-200 rounded-xl space-y-6 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
               <span className="text-[10px] font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded border border-orange-200">
@@ -280,7 +280,7 @@ export default function AdminHeroPage() {
               type="button"
               onClick={() => handleSaveHero(undefined, "Hero Media Assets")}
               disabled={saving}
-              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -300,10 +300,10 @@ export default function AdminHeroPage() {
                   type="text"
                   value={bannerImg}
                   onChange={(e) => setBannerImg(e.target.value)}
-                  className="flex-1 px-4 py-3 border border-slate-300 rounded-xl font-mono text-slate-800 bg-slate-50 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  className="flex-1 px-4 py-3 border border-slate-300 rounded-lg font-mono text-slate-800 bg-slate-50 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
                   placeholder="/hero-section.webp"
                 />
-                <label className="px-5 py-3 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white font-bold rounded-xl cursor-pointer text-xs shrink-0 flex items-center justify-center gap-2 transition-all shadow-md">
+                <label className="px-5 py-3 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white font-bold rounded-lg cursor-pointer text-xs shrink-0 flex items-center justify-center gap-2 transition-all shadow-md">
                   <svg className="w-4 h-4 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   </svg>
@@ -323,7 +323,7 @@ export default function AdminHeroPage() {
                 Supports JPG, PNG, WEBP, SVG. Images are automatically compressed to high-efficiency WebP.
               </p>
               {bannerImg && (
-                <div className="mt-2 w-full h-36 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 relative shadow-inner">
+                <div className="mt-2 w-full h-36 rounded-lg overflow-hidden border border-slate-200 bg-slate-950 relative shadow-inner">
                   <img
                     src={formatImageUrl(bannerImg)}
                     alt="Hero Banner Preview"
@@ -346,7 +346,7 @@ export default function AdminHeroPage() {
                   Background Scroll Video (Slide 2)
                 </label>
                 {videoStats && (
-                  <span className="text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 shadow-2xs">
+                  <span className="text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200 shadow-2xs">
                     ✓ {videoStats}
                   </span>
                 )}
@@ -356,10 +356,10 @@ export default function AdminHeroPage() {
                   type="text"
                   value={videoSrc}
                   onChange={(e) => setVideoSrc(e.target.value)}
-                  className="flex-1 px-4 py-3 border border-slate-300 rounded-xl font-mono text-slate-800 bg-slate-50 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                  className="flex-1 px-4 py-3 border border-slate-300 rounded-lg font-mono text-slate-800 bg-slate-50 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
                   placeholder="/hero-video.mp4"
                 />
-                <label className="px-5 py-3 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold rounded-xl cursor-pointer text-xs shrink-0 flex items-center justify-center gap-2 transition-all shadow-md">
+                <label className="px-5 py-3 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold rounded-lg cursor-pointer text-xs shrink-0 flex items-center justify-center gap-2 transition-all shadow-md">
                   <svg className="w-4 h-4 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
@@ -379,7 +379,7 @@ export default function AdminHeroPage() {
                 Supports MP4, WebM, MOV. Fast-start WebM conversion applied automatically.
               </p>
               {videoSrc && (
-                <div className="mt-2 w-full h-36 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 relative shadow-inner">
+                <div className="mt-2 w-full h-36 rounded-lg overflow-hidden border border-slate-200 bg-slate-950 relative shadow-inner">
                   <video
                     src={formatImageUrl(videoSrc)}
                     muted
@@ -406,7 +406,7 @@ export default function AdminHeroPage() {
               type="button"
               onClick={() => handleSaveHero(undefined, "Hero Media Assets")}
               disabled={saving}
-              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -417,7 +417,7 @@ export default function AdminHeroPage() {
         </div>
 
         {/* ================= HERO SLIDE 1 ================= */}
-        <div className="bg-white p-8 border border-slate-200 rounded-2xl space-y-6 shadow-sm">
+        <div className="bg-white p-8 border border-slate-200 rounded-xl space-y-6 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
               <span className="text-[10px] font-mono font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded border border-amber-200">
@@ -429,7 +429,7 @@ export default function AdminHeroPage() {
               type="button"
               onClick={() => handleSaveHero(undefined, "Slide 1")}
               disabled={saving}
-              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -446,7 +446,7 @@ export default function AdminHeroPage() {
                 required
                 value={slide1Tagline}
                 onChange={(e) => setSlide1Tagline(e.target.value)}
-                className="w-full px-4 py-3 border rounded-xl font-mono text-amber-700 bg-slate-50"
+                className="w-full px-4 py-3 border rounded-lg font-mono text-amber-700 bg-slate-50"
                 placeholder="e.g. SAFETY ARABIA INFRASTRUCTURE"
               />
             </div>
@@ -458,7 +458,7 @@ export default function AdminHeroPage() {
                 required
                 value={slide1Title}
                 onChange={(e) => setSlide1Title(e.target.value)}
-                className="w-full px-4 py-3 border rounded-xl font-bold text-slate-900"
+                className="w-full px-4 py-3 border rounded-lg font-bold text-slate-900"
                 placeholder="e.g. FUSING INDUSTRY AI & CRITICAL SAFETY"
               />
             </div>
@@ -471,7 +471,7 @@ export default function AdminHeroPage() {
               required
               value={slide1Desc}
               onChange={(e) => setSlide1Desc(e.target.value)}
-              className="w-full px-4 py-3 border rounded-xl text-xs leading-relaxed"
+              className="w-full px-4 py-3 border rounded-lg text-xs leading-relaxed"
               placeholder="Enter slide 1 description text..."
             />
           </div>
@@ -484,7 +484,7 @@ export default function AdminHeroPage() {
                   type="text"
                   value={slide1Btn1Text}
                   onChange={(e) => setSlide1Btn1Text(e.target.value)}
-                  className="w-full px-4 py-3 border rounded-xl font-bold text-red-600"
+                  className="w-full px-4 py-3 border rounded-lg font-bold text-red-600"
                   placeholder="e.g. OPERATIONS CENTER"
                 />
               </div>
@@ -494,7 +494,7 @@ export default function AdminHeroPage() {
                   type="text"
                   value={slide1Btn1Link}
                   onChange={(e) => setSlide1Btn1Link(e.target.value)}
-                  className="w-full px-4 py-2.5 border rounded-xl font-mono text-slate-700 bg-slate-50 text-xs"
+                  className="w-full px-4 py-2.5 border rounded-lg font-mono text-slate-700 bg-slate-50 text-xs"
                   placeholder="#solutions or /products"
                 />
               </div>
@@ -507,7 +507,7 @@ export default function AdminHeroPage() {
                   type="text"
                   value={slide1Btn2Text}
                   onChange={(e) => setSlide1Btn2Text(e.target.value)}
-                  className="w-full px-4 py-3 border rounded-xl font-bold text-slate-700"
+                  className="w-full px-4 py-3 border rounded-lg font-bold text-slate-700"
                   placeholder="e.g. OUR CAPABILITIES"
                 />
               </div>
@@ -517,7 +517,7 @@ export default function AdminHeroPage() {
                   type="text"
                   value={slide1Btn2Link}
                   onChange={(e) => setSlide1Btn2Link(e.target.value)}
-                  className="w-full px-4 py-2.5 border rounded-xl font-mono text-slate-700 bg-slate-50 text-xs"
+                  className="w-full px-4 py-2.5 border rounded-lg font-mono text-slate-700 bg-slate-50 text-xs"
                   placeholder="#solutions or /about"
                 />
               </div>
@@ -534,7 +534,7 @@ export default function AdminHeroPage() {
               type="button"
               onClick={() => handleSaveHero(undefined, "Slide 1")}
               disabled={saving}
-              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -545,7 +545,7 @@ export default function AdminHeroPage() {
         </div>
 
         {/* ================= HERO SLIDE 2 ================= */}
-        <div className="bg-white p-8 border border-slate-200 rounded-2xl space-y-6 shadow-sm">
+        <div className="bg-white p-8 border border-slate-200 rounded-xl space-y-6 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
               <span className="text-[10px] font-mono font-bold text-sky-600 bg-sky-50 px-2.5 py-1 rounded border border-sky-200">
@@ -557,7 +557,7 @@ export default function AdminHeroPage() {
               type="button"
               onClick={() => handleSaveHero(undefined, "Slide 2")}
               disabled={saving}
-              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-xl cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase rounded-lg cursor-pointer shadow-xs transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -574,7 +574,7 @@ export default function AdminHeroPage() {
                 required
                 value={slide2Tagline}
                 onChange={(e) => setSlide2Tagline(e.target.value)}
-                className="w-full px-4 py-3 border rounded-xl font-mono text-sky-700 bg-slate-50"
+                className="w-full px-4 py-3 border rounded-lg font-mono text-sky-700 bg-slate-50"
                 placeholder="e.g. IIOT DATA TELEMETRY LOOPS"
               />
             </div>
@@ -586,7 +586,7 @@ export default function AdminHeroPage() {
                 required
                 value={slide2Title}
                 onChange={(e) => setSlide2Title(e.target.value)}
-                className="w-full px-4 py-3 border rounded-xl font-bold text-slate-900"
+                className="w-full px-4 py-3 border rounded-lg font-bold text-slate-900"
                 placeholder="e.g. REAL-TIME EDGE ACQUISITION"
               />
             </div>
@@ -599,7 +599,7 @@ export default function AdminHeroPage() {
               required
               value={slide2Desc}
               onChange={(e) => setSlide2Desc(e.target.value)}
-              className="w-full px-4 py-3 border rounded-xl text-xs leading-relaxed"
+              className="w-full px-4 py-3 border rounded-lg text-xs leading-relaxed"
               placeholder="Enter slide 2 description text..."
             />
           </div>
@@ -611,7 +611,7 @@ export default function AdminHeroPage() {
                 type="text"
                 value={slide2Btn1Text}
                 onChange={(e) => setSlide2Btn1Text(e.target.value)}
-                className="w-full max-w-md px-4 py-3 border rounded-xl font-bold text-red-600"
+                className="w-full max-w-md px-4 py-3 border rounded-lg font-bold text-red-600"
                 placeholder="e.g. EXPLORE MIMES WIRELESS"
               />
             </div>
@@ -621,7 +621,7 @@ export default function AdminHeroPage() {
                 type="text"
                 value={slide2Btn1Link}
                 onChange={(e) => setSlide2Btn1Link(e.target.value)}
-                className="w-full max-w-md px-4 py-2.5 border rounded-xl font-mono text-slate-700 bg-slate-50 text-xs"
+                className="w-full max-w-md px-4 py-2.5 border rounded-lg font-mono text-slate-700 bg-slate-50 text-xs"
                 placeholder="/solutions/mimes"
               />
             </div>
@@ -637,7 +637,7 @@ export default function AdminHeroPage() {
               type="button"
               onClick={() => handleSaveHero(undefined, "Slide 2")}
               disabled={saving}
-              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
+              className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-xs cursor-pointer transition-all disabled:opacity-50 flex items-center gap-1.5"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -648,7 +648,7 @@ export default function AdminHeroPage() {
         </div>
 
         {/* Action Save Button */}
-        <div className="p-5 bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+        <div className="p-5 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
           <div className="flex items-center gap-2.5 text-xs text-slate-600 font-medium">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
             <span>Ready to save and publish all updates across Homepage Hero media & slide captions</span>
@@ -656,7 +656,7 @@ export default function AdminHeroPage() {
           <button
             type="submit"
             disabled={saving}
-            className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-xl shadow-md cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase rounded-lg shadow-md cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />

@@ -339,7 +339,7 @@ export default function AdminFooterPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-2xl text-xs flex items-center gap-2">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-lg text-xs flex items-center gap-2">
           <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
@@ -347,7 +347,7 @@ export default function AdminFooterPage() {
         </div>
       )}
       {success && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-2xl text-xs flex items-center gap-2">
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-lg text-xs flex items-center gap-2">
           <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
@@ -358,7 +358,7 @@ export default function AdminFooterPage() {
       <form onSubmit={handleSave} className="space-y-6">
 
         {/* SECTION 1: BRAND & LOGO */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
           <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
             1. Brand Assets & Mission Text
           </h3>
@@ -371,17 +371,17 @@ export default function AdminFooterPage() {
                   type="text"
                   value={logoUrl}
                   onChange={(e) => setLogoUrl(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono"
+                  className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono"
                   placeholder="/logo.png or image URL"
                 />
-                <label className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-xl cursor-pointer shrink-0">
+                <label className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg cursor-pointer shrink-0">
                   {uploading ? "Uploading..." : "Upload Logo"}
                   <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
                 </label>
               </div>
 
               {/* Logo Preview */}
-              <div className="mt-3 h-20 bg-slate-900 rounded-xl border border-slate-200 flex items-center justify-center p-3">
+              <div className="mt-3 h-20 bg-slate-900 rounded-lg border border-slate-200 flex items-center justify-center p-3">
                 <img src={formatImageUrl(logoUrl, "/logo.png")} alt="Logo Preview" className="max-h-full object-contain" />
               </div>
             </div>
@@ -392,7 +392,7 @@ export default function AdminFooterPage() {
                 type="text"
                 value={badgeText}
                 onChange={(e) => setBadgeText(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium"
                 placeholder="e.g. Certified Marine & Industrial Safety Partner"
               />
             </div>
@@ -404,14 +404,14 @@ export default function AdminFooterPage() {
               rows={3}
               value={tagline}
               onChange={(e) => setTagline(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium resize-y"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium resize-y"
               placeholder="Enter company description summary for footer"
             />
           </div>
         </div>
 
         {/* SECTION 2: OPERATIONS & CONTACT DETAILS */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-5">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
             <div>
               <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 m-0">
@@ -424,7 +424,7 @@ export default function AdminFooterPage() {
             <button
               type="button"
               onClick={handleAddLocation}
-              className="px-3.5 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0 self-start sm:self-auto"
+              className="px-3.5 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0 self-start sm:self-auto"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -439,7 +439,7 @@ export default function AdminFooterPage() {
               type="text"
               value={operationsTitle}
               onChange={(e) => setOperationsTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium"
               placeholder="e.g. Operations"
             />
           </div>
@@ -453,7 +453,7 @@ export default function AdminFooterPage() {
             </div>
 
             {hasUnsavedChanges && (
-              <div className="p-3.5 bg-amber-50 border border-amber-300 rounded-xl text-xs font-semibold text-amber-900 flex items-center justify-between shadow-2xs">
+              <div className="p-3.5 bg-amber-50 border border-amber-300 rounded-lg text-xs font-semibold text-amber-900 flex items-center justify-between shadow-2xs">
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping inline-block" />
                   You have unsaved changes! Click the orange &quot;Save Footer Configuration&quot; button below to persist your changes permanently to the live website.
@@ -462,7 +462,7 @@ export default function AdminFooterPage() {
             )}
 
             {locations.length === 0 ? (
-              <div className="p-6 border border-dashed border-slate-200 rounded-2xl text-center text-xs text-slate-400 bg-slate-50/50">
+              <div className="p-6 border border-dashed border-slate-200 rounded-lg text-center text-xs text-slate-400 bg-slate-50/50">
                 No physical locations configured. Click &quot;+ Add Location&quot; above to add one.
               </div>
             ) : (
@@ -470,7 +470,7 @@ export default function AdminFooterPage() {
                 {locations.map((loc, idx) => (
                   <div
                     key={idx}
-                    className="p-4 bg-slate-50/60 border border-slate-200/90 rounded-2xl space-y-3 relative group"
+                    className="p-4 bg-slate-50/60 border border-slate-200/90 rounded-lg space-y-3 relative group"
                   >
                     <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
                       <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
@@ -524,7 +524,7 @@ export default function AdminFooterPage() {
                 type="text"
                 value={telephone}
                 onChange={(e) => setTelephone(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono"
               />
             </div>
             <div>
@@ -533,14 +533,14 @@ export default function AdminFooterPage() {
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono"
               />
             </div>
           </div>
         </div>
 
         {/* SECTION 3: BOTTOM LEGAL & COPYRIGHT */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
           <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
             3. Bottom Copyright & Legal Links
           </h3>
@@ -551,7 +551,7 @@ export default function AdminFooterPage() {
               type="text"
               value={copyright}
               onChange={(e) => setCopyright(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium"
               placeholder="e.g. © 2026 East Wind Safety. All rights reserved."
             />
           </div>
@@ -561,7 +561,7 @@ export default function AdminFooterPage() {
             <span className="block text-xs font-bold text-slate-700">Bottom Quick Links ({bottomLinks.length})</span>
             <div className="space-y-2 max-h-44 overflow-y-auto pr-1">
               {bottomLinks.map((link, idx) => (
-                <div key={idx} className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs">
+                <div key={idx} className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs">
                   <input
                     type="text"
                     value={link.name}
@@ -604,20 +604,20 @@ export default function AdminFooterPage() {
                 placeholder="Link Name (e.g. Privacy Policy)"
                 value={newBtmName}
                 onChange={(e) => setNewBtmName(e.target.value)}
-                className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs"
+                className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs"
               />
               <input
                 type="text"
                 placeholder="URL (e.g. /privacy)"
                 value={newBtmHref}
                 onChange={(e) => setNewBtmHref(e.target.value)}
-                className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono"
+                className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono"
               />
               <button
                 type="button"
                 onClick={handleAddBtmLink}
                 style={{ color: "#ffffff" }}
-                className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#152e6f] !text-white text-xs font-extrabold rounded-xl shrink-0 cursor-pointer shadow-sm active:scale-95 transition-all flex items-center gap-1.5"
+                className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#152e6f] !text-white text-xs font-extrabold rounded-lg shrink-0 cursor-pointer shadow-sm active:scale-95 transition-all flex items-center gap-1.5"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -630,7 +630,7 @@ export default function AdminFooterPage() {
 
         {/* STICKY SAVE BAR */}
         <div className="sticky bottom-6 z-40 flex justify-end mt-8">
-          <div className={`backdrop-blur-md p-4 rounded-2xl shadow-2xl border flex items-center gap-4 transition-all duration-300 ${
+          <div className={`backdrop-blur-md p-4 rounded-lg shadow-2xl border flex items-center gap-4 transition-all duration-300 ${
             hasUnsavedChanges
               ? "bg-amber-50/95 border-amber-300 ring-2 ring-amber-400/40"
               : "bg-white/95 border-orange-100"
@@ -647,7 +647,7 @@ export default function AdminFooterPage() {
               disabled={saving}
               className={`py-3.5 px-8 ${
                 hasUnsavedChanges ? "bg-orange-600 hover:bg-orange-700 shadow-orange-500/30 ring-2 ring-orange-400 animate-pulse" : "bg-orange-600 hover:bg-orange-700"
-              } text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg cursor-pointer disabled:opacity-50 transition-all flex items-center gap-2 hover:-translate-y-0.5`}
+              } text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg cursor-pointer disabled:opacity-50 transition-all flex items-center gap-2 hover:-translate-y-0.5`}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />

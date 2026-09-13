@@ -287,7 +287,7 @@ export default function AdminBrandsPage() {
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
@@ -301,7 +301,7 @@ export default function AdminBrandsPage() {
         </div>
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-xl shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -312,7 +312,7 @@ export default function AdminBrandsPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-xs flex justify-between items-center shadow-sm">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-xs flex justify-between items-center shadow-sm">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -327,7 +327,7 @@ export default function AdminBrandsPage() {
         </div>
       )}
       {success && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl text-xs flex justify-between items-center shadow-sm">
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-lg text-xs flex justify-between items-center shadow-sm">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -358,27 +358,27 @@ export default function AdminBrandsPage() {
 
       {/* Brands Cards List Grid */}
       {loading ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 text-slate-400 text-sm">
+        <div className="text-center py-16 bg-white rounded-xl border border-slate-200 text-slate-400 text-sm">
           Loading Brands Portfolio...
         </div>
       ) : filteredBrands.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 text-slate-400 text-sm">
+        <div className="text-center py-16 bg-white rounded-xl border border-slate-200 text-slate-400 text-sm">
           No brands found matching criteria. Click "Add New Brand" to create one.
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredBrands.map((brand) => (
-            <div key={brand.id} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div key={brand.id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-start mb-3">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded border border-orange-200">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
                     {brand.solutionName || "General Solution"}
                   </span>
                   <span className="text-[10px] font-mono text-slate-400">ID: {brand.id}</span>
                 </div>
 
                 {/* Brand Logo / Asset Image Display Box */}
-                <div className="h-28 w-full bg-slate-900 rounded-xl mb-3 flex items-center justify-center p-2 border border-slate-800 relative overflow-hidden">
+                <div className="h-28 w-full bg-slate-900 rounded-lg mb-3 flex items-center justify-center p-2 border border-slate-800 relative overflow-hidden">
                   {brand.logoUrl && brand.logoUrl.trim() !== "" ? (
                     <img
                       key={brand.logoUrl}
@@ -409,7 +409,7 @@ export default function AdminBrandsPage() {
                 <p className="text-xs text-slate-600 line-clamp-3 mb-4">{brand.description}</p>
                 
                 {/* Products Count */}
-                <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 mb-4">
+                <div className="bg-slate-50 border border-slate-100 rounded-lg p-3 mb-4">
                   <div className="text-[11px] font-bold text-slate-700 mb-1 flex justify-between">
                     <span>Associated Brand Products</span>
                     <span className="text-orange-600 font-mono">({brand.products?.length || 0})</span>
@@ -458,7 +458,7 @@ export default function AdminBrandsPage() {
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+          <div className="bg-white rounded-xl max-w-sm w-full p-6 shadow-2xl space-y-4">
             <h3 className="text-base font-bold text-slate-900">Confirm Brand Removal</h3>
             <p className="text-xs text-slate-600">
               Are you sure you want to delete brand ID <strong>{deleteTarget}</strong>? This action cannot be undone.
@@ -466,13 +466,13 @@ export default function AdminBrandsPage() {
             <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl"
+                className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDeleteBrand(deleteTarget)}
-                className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-md"
+                className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-md"
               >
                 Confirm Delete
               </button>
@@ -489,7 +489,7 @@ export default function AdminBrandsPage() {
           }}
           className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
         >
-          <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
+          <div className="bg-white rounded-xl max-w-2xl w-full shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
               <div>
@@ -574,7 +574,7 @@ export default function AdminBrandsPage() {
               <div className="space-y-2">
                 <label className="block text-xs font-bold text-slate-700">Brand Logo / Asset Image</label>
                 
-                <div className="h-36 w-full bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center p-2 border border-slate-800 relative">
+                <div className="h-36 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-slate-800 relative">
                   {formLogoUrl && formLogoUrl.trim() !== "" ? (
                     <img
                       key={formLogoUrl}
@@ -617,7 +617,7 @@ export default function AdminBrandsPage() {
               </div>
 
               {/* BRAND PRODUCTS MANAGER */}
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-4">
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-4">
                 <div className="flex justify-between items-center">
                   <div>
                     <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
@@ -633,7 +633,7 @@ export default function AdminBrandsPage() {
                     {formProducts.map((p, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between gap-3 bg-white border border-slate-200 p-2.5 rounded-xl text-xs hover:border-slate-300 transition-all"
+                        className="flex items-center justify-between gap-3 bg-white border border-slate-200 p-2.5 rounded-lg text-xs hover:border-slate-300 transition-all"
                       >
                         <div className="flex items-center gap-3 min-w-0 flex-1">
                           {/* Image Thumbnail Box */}
@@ -676,13 +676,13 @@ export default function AdminBrandsPage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-4 bg-white border border-slate-200 rounded-xl text-xs text-slate-400 font-medium">
+                  <div className="text-center py-4 bg-white border border-slate-200 rounded-lg text-xs text-slate-400 font-medium">
                     No products attached to this brand yet. Select a product below to attach.
                   </div>
                 )}
 
                 {/* Attach Product From Master Inventory */}
-                <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-3 shadow-2xs">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 space-y-3 shadow-2xs">
                   <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                     <svg className="w-3.5 h-3.5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -694,7 +694,7 @@ export default function AdminBrandsPage() {
                     <select
                       value={selectedMasterProdId}
                       onChange={(e) => setSelectedMasterProdId(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none bg-white text-slate-800"
+                      className="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none bg-white text-slate-800"
                     >
                       <option value="">-- Select Product from Inventory --</option>
                       {allMasterProducts.map((mp) => (
@@ -708,7 +708,7 @@ export default function AdminBrandsPage() {
                       type="button"
                       onClick={handleAttachMasterProduct}
                       disabled={!selectedMasterProdId}
-                      className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-sm disabled:opacity-40 disabled:pointer-events-none cursor-pointer transition-all"
+                      className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg shadow-sm disabled:opacity-40 disabled:pointer-events-none cursor-pointer transition-all"
                     >
                       + Attach Selected Product to Brand
                     </button>
@@ -729,14 +729,14 @@ export default function AdminBrandsPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl cursor-pointer transition-colors"
+                  className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-lg cursor-pointer transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   form="brand-form"
-                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-xl shadow-md cursor-pointer transition-all"
+                  className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg shadow-md cursor-pointer transition-all"
                 >
                   {isEdit ? "Update Brand Record" : "Save New Brand"}
                 </button>
@@ -754,7 +754,7 @@ export default function AdminBrandsPage() {
           }}
           className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
         >
-          <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto border border-slate-200">
+          <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto border border-slate-200">
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70 shrink-0">
               <div>
@@ -778,7 +778,7 @@ export default function AdminBrandsPage() {
 
             {/* Scrollable Body */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100 m-0">
+              <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100 m-0">
                 {viewItem.description}
               </p>
 
@@ -788,7 +788,7 @@ export default function AdminBrandsPage() {
                 </h4>
                 <div className="space-y-1.5 max-h-56 overflow-y-auto">
                   {(viewItem.products || []).map((p, idx) => (
-                    <div key={idx} className="text-xs bg-slate-50 p-2 rounded-xl border border-slate-100 flex items-center justify-between gap-3">
+                    <div key={idx} className="text-xs bg-slate-50 p-2 rounded-lg border border-slate-100 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2.5 min-w-0">
                         <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-200 overflow-hidden flex items-center justify-center p-0.5 shrink-0">
                           {p.imageUrl && p.imageUrl.trim() !== "" ? (
@@ -818,7 +818,7 @@ export default function AdminBrandsPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-xl shadow-md cursor-pointer transition-all flex items-center gap-2"
+                className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
               >
                 <span>Close Details</span>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

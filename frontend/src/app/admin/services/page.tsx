@@ -251,7 +251,7 @@ export default function AdminServicesPage() {
         </div>
         <button
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 py-3 px-6 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-600/10 active:translate-y-0.5"
+          className="flex items-center gap-2 py-3 px-6 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-600/10 active:translate-y-0.5"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -262,12 +262,12 @@ export default function AdminServicesPage() {
 
       {/* Notifications */}
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-4 rounded-2xl text-xs">
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-4 rounded-lg text-xs">
           {error}
         </div>
       )}
       {success && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-4 rounded-2xl text-xs">
+        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-4 rounded-lg text-xs">
           {success}
         </div>
       )}
@@ -284,12 +284,12 @@ export default function AdminServicesPage() {
           placeholder="Search services by title, category or ID..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-2xl text-xs text-white placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium"
+          className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-slate-400 focus:border-orange-500 focus:outline-none transition-all font-medium"
         />
       </div>
 
       {/* Services List Table */}
-      <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden backdrop-blur-md">
+      <div className="bg-white/[0.02] border border-white/5 rounded-xl overflow-hidden backdrop-blur-md">
         {loading ? (
           <div className="py-24 text-center space-y-3">
             <div className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto" />
@@ -326,19 +326,19 @@ export default function AdminServicesPage() {
                     <td className="px-6 py-4 text-right flex items-center justify-end gap-2.5">
                       <button
                         onClick={() => setViewItem(item)}
-                        className="py-2 px-4 rounded-xl text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-500/5 hover:bg-emerald-600 hover:text-white transition-all cursor-pointer border border-emerald-500/20"
+                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-500/5 hover:bg-emerald-600 hover:text-white transition-all cursor-pointer border border-emerald-500/20"
                       >
                         View
                       </button>
                       <button
                         onClick={() => handleOpenEdit(item)}
-                        className="py-2 px-4 rounded-xl text-[10px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/5 hover:bg-sky-500 hover:text-white transition-all cursor-pointer"
+                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/5 hover:bg-sky-500 hover:text-white transition-all cursor-pointer"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => setDeleteTarget(item.id)}
-                        className="py-2 px-4 rounded-xl text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50/5 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
+                        className="py-2 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50/5 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
                       >
                         Delete
                       </button>
@@ -358,7 +358,7 @@ export default function AdminServicesPage() {
                   <button
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="py-1.5 px-3.5 rounded-xl border border-white/10 hover:border-white/20 text-[10px] font-bold uppercase tracking-wider text-slate-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
+                    className="py-1.5 px-3.5 rounded-lg border border-white/10 hover:border-white/20 text-[10px] font-bold uppercase tracking-wider text-slate-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
                   >
                     Previous
                   </button>
@@ -366,7 +366,7 @@ export default function AdminServicesPage() {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`w-7.5 h-7.5 rounded-full flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${
+                      className={`w-7.5 h-7.5 rounded-lg flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${
                         currentPage === page
                           ? "bg-sky-600 text-white shadow-md shadow-sky-600/10"
                           : "border border-white/10 hover:border-white/20 text-slate-300 hover:bg-white/5"
@@ -378,7 +378,7 @@ export default function AdminServicesPage() {
                   <button
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="py-1.5 px-3.5 rounded-xl border border-white/10 hover:border-white/20 text-[10px] font-bold uppercase tracking-wider text-slate-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
+                    className="py-1.5 px-3.5 rounded-lg border border-white/10 hover:border-white/20 text-[10px] font-bold uppercase tracking-wider text-slate-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
                   >
                     Next
                   </button>
@@ -392,7 +392,7 @@ export default function AdminServicesPage() {
       {/* CRUD MODAL */}
       {showModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 w-full max-w-3xl rounded-[32px] shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-slate-950 border border-white/10 w-full max-w-3xl rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
             
             {/* Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-white/5 flex-shrink-0">
@@ -401,7 +401,7 @@ export default function AdminServicesPage() {
               </h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/5 text-slate-400 hover:text-white cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 border border-white/5 text-slate-400 hover:text-white cursor-pointer transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -423,7 +423,7 @@ export default function AdminServicesPage() {
                     placeholder="e.g. hse-consultancy"
                     value={formId}
                     onChange={(e) => setFormId(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium disabled:opacity-45"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium disabled:opacity-45"
                   />
                 </div>
 
@@ -435,7 +435,7 @@ export default function AdminServicesPage() {
                     placeholder="Enter visual title"
                     value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium"
                   />
                 </div>
 
@@ -447,7 +447,7 @@ export default function AdminServicesPage() {
                     placeholder="e.g. Risk Audit Programs"
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium"
                   />
                 </div>
 
@@ -459,7 +459,7 @@ export default function AdminServicesPage() {
                     placeholder="Enter service tagline statement"
                     value={formTagline}
                     onChange={(e) => setFormTagline(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium"
+                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-medium"
                   />
                 </div>
 
@@ -470,14 +470,14 @@ export default function AdminServicesPage() {
                       type="color"
                       value={formAccentHex}
                       onChange={(e) => setFormAccentHex(e.target.value)}
-                      className="w-12 h-10 bg-slate-900 border border-white/5 rounded-2xl cursor-pointer"
+                      className="w-12 h-10 bg-slate-900 border border-white/5 rounded-lg cursor-pointer"
                     />
                     <input
                       type="text"
                       placeholder="#10b981"
                       value={formAccentHex}
                       onChange={(e) => setFormAccentHex(e.target.value)}
-                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-mono"
+                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-sky-500 focus:outline-none font-mono"
                     />
                   </div>
                 </div>
@@ -492,7 +492,7 @@ export default function AdminServicesPage() {
                   placeholder="Enter detailed service overview statement"
                   value={formOverview}
                   onChange={(e) => setFormOverview(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none transition-colors"
                 />
               </div>
 
@@ -505,7 +505,7 @@ export default function AdminServicesPage() {
                     placeholder="Capability Title"
                     value={capTitle}
                     onChange={(e) => setCapTitle(e.target.value)}
-                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none"
+                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none"
                   />
                   <div className="md:col-span-2 flex gap-4">
                     <input
@@ -513,12 +513,12 @@ export default function AdminServicesPage() {
                       placeholder="Capability description statement"
                       value={capBody}
                       onChange={(e) => setCapBody(e.target.value)}
-                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none"
+                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none"
                     />
                     <button
                       type="button"
                       onClick={addCapability}
-                      className="px-5 py-3 rounded-2xl bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer"
+                      className="px-5 py-3 rounded-lg bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer"
                     >
                       Add
                     </button>
@@ -526,7 +526,7 @@ export default function AdminServicesPage() {
                 </div>
                 <div className="space-y-2">
                   {formCapabilities.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-start p-4 bg-white/[0.01] border border-white/5 rounded-2xl">
+                    <div key={idx} className="flex justify-between items-start p-4 bg-white/[0.01] border border-white/5 rounded-lg">
                       <div className="space-y-1">
                         <span className="text-xs font-bold text-white block">{item.title}</span>
                         <p className="text-[11px] text-slate-400 font-light leading-relaxed m-0">{item.body}</p>
@@ -552,19 +552,19 @@ export default function AdminServicesPage() {
                     placeholder="Enter deliverable output (e.g. 3D Ray Tracing Report)"
                     value={deliverableInput}
                     onChange={(e) => setDeliverableInput(e.target.value)}
-                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500"
+                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500"
                   />
                   <button
                     type="button"
                     onClick={addDeliverable}
-                    className="px-5 py-3 bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer"
+                    className="px-5 py-3 bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer rounded-lg"
                   >
                     Add
                   </button>
                 </div>
                 <ul className="flex flex-col gap-2 pl-0 list-none m-0">
                   {formDeliverables.map((item, idx) => (
-                    <li key={idx} className="flex justify-between items-center px-4 py-3 bg-white/[0.01] border border-white/5 rounded-xl text-xs">
+                    <li key={idx} className="flex justify-between items-center px-4 py-3 bg-white/[0.01] border border-white/5 rounded-lg text-xs">
                       <span className="text-slate-350 leading-relaxed font-light">{item}</span>
                       <button
                         type="button"
@@ -587,7 +587,7 @@ export default function AdminServicesPage() {
                     placeholder="Metric Value (e.g. 100%)"
                     value={metricValue}
                     onChange={(e) => setMetricValue(e.target.value)}
-                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none"
+                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none"
                   />
                   <div className="md:col-span-2 flex gap-4">
                     <input
@@ -595,12 +595,12 @@ export default function AdminServicesPage() {
                       placeholder="Metric label description"
                       value={metricLabel}
                       onChange={(e) => setMetricLabel(e.target.value)}
-                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-2xl text-xs text-white focus:border-sky-500 focus:outline-none"
+                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-sky-500 focus:outline-none"
                     />
                     <button
                       type="button"
                       onClick={addMetric}
-                      className="px-5 py-3 rounded-2xl bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer"
+                      className="px-5 py-3 rounded-lg bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer"
                     >
                       Add
                     </button>
@@ -608,7 +608,7 @@ export default function AdminServicesPage() {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {formMetrics.map((item, idx) => (
-                    <div key={idx} className="p-4 bg-white/[0.01] border border-white/5 rounded-2xl text-center space-y-2 relative group">
+                    <div key={idx} className="p-4 bg-white/[0.01] border border-white/5 rounded-lg text-center space-y-2 relative group">
                       <button
                         type="button"
                         onClick={() => removeMetric(idx)}
@@ -619,7 +619,7 @@ export default function AdminServicesPage() {
                         </svg>
                       </button>
                       <span className="text-xl font-extrabold tracking-tight" style={{ color: formAccentHex }}>{item.value}</span>
-                      <span className="text-[9px] font-mono text-slate-450 block uppercase tracking-wider leading-relaxed">{item.label}</span>
+                      <span className="text-[9px] font-mono text-slate-455 block uppercase tracking-wider leading-relaxed">{item.label}</span>
                     </div>
                   ))}
                 </div>
@@ -633,14 +633,14 @@ export default function AdminServicesPage() {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-6 py-2.5 rounded-full text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-6 py-2.5 rounded-lg text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 form="service-form"
-                className="px-8 py-2.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
+                className="px-8 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-sky-600/10"
               >
                 {isEdit ? "Update Service" : "Save Service"}
               </button>
@@ -653,8 +653,8 @@ export default function AdminServicesPage() {
       {/* Delete confirmation */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 p-8 rounded-3xl w-full max-w-md text-center space-y-6">
-            <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-500 text-lg mx-auto">
+          <div className="bg-slate-950 border border-white/10 p-8 rounded-xl w-full max-w-md text-center space-y-6">
+            <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-500 text-lg mx-auto">
               <svg className="w-6 h-6 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
@@ -668,13 +668,13 @@ export default function AdminServicesPage() {
             <div className="flex justify-center gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="px-5 py-2.5 rounded-full border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-5 py-2.5 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="px-7 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-7 py-2.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
                 Delete Service
               </button>
@@ -686,7 +686,7 @@ export default function AdminServicesPage() {
       {/* VIEW MODAL OVERLAY */}
       {viewItem && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200/80 w-full max-w-2xl rounded-[32px] shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-white border border-slate-200/80 w-full max-w-2xl rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
             
             {/* Modal Header */}
             <div className="h-16 flex items-center justify-between px-8 border-b border-slate-100 flex-shrink-0">
@@ -695,7 +695,7 @@ export default function AdminServicesPage() {
               </h3>
               <button
                 onClick={() => setViewItem(null)}
-                className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-400 hover:text-slate-700 cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-400 hover:text-slate-700 cursor-pointer transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -744,7 +744,7 @@ export default function AdminServicesPage() {
                 {viewItem.capabilities && viewItem.capabilities.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {viewItem.capabilities.map((cap: any, idx: number) => (
-                      <div key={idx} className="p-4 bg-slate-50 border border-slate-150 rounded-2xl relative">
+                      <div key={idx} className="p-4 bg-slate-50 border border-slate-150 rounded-lg relative">
                         <h4 className="text-xs font-bold text-slate-800 mb-1">{cap.title}</h4>
                         <p className="text-[11px] text-slate-500 leading-relaxed font-light m-0">{cap.body}</p>
                       </div>
@@ -776,7 +776,7 @@ export default function AdminServicesPage() {
                 <div>
                   <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-3">Performance Metrics</span>
                   {viewItem.metrics && viewItem.metrics.length > 0 ? (
-                    <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white">
+                    <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
                       <table className="w-full border-collapse text-left m-0 text-xs">
                         <thead>
                           <tr className="bg-slate-50 border-b border-slate-200">
@@ -807,7 +807,7 @@ export default function AdminServicesPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 rounded-full bg-sky-600 text-white hover:bg-sky-500 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-sky-600/10"
+                className="px-6 py-2.5 rounded-lg bg-sky-600 text-white hover:bg-sky-500 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-sky-600/10"
               >
                 Close View
               </button>
