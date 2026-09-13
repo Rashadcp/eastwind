@@ -30,8 +30,11 @@ const app = express();
 // 1. Logger (executes first for all routes)
 app.use(requestLogger);
 
-// Security & Optimization
-app.use(helmet({ crossOriginResourcePolicy: false })); // allow cross-origin images for frontend
+// Security & Optimization (disable CSP so backend does not block Next.js frontend inline scripts)
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: false
+}));
 app.use(compression());
 
 // 2. CORS and Body Parsing
