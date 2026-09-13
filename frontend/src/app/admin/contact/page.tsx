@@ -213,6 +213,33 @@ export default function AdminContactPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Failed to update ${sectionLabel}`);
 
+      // If saving contact_info, also sync active locations to footer so footer stays in sync
+      if (section === "contact_info") {
+        const syncedLocations = [];
+        if (payload.hqTitle?.trim() || payload.hqAddress?.trim()) {
+          syncedLocations.push({ title: payload.hqTitle?.trim() || "", address: payload.hqAddress?.trim() || "" });
+        }
+        if (payload.hubTitle?.trim() || payload.hubAddress?.trim()) {
+          syncedLocations.push({ title: payload.hubTitle?.trim() || "", address: payload.hubAddress?.trim() || "" });
+        }
+        await fetch(`${baseUrl}/api/contact-settings/footer`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            locations: syncedLocations,
+            hqTitle: payload.hqTitle || "",
+            hqAddress: payload.hqAddress || "",
+            hubTitle: payload.hubTitle || "",
+            hubAddress: payload.hubAddress || "",
+            telephone: payload.telephone,
+            email: payload.email
+          })
+        }).catch(() => null);
+      }
+
       setSuccess(`${sectionLabel} updated successfully!`);
     } catch (err: any) {
       console.error(err);

@@ -119,6 +119,13 @@ export interface IContactSettings extends Document {
   tagline?: string;
   title?: string;
   description?: string;
+  logoUrl?: string;
+  badgeText?: string;
+  solutionsTitle?: string;
+  operationsTitle?: string;
+  copyright?: string;
+  solutionsLinks?: { name: string; href: string }[];
+  bottomLinks?: { name: string; href: string }[];
   operationalSectors?: { value: string; label: string }[];
   submitButtonText?: string;
   successTitle?: string;
@@ -335,6 +342,13 @@ const ContactSettingsSchema = new Schema<IContactSettings>({
   tagline: { type: String },
   title: { type: String },
   description: { type: String },
+  logoUrl: { type: String },
+  badgeText: { type: String },
+  solutionsTitle: { type: String },
+  operationsTitle: { type: String },
+  copyright: { type: String },
+  solutionsLinks: [{ name: String, href: String }],
+  bottomLinks: [{ name: String, href: String }],
   operationalSectors: [{ value: String, label: String }],
   submitButtonText: { type: String },
   successTitle: { type: String },
@@ -353,7 +367,7 @@ const ContactSettingsSchema = new Schema<IContactSettings>({
   enquiryTitle: { type: String },
   enquiryDescription: { type: String },
   applicationPurposes: [{ value: String, label: String }]
-});
+}, { strict: false });
 
 const SolutionPageSchema = new Schema<ISolutionPage>({
   id: { type: String, required: true, unique: true, index: true },

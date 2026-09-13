@@ -186,36 +186,48 @@ export default function Contact() {
             <div className="space-y-8">
               
               {/* Al Khobar HQ */}
-              <div className="flex gap-5 items-start group">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-slate-200/60 shadow-xs shrink-0 transition-all duration-300 group-hover:border-[#1e3e8f] group-hover:shadow-md">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3e8f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
+              {(contactInfo.hqTitle?.trim() || contactInfo.hqAddress?.trim()) && (
+                <div className="flex gap-5 items-start group">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-slate-200/60 shadow-xs shrink-0 transition-all duration-300 group-hover:border-[#1e3e8f] group-hover:shadow-md">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3e8f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  <div>
+                    {contactInfo.hqTitle && (
+                      <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-1">{contactInfo.hqTitle}</h4>
+                    )}
+                    {contactInfo.hqAddress && (
+                      <p className="text-[0.88rem] text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
+                        {contactInfo.hqAddress}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-1">{contactInfo.hqTitle}</h4>
-                  <p className="text-[0.88rem] text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
-                    {contactInfo.hqAddress}
-                  </p>
-                </div>
-              </div>
+              )}
 
               {/* Riyadh Hub */}
-              <div className="flex gap-5 items-start group">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-slate-200/60 shadow-xs shrink-0 transition-all duration-300 group-hover:border-[#c22026] group-hover:shadow-md">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c22026" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
+              {(contactInfo.hubTitle?.trim() || contactInfo.hubAddress?.trim()) && (
+                <div className="flex gap-5 items-start group">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-slate-200/60 shadow-xs shrink-0 transition-all duration-300 group-hover:border-[#c22026] group-hover:shadow-md">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c22026" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  <div>
+                    {contactInfo.hubTitle && (
+                      <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-1">{contactInfo.hubTitle}</h4>
+                    )}
+                    {contactInfo.hubAddress && (
+                      <p className="text-[0.88rem] text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
+                        {contactInfo.hubAddress}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-1">{contactInfo.hubTitle}</h4>
-                  <p className="text-[0.88rem] text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
-                    {contactInfo.hubAddress}
-                  </p>
-                </div>
-              </div>
+              )}
 
               {/* Phone & Email */}
               <div className="flex gap-5 items-start group">

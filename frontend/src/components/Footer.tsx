@@ -85,16 +85,14 @@ export default function Footer() {
           // Determine locations
           let locs: FooterLocation[] = [];
           if (footerDoc?.locations && Array.isArray(footerDoc.locations)) {
-            locs = footerDoc.locations;
-          } else if (contactDoc?.locations && Array.isArray(contactDoc.locations)) {
-            locs = contactDoc.locations;
-          } else {
-            const hqT = footerDoc?.hqTitle || contactDoc?.hqTitle || DEFAULT_FOOTER.hqTitle;
-            const hqA = footerDoc?.hqAddress || contactDoc?.hqAddress || DEFAULT_FOOTER.hqAddress;
-            const hubT = footerDoc?.hubTitle || contactDoc?.hubTitle || DEFAULT_FOOTER.hubTitle;
-            const hubA = footerDoc?.hubAddress || contactDoc?.hubAddress || DEFAULT_FOOTER.hubAddress;
-            if (hqT || hqA) locs.push({ title: hqT, address: hqA });
-            if (hubT || hubA) locs.push({ title: hubT, address: hubA });
+            locs = footerDoc.locations.filter((l: any) => (l.title && l.title.trim()) || (l.address && l.address.trim()));
+          } else if (contactDoc) {
+            const hqT = contactDoc.hqTitle;
+            const hqA = contactDoc.hqAddress;
+            const hubT = contactDoc.hubTitle;
+            const hubA = contactDoc.hubAddress;
+            if (hqT?.trim() || hqA?.trim()) locs.push({ title: hqT || "", address: hqA || "" });
+            if (hubT?.trim() || hubA?.trim()) locs.push({ title: hubT || "", address: hubA || "" });
           }
 
           setFooter({
@@ -180,7 +178,7 @@ export default function Footer() {
               {(Array.isArray(footer.locations) ? footer.locations : [
                 { title: footer.hqTitle, address: footer.hqAddress },
                 { title: footer.hubTitle, address: footer.hubAddress }
-              ].filter(l => l.title || l.address)).map((loc, locIdx) => {
+              ]).filter(l => (l.title && l.title.trim()) || (l.address && l.address.trim())).map((loc, locIdx) => {
                 const isBlue = locIdx % 2 === 0;
                 return (
                   <div key={locIdx} className="flex gap-3.5 items-start">
@@ -191,12 +189,16 @@ export default function Footer() {
                       </svg>
                     </div>
                     <div>
-                      <strong className="text-slate-900 block mb-0.5 text-[0.88rem] font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
-                        {loc.title}
-                      </strong>
-                      <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-normal text-slate-500 block text-[0.82rem] whitespace-pre-line">
-                        {loc.address}
-                      </span>
+                      {loc.title && (
+                        <strong className="text-slate-900 block mb-0.5 text-[0.88rem] font-semibold" style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}>
+                          {loc.title}
+                        </strong>
+                      )}
+                      {loc.address && (
+                        <span style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }} className="leading-relaxed font-normal text-slate-500 block text-[0.82rem] whitespace-pre-line">
+                          {loc.address}
+                        </span>
+                      )}
                     </div>
                   </div>
                 );
