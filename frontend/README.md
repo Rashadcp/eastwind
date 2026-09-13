@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Eastwind Energy Arabia - Web Platform
 
-## Getting Started
+Enterprise web application for Eastwind Energy Arabia — Industrial Digitalization, Edge Wireless Data Acquisition, Predictive AI Analytics, Intrinsically Safe Mobility, and Fire & Rescue Engineering across the Middle East.
 
-First, run the development server:
+## Architecture
+
+- **Frontend**: Next.js (App Router), React 19, Tailwind CSS, Framer Motion, Lucide Icons.
+- **Backend**: Node.js & Express with TypeScript, MongoDB (Mongoose), Multer, Sharp image optimization, Fluent-FFmpeg.
+- **Deployment Model**: Self-hosted on VPS / Dedicated Linux Server via PM2 & Nginx reverse proxy.
+
+## Getting Started Locally
+
+### 1. Backend
 
 ```bash
+cd backend
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Server runs on `http://localhost:5000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. Frontend
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) with your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## Production Deployment (Self-Hosted VPS / PM2)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Build and Start
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Build Backend
+cd backend
+npm run build
+pm2 start dist/index.js --name "eastwind-backend"
 
-## Deploy on Vercel
+# Build Frontend
+cd ../frontend
+npm run build
+pm2 start npm --name "eastwind-frontend" -- start -- -p 3000
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Save PM2 state
+pm2 save
+```
