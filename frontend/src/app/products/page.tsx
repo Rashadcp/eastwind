@@ -93,8 +93,18 @@ import {
   CheckCircle2,
   Search,
   RotateCcw,
-  Zap
+  Zap,
+  ChevronDown
 } from "lucide-react";
+
+export const SOLUTIONS_LIST = [
+  { id: "oil-gas", name: "Oil & Gas Industry", keywords: ["oil", "gas", "petrochemical", "refinery", "mimes", "xshielder", "wireless"] },
+  { id: "marine-offshore", name: "Marine Operations", keywords: ["marine", "offshore", "ship", "vessel", "partech", "hull", "damage"] },
+  { id: "utilities-power", name: "Utilities & Power", keywords: ["utility", "power", "electrical", "grid", "atexor", "nardi", "compressor"] },
+  { id: "defense-security", name: "Defense & Border Security", keywords: ["defense", "border", "military", "tactical", "security", "guard"] },
+  { id: "civil-defense", name: "Civil Defense", keywords: ["civil", "fire", "rescue", "emergency", "one seven", "foam", "sione"] },
+  { id: "smart-industrial", name: "Smart Industrial Facilities", keywords: ["industrial", "facility", "smart", "digitalization", "telemetry", "sensor"] }
+];
 
 function ProductsCatalogContent() {
   const searchParams = useSearchParams();
@@ -569,9 +579,9 @@ function ProductsCatalogContent() {
         <section className="max-w-[1400px] mx-auto px-10 max-sm:px-5">
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 items-start">
             
-            {/* ================= LEFT SIDEBAR FILTERS (INDEPENDENT SCROLL CONTAINER) ================= */}
+            {/* ================= LEFT SIDEBAR FILTERS (DESKTOP ONLY - INDEPENDENT SCROLL CONTAINER) ================= */}
             <aside 
-              className="space-y-6 bg-white p-6 rounded-[24px] border border-slate-200 shadow-sm sticky top-28 max-h-[calc(100vh-130px)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-orange-500 transition-colors"
+              className="hidden lg:block space-y-6 bg-white p-6 rounded-[24px] border border-slate-200 shadow-sm sticky top-28 max-h-[calc(100vh-130px)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-orange-500 transition-colors"
               style={{ scrollbarWidth: "thin", scrollbarColor: "#cbd5e1 #f1f5f9" }}
             >
               
@@ -667,14 +677,7 @@ function ProductsCatalogContent() {
                     <span className="font-mono text-[10px] opacity-75">({products.length})</span>
                   </button>
 
-                  {[
-                    { id: "oil-gas", name: "Oil & Gas Industry", keywords: ["oil", "gas", "petrochemical", "refinery", "mimes", "xshielder", "wireless"] },
-                    { id: "marine-offshore", name: "Marine Operations", keywords: ["marine", "offshore", "ship", "vessel", "partech", "hull", "damage"] },
-                    { id: "utilities-power", name: "Utilities & Power", keywords: ["utility", "power", "electrical", "grid", "atexor", "nardi", "compressor"] },
-                    { id: "defense-security", name: "Defense & Border Security", keywords: ["defense", "border", "military", "tactical", "security", "guard"] },
-                    { id: "civil-defense", name: "Civil Defense", keywords: ["civil", "fire", "rescue", "emergency", "one seven", "foam", "sione"] },
-                    { id: "smart-industrial", name: "Smart Industrial Facilities", keywords: ["industrial", "facility", "smart", "digitalization", "telemetry", "sensor"] }
-                  ].map((sol) => {
+                  {SOLUTIONS_LIST.map((sol) => {
                     const isSelected = selectedCategory.toLowerCase() === sol.name.toLowerCase();
 
                     // Calculate product count matching this solution
@@ -704,7 +707,143 @@ function ProductsCatalogContent() {
             </aside>
 
             {/* ================= RIGHT MAIN PRODUCTS GRID ================= */}
-            <main className="space-y-6">
+            <main className="space-y-6 min-w-0">
+
+              {/* ================= MOBILE FILTER BAR (VISIBLE ONLY ON MOBILE & TABLET < LG) ================= */}
+              <div className="block lg:hidden space-y-4 mb-2">
+                {/* Search Input on Mobile */}
+                <div className="relative">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Search equipment, brands, specs..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-10 py-2.5 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 font-medium shadow-2xs placeholder:text-slate-400"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Horizontal Scrollable Category Pills */}
+                <div>
+                  <div className="flex items-center justify-between mb-2 px-0.5">
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500">
+                      Equipment Categories
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-400">
+                      Scroll to browse →
+                    </span>
+                  </div>
+                  
+                  <div 
+                    className="flex gap-2 overflow-x-auto pb-2 pt-0.5 -mx-5 px-5 scroll-smooth [&::-webkit-scrollbar]:hidden"
+                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                  >
+                    {/* All Categories Pill */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedBrand("All")}
+                      className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                        selectedBrand === "All"
+                          ? "bg-slate-900 text-white shadow-xs"
+                          : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 shadow-2xs"
+                      }`}
+                    >
+                      <span>All Categories</span>
+                      <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md ${
+                        selectedBrand === "All" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
+                      }`}>
+                        {products.length}
+                      </span>
+                    </button>
+
+                    {/* Dynamic Category Pills */}
+                    {productCategoriesList.map((catName) => {
+                      const count = products.filter((p) => p.brand.toLowerCase() === catName.toLowerCase()).length;
+                      const isSelected = selectedBrand.toLowerCase() === catName.toLowerCase();
+                      return (
+                        <button
+                          key={catName}
+                          type="button"
+                          onClick={() => setSelectedBrand(catName)}
+                          className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                            isSelected
+                              ? "bg-orange-600 text-white shadow-xs"
+                              : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 shadow-2xs"
+                          }`}
+                        >
+                          <span>{catName}</span>
+                          <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md ${
+                            isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
+                          }`}>
+                            {count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Mobile Dropdowns for Quick Jump */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="relative">
+                    <select
+                      value={selectedBrand}
+                      onChange={(e) => setSelectedBrand(e.target.value)}
+                      className="w-full appearance-none bg-white border border-slate-200 text-slate-800 text-[11px] font-medium rounded-xl pl-3 pr-7 py-2.5 shadow-2xs focus:outline-none focus:border-orange-500 truncate cursor-pointer"
+                    >
+                      <option value="All">All Categories ({products.length})</option>
+                      {productCategoriesList.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+
+                  <div className="relative">
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-full appearance-none bg-white border border-slate-200 text-slate-800 text-[11px] font-medium rounded-xl pl-3 pr-7 py-2.5 shadow-2xs focus:outline-none focus:border-orange-500 truncate cursor-pointer"
+                    >
+                      <option value="All">All Solutions</option>
+                      {SOLUTIONS_LIST.map((sol) => (
+                        <option key={sol.id} value={sol.name}>{sol.name}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* Counter & Reset row on Mobile */}
+                <div className="flex items-center justify-between text-xs pt-0.5 px-0.5">
+                  <span className="text-[11px] font-mono text-slate-500">
+                    Showing <strong className="text-slate-800">{filteredProducts.length}</strong> certified products
+                  </span>
+                  {(selectedBrand !== "All" || selectedCategory !== "All" || searchQuery) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedBrand("All");
+                        setSelectedCategory("All");
+                        setSearchQuery("");
+                      }}
+                      className="inline-flex items-center gap-1 text-[11px] font-mono text-orange-600 font-bold hover:underline cursor-pointer"
+                    >
+                      <RotateCcw className="w-3 h-3" />
+                      <span>Reset All</span>
+                    </button>
+                  )}
+                </div>
+              </div>
 
               {/* Products Grid */}
               {loading ? (
