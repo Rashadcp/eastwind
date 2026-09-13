@@ -187,35 +187,8 @@ export default function AdminProductsPage() {
       if (res.ok) {
         const list = await res.json();
         if (Array.isArray(list) && list.length > 0) {
-          const existingNames = new Set(list.map((c: any) => (c.name || "").toLowerCase()));
-          const extraCategories: any[] = [];
-
-          PRODUCT_BRANDS.forEach((pb) => {
-            if (!existingNames.has(pb.name.toLowerCase())) {
-              existingNames.add(pb.name.toLowerCase());
-              extraCategories.push({
-                id: pb.id || pb.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-                name: pb.name,
-                order: list.length + extraCategories.length
-              });
-            }
-          });
-
-          const prodsToCheck = loadedProducts || products;
-          prodsToCheck.forEach((p) => {
-            if (p.brand && !existingNames.has(p.brand.toLowerCase())) {
-              existingNames.add(p.brand.toLowerCase());
-              extraCategories.push({
-                id: p.brand.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-                name: p.brand,
-                order: list.length + extraCategories.length
-              });
-            }
-          });
-
-          const fullList = [...list, ...extraCategories];
-          setManagedCategories(fullList);
-          setAvailableBrandsList(fullList.map((c: any) => c.name));
+          setManagedCategories(list);
+          setAvailableBrandsList(list.map((c: any) => c.name));
           return;
         }
       }

@@ -66,25 +66,28 @@ export class ProductCategoryModel {
   static async getAll(): Promise<any[]> {
     let list = await ProductCategory.find({}).sort({ order: 1, createdAt: 1 }).lean().exec();
 
-    // Ensure all default product categories exist so catalog categories are never missing
-    const existingNames = new Set((list || []).map((c: any) => c.name.toLowerCase()));
-    const missingDefaults = DEFAULT_PRODUCT_CATEGORIES.filter(
-      (dc) => !existingNames.has(dc.name.toLowerCase())
-    );
-
-    if (missingDefaults.length > 0) {
-      const maxOrder = list && list.length > 0 ? Math.max(...list.map((c: any) => c.order || 0)) : -1;
-      const toInsert = missingDefaults.map((d, i) => ({
-        ...d,
-        order: maxOrder + 1 + i
-      }));
-      try {
-        await ProductCategory.insertMany(toInsert);
-      } catch (err) {
-        console.error("Error inserting missing default categories:", err);
+    // If MongoDB is completely empty or only contains the initial single test entry 'cat-test-1':
+    const isOnlyTempTest = list && list.length === 1 && list[0].id === "cat-test-1";
+    if (!list || list.length === 0 || isOnlyTempTest) {
+      if (fs.existsSync(DB_FILE)) {
+        try {
+          const raw = fs.readFileSync(DB_FILE, "utf-8");
+          const data = JSON.parse(raw);
+          if (Array.isArray(data.product_categories) && data.product_categories.length > 1) {
+            if (isOnlyTempTest) {
+              await ProductCategory.deleteMany({});
+            }
+            await ProductCategory.insertMany(data.product_categories);
+            return data.product_categories.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+          }
+        } catch (e) {}
       }
-      list = await ProductCategory.find({}).sort({ order: 1, createdAt: 1 }).lean().exec();
-      syncToDatabaseJson(list);
+
+      if (!list || list.length === 0) {
+        await ProductCategory.insertMany(DEFAULT_PRODUCT_CATEGORIES);
+        syncToDatabaseJson(DEFAULT_PRODUCT_CATEGORIES);
+        return DEFAULT_PRODUCT_CATEGORIES as any[];
+      }
     }
 
     return list;
