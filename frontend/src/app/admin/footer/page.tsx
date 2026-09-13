@@ -22,7 +22,7 @@ export default function AdminFooterPage() {
 
   // Footer fields state
   const [logoUrl, setLogoUrl] = useState<string>("/logo.png");
-  const [tagline, setTagline] = useState<string>("Sales, renting, and servicing of world-class safety products and engineered solutions for the Marine, Oil & Gas, Petrochemical, and Civil Defense sectors.");
+  const [tagline, setTagline] = useState<string>("");
   const [badgeText, setBadgeText] = useState<string>("Certified Marine & Industrial Safety Partner");
   const [solutionsTitle, setSolutionsTitle] = useState<string>("Safety Solutions");
   const [operationsTitle, setOperationsTitle] = useState<string>("Operations");
@@ -78,16 +78,16 @@ export default function AdminFooterPage() {
         const contactDoc = list.find((item: any) => item.id === "contact_info");
 
         if (footerDoc) {
-          if (footerDoc.logoUrl) setLogoUrl(footerDoc.logoUrl);
-          if (footerDoc.tagline) setTagline(footerDoc.tagline);
-          if (footerDoc.badgeText) setBadgeText(footerDoc.badgeText);
-          if (footerDoc.solutionsTitle) setSolutionsTitle(footerDoc.solutionsTitle);
-          if (footerDoc.operationsTitle) setOperationsTitle(footerDoc.operationsTitle);
-          if (footerDoc.copyright) setCopyright(footerDoc.copyright);
+          if (footerDoc.logoUrl !== undefined) setLogoUrl(footerDoc.logoUrl || "");
+          if (typeof footerDoc.tagline === "string") setTagline(footerDoc.tagline);
+          if (typeof footerDoc.badgeText === "string") setBadgeText(footerDoc.badgeText);
+          if (typeof footerDoc.solutionsTitle === "string") setSolutionsTitle(footerDoc.solutionsTitle);
+          if (typeof footerDoc.operationsTitle === "string") setOperationsTitle(footerDoc.operationsTitle);
+          if (typeof footerDoc.copyright === "string") setCopyright(footerDoc.copyright);
           if (footerDoc.solutionsLinks && Array.isArray(footerDoc.solutionsLinks)) setSolutionsLinks(footerDoc.solutionsLinks);
           if (footerDoc.bottomLinks && Array.isArray(footerDoc.bottomLinks)) setBottomLinks(footerDoc.bottomLinks);
-          if (footerDoc.telephone) setTelephone(footerDoc.telephone);
-          if (footerDoc.email) setEmail(footerDoc.email);
+          if (typeof footerDoc.telephone === "string") setTelephone(footerDoc.telephone);
+          if (typeof footerDoc.email === "string") setEmail(footerDoc.email);
         }
 
         if (contactDoc) {

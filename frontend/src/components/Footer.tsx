@@ -99,10 +99,10 @@ export default function Footer() {
 
           setFooter({
             logoUrl: footerDoc?.logoUrl || "/logo.png",
-            tagline: footerDoc?.tagline || DEFAULT_FOOTER.tagline,
-            badgeText: footerDoc?.badgeText || DEFAULT_FOOTER.badgeText,
-            solutionsTitle: footerDoc?.solutionsTitle || DEFAULT_FOOTER.solutionsTitle,
-            operationsTitle: footerDoc?.operationsTitle || DEFAULT_FOOTER.operationsTitle,
+            tagline: typeof footerDoc?.tagline === "string" ? footerDoc.tagline : DEFAULT_FOOTER.tagline,
+            badgeText: typeof footerDoc?.badgeText === "string" ? footerDoc.badgeText : DEFAULT_FOOTER.badgeText,
+            solutionsTitle: typeof footerDoc?.solutionsTitle === "string" ? footerDoc.solutionsTitle : DEFAULT_FOOTER.solutionsTitle,
+            operationsTitle: typeof footerDoc?.operationsTitle === "string" ? footerDoc.operationsTitle : DEFAULT_FOOTER.operationsTitle,
             locations: locs,
             hqTitle: locs[0]?.title || footerDoc?.hqTitle || contactDoc?.hqTitle || DEFAULT_FOOTER.hqTitle,
             hqAddress: locs[0]?.address || footerDoc?.hqAddress || contactDoc?.hqAddress || DEFAULT_FOOTER.hqAddress,
@@ -110,7 +110,7 @@ export default function Footer() {
             hubAddress: locs[1]?.address || footerDoc?.hubAddress || contactDoc?.hubAddress || DEFAULT_FOOTER.hubAddress,
             telephone: footerDoc?.telephone || contactDoc?.telephone || DEFAULT_FOOTER.telephone,
             email: footerDoc?.email || contactDoc?.email || DEFAULT_FOOTER.email,
-            copyright: footerDoc?.copyright || DEFAULT_FOOTER.copyright,
+            copyright: typeof footerDoc?.copyright === "string" ? footerDoc.copyright : DEFAULT_FOOTER.copyright,
             solutionsLinks: [],
             bottomLinks: (footerDoc?.bottomLinks && footerDoc.bottomLinks.length > 0)
               ? footerDoc.bottomLinks
@@ -141,12 +141,14 @@ export default function Footer() {
               className="h-10 w-auto object-contain"
             />
           </div>
-          <p 
-            className="text-[0.92rem] text-slate-600 max-w-[460px] leading-relaxed m-0 font-normal"
-            style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
-          >
-            {footer.tagline}
-          </p>
+          {footer.tagline && footer.tagline.trim() ? (
+            <p 
+              className="text-[0.92rem] text-slate-600 max-w-[460px] leading-relaxed m-0 font-normal"
+              style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
+            >
+              {footer.tagline}
+            </p>
+          ) : null}
         </div>
 
         {/* Column 2: Operations & Contact Info (7 cols) */}
