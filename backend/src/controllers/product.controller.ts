@@ -13,6 +13,10 @@ export class ProductController {
 
   static async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      if (req.params.id === "reorder") {
+        res.status(404).json({ error: "Product not found" });
+        return;
+      }
       const item = await ProductModel.getById(req.params.id);
       if (!item) {
         res.status(404).json({ error: "Product not found" });
@@ -35,6 +39,9 @@ export class ProductController {
 
   static async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      if (req.params.id === "reorder") {
+        return ProductController.reorder(req, res, next);
+      }
       const updated = await ProductModel.update(req.params.id, req.body);
       if (!updated) {
         res.status(404).json({ error: "Product not found to update" });

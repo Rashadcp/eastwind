@@ -1,3 +1,5 @@
+import fs from "fs";
+import { DB_FILE } from "../config.js";
 import { Product, Brand, IProduct } from "../db.js";
 import { sanitizeObjectImages } from "../utils/imageStorage.js";
 import { invalidateCache } from "../utils/cache.js";
@@ -35,7 +37,7 @@ function cleanProductName(name?: string): string {
 
 export class ProductModel {
   static async getAll(): Promise<any[]> {
-    const list = await Product.find({}).lean().exec();
+    const list = await Product.find({ id: { $ne: "reorder" } }).lean().exec();
     return list.sort((a: any, b: any) => {
       const orderA = typeof a.order === "number" ? a.order : 99999;
       const orderB = typeof b.order === "number" ? b.order : 99999;
@@ -49,14 +51,39 @@ export class ProductModel {
       throw new Error("Items must be a non-empty array of { id, order }");
     }
 
-    const bulkOps = items.map((item, idx) => ({
+    const cleanItems = items.filter((it) => it.id && it.id !== "reorder");
+
+    const bulkOps = cleanItems.map((item, idx) => ({
       updateOne: {
         filter: { id: item.id },
         update: { $set: { order: typeof item.order === "number" ? item.order : idx } }
       }
     }));
 
-    await Product.bulkWrite(bulkOps);
+    if (bulkOps.length > 0) {
+      await Product.bulkWrite(bulkOps);
+    }
+
+    try {
+      if (fs.existsSync(DB_FILE)) {
+        const raw = fs.readFileSync(DB_FILE, "utf-8");
+        const dbData = JSON.parse(raw);
+        if (Array.isArray(dbData.products)) {
+          const orderMap = new Map(cleanItems.map((it, idx) => [it.id, typeof it.order === "number" ? it.order : idx]));
+          dbData.products.forEach((p: any) => {
+            if (orderMap.has(p.id)) {
+              p.order = orderMap.get(p.id);
+            }
+          });
+          dbData.products = dbData.products.filter((p: any) => p.id !== "reorder");
+          dbData.products.sort((a: any, b: any) => (a.order ?? 99999) - (b.order ?? 99999));
+          fs.writeFileSync(DB_FILE, JSON.stringify(dbData, null, 2), "utf-8");
+        }
+      }
+    } catch (e) {
+      console.error("Failed to sync reordered products to database.json:", e);
+    }
+
     invalidateCache("product");
     invalidateCache("brand");
     return true;

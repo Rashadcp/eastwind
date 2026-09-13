@@ -6,9 +6,9 @@ import { requireAdmin } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.get("/", ProductController.getAll);
+router.put("/reorder", requireAdmin, ProductController.reorder);
 router.get("/:id", ProductController.getById);
 router.post("/", requireAdmin, validateProduct, ProductController.create);
-router.put("/reorder", requireAdmin, ProductController.reorder);
 router.put("/:id", requireAdmin, ProductController.update);
 router.delete("/:id", requireAdmin, ProductController.delete);
 

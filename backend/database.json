@@ -4782,59 +4782,9 @@
   ],
   "product_categories": [
     {
-      "id": "linear-heat-detection",
-      "name": "Linear Heat Detection",
+      "id": "cat-test-1",
+      "name": "Industrial Wireless Data Systems",
       "order": 0
-    },
-    {
-      "id": "firefighting-suits-gear",
-      "name": "Firefighting Suits & Gear",
-      "order": 1
-    },
-    {
-      "id": "air-compressors",
-      "name": "Air Compressors",
-      "order": 2
-    },
-    {
-      "id": "compressed-air-foam-cafs",
-      "name": "Compressed Air Foam (CAFS)",
-      "order": 3
-    },
-    {
-      "id": "wireless-gas-detection-telemetry",
-      "name": "Wireless Gas Detection & Telemetry",
-      "order": 4
-    },
-    {
-      "id": "damage-control-systems",
-      "name": "Damage Control Systems",
-      "order": 5
-    },
-    {
-      "id": "intrinsically-safe-mobile-devices",
-      "name": "Intrinsically Safe Mobile Devices",
-      "order": 6
-    },
-    {
-      "id": "explosion-proof-lighting",
-      "name": "Explosion-Proof Lighting",
-      "order": 7
-    },
-    {
-      "id": "breathing-air-lines-hoses",
-      "name": "Breathing Air Lines & Hoses",
-      "order": 8
-    },
-    {
-      "id": "quick-connect-couplings",
-      "name": "Quick Connect Couplings",
-      "order": 9
-    },
-    {
-      "id": "emergency-flange-adapters",
-      "name": "Emergency Flange Adapters",
-      "order": 10
     }
   ]
 }

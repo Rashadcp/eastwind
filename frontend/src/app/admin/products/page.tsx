@@ -144,11 +144,20 @@ export default function AdminProductsPage() {
         }
       }
 
-      const cleanList = allList.map((p) => ({
-        ...p,
-        name: cleanProductName(p.name),
-        brand: sanitizeCategory(p.brand)
-      }));
+      const cleanList = allList
+        .filter((p) => p.id !== "reorder")
+        .map((p) => ({
+          ...p,
+          name: cleanProductName(p.name),
+          brand: sanitizeCategory(p.brand)
+        }));
+
+      cleanList.sort((a, b) => {
+        const orderA = typeof a.order === "number" ? a.order : 99999;
+        const orderB = typeof b.order === "number" ? b.order : 99999;
+        if (orderA !== orderB) return orderA - orderB;
+        return a.name.localeCompare(b.name);
+      });
 
       setProducts(cleanList);
 
@@ -433,7 +442,19 @@ export default function AdminProductsPage() {
     const copy = [...orderedCategoryProducts];
     const [moved] = copy.splice(fromIndex, 1);
     copy.splice(toIndex, 0, moved);
-    const updated = copy.map((item, idx) => ({ ...item, order: idx }));
+
+    let updated: ProductItem[];
+    if (selectedBrandFilter !== "All") {
+      const categorySlots = [...orderedCategoryProducts]
+        .map((p, i) => (typeof p.order === "number" ? p.order : i * 10))
+        .sort((a, b) => a - b);
+      updated = copy.map((item, idx) => ({
+        ...item,
+        order: categorySlots[idx] !== undefined ? categorySlots[idx] : idx
+      }));
+    } else {
+      updated = copy.map((item, idx) => ({ ...item, order: idx }));
+    }
 
     isLocalReorderRef.current = true;
     setOrderedCategoryProducts(updated);
@@ -443,7 +464,9 @@ export default function AdminProductsPage() {
     if (selectedBrandFilter !== "All") {
       setProducts((prev) => {
         const others = prev.filter((p) => p.brand?.toLowerCase() !== selectedBrandFilter.toLowerCase());
-        return [...others, ...updated];
+        const combined = [...others, ...updated];
+        combined.sort((a, b) => (a.order ?? 99999) - (b.order ?? 99999));
+        return combined;
       });
     } else {
       setProducts(updated);
@@ -501,18 +524,13 @@ export default function AdminProductsPage() {
         }));
       } else {
         // Reordering within a specific category:
-        // Get existing orders of this category's products in catalog
-        const currentCategoryProds = products
-          .filter((p) => p.brand?.toLowerCase() === selectedBrandFilter.toLowerCase())
-          .sort((a, b) => (a.order ?? 99999) - (b.order ?? 99999));
-
-        const slots = currentCategoryProds
+        const categorySlots = [...orderedCategoryProducts]
           .map((p, i) => (typeof p.order === "number" ? p.order : i * 10))
           .sort((a, b) => a - b);
 
         payload = list.map((item, idx) => ({
           id: item.id,
-          order: slots[idx] !== undefined ? slots[idx] : idx
+          order: categorySlots[idx] !== undefined ? categorySlots[idx] : idx
         }));
       }
 
@@ -525,10 +543,32 @@ export default function AdminProductsPage() {
         body: JSON.stringify({ items: payload })
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to save product order");
+        throw new Error(data.error || "Failed to save product order");
       }
+
+      // Check if backend actually processed the reorder (or if an old build routed to update)
+      if (!data.success) {
+        throw new Error(
+          "Backend server needs to be rebuilt and restarted. (Run on server: git pull && cd backend && npm run build && pm2 restart all)"
+        );
+      }
+
+      // Pre-apply saved order to products state so UI reflects new sequence immediately without flash
+      const orderMap = new Map(payload.map((p) => [p.id, p.order]));
+      isLocalReorderRef.current = true;
+      setProducts((prev) => {
+        const updated = prev.map((p) => (orderMap.has(p.id) ? { ...p, order: orderMap.get(p.id) } : p));
+        updated.sort((a, b) => {
+          const orderA = typeof a.order === "number" ? a.order : 99999;
+          const orderB = typeof b.order === "number" ? b.order : 99999;
+          if (orderA !== orderB) return orderA - orderB;
+          return a.name.localeCompare(b.name);
+        });
+        return updated;
+      });
 
       const scopeName = selectedBrandFilter === "All" ? "All Products" : `'${selectedBrandFilter}'`;
       setSuccess(`Product order for ${scopeName} saved successfully.`);
