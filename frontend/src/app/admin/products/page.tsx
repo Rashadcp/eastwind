@@ -160,6 +160,7 @@ export default function AdminProductsPage() {
       });
 
       setProducts(cleanList);
+      fetchCategories(cleanList);
 
       const dynamicBrands = Array.from(
         new Set([
@@ -178,16 +179,43 @@ export default function AdminProductsPage() {
     }
   };
 
-  const fetchCategories = async () => {
+  const fetchCategories = async (loadedProducts?: ProductItem[]) => {
     try {
       setLoadingCategories(true);
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${baseUrl}/api/product-categories?t=${Date.now()}`, { cache: "no-store" });
       if (res.ok) {
         const list = await res.json();
-        if (Array.isArray(list)) {
-          setManagedCategories(list);
-          setAvailableBrandsList(list.map((c: any) => c.name));
+        if (Array.isArray(list) && list.length > 0) {
+          const existingNames = new Set(list.map((c: any) => (c.name || "").toLowerCase()));
+          const extraCategories: any[] = [];
+
+          PRODUCT_BRANDS.forEach((pb) => {
+            if (!existingNames.has(pb.name.toLowerCase())) {
+              existingNames.add(pb.name.toLowerCase());
+              extraCategories.push({
+                id: pb.id || pb.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+                name: pb.name,
+                order: list.length + extraCategories.length
+              });
+            }
+          });
+
+          const prodsToCheck = loadedProducts || products;
+          prodsToCheck.forEach((p) => {
+            if (p.brand && !existingNames.has(p.brand.toLowerCase())) {
+              existingNames.add(p.brand.toLowerCase());
+              extraCategories.push({
+                id: p.brand.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+                name: p.brand,
+                order: list.length + extraCategories.length
+              });
+            }
+          });
+
+          const fullList = [...list, ...extraCategories];
+          setManagedCategories(fullList);
+          setAvailableBrandsList(fullList.map((c: any) => c.name));
           return;
         }
       }
@@ -197,13 +225,14 @@ export default function AdminProductsPage() {
       setLoadingCategories(false);
     }
 
-    // Fallback: If API returns 404 or backend is not yet built/restarted on server,
+    // Fallback: If API returns 404 or empty list,
     // populate from registered PRODUCT_BRANDS and products so the modal is never empty
     setManagedCategories((prev) => {
-      if (prev.length > 0) return prev;
+      const prodsToCheck = loadedProducts || products;
       const combined = Array.from(
-        new Set([...PRODUCT_BRANDS.map((b) => b.name), ...products.map((p) => p.brand).filter(Boolean)])
+        new Set([...PRODUCT_BRANDS.map((b) => b.name), ...prodsToCheck.map((p) => p.brand).filter(Boolean)])
       );
+      if (prev.length > 0 && prev.length >= combined.length) return prev;
       return combined.map((name, idx) => ({
         id: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
         name,
@@ -220,7 +249,7 @@ export default function AdminProductsPage() {
   const handleOpenCategoryManager = () => {
     clearMessages();
     setShowCategoryModal(true);
-    fetchCategories();
+    fetchCategories(products);
   };
 
   const handleReorderCategoryPositions = (fromIndex: number, toIndex: number) => {
