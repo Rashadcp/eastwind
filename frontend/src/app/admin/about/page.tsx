@@ -179,32 +179,32 @@ export default function AdminAboutPage() {
       
       const homeDoc = list.find((item: any) => item.id === "home");
       if (homeDoc) {
-        if (homeDoc.imageUrl) setHomeImage(homeDoc.imageUrl);
-        if (homeDoc.title) setHomeTitle(homeDoc.title);
-        if (homeDoc.overviewText) setHomeOverview(homeDoc.overviewText);
-        if (homeDoc.secondaryText) setHomeSecondary(homeDoc.secondaryText);
-        if (homeDoc.metrics && homeDoc.metrics.length > 0) setHomeMetrics(homeDoc.metrics);
-        if (homeDoc.lifecycleSteps && homeDoc.lifecycleSteps.length > 0) setHomeLifecycleSteps(homeDoc.lifecycleSteps);
+        if (homeDoc.imageUrl !== undefined) setHomeImage(homeDoc.imageUrl);
+        if (homeDoc.title !== undefined) setHomeTitle(homeDoc.title);
+        if (homeDoc.overviewText !== undefined) setHomeOverview(homeDoc.overviewText);
+        if (homeDoc.secondaryText !== undefined) setHomeSecondary(homeDoc.secondaryText);
+        if (Array.isArray(homeDoc.metrics)) setHomeMetrics(homeDoc.metrics);
+        if (Array.isArray(homeDoc.lifecycleSteps)) setHomeLifecycleSteps(homeDoc.lifecycleSteps);
       }
 
       const pageDoc = list.find((item: any) => item.id === "about_page");
       if (pageDoc) {
-        if (pageDoc.heroBgImage) setPageHeroBgImage(pageDoc.heroBgImage);
-        if (pageDoc.heroTagline) setPageHeroTagline(pageDoc.heroTagline);
-        if (pageDoc.heroTitle) setPageHeroTitle(pageDoc.heroTitle);
-        if (pageDoc.heroDescription) setPageHeroDescription(pageDoc.heroDescription);
-        if (pageDoc.mandateBadge) setPageMandateBadge(pageDoc.mandateBadge);
-        if (pageDoc.mandateTitle) setPageMandateTitle(pageDoc.mandateTitle);
-        if (pageDoc.mandateParagraph1) setPageMandateParagraph1(pageDoc.mandateParagraph1);
-        if (pageDoc.mandateParagraph2) setPageMandateParagraph2(pageDoc.mandateParagraph2);
-        if (pageDoc.facilityImage) setPageFacilityImage(pageDoc.facilityImage);
-        if (pageDoc.facilityCode) setPageFacilityCode(pageDoc.facilityCode);
-        if (pageDoc.positioning && pageDoc.positioning.length > 0) setPagePositioning(pageDoc.positioning);
-        if (pageDoc.metrics && pageDoc.metrics.length > 0) setPageMetrics(pageDoc.metrics);
-        if (pageDoc.disciplines && pageDoc.disciplines.length > 0) setPageDisciplines(pageDoc.disciplines);
-        if (pageDoc.ctaTitle) setPageCtaTitle(pageDoc.ctaTitle);
-        if (pageDoc.ctaDescription) setPageCtaDescription(pageDoc.ctaDescription);
-        if (pageDoc.ctaButtonText) setPageCtaButtonText(pageDoc.ctaButtonText);
+        if (pageDoc.heroBgImage !== undefined) setPageHeroBgImage(pageDoc.heroBgImage);
+        if (pageDoc.heroTagline !== undefined) setPageHeroTagline(pageDoc.heroTagline);
+        if (pageDoc.heroTitle !== undefined) setPageHeroTitle(pageDoc.heroTitle);
+        if (pageDoc.heroDescription !== undefined) setPageHeroDescription(pageDoc.heroDescription);
+        if (pageDoc.mandateBadge !== undefined) setPageMandateBadge(pageDoc.mandateBadge);
+        if (pageDoc.mandateTitle !== undefined) setPageMandateTitle(pageDoc.mandateTitle);
+        if (pageDoc.mandateParagraph1 !== undefined) setPageMandateParagraph1(pageDoc.mandateParagraph1);
+        if (pageDoc.mandateParagraph2 !== undefined) setPageMandateParagraph2(pageDoc.mandateParagraph2);
+        if (pageDoc.facilityImage !== undefined) setPageFacilityImage(pageDoc.facilityImage);
+        if (pageDoc.facilityCode !== undefined) setPageFacilityCode(pageDoc.facilityCode);
+        if (Array.isArray(pageDoc.positioning)) setPagePositioning(pageDoc.positioning);
+        if (Array.isArray(pageDoc.metrics)) setPageMetrics(pageDoc.metrics);
+        if (Array.isArray(pageDoc.disciplines)) setPageDisciplines(pageDoc.disciplines);
+        if (pageDoc.ctaTitle !== undefined) setPageCtaTitle(pageDoc.ctaTitle);
+        if (pageDoc.ctaDescription !== undefined) setPageCtaDescription(pageDoc.ctaDescription);
+        if (pageDoc.ctaButtonText !== undefined) setPageCtaButtonText(pageDoc.ctaButtonText);
       }
     } catch (err: any) {
       console.error(err);

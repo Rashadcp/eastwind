@@ -477,7 +477,9 @@ export async function seedDatabase(): Promise<void> {
         - ${counts.contactSettings} Contact Settings Records
         - ${counts.solutionPage} Solutions Page Configuration
         - ${counts.brands} Brands Portfolio`);
-      await syncBrandProductsToProductsCollection();
+      if (counts.products === 0) {
+        await syncBrandProductsToProductsCollection();
+      }
       return;
     }
 
@@ -529,7 +531,9 @@ export async function seedDatabase(): Promise<void> {
       }
     }
 
-    await syncBrandProductsToProductsCollection();
+    if (counts.products === 0) {
+      await syncBrandProductsToProductsCollection();
+    }
     console.log("Database initialization & seeding completed successfully.");
   } catch (error) {
     console.error("Critical Failure during MongoDB seeding process:", error);

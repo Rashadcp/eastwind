@@ -72,11 +72,11 @@ export default function About() {
           const validImg = json.imageUrl && json.imageUrl.trim() !== "" ? json.imageUrl : defaultData.imageUrl;
           setData({
             imageUrl: validImg,
-            title: json.title || defaultData.title,
-            overviewText: json.overviewText || defaultData.overviewText,
-            secondaryText: json.secondaryText || defaultData.secondaryText,
-            metrics: json.metrics && json.metrics.length > 0 ? json.metrics : defaultData.metrics,
-            lifecycleSteps: json.lifecycleSteps && json.lifecycleSteps.length > 0 ? json.lifecycleSteps : defaultData.lifecycleSteps,
+            title: json.title !== undefined ? json.title : defaultData.title,
+            overviewText: json.overviewText !== undefined ? json.overviewText : defaultData.overviewText,
+            secondaryText: json.secondaryText !== undefined ? json.secondaryText : defaultData.secondaryText,
+            metrics: Array.isArray(json.metrics) ? json.metrics : defaultData.metrics,
+            lifecycleSteps: Array.isArray(json.lifecycleSteps) ? json.lifecycleSteps : defaultData.lifecycleSteps,
           });
           setImgSrc(formatImageUrl(validImg));
           setImageError(false);

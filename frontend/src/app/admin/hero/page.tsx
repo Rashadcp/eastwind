@@ -45,21 +45,21 @@ export default function AdminHeroPage() {
       const res = await fetch(`${baseUrl}/api/hero`);
       if (res.ok) {
         const data = await res.json();
-        if (data.bannerImg) setBannerImg(data.bannerImg);
-        if (data.videoSrc) setVideoSrc(data.videoSrc);
-        if (data.slide1Tagline) setSlide1Tagline(data.slide1Tagline);
-        if (data.slide1Title) setSlide1Title(data.slide1Title);
-        if (data.slide1Desc) setSlide1Desc(data.slide1Desc);
-        if (data.slide1Btn1Text) setSlide1Btn1Text(data.slide1Btn1Text);
-        if (data.slide1Btn1Link) setSlide1Btn1Link(data.slide1Btn1Link);
-        if (data.slide1Btn2Text) setSlide1Btn2Text(data.slide1Btn2Text);
-        if (data.slide1Btn2Link) setSlide1Btn2Link(data.slide1Btn2Link);
+        if (data.bannerImg !== undefined) setBannerImg(data.bannerImg);
+        if (data.videoSrc !== undefined) setVideoSrc(data.videoSrc);
+        if (data.slide1Tagline !== undefined) setSlide1Tagline(data.slide1Tagline);
+        if (data.slide1Title !== undefined) setSlide1Title(data.slide1Title);
+        if (data.slide1Desc !== undefined) setSlide1Desc(data.slide1Desc);
+        if (data.slide1Btn1Text !== undefined) setSlide1Btn1Text(data.slide1Btn1Text);
+        if (data.slide1Btn1Link !== undefined) setSlide1Btn1Link(data.slide1Btn1Link);
+        if (data.slide1Btn2Text !== undefined) setSlide1Btn2Text(data.slide1Btn2Text);
+        if (data.slide1Btn2Link !== undefined) setSlide1Btn2Link(data.slide1Btn2Link);
 
-        if (data.slide2Tagline) setSlide2Tagline(data.slide2Tagline);
-        if (data.slide2Title) setSlide2Title(data.slide2Title);
-        if (data.slide2Desc) setSlide2Desc(data.slide2Desc);
-        if (data.slide2Btn1Text) setSlide2Btn1Text(data.slide2Btn1Text);
-        if (data.slide2Btn1Link) setSlide2Btn1Link(data.slide2Btn1Link);
+        if (data.slide2Tagline !== undefined) setSlide2Tagline(data.slide2Tagline);
+        if (data.slide2Title !== undefined) setSlide2Title(data.slide2Title);
+        if (data.slide2Desc !== undefined) setSlide2Desc(data.slide2Desc);
+        if (data.slide2Btn1Text !== undefined) setSlide2Btn1Text(data.slide2Btn1Text);
+        if (data.slide2Btn1Link !== undefined) setSlide2Btn1Link(data.slide2Btn1Link);
       }
     } catch (err: any) {
       console.error(err);

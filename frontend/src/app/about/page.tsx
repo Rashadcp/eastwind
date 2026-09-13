@@ -153,22 +153,22 @@ export default async function AboutPage() {
     if (res.ok) {
       const json = await res.json();
       data = {
-        heroBgImage: json.heroBgImage || defaultData.heroBgImage,
-        heroTagline: json.heroTagline || defaultData.heroTagline,
-        heroTitle: json.heroTitle || defaultData.heroTitle,
-        heroDescription: json.heroDescription || defaultData.heroDescription,
-        mandateBadge: json.mandateBadge || defaultData.mandateBadge,
-        mandateTitle: json.mandateTitle || defaultData.mandateTitle,
-        mandateParagraph1: json.mandateParagraph1 || defaultData.mandateParagraph1,
-        mandateParagraph2: json.mandateParagraph2 || defaultData.mandateParagraph2,
-        facilityImage: json.facilityImage || defaultData.facilityImage,
-        facilityCode: json.facilityCode || defaultData.facilityCode,
-        positioning: json.positioning && json.positioning.length > 0 ? json.positioning : defaultData.positioning,
-        metrics: json.metrics && json.metrics.length > 0 ? json.metrics : defaultData.metrics,
-        disciplines: json.disciplines && json.disciplines.length > 0 ? json.disciplines : defaultData.disciplines,
-        ctaTitle: json.ctaTitle || defaultData.ctaTitle,
-        ctaDescription: json.ctaDescription || defaultData.ctaDescription,
-        ctaButtonText: json.ctaButtonText || defaultData.ctaButtonText,
+        heroBgImage: json.heroBgImage !== undefined ? json.heroBgImage : defaultData.heroBgImage,
+        heroTagline: json.heroTagline !== undefined ? json.heroTagline : defaultData.heroTagline,
+        heroTitle: json.heroTitle !== undefined ? json.heroTitle : defaultData.heroTitle,
+        heroDescription: json.heroDescription !== undefined ? json.heroDescription : defaultData.heroDescription,
+        mandateBadge: json.mandateBadge !== undefined ? json.mandateBadge : defaultData.mandateBadge,
+        mandateTitle: json.mandateTitle !== undefined ? json.mandateTitle : defaultData.mandateTitle,
+        mandateParagraph1: json.mandateParagraph1 !== undefined ? json.mandateParagraph1 : defaultData.mandateParagraph1,
+        mandateParagraph2: json.mandateParagraph2 !== undefined ? json.mandateParagraph2 : defaultData.mandateParagraph2,
+        facilityImage: json.facilityImage !== undefined ? json.facilityImage : defaultData.facilityImage,
+        facilityCode: json.facilityCode !== undefined ? json.facilityCode : defaultData.facilityCode,
+        positioning: Array.isArray(json.positioning) ? json.positioning : defaultData.positioning,
+        metrics: Array.isArray(json.metrics) ? json.metrics : defaultData.metrics,
+        disciplines: Array.isArray(json.disciplines) ? json.disciplines : defaultData.disciplines,
+        ctaTitle: json.ctaTitle !== undefined ? json.ctaTitle : defaultData.ctaTitle,
+        ctaDescription: json.ctaDescription !== undefined ? json.ctaDescription : defaultData.ctaDescription,
+        ctaButtonText: json.ctaButtonText !== undefined ? json.ctaButtonText : defaultData.ctaButtonText,
       };
     }
   } catch (err) {

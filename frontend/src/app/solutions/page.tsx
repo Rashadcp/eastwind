@@ -737,29 +737,29 @@ function SolutionsPageContent() {
         });
         if (pageRes.ok) {
           const data = await pageRes.json();
-          const loadedIndustries = data.industries && data.industries.length > 0 ? data.industries : defaultPageConfig.industries;
+          const loadedIndustries = Array.isArray(data.industries) ? data.industries : defaultPageConfig.industries;
           setPageConfig({
-            heroBgImage: data.heroBgImage || defaultPageConfig.heroBgImage,
-            heroTagline: data.heroTagline || defaultPageConfig.heroTagline,
-            heroTitle: data.heroTitle || defaultPageConfig.heroTitle,
-            heroDescription: data.heroDescription || defaultPageConfig.heroDescription,
-            industriesTagline: data.industriesTagline || defaultPageConfig.industriesTagline,
-            industriesTitle: data.industriesTitle || defaultPageConfig.industriesTitle,
-            industriesDesc: data.industriesDesc || defaultPageConfig.industriesDesc,
+            heroBgImage: data.heroBgImage !== undefined ? data.heroBgImage : defaultPageConfig.heroBgImage,
+            heroTagline: data.heroTagline !== undefined ? data.heroTagline : defaultPageConfig.heroTagline,
+            heroTitle: data.heroTitle !== undefined ? data.heroTitle : defaultPageConfig.heroTitle,
+            heroDescription: data.heroDescription !== undefined ? data.heroDescription : defaultPageConfig.heroDescription,
+            industriesTagline: data.industriesTagline !== undefined ? data.industriesTagline : defaultPageConfig.industriesTagline,
+            industriesTitle: data.industriesTitle !== undefined ? data.industriesTitle : defaultPageConfig.industriesTitle,
+            industriesDesc: data.industriesDesc !== undefined ? data.industriesDesc : defaultPageConfig.industriesDesc,
             industries: loadedIndustries,
-            capabilitiesTagline: data.capabilitiesTagline || defaultPageConfig.capabilitiesTagline,
-            capabilitiesTitle: data.capabilitiesTitle || defaultPageConfig.capabilitiesTitle,
-            capabilitiesDesc: data.capabilitiesDesc || defaultPageConfig.capabilitiesDesc,
-            corePortfolios: data.corePortfolios && data.corePortfolios.length > 0 ? data.corePortfolios : defaultPageConfig.corePortfolios,
-            partnersTagline: data.partnersTagline || defaultPageConfig.partnersTagline,
-            partnersTitle: data.partnersTitle || defaultPageConfig.partnersTitle,
-            partnersDesc: data.partnersDesc || defaultPageConfig.partnersDesc,
-            partners: data.partners && data.partners.length > 0 ? data.partners : defaultPageConfig.partners,
-            gatewayTagline: data.gatewayTagline || defaultPageConfig.gatewayTagline,
-            gatewayTitle: data.gatewayTitle || defaultPageConfig.gatewayTitle,
-            gatewayDesc: data.gatewayDesc || defaultPageConfig.gatewayDesc,
-            solutionScopeOptions: data.solutionScopeOptions && data.solutionScopeOptions.length > 0 ? data.solutionScopeOptions : defaultPageConfig.solutionScopeOptions,
-            submitButtonText: data.submitButtonText || defaultPageConfig.submitButtonText,
+            capabilitiesTagline: data.capabilitiesTagline !== undefined ? data.capabilitiesTagline : defaultPageConfig.capabilitiesTagline,
+            capabilitiesTitle: data.capabilitiesTitle !== undefined ? data.capabilitiesTitle : defaultPageConfig.capabilitiesTitle,
+            capabilitiesDesc: data.capabilitiesDesc !== undefined ? data.capabilitiesDesc : defaultPageConfig.capabilitiesDesc,
+            corePortfolios: Array.isArray(data.corePortfolios) ? data.corePortfolios : defaultPageConfig.corePortfolios,
+            partnersTagline: data.partnersTagline !== undefined ? data.partnersTagline : defaultPageConfig.partnersTagline,
+            partnersTitle: data.partnersTitle !== undefined ? data.partnersTitle : defaultPageConfig.partnersTitle,
+            partnersDesc: data.partnersDesc !== undefined ? data.partnersDesc : defaultPageConfig.partnersDesc,
+            partners: Array.isArray(data.partners) ? data.partners : defaultPageConfig.partners,
+            gatewayTagline: data.gatewayTagline !== undefined ? data.gatewayTagline : defaultPageConfig.gatewayTagline,
+            gatewayTitle: data.gatewayTitle !== undefined ? data.gatewayTitle : defaultPageConfig.gatewayTitle,
+            gatewayDesc: data.gatewayDesc !== undefined ? data.gatewayDesc : defaultPageConfig.gatewayDesc,
+            solutionScopeOptions: Array.isArray(data.solutionScopeOptions) ? data.solutionScopeOptions : defaultPageConfig.solutionScopeOptions,
+            submitButtonText: data.submitButtonText !== undefined ? data.submitButtonText : defaultPageConfig.submitButtonText,
           });
 
           const matched = getMatchingIndustryId(urlCat, loadedIndustries);

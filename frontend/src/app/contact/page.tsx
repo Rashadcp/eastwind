@@ -108,19 +108,19 @@ export default function ContactPage() {
         if (pageRes.ok) {
           const json = await pageRes.json();
           setContactPage({
-            heroBgImage: json.heroBgImage || defaultContactPage.heroBgImage,
-            heroTagline: json.heroTagline || defaultContactPage.heroTagline,
-            heroTitle: json.heroTitle || defaultContactPage.heroTitle,
-            heroDescription: json.heroDescription || defaultContactPage.heroDescription,
-            communicationsTagline: json.communicationsTagline || defaultContactPage.communicationsTagline,
-            communicationsTitle: json.communicationsTitle || defaultContactPage.communicationsTitle,
-            communicationsDesc: json.communicationsDesc || defaultContactPage.communicationsDesc,
-            formSubHeaderTagline: json.formSubHeaderTagline || defaultContactPage.formSubHeaderTagline,
-            formSubHeaderTitle: json.formSubHeaderTitle || defaultContactPage.formSubHeaderTitle,
-            marketSegments: json.marketSegments && json.marketSegments.length > 0 ? json.marketSegments : defaultContactPage.marketSegments,
-            submitButtonText: json.submitButtonText || defaultContactPage.submitButtonText,
-            successTitle: json.successTitle || defaultContactPage.successTitle,
-            successMessage: json.successMessage || defaultContactPage.successMessage,
+            heroBgImage: json.heroBgImage !== undefined ? json.heroBgImage : defaultContactPage.heroBgImage,
+            heroTagline: json.heroTagline !== undefined ? json.heroTagline : defaultContactPage.heroTagline,
+            heroTitle: json.heroTitle !== undefined ? json.heroTitle : defaultContactPage.heroTitle,
+            heroDescription: json.heroDescription !== undefined ? json.heroDescription : defaultContactPage.heroDescription,
+            communicationsTagline: json.communicationsTagline !== undefined ? json.communicationsTagline : defaultContactPage.communicationsTagline,
+            communicationsTitle: json.communicationsTitle !== undefined ? json.communicationsTitle : defaultContactPage.communicationsTitle,
+            communicationsDesc: json.communicationsDesc !== undefined ? json.communicationsDesc : defaultContactPage.communicationsDesc,
+            formSubHeaderTagline: json.formSubHeaderTagline !== undefined ? json.formSubHeaderTagline : defaultContactPage.formSubHeaderTagline,
+            formSubHeaderTitle: json.formSubHeaderTitle !== undefined ? json.formSubHeaderTitle : defaultContactPage.formSubHeaderTitle,
+            marketSegments: Array.isArray(json.marketSegments) ? json.marketSegments : defaultContactPage.marketSegments,
+            submitButtonText: json.submitButtonText !== undefined ? json.submitButtonText : defaultContactPage.submitButtonText,
+            successTitle: json.successTitle !== undefined ? json.successTitle : defaultContactPage.successTitle,
+            successMessage: json.successMessage !== undefined ? json.successMessage : defaultContactPage.successMessage,
           });
         }
       } catch (err) {

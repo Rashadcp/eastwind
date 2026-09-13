@@ -84,28 +84,28 @@ export default function Contact() {
         if (infoRes.ok) {
           const json = await infoRes.json();
           setContactInfo({
-            hqTitle: json.hqTitle || defaultContactInfo.hqTitle,
-            hqAddress: json.hqAddress || defaultContactInfo.hqAddress,
-            hubTitle: json.hubTitle || defaultContactInfo.hubTitle,
-            hubAddress: json.hubAddress || defaultContactInfo.hubAddress,
-            telephone: json.telephone || defaultContactInfo.telephone,
-            email: json.email || defaultContactInfo.email,
-            workingHours: json.workingHours || defaultContactInfo.workingHours,
-            gatewayText: json.gatewayText || defaultContactInfo.gatewayText,
-            gatewayStatus: json.gatewayStatus || defaultContactInfo.gatewayStatus,
+            hqTitle: json.hqTitle !== undefined ? json.hqTitle : defaultContactInfo.hqTitle,
+            hqAddress: json.hqAddress !== undefined ? json.hqAddress : defaultContactInfo.hqAddress,
+            hubTitle: json.hubTitle !== undefined ? json.hubTitle : defaultContactInfo.hubTitle,
+            hubAddress: json.hubAddress !== undefined ? json.hubAddress : defaultContactInfo.hubAddress,
+            telephone: json.telephone !== undefined ? json.telephone : defaultContactInfo.telephone,
+            email: json.email !== undefined ? json.email : defaultContactInfo.email,
+            workingHours: json.workingHours !== undefined ? json.workingHours : defaultContactInfo.workingHours,
+            gatewayText: json.gatewayText !== undefined ? json.gatewayText : defaultContactInfo.gatewayText,
+            gatewayStatus: json.gatewayStatus !== undefined ? json.gatewayStatus : defaultContactInfo.gatewayStatus,
           });
         }
 
         if (homeRes.ok) {
           const json = await homeRes.json();
           setHomeContact({
-            tagline: json.tagline || defaultHomeContact.tagline,
-            title: json.title || defaultHomeContact.title,
-            description: json.description || defaultHomeContact.description,
-            operationalSectors: json.operationalSectors && json.operationalSectors.length > 0 ? json.operationalSectors : defaultHomeContact.operationalSectors,
-            submitButtonText: json.submitButtonText || defaultHomeContact.submitButtonText,
-            successTitle: json.successTitle || defaultHomeContact.successTitle,
-            successMessage: json.successMessage || defaultHomeContact.successMessage,
+            tagline: json.tagline !== undefined ? json.tagline : defaultHomeContact.tagline,
+            title: json.title !== undefined ? json.title : defaultHomeContact.title,
+            description: json.description !== undefined ? json.description : defaultHomeContact.description,
+            operationalSectors: Array.isArray(json.operationalSectors) ? json.operationalSectors : defaultHomeContact.operationalSectors,
+            submitButtonText: json.submitButtonText !== undefined ? json.submitButtonText : defaultHomeContact.submitButtonText,
+            successTitle: json.successTitle !== undefined ? json.successTitle : defaultHomeContact.successTitle,
+            successMessage: json.successMessage !== undefined ? json.successMessage : defaultHomeContact.successMessage,
           });
         }
       } catch (err) {

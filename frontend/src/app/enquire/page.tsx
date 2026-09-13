@@ -69,13 +69,13 @@ function EnquiryFormContent() {
         const json = await cachedFetch<any>(`${baseUrl}/api/contact-settings/enquiry_page`, { fallback: null });
         if (json) {
           setSettings({
-            enquiryTagline: json.enquiryTagline || defaultEnquirySettings.enquiryTagline,
-            enquiryTitle: json.enquiryTitle || defaultEnquirySettings.enquiryTitle,
-            enquiryDescription: json.enquiryDescription || defaultEnquirySettings.enquiryDescription,
-            applicationPurposes: json.applicationPurposes && json.applicationPurposes.length > 0 ? json.applicationPurposes : defaultEnquirySettings.applicationPurposes,
-            submitButtonText: json.submitButtonText || defaultEnquirySettings.submitButtonText,
-            successTitle: json.successTitle || defaultEnquirySettings.successTitle,
-            successMessage: json.successMessage || defaultEnquirySettings.successMessage,
+            enquiryTagline: json.enquiryTagline !== undefined ? json.enquiryTagline : defaultEnquirySettings.enquiryTagline,
+            enquiryTitle: json.enquiryTitle !== undefined ? json.enquiryTitle : defaultEnquirySettings.enquiryTitle,
+            enquiryDescription: json.enquiryDescription !== undefined ? json.enquiryDescription : defaultEnquirySettings.enquiryDescription,
+            applicationPurposes: Array.isArray(json.applicationPurposes) ? json.applicationPurposes : defaultEnquirySettings.applicationPurposes,
+            submitButtonText: json.submitButtonText !== undefined ? json.submitButtonText : defaultEnquirySettings.submitButtonText,
+            successTitle: json.successTitle !== undefined ? json.successTitle : defaultEnquirySettings.successTitle,
+            successMessage: json.successMessage !== undefined ? json.successMessage : defaultEnquirySettings.successMessage,
           });
         }
 

@@ -177,7 +177,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-[0.88rem] text-slate-600">
             {/* Hubs & Physical Locations */}
             <div className="flex flex-col gap-5">
-              {(footer.locations && footer.locations.length > 0 ? footer.locations : [
+              {(Array.isArray(footer.locations) ? footer.locations : [
                 { title: footer.hqTitle, address: footer.hqAddress },
                 { title: footer.hubTitle, address: footer.hubAddress }
               ].filter(l => l.title || l.address)).map((loc, locIdx) => {

@@ -95,54 +95,54 @@ export default function AdminContactPage() {
 
       const infoDoc = list.find((item: any) => item.id === "contact_info");
       if (infoDoc) {
-        if (infoDoc.hqTitle) setHqTitle(infoDoc.hqTitle);
-        if (infoDoc.hqAddress) setHqAddress(infoDoc.hqAddress);
-        if (infoDoc.hubTitle) setHubTitle(infoDoc.hubTitle);
-        if (infoDoc.hubAddress) setHubAddress(infoDoc.hubAddress);
-        if (infoDoc.telephone) setTelephone(infoDoc.telephone);
-        if (infoDoc.email) setEmail(infoDoc.email);
-        if (infoDoc.workingHours) setWorkingHours(infoDoc.workingHours);
-        if (infoDoc.gatewayText) setGatewayText(infoDoc.gatewayText);
-        if (infoDoc.gatewayStatus) setGatewayStatus(infoDoc.gatewayStatus);
+        if (infoDoc.hqTitle !== undefined) setHqTitle(infoDoc.hqTitle);
+        if (infoDoc.hqAddress !== undefined) setHqAddress(infoDoc.hqAddress);
+        if (infoDoc.hubTitle !== undefined) setHubTitle(infoDoc.hubTitle);
+        if (infoDoc.hubAddress !== undefined) setHubAddress(infoDoc.hubAddress);
+        if (infoDoc.telephone !== undefined) setTelephone(infoDoc.telephone);
+        if (infoDoc.email !== undefined) setEmail(infoDoc.email);
+        if (infoDoc.workingHours !== undefined) setWorkingHours(infoDoc.workingHours);
+        if (infoDoc.gatewayText !== undefined) setGatewayText(infoDoc.gatewayText);
+        if (infoDoc.gatewayStatus !== undefined) setGatewayStatus(infoDoc.gatewayStatus);
       }
 
       const homeDoc = list.find((item: any) => item.id === "home_contact");
       if (homeDoc) {
-        if (homeDoc.tagline) setHomeTagline(homeDoc.tagline);
-        if (homeDoc.title) setHomeTitle(homeDoc.title);
-        if (homeDoc.description) setHomeDescription(homeDoc.description);
-        if (homeDoc.operationalSectors && homeDoc.operationalSectors.length > 0) setHomeSectors(homeDoc.operationalSectors);
-        if (homeDoc.submitButtonText) setHomeSubmitBtn(homeDoc.submitButtonText);
-        if (homeDoc.successTitle) setHomeSuccessTitle(homeDoc.successTitle);
-        if (homeDoc.successMessage) setHomeSuccessMessage(homeDoc.successMessage);
+        if (homeDoc.tagline !== undefined) setHomeTagline(homeDoc.tagline);
+        if (homeDoc.title !== undefined) setHomeTitle(homeDoc.title);
+        if (homeDoc.description !== undefined) setHomeDescription(homeDoc.description);
+        if (Array.isArray(homeDoc.operationalSectors)) setHomeSectors(homeDoc.operationalSectors);
+        if (homeDoc.submitButtonText !== undefined) setHomeSubmitBtn(homeDoc.submitButtonText);
+        if (homeDoc.successTitle !== undefined) setHomeSuccessTitle(homeDoc.successTitle);
+        if (homeDoc.successMessage !== undefined) setHomeSuccessMessage(homeDoc.successMessage);
       }
 
       const pageDoc = list.find((item: any) => item.id === "contact_page");
       if (pageDoc) {
-        if (pageDoc.heroBgImage) setPageHeroBgImage(pageDoc.heroBgImage);
-        if (pageDoc.heroTagline) setPageHeroTagline(pageDoc.heroTagline);
-        if (pageDoc.heroTitle) setPageHeroTitle(pageDoc.heroTitle);
-        if (pageDoc.heroDescription) setPageHeroDescription(pageDoc.heroDescription);
-        if (pageDoc.communicationsTagline) setPageCommsTagline(pageDoc.communicationsTagline);
-        if (pageDoc.communicationsTitle) setPageCommsTitle(pageDoc.communicationsTitle);
-        if (pageDoc.communicationsDesc) setPageCommsDesc(pageDoc.communicationsDesc);
-        if (pageDoc.formSubHeaderTagline) setPageFormTagline(pageDoc.formSubHeaderTagline);
-        if (pageDoc.formSubHeaderTitle) setPageFormTitle(pageDoc.formSubHeaderTitle);
-        if (pageDoc.marketSegments && pageDoc.marketSegments.length > 0) setPageMarketSegments(pageDoc.marketSegments);
-        if (pageDoc.submitButtonText) setPageSubmitBtn(pageDoc.submitButtonText);
-        if (pageDoc.successTitle) setPageSuccessTitle(pageDoc.successTitle);
-        if (pageDoc.successMessage) setPageSuccessMessage(pageDoc.successMessage);
+        if (pageDoc.heroBgImage !== undefined) setPageHeroBgImage(pageDoc.heroBgImage);
+        if (pageDoc.heroTagline !== undefined) setPageHeroTagline(pageDoc.heroTagline);
+        if (pageDoc.heroTitle !== undefined) setPageHeroTitle(pageDoc.heroTitle);
+        if (pageDoc.heroDescription !== undefined) setPageHeroDescription(pageDoc.heroDescription);
+        if (pageDoc.communicationsTagline !== undefined) setPageCommsTagline(pageDoc.communicationsTagline);
+        if (pageDoc.communicationsTitle !== undefined) setPageCommsTitle(pageDoc.communicationsTitle);
+        if (pageDoc.communicationsDesc !== undefined) setPageCommsDesc(pageDoc.communicationsDesc);
+        if (pageDoc.formSubHeaderTagline !== undefined) setPageFormTagline(pageDoc.formSubHeaderTagline);
+        if (pageDoc.formSubHeaderTitle !== undefined) setPageFormTitle(pageDoc.formSubHeaderTitle);
+        if (Array.isArray(pageDoc.marketSegments)) setPageMarketSegments(pageDoc.marketSegments);
+        if (pageDoc.submitButtonText !== undefined) setPageSubmitBtn(pageDoc.submitButtonText);
+        if (pageDoc.successTitle !== undefined) setPageSuccessTitle(pageDoc.successTitle);
+        if (pageDoc.successMessage !== undefined) setPageSuccessMessage(pageDoc.successMessage);
       }
 
       const enquiryDoc = list.find((item: any) => item.id === "enquiry_page");
       if (enquiryDoc) {
-        if (enquiryDoc.enquiryTagline) setEnquiryTagline(enquiryDoc.enquiryTagline);
-        if (enquiryDoc.enquiryTitle) setEnquiryTitle(enquiryDoc.enquiryTitle);
-        if (enquiryDoc.enquiryDescription) setEnquiryDescription(enquiryDoc.enquiryDescription);
-        if (enquiryDoc.applicationPurposes && enquiryDoc.applicationPurposes.length > 0) setEnquiryPurposes(enquiryDoc.applicationPurposes);
-        if (enquiryDoc.submitButtonText) setEnquirySubmitBtn(enquiryDoc.submitButtonText);
-        if (enquiryDoc.successTitle) setEnquirySuccessTitle(enquiryDoc.successTitle);
-        if (enquiryDoc.successMessage) setEnquirySuccessMessage(enquiryDoc.successMessage);
+        if (enquiryDoc.enquiryTagline !== undefined) setEnquiryTagline(enquiryDoc.enquiryTagline);
+        if (enquiryDoc.enquiryTitle !== undefined) setEnquiryTitle(enquiryDoc.enquiryTitle);
+        if (enquiryDoc.enquiryDescription !== undefined) setEnquiryDescription(enquiryDoc.enquiryDescription);
+        if (Array.isArray(enquiryDoc.applicationPurposes)) setEnquiryPurposes(enquiryDoc.applicationPurposes);
+        if (enquiryDoc.submitButtonText !== undefined) setEnquirySubmitBtn(enquiryDoc.submitButtonText);
+        if (enquiryDoc.successTitle !== undefined) setEnquirySuccessTitle(enquiryDoc.successTitle);
+        if (enquiryDoc.successMessage !== undefined) setEnquirySuccessMessage(enquiryDoc.successMessage);
       }
 
     } catch (err: any) {
