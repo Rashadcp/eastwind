@@ -33,10 +33,10 @@ const CORE_PAGE_KEYS = [
 ];
 
 const ROBOT_OPTIONS = [
-  { value: "index, follow", label: "Index, Follow (Recommended - Visible to Search Engines)" },
-  { value: "noindex, follow", label: "Noindex, Follow (Hide from search, follow internal links)" },
-  { value: "index, nofollow", label: "Index, Nofollow (Visible in search, ignore outbound links)" },
-  { value: "noindex, nofollow", label: "Noindex, Nofollow (Completely hidden from search engines)" }
+  { value: "index, follow", label: "Yes, show on Google (Recommended)" },
+  { value: "noindex, follow", label: "No, hide from Google search" },
+  { value: "index, nofollow", label: "Show on Google, but don't follow links" },
+  { value: "noindex, nofollow", label: "Completely hide and ignore this page" }
 ];
 
 export default function AdminSeoPage() {
@@ -77,7 +77,7 @@ export default function AdminSeoPage() {
       setError(null);
       const res = await fetch(`${baseUrl}/api/seo`);
       if (!res.ok) {
-        throw new Error("Failed to load SEO configuration from server");
+        throw new Error("Could not load page settings from server");
       }
       const data: SeoPageSetting[] = await res.json();
       setPages(data);
@@ -89,8 +89,8 @@ export default function AdminSeoPage() {
         setOriginalData({ ...current });
       }
     } catch (err: any) {
-      console.error("Error fetching SEO settings:", err);
-      setError(err.message || "Failed to fetch SEO settings");
+      console.error("Error loading page settings:", err);
+      setError(err.message || "Failed to load page settings");
     } finally {
       setLoading(false);
     }
@@ -103,7 +103,7 @@ export default function AdminSeoPage() {
   const handleSelectPage = (pageKey: string) => {
     if (hasUnsavedChanges) {
       const confirmSwitch = window.confirm(
-        "You have unsaved changes. Switching pages will discard them. Do you want to proceed?"
+        "You have unsaved changes. Switching pages will discard them. Do you want to continue?"
       );
       if (!confirmSwitch) return;
     }
@@ -136,7 +136,7 @@ export default function AdminSeoPage() {
           JSON.parse(value);
           setJsonLdError(null);
         } catch (e: any) {
-          setJsonLdError("Invalid JSON format");
+          setJsonLdError("Invalid code format");
         }
       }
     }
@@ -145,7 +145,7 @@ export default function AdminSeoPage() {
   const handleSave = async () => {
     if (!formData) return;
     if (jsonLdError) {
-      setError("Please fix the Structured Data JSON error before saving.");
+      setError("Please fix the code error in Advanced Settings before saving.");
       return;
     }
 
@@ -166,7 +166,7 @@ export default function AdminSeoPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to save SEO changes");
+        throw new Error(data.error || "Failed to save changes");
       }
 
       const updated = await res.json();
@@ -175,10 +175,10 @@ export default function AdminSeoPage() {
       );
       setFormData({ ...updated });
       setOriginalData({ ...updated });
-      setSuccess(`SEO settings for "${updated.pageName}" saved successfully!`);
+      setSuccess(`Changes for "${updated.pageName}" saved successfully!`);
     } catch (err: any) {
       console.error("Save error:", err);
-      setError(err.message || "Failed to save SEO settings");
+      setError(err.message || "Failed to save changes");
     } finally {
       setSaving(false);
     }
@@ -187,7 +187,7 @@ export default function AdminSeoPage() {
   const handleAddPage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPageName.trim()) {
-      setModalError("Page name is required");
+      setModalError("Please enter a page name");
       return;
     }
 
@@ -215,15 +215,15 @@ export default function AdminSeoPage() {
           `${newPageName.trim()} | Eastwind Safety Arabia`,
         description:
           newPageDescription.trim() ||
-          `${newPageName.trim()} - Industrial safety solutions and engineering infrastructure in Saudi Arabia.`,
-        keywords: `${newPageName.toLowerCase()}, industrial safety, Saudi Arabia`,
+          `${newPageName.trim()} - Industrial safety solutions and services in Saudi Arabia.`,
+        keywords: `${newPageName.toLowerCase()}, safety, Saudi Arabia`,
         canonicalUrl: `https://eastwindsafety.com${cleanPath || `/${generatedKey}`}`,
         ogTitle:
           newPageTitle.trim() ||
           `${newPageName.trim()} | Eastwind Safety Arabia`,
         ogDescription:
           newPageDescription.trim() ||
-          `${newPageName.trim()} - Industrial safety solutions and engineering infrastructure in Saudi Arabia.`,
+          `${newPageName.trim()} - Industrial safety solutions and services in Saudi Arabia.`,
         ogImage: "/logo.png",
         robots: "index, follow"
       };
@@ -239,7 +239,7 @@ export default function AdminSeoPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to create new page SEO");
+        throw new Error(data.error || "Failed to create new page");
       }
 
       const created = await res.json();
@@ -252,7 +252,7 @@ export default function AdminSeoPage() {
       setNewPagePath("");
       setNewPageTitle("");
       setNewPageDescription("");
-      setSuccess(`Page "${created.pageName}" created successfully!`);
+      setSuccess(`Page "${created.pageName}" added successfully!`);
     } catch (err: any) {
       console.error("Create page error:", err);
       setModalError(err.message || "Failed to create page");
@@ -277,7 +277,7 @@ export default function AdminSeoPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to delete page SEO");
+        throw new Error(data.error || "Failed to delete page");
       }
 
       const updatedPages = pages.filter((p) => p.pageKey !== formData.pageKey);
@@ -327,14 +327,14 @@ export default function AdminSeoPage() {
           (data.filename ? `/uploads/${data.filename}` : "");
         if (uploadedUrl) {
           handleInputChange("ogImage", uploadedUrl);
-          setSuccess(`OG Image "${file.name}" uploaded successfully!`);
+          setSuccess(`Photo "${file.name}" uploaded successfully!`);
           return;
         }
       }
 
-      throw new Error("Failed to upload image file to server");
+      throw new Error("Failed to upload image file");
     } catch (err: any) {
-      console.error("OG upload error:", err);
+      console.error("Upload error:", err);
       setError(err.message || "Image upload failed");
     } finally {
       setUploadingOg(false);
@@ -357,14 +357,14 @@ export default function AdminSeoPage() {
     return (
       <div className="py-24 text-center space-y-3">
         <div className="w-8 h-8 border-2 border-[#1e3e8f] border-t-transparent animate-spin mx-auto rounded-full" />
-        <p className="text-xs text-slate-500 font-medium">Loading Meta SEO Settings...</p>
+        <p className="text-xs text-slate-500 font-medium">Loading page settings...</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6 pb-24 font-sans text-slate-800">
-      {/* Explicit Scoped CSS to enforce clean styling and protect against layout button overrides */}
+      {/* Scoped CSS for 100% Guaranteed High Contrast & Legibility */}
       <style dangerouslySetInnerHTML={{ __html: `
         .seo-list-row {
           background-color: #ffffff !important;
@@ -411,21 +411,21 @@ export default function AdminSeoPage() {
         }
       ` }} />
 
-      {/* Clean Header Bar */}
+      {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2 py-0.5 bg-blue-50 text-[#1e3e8f] border border-blue-200 text-[10px] font-bold rounded-xs uppercase tracking-wider">
-              SEO Management
+              Website Settings
             </span>
             <span className="text-xs text-slate-400">/</span>
-            <span className="text-xs font-semibold text-slate-600">Page Meta Tags</span>
+            <span className="text-xs font-semibold text-slate-600">Google & Social Media</span>
           </div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight m-0">
-            Search Engine & Meta Optimization
+            Google Search & Social Media Settings
           </h1>
           <p className="text-xs text-slate-500 mt-0.5 m-0">
-            Customize Google search appearance, OpenGraph social previews, and robots indexing directives for all site pages.
+            Control how your pages look when people find them on Google or share links on WhatsApp and social media.
           </p>
         </div>
 
@@ -491,15 +491,14 @@ export default function AdminSeoPage() {
         </div>
       )}
 
-      {/* Main Clean 2-Column Work Area */}
+      {/* 2-Column Work Area */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Left Column: Clean Page List (4 cols) */}
+        {/* Left Column: Pages List (4 cols) */}
         <div className="lg:col-span-4 bg-white border border-slate-200 rounded-xs overflow-hidden shadow-xs">
-          {/* Header */}
           <div className="p-3 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
             <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-              Site Pages ({pages.length})
+              Your Pages ({pages.length})
             </span>
             <button
               type="button"
@@ -520,7 +519,7 @@ export default function AdminSeoPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search page by name or path..."
+                placeholder="Search page..."
                 className="w-full text-xs pl-7 pr-2.5 py-1.5 border border-slate-200 rounded-xs bg-white text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none"
               />
               <svg
@@ -535,7 +534,7 @@ export default function AdminSeoPage() {
             </div>
           </div>
 
-          {/* Clean List Items (Divs with role=button to eliminate button CSS clashes) */}
+          {/* Clean List Items */}
           <div className="divide-y divide-slate-100 max-h-[640px] overflow-y-auto">
             {filteredPages.map((page) => {
               const isSelected = page.pageKey === selectedKey;
@@ -567,7 +566,7 @@ export default function AdminSeoPage() {
                           isCore ? "seo-chip-core" : "seo-chip-custom"
                         }`}
                       >
-                        {isCore ? "Core" : "Custom"}
+                        {isCore ? "Main Page" : "Custom"}
                       </span>
                     </div>
                     <div className="page-path text-[11px] font-mono truncate mt-0.5">
@@ -580,7 +579,7 @@ export default function AdminSeoPage() {
                       isNoIndex ? "seo-chip-noindex" : "seo-chip-indexed"
                     }`}
                   >
-                    {isNoIndex ? "Noindex" : "Indexed"}
+                    {isNoIndex ? "Hidden" : "Shows on Google"}
                   </span>
                 </div>
               );
@@ -588,17 +587,17 @@ export default function AdminSeoPage() {
 
             {filteredPages.length === 0 && (
               <div className="p-6 text-center text-xs text-slate-400">
-                No matching pages found for "{searchQuery}".
+                No pages found matching "{searchQuery}".
               </div>
             )}
           </div>
         </div>
 
-        {/* Right Column: Clean Editor (8 cols) */}
+        {/* Right Column: Editor (8 cols) */}
         {formData ? (
           <div className="lg:col-span-8 space-y-4">
             
-            {/* Selected Page Header & Tab Bar */}
+            {/* Header of Selected Page & Tabs */}
             <div className="bg-white border border-slate-200 rounded-xs p-4 shadow-xs">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
@@ -610,7 +609,7 @@ export default function AdminSeoPage() {
                   </span>
                   {isCorePage ? (
                     <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded-xs">
-                      Default Page
+                      Default Website Page
                     </span>
                   ) : (
                     <span className="text-[10px] font-semibold text-[#1e3e8f] bg-blue-50 px-1.5 py-0.5 rounded-xs border border-blue-200">
@@ -626,10 +625,7 @@ export default function AdminSeoPage() {
                     rel="noreferrer"
                     className="text-xs font-semibold text-[#1e3e8f] hover:underline inline-flex items-center gap-1"
                   >
-                    <span>View Public URL</span>
-                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
+                    <span>Open Live Page ↗</span>
                   </a>
                   {!isCorePage && (
                     <button
@@ -637,13 +633,13 @@ export default function AdminSeoPage() {
                       onClick={() => setShowDeleteModal(true)}
                       className="text-xs text-rose-600 hover:text-rose-800 hover:underline font-semibold cursor-pointer"
                     >
-                      Delete Page
+                      Delete This Page
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Clean Navigation Tabs */}
+              {/* Simple Navigation Tabs */}
               <div className="flex gap-1 pt-3">
                 <button
                   type="button"
@@ -654,7 +650,7 @@ export default function AdminSeoPage() {
                       : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                   }`}
                 >
-                  1. Google Search (SERP)
+                  1. Google Search
                 </button>
                 <button
                   type="button"
@@ -665,7 +661,7 @@ export default function AdminSeoPage() {
                       : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                   }`}
                 >
-                  2. Social Sharing (OG)
+                  2. WhatsApp & Social Media
                 </button>
                 <button
                   type="button"
@@ -676,18 +672,18 @@ export default function AdminSeoPage() {
                       : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                   }`}
                 >
-                  3. Indexing & Schema
+                  3. Advanced Settings
                 </button>
               </div>
             </div>
 
-            {/* TAB 1: Google Search Appearance */}
+            {/* TAB 1: Google Search */}
             {activeTab === "search" && (
               <div className="space-y-4">
-                {/* Clean Live Google SERP Box */}
+                {/* Google Result Preview */}
                 <div className="bg-white border border-slate-200 rounded-xs p-4 shadow-xs">
                   <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                    Live Google Search Snippet Preview
+                    How this page looks on Google search:
                   </div>
                   
                   <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xs">
@@ -708,23 +704,23 @@ export default function AdminSeoPage() {
 
                     <div className="text-[12px] text-[#4d5156] leading-relaxed mt-1 line-clamp-2">
                       {formData.description ||
-                        "Enter a meta description to see how this page will be displayed in Google search results."}
+                        "Enter a page description below to see how it will appear in Google search results."}
                     </div>
                   </div>
                 </div>
 
-                {/* Meta Inputs Form */}
+                {/* Form Fields */}
                 <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
                   
-                  {/* Meta Title */}
+                  {/* Title */}
                   <div>
                     <div className="flex justify-between items-center mb-1">
                       <label className="text-xs font-bold text-slate-700">
-                        Meta Title <span className="text-rose-500">*</span>
+                        Page Title (shows on Google) <span className="text-rose-500">*</span>
                       </label>
                       <div className="flex items-center gap-2">
                         <span className="text-[11px] font-mono text-slate-500">
-                          {titleLength} / 60 chars
+                          {titleLength} / 60 characters
                         </span>
                         <span
                           className={`text-[10px] font-bold px-1.5 py-0.2 rounded-xs ${
@@ -736,12 +732,12 @@ export default function AdminSeoPage() {
                           }`}
                         >
                           {titleLength >= 45 && titleLength <= 65
-                            ? "Optimal"
+                            ? "Good length"
                             : titleLength === 0
-                            ? "Empty"
+                            ? "Needs text"
                             : titleLength < 45
-                            ? "Short"
-                            : "May Truncate"}
+                            ? "A bit short"
+                            : "Too long (may be cut off)"}
                         </span>
                       </div>
                     </div>
@@ -754,15 +750,15 @@ export default function AdminSeoPage() {
                     />
                   </div>
 
-                  {/* Meta Description */}
+                  {/* Description */}
                   <div>
                     <div className="flex justify-between items-center mb-1">
                       <label className="text-xs font-bold text-slate-700">
-                        Meta Description
+                        Page Description (shows below the title on Google)
                       </label>
                       <div className="flex items-center gap-2">
                         <span className="text-[11px] font-mono text-slate-500">
-                          {descLength} / 160 chars
+                          {descLength} / 160 characters
                         </span>
                         <span
                           className={`text-[10px] font-bold px-1.5 py-0.2 rounded-xs ${
@@ -774,12 +770,12 @@ export default function AdminSeoPage() {
                           }`}
                         >
                           {descLength >= 120 && descLength <= 160
-                            ? "Optimal"
+                            ? "Good length"
                             : descLength === 0
-                            ? "Empty"
+                            ? "Needs text"
                             : descLength < 120
-                            ? "Short"
-                            : "May Truncate"}
+                            ? "A bit short"
+                            : "Too long (may be cut off)"}
                         </span>
                       </div>
                     </div>
@@ -787,29 +783,29 @@ export default function AdminSeoPage() {
                       rows={3}
                       value={formData.description}
                       onChange={(e) => handleInputChange("description", e.target.value)}
-                      placeholder="Summary of page offerings, certified equipment, and technical solutions for search engines..."
+                      placeholder="Write 1 or 2 sentences describing what this page offers. This helps people choose your link on Google."
                       className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
                     />
                   </div>
 
-                  {/* Keywords & Canonical URL */}
+                  {/* Keywords & Canonical Link */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Meta Keywords (comma-separated)
+                        Search Keywords (separated by commas)
                       </label>
                       <input
                         type="text"
                         value={formData.keywords}
                         onChange={(e) => handleInputChange("keywords", e.target.value)}
-                        placeholder="safety systems, ATEX, Saudi Arabia"
+                        placeholder="e.g. safety systems, gas detection, Saudi Arabia"
                         className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
                       />
                     </div>
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Canonical URL
+                        Main Website Link (Canonical Link)
                       </label>
                       <input
                         type="url"
@@ -821,12 +817,12 @@ export default function AdminSeoPage() {
                     </div>
                   </div>
 
-                  {/* Page Name & Route (for custom pages) */}
+                  {/* Edit name & path for custom page */}
                   {!isCorePage && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
                       <div>
                         <label className="block text-xs font-bold text-slate-700 mb-1">
-                          Custom Page Name
+                          Page Name
                         </label>
                         <input
                           type="text"
@@ -837,7 +833,7 @@ export default function AdminSeoPage() {
                       </div>
                       <div>
                         <label className="block text-xs font-bold text-slate-700 mb-1">
-                          Custom URL Path
+                          Page Link (Path)
                         </label>
                         <input
                           type="text"
@@ -852,27 +848,27 @@ export default function AdminSeoPage() {
               </div>
             )}
 
-            {/* TAB 2: Social Sharing (OpenGraph) */}
+            {/* TAB 2: Social Media & WhatsApp */}
             {activeTab === "social" && (
               <div className="space-y-4">
                 {/* Social Card Preview */}
                 <div className="bg-white border border-slate-200 rounded-xs p-4 shadow-xs">
                   <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                    Social Card Preview (LinkedIn, WhatsApp, Facebook, X)
+                    How this link looks when shared on WhatsApp, LinkedIn, or Facebook:
                   </div>
                   <div className="max-w-md bg-white border border-slate-200 rounded-xs overflow-hidden shadow-xs">
                     <div className="h-36 bg-slate-100 relative overflow-hidden flex items-center justify-center">
                       {formData.ogImage ? (
                         <img
                           src={formatImageUrl(formData.ogImage)}
-                          alt="OG Preview"
+                          alt="Preview Photo"
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = "/logo.png";
                           }}
                         />
                       ) : (
-                        <span className="text-xs text-slate-400">No Image Specified</span>
+                        <span className="text-xs text-slate-400">No Photo Selected</span>
                       )}
                     </div>
                     <div className="p-3">
@@ -883,7 +879,7 @@ export default function AdminSeoPage() {
                         {formData.ogTitle || formData.title || "Page Title"}
                       </h3>
                       <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 m-0">
-                        {formData.ogDescription || formData.description || "Social description..."}
+                        {formData.ogDescription || formData.description || "Page description..."}
                       </p>
                     </div>
                   </div>
@@ -893,44 +889,47 @@ export default function AdminSeoPage() {
                 <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      OpenGraph Title (optional, defaults to Meta Title)
+                      Social Media Title (Optional)
                     </label>
                     <input
                       type="text"
                       value={formData.ogTitle}
                       onChange={(e) => handleInputChange("ogTitle", e.target.value)}
-                      placeholder="Title optimized for social sharing feeds..."
+                      placeholder="Leave empty to use the same title as Google search"
                       className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
                     />
+                    <span className="text-[10px] text-slate-400 mt-1 block">
+                      If left empty, WhatsApp and social media will use your Google page title.
+                    </span>
                   </div>
 
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      OpenGraph Description (optional, defaults to Meta Description)
+                      Social Media Description (Optional)
                     </label>
                     <textarea
                       rows={2}
                       value={formData.ogDescription}
                       onChange={(e) => handleInputChange("ogDescription", e.target.value)}
-                      placeholder="Short summary for social media shares..."
+                      placeholder="Leave empty to use the same description as Google search"
                       className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Social Card Image (OG Image)
+                      Picture to show when link is shared
                     </label>
                     <div className="flex gap-2 items-center">
                       <input
                         type="text"
                         value={formData.ogImage}
                         onChange={(e) => handleInputChange("ogImage", e.target.value)}
-                        placeholder="/logo.png or https://example.com/image.jpg"
+                        placeholder="/logo.png or https://example.com/photo.jpg"
                         className="flex-1 text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 font-mono focus:border-[#1e3e8f] focus:outline-none"
                       />
                       <label className="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-xs cursor-pointer shrink-0 transition-colors">
-                        <span>{uploadingOg ? "Uploading..." : "Upload Image"}</span>
+                        <span>{uploadingOg ? "Uploading..." : "Upload Photo"}</span>
                         <input
                           type="file"
                           accept="image/*"
@@ -941,20 +940,20 @@ export default function AdminSeoPage() {
                       </label>
                     </div>
                     <span className="text-[10px] text-slate-400 mt-1 block">
-                      Recommended resolution: 1200 x 630 pixels (1.91:1 aspect ratio).
+                      Recommended photo size: 1200 x 630 pixels.
                     </span>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* TAB 3: Advanced & Indexing */}
+            {/* TAB 3: Advanced Settings */}
             {activeTab === "advanced" && (
               <div className="space-y-4">
                 <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Robots Directive
+                      Show this page on Google search?
                     </label>
                     <select
                       value={formData.robots}
@@ -968,14 +967,14 @@ export default function AdminSeoPage() {
                       ))}
                     </select>
                     <span className="text-[10px] text-slate-400 mt-1 block">
-                      Directs search engine crawlers whether to index this page and follow its outbound links.
+                      Choose whether search engines like Google are allowed to show this page in public search results.
                     </span>
                   </div>
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
                       <label className="text-xs font-bold text-slate-700">
-                        Custom Structured Data (JSON-LD)
+                        Extra Code for Search Engines (Optional JSON-LD)
                       </label>
                       {jsonLdError ? (
                         <span className="text-[11px] text-rose-600 font-bold">
@@ -983,7 +982,7 @@ export default function AdminSeoPage() {
                         </span>
                       ) : (
                         <span className="text-[11px] text-slate-400">
-                          Optional schema.org JSON block
+                          Optional schema.org code
                         </span>
                       )}
                     </div>
@@ -994,22 +993,25 @@ export default function AdminSeoPage() {
                       placeholder={`{\n  "@context": "https://schema.org",\n  "@type": "WebPage",\n  "name": "${formData.pageName}"\n}`}
                       className="w-full text-xs font-mono px-3 py-2 border border-slate-300 rounded-xs bg-slate-50 text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
                     />
+                    <span className="text-[10px] text-slate-400 mt-1 block">
+                      This is only for technical developers. You can safely leave this blank.
+                    </span>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Clean Bottom Action Bar */}
+            {/* Bottom Action Bar */}
             <div className="flex items-center justify-between bg-white border border-slate-200 rounded-xs p-3.5 shadow-xs">
               <div>
                 {hasUnsavedChanges ? (
                   <span className="text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-xs inline-flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                    Unsaved changes
+                    You have unsaved changes
                   </span>
                 ) : (
                   <span className="text-xs text-slate-500">
-                    All parameters up to date.
+                    All changes are saved.
                   </span>
                 )}
               </div>
@@ -1026,7 +1028,7 @@ export default function AdminSeoPage() {
                   }}
                   className="px-3.5 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs rounded-xs transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  Discard
+                  Cancel Changes
                 </button>
 
                 <button
@@ -1038,7 +1040,7 @@ export default function AdminSeoPage() {
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>{saving ? "Saving..." : "Save Page SEO"}</span>
+                  <span>{saving ? "Saving..." : "Save Changes"}</span>
                 </button>
               </div>
             </div>
@@ -1046,12 +1048,12 @@ export default function AdminSeoPage() {
           </div>
         ) : (
           <div className="lg:col-span-8 bg-white border border-slate-200 rounded-xs p-12 text-center text-slate-400">
-            Select a page from the list to customize its meta and SEO tags.
+            Please select a page from the list on the left to edit its settings.
           </div>
         )}
       </div>
 
-      {/* Add New Custom Page Modal */}
+      {/* Add New Page Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white border border-slate-300 rounded-xs shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
@@ -1059,7 +1061,7 @@ export default function AdminSeoPage() {
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#1e3e8f]" />
                 <h3 className="text-sm font-bold text-slate-900 tracking-tight m-0">
-                  Add New Custom Page for Meta SEO
+                  Add a New Page
                 </h3>
               </div>
               <button
@@ -1098,14 +1100,14 @@ export default function AdminSeoPage() {
                       setNewPagePath(`/${slug}`);
                     }
                   }}
-                  placeholder="e.g. Careers, Quality Standards, Certifications"
+                  placeholder="e.g. Careers, Certifications, Quality"
                   className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Page Path / URL <span className="text-rose-500">*</span>
+                  Page Link (URL) <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -1119,26 +1121,26 @@ export default function AdminSeoPage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Initial Meta Title
+                  Title for Google Search
                 </label>
                 <input
                   type="text"
                   value={newPageTitle}
                   onChange={(e) => setNewPageTitle(e.target.value)}
-                  placeholder="e.g. Certifications & Standards | Eastwind Safety Arabia"
+                  placeholder="e.g. Careers & Job Openings | Eastwind Safety"
                   className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Initial Meta Description
+                  Short Description for Google
                 </label>
                 <textarea
                   rows={3}
                   value={newPageDescription}
                   onChange={(e) => setNewPageDescription(e.target.value)}
-                  placeholder="Brief summary for Google search engine snippet..."
+                  placeholder="Write a brief sentence describing what this page is about..."
                   className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
                 />
               </div>
@@ -1173,17 +1175,17 @@ export default function AdminSeoPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
               <h3 className="text-sm font-bold text-rose-900 tracking-tight m-0">
-                Delete Custom Page SEO
+                Delete this page?
               </h3>
             </div>
 
             <div className="p-5 space-y-3">
               <p className="text-xs text-slate-700 m-0">
-                Are you sure you want to delete the SEO configuration for{" "}
+                Are you sure you want to delete the settings for{" "}
                 <strong className="text-slate-900">"{formData.pageName}"</strong> ({formData.path})?
               </p>
               <p className="text-xs text-slate-500 m-0">
-                This action cannot be undone. Custom meta tags for this route will be removed.
+                This will remove this page from your Google & Social Media settings list.
               </p>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
@@ -1200,7 +1202,7 @@ export default function AdminSeoPage() {
                   onClick={handleDeletePage}
                   className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded-xs transition-colors cursor-pointer disabled:opacity-50"
                 >
-                  {deleting ? "Deleting..." : "Confirm Delete"}
+                  {deleting ? "Deleting..." : "Yes, Delete Page"}
                 </button>
               </div>
             </div>

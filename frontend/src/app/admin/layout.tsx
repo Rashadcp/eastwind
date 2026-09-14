@@ -18,7 +18,7 @@ const ROUTE_LOCATION_MAP: Record<string, { path: string; label: string }> = {
   "/admin/contact": { path: "/contact", label: "Contact Page" },
   "/admin/footer": { path: "/", label: "Global Footer" },
   "/admin/privacy-policy": { path: "/privacy-policy", label: "Privacy Policy Page" },
-  "/admin/seo": { path: "/", label: "Meta SEO Management" },
+  "/admin/seo": { path: "/", label: "Google & SEO Settings" },
   "/admin/brands": { path: "/", label: "Brand Partners" },
   "/admin/success-stories": { path: "/about", label: "Success Stories" },
 };
@@ -281,7 +281,7 @@ export default function AdminLayout({
       )
     },
     {
-      name: "Meta SEO Settings",
+      name: "Google & SEO Settings",
       href: "/admin/seo",
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

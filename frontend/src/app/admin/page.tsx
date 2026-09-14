@@ -178,17 +178,17 @@ export default function AdminDashboardPage() {
         <div className="space-y-1 max-w-2xl">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-[#1e3e8f] border border-blue-200 px-2 py-0.5 rounded-sm">
-              Search Visibility & Indexing
+              Google & Social Media
             </span>
             <span className="text-xs font-semibold text-slate-500">
-              {stats.seoPages} Pages Configured
+              {stats.seoPages} Pages Set Up
             </span>
           </div>
           <h3 className="text-base font-bold text-slate-900 tracking-tight m-0">
-            Meta SEO & OpenGraph Management
+            Google Search & Social Media Settings
           </h3>
           <p className="text-xs text-slate-600 m-0">
-            Customize search snippets, titles, social sharing previews, canonical URLs, and add custom landing page metadata.
+            Control how your pages appear when people search on Google or share links on WhatsApp and social media.
           </p>
         </div>
 
@@ -199,7 +199,7 @@ export default function AdminDashboardPage() {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
-          <span>Configure Meta SEO</span>
+          <span>Manage Google Settings</span>
         </Link>
       </div>
     </div>
