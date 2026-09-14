@@ -1,8 +1,31 @@
 import fs from "fs";
+import mongoose from "mongoose";
 import { DB_FILE } from "../config.js";
 import { Product, Brand, IProduct } from "../db.js";
 import { sanitizeObjectImages } from "../utils/imageStorage.js";
 import { invalidateCache } from "../utils/cache.js";
+
+function buildIdQuery(rawId: string) {
+  const decoded = decodeURIComponent(rawId).trim();
+  const raw = rawId.trim();
+  const orConditions: any[] = [
+    { id: raw },
+    { id: decoded },
+    { slug: raw },
+    { slug: decoded },
+    { id: { $regex: new RegExp(`^${raw}$`, "i") } },
+    { id: { $regex: new RegExp(`^${decoded}$`, "i") } }
+  ];
+
+  if (mongoose.Types.ObjectId.isValid(raw)) {
+    orConditions.push({ _id: new mongoose.Types.ObjectId(raw) });
+  }
+  if (mongoose.Types.ObjectId.isValid(decoded)) {
+    orConditions.push({ _id: new mongoose.Types.ObjectId(decoded) });
+  }
+
+  return { $or: orConditions };
+}
 
 const BRAND_TO_CATEGORY: Record<string, string> = {
   "one seven": "Compressed Air Foam (CAFS)",
@@ -90,11 +113,21 @@ export class ProductModel {
   }
 
   static async getById(id: string): Promise<any | null> {
-    let item: any = await Product.findOne({ id }).lean().exec();
+    const query = buildIdQuery(id);
+    let item: any = await Product.findOne(query).lean().exec();
     if (!item) {
-      const brandWithProd: any = await Brand.findOne({ "products.id": id }).lean().exec();
+      const decoded = decodeURIComponent(id).trim();
+      const brandWithProd: any = await Brand.findOne({
+        $or: [
+          { "products.id": id },
+          { "products.id": decoded },
+          { "products.id": { $regex: new RegExp(`^${id}$`, "i") } }
+        ]
+      }).lean().exec();
       if (brandWithProd) {
-        const bp = brandWithProd.products?.find((p: any) => p.id === id);
+        const bp = brandWithProd.products?.find((p: any) => 
+          p.id === id || p.id === decoded || (p.id && p.id.toLowerCase() === id.toLowerCase())
+        );
         if (bp) {
           item = {
             id: bp.id,
@@ -178,17 +211,27 @@ export class ProductModel {
     }
 
     const sanitized = sanitizeObjectImages(updates, id);
+    const query = buildIdQuery(id);
 
-    let doc: any = await Product.findOneAndUpdate({ id }, sanitized, { new: true }).lean().exec();
+    let doc: any = await Product.findOneAndUpdate(query, sanitized, { new: true }).lean().exec();
 
     // If product was not yet in Product collection (e.g. from seed brand catalog), find & upsert
     if (!doc) {
-      const brandWithProd: any = await Brand.findOne({ "products.id": id }).lean().exec();
-      const bp = brandWithProd?.products?.find((p: any) => p.id === id);
+      const decoded = decodeURIComponent(id).trim();
+      const brandWithProd: any = await Brand.findOne({
+        $or: [
+          { "products.id": id },
+          { "products.id": decoded },
+          { "products.id": { $regex: new RegExp(`^${id}$`, "i") } }
+        ]
+      }).lean().exec();
+      const bp = brandWithProd?.products?.find((p: any) =>
+        p.id === id || p.id === decoded || (p.id && p.id.toLowerCase() === id.toLowerCase())
+      );
 
       const newProductData = {
-        id,
-        slug: `${id}-system`,
+        id: bp?.id || id,
+        slug: `${bp?.id || id}-system`,
         name: updates.name || cleanProductName(bp?.name) || id,
         brand: updates.brand || sanitizeBrand(brandWithProd?.name) || "Industrial Safety Equipment",
         category: updates.category || bp?.category || "Industrial Safety & Fire Protection",
@@ -200,7 +243,7 @@ export class ProductModel {
         ...sanitized
       };
 
-      doc = await Product.findOneAndUpdate({ id }, newProductData, { new: true, upsert: true }).lean().exec();
+      doc = await Product.findOneAndUpdate(query, newProductData, { new: true, upsert: true }).lean().exec();
     }
 
     if (!doc) {
@@ -209,6 +252,7 @@ export class ProductModel {
 
     // Sync changes to Brand collection
     const finalBrandName = updates.brand || doc.brand;
+    const targetProdId = doc.id || id;
     if (finalBrandName) {
       const targetBrand: any = await Brand.findOne({
         $or: [
@@ -220,15 +264,15 @@ export class ProductModel {
       if (targetBrand) {
         // Remove from all other brands if brand changed
         await Brand.updateMany(
-          { _id: { $ne: targetBrand._id }, "products.id": id },
-          { $pull: { products: { id } } }
+          { _id: { $ne: targetBrand._id }, "products.id": targetProdId },
+          { $pull: { products: { id: targetProdId } } }
         );
 
         // Update or insert into the target brand's products list
-        const existingInTarget = targetBrand.products?.some((p: any) => p.id === id);
+        const existingInTarget = targetBrand.products?.some((p: any) => p.id === targetProdId);
         if (existingInTarget) {
           await Brand.updateOne(
-            { _id: targetBrand._id, "products.id": id },
+            { _id: targetBrand._id, "products.id": targetProdId },
             {
               $set: {
                 "products.$.name": doc.name,
@@ -259,7 +303,7 @@ export class ProductModel {
     } else {
       // If brand didn't change, update the product info in whatever brand currently has it
       await Brand.updateMany(
-        { "products.id": id },
+        { "products.id": targetProdId },
         {
           $set: {
             "products.$.name": doc.name,
@@ -277,9 +321,21 @@ export class ProductModel {
   }
 
   static async delete(id: string): Promise<any | null> {
-    const doc = await Product.findOneAndDelete({ id }).lean().exec();
+    const query = buildIdQuery(id);
+    const doc = await Product.findOneAndDelete(query).lean().exec();
+    const decoded = decodeURIComponent(id).trim();
     // Remove from all brands portfolio lists
-    await Brand.updateMany({}, { $pull: { products: { id } } });
+    await Brand.updateMany({}, {
+      $pull: {
+        products: {
+          $or: [
+            { id },
+            { id: decoded },
+            { id: { $regex: new RegExp(`^${id}$`, "i") } }
+          ]
+        } as any
+      }
+    });
     invalidateCache("product");
     invalidateCache("brand");
     return doc || { id, deleted: true };

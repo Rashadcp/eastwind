@@ -65,7 +65,13 @@ export default function SuccessStoriesSection() {
     async function fetchStories() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${baseUrl}/api/success-stories`);
+        const res = await fetch(`${baseUrl}/api/success-stories?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache"
+          }
+        });
         if (res.ok) {
           const apiStories = await res.json();
           if (Array.isArray(apiStories)) {
@@ -81,6 +87,10 @@ export default function SuccessStoriesSection() {
       }
     }
     fetchStories();
+
+    const handleCacheCleared = () => fetchStories();
+    window.addEventListener("cms-cache-cleared", handleCacheCleared);
+    return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, []);
 
   return (

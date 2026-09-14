@@ -316,7 +316,7 @@ export default function AdminProductsPage() {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const token = localStorage.getItem("admin_token");
-      const res = await fetch(`${baseUrl}/api/product-categories/${catId}`, {
+      const res = await fetch(`${baseUrl}/api/product-categories/${encodeURIComponent(catId)}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -360,7 +360,7 @@ export default function AdminProductsPage() {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const token = localStorage.getItem("admin_token");
-      const res = await fetch(`${baseUrl}/api/product-categories/${catDeleteTarget.id}`, {
+      const res = await fetch(`${baseUrl}/api/product-categories/${encodeURIComponent(catDeleteTarget.id)}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -618,7 +618,7 @@ export default function AdminProductsPage() {
   const handleOpenEdit = (item: ProductItem) => {
     clearMessages();
     setIsEdit(true);
-    setFormId(item.id);
+    setFormId(item.id || (item as any)._id || "");
     setFormName(item.name);
     setFormBrand(item.brand);
     if (item.brand) {
@@ -872,7 +872,7 @@ export default function AdminProductsPage() {
       let res;
       if (isEdit) {
         // PUT update
-        res = await fetch(`${baseUrl}/api/products/${payload.id}`, {
+        res = await fetch(`${baseUrl}/api/products/${encodeURIComponent(payload.id)}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -913,7 +913,7 @@ export default function AdminProductsPage() {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const token = localStorage.getItem("admin_token");
 
-      const res = await fetch(`${baseUrl}/api/products/${deleteTarget}`, {
+      const res = await fetch(`${baseUrl}/api/products/${encodeURIComponent(deleteTarget)}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -1218,7 +1218,7 @@ export default function AdminProductsPage() {
                         Edit
                       </button>
                       <button
-                        onClick={() => setDeleteTarget(item.id)}
+                        onClick={() => setDeleteTarget(item.id || (item as any)._id)}
                         className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#c22026] bg-rose-50 hover:bg-[#c22026] hover:text-white transition-colors cursor-pointer border border-rose-200"
                       >
                         Delete
@@ -1417,7 +1417,8 @@ export default function AdminProductsPage() {
                   <button
                     type="button"
                     onClick={addFeature}
-                    className="px-5 py-3 rounded-lg bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 transition-colors cursor-pointer text-slate-200"
+                    className="px-5 py-3 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
+                    style={{ color: "#ffffff", backgroundColor: "#1e3e8f" }}
                   >
                     Add
                   </button>
@@ -1500,7 +1501,8 @@ export default function AdminProductsPage() {
                   <button
                     type="button"
                     onClick={addCertification}
-                    className="px-5 py-3 rounded-lg bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 transition-colors cursor-pointer text-slate-200 shrink-0"
+                    className="px-5 py-3 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shrink-0 shadow-xs"
+                    style={{ color: "#ffffff", backgroundColor: "#1e3e8f" }}
                   >
                     Add Badge
                   </button>
@@ -1872,7 +1874,8 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-6 py-2.5 rounded-lg text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all"
+                className="px-6 py-2.5 rounded-lg text-black border border-slate-300 bg-white hover:bg-slate-100 text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-2xs"
+                style={{ color: "#000000", backgroundColor: "#ffffff" }}
               >
                 Cancel
               </button>
@@ -2066,17 +2069,17 @@ export default function AdminProductsPage() {
       {/* CATEGORY MANAGEMENT MODAL */}
       {showCategoryModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-white/10 w-full max-w-2xl rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh] text-slate-900">
             
             {/* Modal Header */}
-            <div className="h-16 flex items-center justify-between px-8 border-b border-white/10 flex-shrink-0 bg-slate-950/40">
+            <div className="h-16 flex items-center justify-between px-8 border-b border-slate-100 flex-shrink-0 bg-white">
               <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#1e3e8f] animate-pulse" />
                 <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 m-0" style={{ color: "#0f172a" }}>
                     Manage Equipment Categories
                   </h3>
-                  <p className="text-[10px] font-mono text-slate-400 m-0">
+                  <p className="text-[10px] font-mono text-slate-500 m-0" style={{ color: "#64748b" }}>
                     Add, edit, delete, and reorder display sequence (Total: {managedCategories.length})
                   </p>
                 </div>
@@ -2087,7 +2090,8 @@ export default function AdminProductsPage() {
                   setEditingCatId(null);
                   setCatDeleteTarget(null);
                 }}
-                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 border border-white/10 text-slate-400 hover:text-white cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-200 cursor-pointer transition-colors"
+                title="Close"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -2096,12 +2100,12 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 overflow-y-auto space-y-5 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full">
+            <div className="p-6 overflow-y-auto space-y-5 flex-1 bg-white [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full">
               
               {/* Add New Category Row */}
-              <div className="bg-slate-950/50 border border-white/10 p-4 rounded-lg space-y-2">
-                <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">
-                  + Add New Equipment Category
+              <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg space-y-2">
+                <label className="text-[10px] font-mono uppercase tracking-widest text-slate-600 block font-bold" style={{ color: "#475569" }}>
+                  Add New Equipment Category
                 </label>
                 <div className="flex gap-2">
                   <input
@@ -2115,12 +2119,14 @@ export default function AdminProductsPage() {
                       }
                     }}
                     placeholder="e.g. Explosion-Proof Detection Arrays"
-                    className="flex-1 px-4 py-2.5 bg-slate-900 border border-white/10 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1e3e8f] font-medium"
+                    className="flex-1 px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#1e3e8f] focus:ring-1 focus:ring-[#1e3e8f] font-medium shadow-2xs"
+                    style={{ color: "#0f172a" }}
                   />
                   <button
                     type="button"
                     onClick={handleAddCategory}
                     className="px-5 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all cursor-pointer shadow-sm active:translate-y-0.5 shrink-0"
+                    style={{ color: "#ffffff", backgroundColor: "#1e3e8f" }}
                   >
                     Add Category
                   </button>
@@ -2128,8 +2134,8 @@ export default function AdminProductsPage() {
               </div>
 
               {/* Instructions Tip */}
-              <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono">
-                <span>Drag with the <strong className="text-[#1e3e8f]">⋮⋮</strong> handle or use ▲ ▼ to reorder</span>
+              <div className="flex items-center justify-between text-[11px] text-slate-500 px-1 font-mono">
+                <span style={{ color: "#64748b" }}>Drag with the <strong className="text-[#1e3e8f]">⋮⋮</strong> handle or use ▲ ▼ to reorder</span>
                 <span className="text-[#1e3e8f] font-bold">Display Order</span>
               </div>
 
@@ -2153,17 +2159,17 @@ export default function AdminProductsPage() {
                       onDragEnd={handleCategoryDragEnd}
                       className={`flex items-center justify-between gap-3 p-3 rounded-lg border transition-all group ${
                         isDragging
-                          ? "opacity-35 bg-blue-500/10 border-dashed border-[#1e3e8f]/60"
+                          ? "opacity-35 bg-blue-50 border-dashed border-[#1e3e8f]/60"
                           : isDragOver
-                          ? "border-t-2 border-t-[#1e3e8f] bg-blue-500/20 shadow-md"
-                          : "bg-slate-950/40 border-white/5 hover:border-white/15"
+                          ? "border-t-2 border-t-[#1e3e8f] bg-blue-50/90 shadow-md"
+                          : "bg-white hover:bg-slate-50 border-slate-200 shadow-2xs"
                       }`}
                     >
                       {/* Left: Drag Handle + Position index + Reorder arrows */}
                       <div className="flex items-center gap-2">
                         {/* Drag Handle */}
                         <div
-                          className="cursor-grab active:cursor-grabbing p-1 -ml-1 text-slate-500 hover:text-[#1e3e8f] hover:bg-white/5 rounded-md transition-colors shrink-0"
+                          className="cursor-grab active:cursor-grabbing p-1.5 -ml-1 text-slate-400 hover:text-[#1e3e8f] hover:bg-blue-50 rounded-md transition-colors shrink-0"
                           title="Drag to change category order"
                         >
                           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
@@ -2176,7 +2182,7 @@ export default function AdminProductsPage() {
                           </svg>
                         </div>
 
-                        <span className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center font-mono font-bold text-[10px] text-slate-400 shrink-0">
+                        <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center font-mono font-bold text-xs text-[#1e3e8f] shrink-0" style={{ color: "#1e3e8f" }}>
                           #{idx + 1}
                         </span>
 
@@ -2185,10 +2191,11 @@ export default function AdminProductsPage() {
                             type="button"
                             onClick={() => handleMoveCategory(idx, "up")}
                             disabled={isFirst || savingCategories}
-                            className={`p-1 rounded bg-white/5 border border-white/5 transition-colors ${
-                              isFirst || savingCategories ? "opacity-20 cursor-not-allowed" : "hover:bg-[#162f6d]/20 hover:text-[#1e3e8f] cursor-pointer"
+                            className={`p-1 rounded bg-slate-100 border border-slate-200 transition-colors ${
+                              isFirst || savingCategories ? "opacity-25 cursor-not-allowed text-slate-300" : "hover:bg-[#1e3e8f] hover:text-white hover:border-[#1e3e8f] cursor-pointer"
                             }`}
                             title="Move Up"
+                            style={{ color: isFirst || savingCategories ? "#cbd5e1" : "#334155" }}
                           >
                             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
@@ -2198,10 +2205,11 @@ export default function AdminProductsPage() {
                             type="button"
                             onClick={() => handleMoveCategory(idx, "down")}
                             disabled={isLast || savingCategories}
-                            className={`p-1 rounded bg-white/5 border border-white/5 transition-colors ${
-                              isLast || savingCategories ? "opacity-20 cursor-not-allowed" : "hover:bg-[#162f6d]/20 hover:text-[#1e3e8f] cursor-pointer"
+                            className={`p-1 rounded bg-slate-100 border border-slate-200 transition-colors ${
+                              isLast || savingCategories ? "opacity-25 cursor-not-allowed text-slate-300" : "hover:bg-[#1e3e8f] hover:text-white hover:border-[#1e3e8f] cursor-pointer"
                             }`}
                             title="Move Down"
+                            style={{ color: isLast || savingCategories ? "#cbd5e1" : "#334155" }}
                           >
                             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -2226,30 +2234,39 @@ export default function AdminProductsPage() {
                                   setEditingCatId(null);
                                 }
                               }}
-                              className="flex-1 px-3 py-1.5 bg-slate-900 border border-[#1e3e8f] rounded-lg text-xs text-white focus:outline-none font-medium"
+                              className="flex-1 px-3 py-1.5 bg-white border border-[#1e3e8f] rounded-lg text-xs text-slate-900 focus:outline-none font-bold"
+                              style={{ color: "#0f172a" }}
                               autoFocus
                             />
                             <button
                               type="button"
                               onClick={() => handleSaveRenameCategory(cat.id)}
-                              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-xs"
+                              style={{ color: "#ffffff", backgroundColor: "#059669" }}
                             >
                               Save
                             </button>
                             <button
                               type="button"
                               onClick={() => setEditingCatId(null)}
-                              className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 text-slate-300 rounded-lg text-xs transition-colors cursor-pointer"
+                              className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg text-xs transition-colors cursor-pointer"
+                              style={{ color: "#334155" }}
                             >
                               Cancel
                             </button>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-xs text-white truncate">
+                          <div className="flex items-center gap-3">
+                            <span
+                              className="font-bold text-xs text-slate-900 truncate"
+                              style={{ color: "#0f172a" }}
+                            >
                               {cat.name}
                             </span>
-                            <span className="font-mono text-[10px] text-slate-500 bg-white/5 px-2 py-0.5 rounded-md border border-white/5">
+                            <span
+                              className="font-mono text-[10px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200"
+                              style={{ color: "#475569" }}
+                            >
                               {prodCount} product{prodCount === 1 ? "" : "s"}
                             </span>
                           </div>
@@ -2265,10 +2282,11 @@ export default function AdminProductsPage() {
                               setEditingCatId(cat.id);
                               setEditingCatName(cat.name);
                             }}
-                            className="p-2 text-slate-400 hover:text-[#1e3e8f] hover:bg-[#162f6d]/10 rounded-lg transition-colors cursor-pointer"
+                            className="p-2 text-slate-500 hover:text-[#1e3e8f] hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                             title="Edit Category Name"
+                            style={{ color: "#64748b" }}
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                             </svg>
                           </button>
@@ -2276,10 +2294,11 @@ export default function AdminProductsPage() {
                           <button
                             type="button"
                             onClick={() => handleRequestDeleteCategory(cat)}
-                            className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
+                            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                             title="Delete Category"
+                            style={{ color: "#94a3b8" }}
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                           </button>
@@ -2293,15 +2312,16 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="h-20 flex items-center justify-between px-8 border-t border-white/10 flex-shrink-0 bg-slate-950/60">
-              <span className="text-[10px] font-mono text-slate-400">
+            <div className="h-20 flex items-center justify-between px-8 border-t border-slate-100 flex-shrink-0 bg-slate-50">
+              <span className="text-xs font-mono text-slate-500" style={{ color: "#64748b" }}>
                 Changes persist automatically across the public store.
               </span>
               <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setShowCategoryModal(false)}
-                  className="px-5 py-2.5 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
+                  className="px-5 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors shadow-2xs"
+                  style={{ color: "#334155" }}
                 >
                   Close
                 </button>
@@ -2309,9 +2329,19 @@ export default function AdminProductsPage() {
                   type="button"
                   onClick={handleSaveCategoriesOrder}
                   disabled={savingCategories}
-                  className="px-6 py-2.5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-[#1e3e8f]/20 active:translate-y-0.5 font-mono"
+                  className="px-6 py-2.5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-[#1e3e8f]/20 active:translate-y-0.5 font-mono flex items-center gap-2"
+                  style={{ color: "#ffffff", backgroundColor: "#1e3e8f" }}
                 >
-                  {savingCategories ? "Saving..." : "Save Order"}
+                  {savingCategories ? (
+                    <span>Saving...</span>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Save Order</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -2323,19 +2353,19 @@ export default function AdminProductsPage() {
       {/* CATEGORY DELETE CONFIRMATION MODAL */}
       {catDeleteTarget && (
         <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-white/10 max-w-md w-full rounded-xl p-6 shadow-2xl text-center space-y-4">
-            <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center mx-auto">
+          <div className="bg-white border border-slate-200 max-w-md w-full rounded-xl p-6 shadow-2xl text-center space-y-4 text-slate-900">
+            <div className="w-12 h-12 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
 
             <div>
-              <h4 className="text-base font-bold text-white m-0 uppercase tracking-tight">Delete Equipment Category?</h4>
-              <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                Are you sure you want to delete <strong className="text-white">"{catDeleteTarget.name}"</strong>?
+              <h4 className="text-base font-bold text-slate-900 m-0 uppercase tracking-tight" style={{ color: "#0f172a" }}>Delete Equipment Category?</h4>
+              <p className="text-xs text-slate-600 mt-2 leading-relaxed" style={{ color: "#475569" }}>
+                Are you sure you want to delete <strong className="text-slate-900" style={{ color: "#0f172a" }}>"{catDeleteTarget.name}"</strong>?
                 {catDeleteTarget.count > 0 && (
-                  <span className="block text-amber-400 mt-1 font-semibold">
+                  <span className="block text-amber-600 mt-1 font-semibold" style={{ color: "#d97706" }}>
                     Warning: {catDeleteTarget.count} product(s) are currently assigned to this category.
                   </span>
                 )}
@@ -2346,14 +2376,16 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setCatDeleteTarget(null)}
-                className="px-5 py-2 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-5 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider cursor-pointer"
+                style={{ color: "#334155" }}
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleExecuteDeleteCategory}
-                className="px-6 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-6 py-2.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-sm"
+                style={{ color: "#ffffff", backgroundColor: "#e11d48" }}
               >
                 Confirm Delete
               </button>

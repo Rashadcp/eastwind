@@ -122,18 +122,20 @@ export default function Navbar() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         
-        // 1. Fetch products catalog with instant memory cache & static fallback
-        let productsCatalog = await cachedFetch<any[]>(`${baseUrl}/api/products`, {
+        // 1. Fetch products catalog with real-time cache-busting
+        let productsCatalog = await cachedFetch<any[]>(`${baseUrl}/api/products?t=${Date.now()}`, {
           fallback: productsDb,
+          cache: "no-store",
         });
 
         if (!Array.isArray(productsCatalog) || productsCatalog.length === 0) {
           productsCatalog = productsDb;
         }
 
-        // 2. Fetch solutions page configuration with instant memory cache
-        const data = await cachedFetch<any>(`${baseUrl}/api/solutions-page`, {
+        // 2. Fetch solutions page configuration with real-time cache-busting
+        const data = await cachedFetch<any>(`${baseUrl}/api/solutions-page?t=${Date.now()}`, {
           fallback: null,
+          cache: "no-store",
         });
 
         if (data && Array.isArray(data.industries) && data.industries.length > 0) {
@@ -343,9 +345,12 @@ export default function Navbar() {
     async function fetchNavbarData() {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-      // Fetch applications
+      // Fetch applications with real-time cache-busting
       try {
-        const res = await fetch(`${baseUrl}/api/applications`);
+        const res = await fetch(`${baseUrl}/api/applications?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: { "Cache-Control": "no-cache, no-store, must-revalidate" }
+        });
         if (res.ok) {
           const list = await res.json();
           const mapped = list.map((item: any) => ({
@@ -360,9 +365,12 @@ export default function Navbar() {
         console.error("Navbar failed to fetch applications:", err);
       }
 
-      // Fetch services
+      // Fetch services with real-time cache-busting
       try {
-        const res = await fetch(`${baseUrl}/api/services`);
+        const res = await fetch(`${baseUrl}/api/services?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: { "Cache-Control": "no-cache, no-store, must-revalidate" }
+        });
         if (res.ok) {
           const list = await res.json();
           const mapped = list.map((item: any) => ({
@@ -378,7 +386,7 @@ export default function Navbar() {
       }
       // Fetch footer / contact settings data to get unified logoUrl
       try {
-        const settings = await cachedFetch<any[]>(`${baseUrl}/api/contact-settings`, { fallback: [] });
+        const settings = await cachedFetch<any[]>(`${baseUrl}/api/contact-settings?t=${Date.now()}`, { fallback: [], cache: "no-store" });
         if (Array.isArray(settings)) {
           const footerDoc = settings.find((item: any) => item.id === "footer");
           if (footerDoc && footerDoc.logoUrl) {
@@ -391,6 +399,10 @@ export default function Navbar() {
     }
 
     fetchNavbarData();
+
+    const handleCacheCleared = () => fetchNavbarData();
+    window.addEventListener("cms-cache-cleared", handleCacheCleared);
+    return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, []);
 
 
@@ -446,18 +458,18 @@ export default function Navbar() {
       <div
         className={`pointer-events-auto flex items-center justify-between gap-4 transition-all duration-300 relative ${
           showTransparent
-            ? "w-full px-10 max-sm:px-5 py-5 bg-transparent border-b border-white/5 shadow-none rounded-none backdrop-blur-none scale-100"
-            : `w-[calc(100%-48px)] max-sm:w-[calc(100%-24px)] max-w-[1240px] px-6 rounded-full backdrop-blur-2xl border ${
+            ? "w-full px-10 max-sm:px-5 py-5 bg-transparent shadow-none rounded-none backdrop-blur-none scale-100"
+            : `w-[calc(100%-48px)] max-sm:w-[calc(100%-24px)] max-w-[1240px] px-6 rounded-full backdrop-blur-2xl ${
                 isScrolled
-                  ? "py-1.5 bg-white/80 saturate-[160%] border-white/70 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_12px_36px_rgba(15,23,42,0.08)] scale-[0.985]"
-                  : "py-2.5 bg-white/70 saturate-[150%] border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_8px_30px_rgba(15,23,42,0.06)]"
+                  ? "py-1.5 bg-white/85 saturate-[160%] shadow-[0_12px_36px_rgba(15,23,42,0.08)] scale-[0.985]"
+                  : "py-2.5 bg-white/80 saturate-[150%] shadow-[0_8px_30px_rgba(15,23,42,0.06)]"
               }`
         }`}
       >
         <Link href="/" className="brand-link inline-flex items-center no-underline shrink-0">
           <div className={`transition-all duration-300 ${
             showTransparent
-              ? "bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/80 shadow-md"
+              ? "bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-md"
               : "bg-transparent"
           }`}>
             <img
@@ -504,14 +516,25 @@ export default function Navbar() {
             <span className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full opacity-0 scale-50 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-300 ${showTransparent ? "bg-white" : "bg-[#c22026]"}`} />
           </Link>
 
-          {/* Single Solutions & Applications Link Button */}
+          {/* Solutions Link Button */}
           <Link
             href="/solutions"
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
             }`}
           >
-            <span>Solutions & Applications</span>
+            <span>Solutions</span>
+            <span className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full opacity-0 scale-50 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-300 ${showTransparent ? "bg-white" : "bg-[#c22026]"}`} />
+          </Link>
+
+          {/* Applications Link Button */}
+          <Link
+            href="/solutions?type=applications"
+            className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
+              showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
+            }`}
+          >
+            <span>Applications</span>
             <span className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full opacity-0 scale-50 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-300 ${showTransparent ? "bg-white" : "bg-[#c22026]"}`} />
           </Link>
 
@@ -541,8 +564,8 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setMobileMenuOpen((open) => !open)}
-          className={`mobile-menu-button flex lg:hidden w-10 h-10 items-center justify-center border rounded-full cursor-pointer shadow-sm transition-all duration-200 ${
-            showTransparent ? "border-white/20 bg-white/10 text-white" : "border-slate-200 bg-white/80 text-slate-800"
+          className={`mobile-menu-button flex lg:hidden w-10 h-10 items-center justify-center rounded-full cursor-pointer shadow-sm transition-all duration-200 ${
+            showTransparent ? "bg-white/10 text-white" : "bg-white/90 text-slate-800"
           }`}
           aria-expanded={mobileMenuOpen}
         >
@@ -558,7 +581,7 @@ export default function Navbar() {
 
       {/* Mobile Accordion Panel */}
       {mobileMenuOpen && (
-        <div className={`mobile-menu-panel pointer-events-auto flex lg:hidden fixed left-4 right-4 max-h-[calc(100vh-96px)] overflow-y-auto p-4.5 flex-col gap-2.5 border border-white/80 rounded-[24px] bg-white/95 shadow-2xl z-[150] backdrop-blur-xl ${
+        <div className={`mobile-menu-panel pointer-events-auto flex lg:hidden fixed left-4 right-4 max-h-[calc(100vh-96px)] overflow-y-auto p-4.5 flex-col gap-2.5 rounded-[24px] bg-white/95 shadow-2xl z-[150] backdrop-blur-xl ${
           showTransparent ? "top-[82px]" : "top-[70px]"
         }`}>
           <div className="industrial-grid absolute inset-0 opacity-[0.015] pointer-events-none rounded-[24px]" />
@@ -567,14 +590,14 @@ export default function Navbar() {
             <Link 
               href="/" 
               onClick={() => setMobileMenuOpen(false)} 
-              className="w-full min-h-[44px] flex items-center justify-between px-4 border border-slate-200/50 rounded-xl bg-slate-50/50 text-slate-800 text-[0.88rem] font-bold no-underline"
+              className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Home
             </Link>
             <Link 
               href="/about" 
               onClick={() => setMobileMenuOpen(false)} 
-              className="w-full min-h-[44px] flex items-center justify-between px-4 border border-slate-200/50 rounded-xl bg-slate-50/50 text-slate-800 text-[0.88rem] font-bold no-underline"
+              className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               About Us
             </Link>
@@ -583,25 +606,34 @@ export default function Navbar() {
             <Link 
               href="/products" 
               onClick={() => setMobileMenuOpen(false)} 
-              className="w-full min-h-[44px] flex items-center justify-between px-4 border border-slate-200/50 rounded-xl bg-slate-50/50 text-slate-800 text-[0.88rem] font-bold no-underline"
+              className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Products
             </Link>
 
-            {/* Mobile Solutions & Applications Direct Link */}
+            {/* Mobile Solutions Direct Link */}
             <Link 
               href="/solutions" 
               onClick={() => setMobileMenuOpen(false)} 
-              className="w-full min-h-[44px] flex items-center justify-between px-4 border border-slate-200/50 rounded-xl bg-slate-50/50 text-slate-800 text-[0.88rem] font-bold no-underline"
+              className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
-              Solutions & Applications
+              Solutions
+            </Link>
+
+            {/* Mobile Applications Direct Link */}
+            <Link 
+              href="/solutions?type=applications" 
+              onClick={() => setMobileMenuOpen(false)} 
+              className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
+            >
+              Applications
             </Link>
 
             {/* Mobile Services Direct Link */}
             <Link 
               href="/solutions?type=services" 
               onClick={() => setMobileMenuOpen(false)} 
-              className="w-full min-h-[44px] flex items-center justify-between px-4 border border-slate-200/50 rounded-xl bg-slate-50/50 text-slate-800 text-[0.88rem] font-bold no-underline"
+              className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Services & Consultancy
             </Link>
@@ -609,7 +641,7 @@ export default function Navbar() {
             <Link 
               href="/contact" 
               onClick={() => setMobileMenuOpen(false)} 
-              className="w-full min-h-[44px] flex items-center justify-between px-4 border border-slate-200/50 rounded-xl bg-slate-50/50 text-slate-800 text-[0.88rem] font-bold no-underline"
+              className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Contact Us
             </Link>

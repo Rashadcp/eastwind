@@ -287,8 +287,8 @@ export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/applications`, {
-      next: { revalidate: 60 }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/applications?t=${Date.now()}`, {
+      cache: "no-store"
     });
     if (!res.ok) return [];
     const list = await res.json();
@@ -309,8 +309,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   let data: ApplicationData | null = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/applications/${id}`, {
-      next: { revalidate: 60 }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/applications/${id}?t=${Date.now()}`, {
+      cache: "no-store"
     });
     if (res.ok) {
       data = await res.json();
@@ -342,8 +342,8 @@ export default async function ApplicationDetailPage({ params }: Props) {
   
   let data: ApplicationData | null = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/applications/${id}`, {
-      next: { revalidate: 60 }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/applications/${id}?t=${Date.now()}`, {
+      cache: "no-store"
     });
     if (res.ok) {
       data = await res.json();

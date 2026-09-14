@@ -29,12 +29,12 @@ const BRAND_TO_CATEGORY: Record<string, string> = {
 
 export function sanitizeCategory(brandOrCat?: string): string {
   if (!brandOrCat) return "Industrial Safety Equipment";
-  const key = brandOrCat.trim().toLowerCase();
-  return BRAND_TO_CATEGORY[key] || brandOrCat;
+  return brandOrCat.trim();
 }
 
 export function cleanProductName(name: string): string {
-  return name.replace(/^(One Seven|SIONE|Paratech|Partech|Nardi|Xshielder|Mimes|Atexor|Polyhose|Poly Hose|CEJN|Key Connections|Thermo Cable|OS)\s+/i, "");
+  if (!name) return "";
+  return name.trim();
 }
 
 export interface SpecItem {
@@ -195,8 +195,8 @@ function ProductsCatalogContent() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-        // 1. Fetch Brands & their products with instant memory cache
-        const fetchedBrands = await cachedFetch<BrandItem[]>(`${baseUrl}/api/brands`, { fallback: [] });
+        // 1. Fetch Brands & their products with real-time cache-busting
+        const fetchedBrands = await cachedFetch<BrandItem[]>(`${baseUrl}/api/brands?t=${Date.now()}`, { fallback: [], cache: "no-store" });
         let allProds: ProductItem[] = [];
 
         if (Array.isArray(fetchedBrands) && fetchedBrands.length > 0) {
@@ -217,8 +217,8 @@ function ProductsCatalogContent() {
           });
         }
 
-        // 2. Fetch all products API as well (with instant memory cache)
-        const mainProds = await cachedFetch<any[]>(`${baseUrl}/api/products`, { fallback: [] });
+        // 2. Fetch all products API as well (with real-time cache-busting)
+        const mainProds = await cachedFetch<any[]>(`${baseUrl}/api/products?t=${Date.now()}`, { fallback: [], cache: "no-store" });
         if (Array.isArray(mainProds)) {
           mainProds.forEach((mp) => {
             const sanitizedBrand = sanitizeCategory(mp.brand);
@@ -276,6 +276,10 @@ function ProductsCatalogContent() {
     }
 
     loadData();
+
+    const handleCacheCleared = () => loadData();
+    window.addEventListener("cms-cache-cleared", handleCacheCleared);
+    return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, [initialId]);
 
   // Sync state with URL params if modified

@@ -13,6 +13,7 @@ interface DropdownOption {
 }
 
 interface ContactInfoData {
+  locations?: { title: string; address: string }[];
   hqTitle: string;
   hqAddress: string;
   hubTitle: string;
@@ -39,6 +40,16 @@ interface ContactPageData {
 }
 
 const defaultContactInfo: ContactInfoData = {
+  locations: [
+    {
+      title: "Al Khobar Headquarters",
+      address: "King Faisal West Road, Bandariyah District,\nAl Khobar, Kingdom of Saudi Arabia",
+    },
+    {
+      title: "Riyadh Technology Hub",
+      address: "Olaya District, Riyadh,\nKingdom of Saudi Arabia",
+    },
+  ],
   hqTitle: "Al Khobar Headquarters",
   hqAddress: "King Faisal West Road, Bandariyah District,\nAl Khobar, Kingdom of Saudi Arabia",
   hubTitle: "Riyadh Technology Hub",
@@ -95,6 +106,7 @@ export default function ContactPage() {
         if (infoRes.ok) {
           const json = await infoRes.json();
           setContactInfo({
+            locations: Array.isArray(json.locations) && json.locations.length > 0 ? json.locations : undefined,
             hqTitle: json.hqTitle || defaultContactInfo.hqTitle,
             hqAddress: json.hqAddress || defaultContactInfo.hqAddress,
             hubTitle: json.hubTitle || defaultContactInfo.hubTitle,
@@ -177,45 +189,33 @@ export default function ContactPage() {
               </div>
 
               <div className="space-y-6">
-                {/* Al Khobar HQ */}
-                {(contactInfo.hqTitle?.trim() || contactInfo.hqAddress?.trim()) && (
-                  <div className="flex gap-5 items-start">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-200/60 shadow-xs shrink-0">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#1e3e8f]">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                        <circle cx="12" cy="10" r="3" />
-                      </svg>
+                {(contactInfo.locations && contactInfo.locations.length > 0
+                  ? contactInfo.locations
+                  : [
+                      { title: contactInfo.hqTitle, address: contactInfo.hqAddress },
+                      { title: contactInfo.hubTitle, address: contactInfo.hubAddress }
+                    ]
+                ).filter(l => (l.title && l.title.trim()) || (l.address && l.address.trim())).map((loc, idx) => {
+                  const isRed = idx % 2 === 1;
+                  return (
+                    <div key={idx} className="flex gap-5 items-start">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-200/60 shadow-xs shrink-0">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={isRed ? "text-[#c22026]" : "text-[#1e3e8f]"}>
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                          <circle cx="12" cy="10" r="3" />
+                        </svg>
+                      </div>
+                      <div className="space-y-1">
+                        {loc.title && <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide m-0">{loc.title}</h4>}
+                        {loc.address && (
+                          <p className="text-xs text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
+                            {loc.address}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <div className="space-y-1">
-                      {contactInfo.hqTitle && <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide m-0">{contactInfo.hqTitle}</h4>}
-                      {contactInfo.hqAddress && (
-                        <p className="text-xs text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
-                          {contactInfo.hqAddress}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Riyadh Tech Hub */}
-                {(contactInfo.hubTitle?.trim() || contactInfo.hubAddress?.trim()) && (
-                  <div className="flex gap-5 items-start">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-200/60 shadow-xs shrink-0">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#c22026]">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                        <circle cx="12" cy="10" r="3" />
-                      </svg>
-                    </div>
-                    <div className="space-y-1">
-                      {contactInfo.hubTitle && <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide m-0">{contactInfo.hubTitle}</h4>}
-                      {contactInfo.hubAddress && (
-                        <p className="text-xs text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
-                          {contactInfo.hubAddress}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
+                  );
+                })}
 
                 {/* Secure Contact Matrix */}
                 <div className="border-t border-slate-100 pt-6 space-y-3.5">

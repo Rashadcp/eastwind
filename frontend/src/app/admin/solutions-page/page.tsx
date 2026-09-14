@@ -606,7 +606,7 @@ export default function AdminSolutionsPage() {
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
-                  <span>+ Add Industry Category</span>
+                  <span>Add Industry Category</span>
                 </button>
               </div>
             </div>
@@ -824,7 +824,7 @@ export default function AdminSolutionsPage() {
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
-                  <span>+ Add Capability Card</span>
+                  <span>Add Capability Card</span>
                 </button>
               </div>
             </div>
@@ -993,7 +993,7 @@ export default function AdminSolutionsPage() {
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
-                  <span>+ Add Brand</span>
+                  <span>Add Brand</span>
                 </button>
               </div>
             </div>
@@ -1195,7 +1195,7 @@ export default function AdminSolutionsPage() {
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
-                  <span>+ Add Scope Option</span>
+                  <span>Add Scope Option</span>
                 </button>
               </div>
             </div>

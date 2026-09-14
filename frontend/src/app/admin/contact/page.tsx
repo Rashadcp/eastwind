@@ -8,6 +8,11 @@ interface DropdownOption {
   label: string;
 }
 
+export interface ContactLocation {
+  title: string;
+  address: string;
+}
+
 export default function AdminContactPage() {
   const [activeTab, setActiveTab] = useState<"info" | "home" | "contact_page" | "enquiry_page">("info");
   const [loading, setLoading] = useState<boolean>(true);
@@ -17,6 +22,16 @@ export default function AdminContactPage() {
   const [uploadingField, setUploadingField] = useState<string | null>(null);
 
   // Tab 1: Office Addresses & Channels State (contact_info)
+  const [locations, setLocations] = useState<ContactLocation[]>([
+    {
+      title: "Al Khobar Headquarters",
+      address: "King Faisal West Road, Bandariyah District,\nAl Khobar, Kingdom of Saudi Arabia",
+    },
+    {
+      title: "Riyadh Technology Hub",
+      address: "Olaya District, Riyadh,\nKingdom of Saudi Arabia",
+    },
+  ]);
   const [hqTitle, setHqTitle] = useState<string>("Al Khobar Headquarters");
   const [hqAddress, setHqAddress] = useState<string>("King Faisal West Road, Bandariyah District,\nAl Khobar, Kingdom of Saudi Arabia");
   const [hubTitle, setHubTitle] = useState<string>("Riyadh Technology Hub");
@@ -94,7 +109,25 @@ export default function AdminContactPage() {
       const list = await res.json();
 
       const infoDoc = list.find((item: any) => item.id === "contact_info");
+      const footerDoc = list.find((item: any) => item.id === "footer");
       if (infoDoc) {
+        if (Array.isArray(infoDoc.locations) && infoDoc.locations.length > 0) {
+          setLocations(infoDoc.locations);
+        } else if (footerDoc && Array.isArray(footerDoc.locations) && footerDoc.locations.length > 0) {
+          setLocations(footerDoc.locations);
+        } else {
+          const initialLocs: ContactLocation[] = [];
+          if (infoDoc.hqTitle || infoDoc.hqAddress) {
+            initialLocs.push({ title: infoDoc.hqTitle || "Al Khobar Headquarters", address: infoDoc.hqAddress || "" });
+          }
+          if (infoDoc.hubTitle || infoDoc.hubAddress) {
+            initialLocs.push({ title: infoDoc.hubTitle || "Riyadh Technology Hub", address: infoDoc.hubAddress || "" });
+          }
+          if (initialLocs.length > 0) {
+            setLocations(initialLocs);
+          }
+        }
+
         if (infoDoc.hqTitle !== undefined) setHqTitle(infoDoc.hqTitle);
         if (infoDoc.hqAddress !== undefined) setHqAddress(infoDoc.hqAddress);
         if (infoDoc.hubTitle !== undefined) setHubTitle(infoDoc.hubTitle);
@@ -192,6 +225,46 @@ export default function AdminContactPage() {
     }
   };
 
+  // Dynamic Location Handlers
+  const handleAddLocation = () => {
+    setLocations((prev) => [
+      ...prev,
+      {
+        title: "New Office / Hub Location",
+        address: "Address & Industrial Zone, Kingdom of Saudi Arabia",
+      },
+    ]);
+  };
+
+  const handleUpdateLocation = (index: number, field: "title" | "address", value: string) => {
+    setLocations((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  const handleDeleteLocation = (index: number) => {
+    if (locations.length <= 1) {
+      if (!confirm("Are you sure you want to delete this location? It is recommended to have at least one office location listed.")) {
+        return;
+      }
+    }
+    setLocations((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleMoveLocation = (index: number, direction: "up" | "down") => {
+    setLocations((prev) => {
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= prev.length) return prev;
+      const updated = [...prev];
+      const temp = updated[index];
+      updated[index] = updated[targetIndex];
+      updated[targetIndex] = temp;
+      return updated;
+    });
+  };
+
   // Save section handler
   const saveSection = async (section: string, payload: any, sectionLabel: string) => {
     clearMessages();
@@ -213,15 +286,9 @@ export default function AdminContactPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Failed to update ${sectionLabel}`);
 
-      // If saving contact_info, also sync active locations to footer so footer stays in sync
+      // If saving contact_info, also sync active locations to footer so footer stays completely in sync
       if (section === "contact_info") {
-        const syncedLocations = [];
-        if (payload.hqTitle?.trim() || payload.hqAddress?.trim()) {
-          syncedLocations.push({ title: payload.hqTitle?.trim() || "", address: payload.hqAddress?.trim() || "" });
-        }
-        if (payload.hubTitle?.trim() || payload.hubAddress?.trim()) {
-          syncedLocations.push({ title: payload.hubTitle?.trim() || "", address: payload.hubAddress?.trim() || "" });
-        }
+        const syncedLocations = Array.isArray(payload.locations) ? payload.locations : [];
         await fetch(`${baseUrl}/api/contact-settings/footer`, {
           method: "PUT",
           headers: {
@@ -230,10 +297,10 @@ export default function AdminContactPage() {
           },
           body: JSON.stringify({
             locations: syncedLocations,
-            hqTitle: payload.hqTitle || "",
-            hqAddress: payload.hqAddress || "",
-            hubTitle: payload.hubTitle || "",
-            hubAddress: payload.hubAddress || "",
+            hqTitle: syncedLocations[0]?.title || "",
+            hqAddress: syncedLocations[0]?.address || "",
+            hubTitle: syncedLocations[1]?.title || "",
+            hubAddress: syncedLocations[1]?.address || "",
             telephone: payload.telephone,
             email: payload.email
           })
@@ -252,7 +319,16 @@ export default function AdminContactPage() {
   const handleSaveCurrentTab = () => {
     if (activeTab === "info") {
       saveSection("contact_info", {
-        hqTitle, hqAddress, hubTitle, hubAddress, telephone, email, workingHours, gatewayText, gatewayStatus
+        locations,
+        hqTitle: locations[0]?.title || hqTitle,
+        hqAddress: locations[0]?.address || hqAddress,
+        hubTitle: locations[1]?.title || hubTitle,
+        hubAddress: locations[1]?.address || hubAddress,
+        telephone,
+        email,
+        workingHours,
+        gatewayText,
+        gatewayStatus
       }, "Office Addresses & Channels");
     } else if (activeTab === "home") {
       saveSection("home_contact", {
@@ -401,51 +477,133 @@ export default function AdminContactPage() {
       {activeTab === "info" && (
         <div className="space-y-6">
           <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
-              Office Locations & Direct Contact Channels
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Al Khobar HQ Title</label>
-                <input
-                  type="text"
-                  value={hqTitle}
-                  onChange={(e) => setHqTitle(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
-                />
+                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+                  <span>Office & Hub Locations</span>
+                  <span className="px-2 py-0.5 bg-blue-50 text-[#1e3e8f] text-[11px] font-bold rounded-full border border-blue-200/60">
+                    {locations.length} {locations.length === 1 ? "Location" : "Locations"}
+                  </span>
+                </h2>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">
+                  Configure corporate headquarters, regional operations hubs, branch offices, and service centers.
+                </p>
               </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Al Khobar HQ Full Address</label>
-                <textarea
-                  rows={2}
-                  value={hqAddress}
-                  onChange={(e) => setHqAddress(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
-                />
-              </div>
+              <button
+                type="button"
+                onClick={handleAddLocation}
+                className="px-3.5 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 shrink-0 self-start sm:self-auto shadow-xs"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Add Location</span>
+              </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-slate-100">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Riyadh Technology Hub Title</label>
-                <input
-                  type="text"
-                  value={hubTitle}
-                  onChange={(e) => setHubTitle(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
-                />
+            {locations.length === 0 ? (
+              <div className="p-8 border border-dashed border-slate-200 rounded-sm text-center space-y-3 bg-slate-50/50">
+                <p className="text-xs text-slate-500 font-medium">No office locations configured yet.</p>
+                <button
+                  type="button"
+                  onClick={handleAddLocation}
+                  className="px-4 py-2 bg-[#1e3e8f] text-white text-xs font-semibold rounded-sm hover:bg-[#162f6d] transition-colors cursor-pointer shadow-xs inline-flex items-center gap-1.5"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Add First Location</span>
+                </button>
               </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Riyadh Technology Hub Full Address</label>
-                <textarea
-                  rows={2}
-                  value={hubAddress}
-                  onChange={(e) => setHubAddress(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
-                />
+            ) : (
+              <div className="space-y-4">
+                {locations.map((loc, idx) => {
+                  const isPrimary = idx === 0;
+                  const isSecondary = idx === 1;
+                  return (
+                    <div
+                      key={idx}
+                      className="p-4 bg-slate-50/80 border border-slate-200 rounded-sm space-y-3 relative group transition-all hover:border-slate-300 shadow-2xs"
+                    >
+                      <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`w-2.5 h-2.5 rounded-full ${isPrimary ? "bg-[#1e3e8f]" : isSecondary ? "bg-[#c22026]" : "bg-emerald-600"}`} />
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-800">
+                            Location #{idx + 1}
+                            {isPrimary ? " — Primary Headquarters" : isSecondary ? " — Regional Hub" : " — Branch Office"}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          {/* Reorder Buttons */}
+                          <button
+                            type="button"
+                            disabled={idx === 0}
+                            onClick={() => handleMoveLocation(idx, "up")}
+                            title="Move Up in List"
+                            className="p-1 text-slate-500 hover:text-slate-800 disabled:opacity-25 disabled:cursor-not-allowed rounded hover:bg-slate-200/50 transition-colors cursor-pointer"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            disabled={idx === locations.length - 1}
+                            onClick={() => handleMoveLocation(idx, "down")}
+                            title="Move Down in List"
+                            className="p-1 text-slate-500 hover:text-slate-800 disabled:opacity-25 disabled:cursor-not-allowed rounded hover:bg-slate-200/50 transition-colors cursor-pointer"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+
+                          <div className="h-4 w-px bg-slate-200 mx-1" />
+
+                          {/* Delete Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteLocation(idx)}
+                            className="px-2 py-0.5 text-xs text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded font-semibold cursor-pointer transition-colors"
+                            title="Delete this location"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                            Office / Hub Title <span className="text-rose-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={loc.title}
+                            onChange={(e) => handleUpdateLocation(idx, "title", e.target.value)}
+                            placeholder="e.g. Al Khobar Headquarters, Riyadh Technology Hub, Jeddah Operations..."
+                            className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-medium"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                            Physical Address & City <span className="text-rose-500">*</span>
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={loc.address}
+                            onChange={(e) => handleUpdateLocation(idx, "address", e.target.value)}
+                            placeholder="Street, District, City, Kingdom of Saudi Arabia..."
+                            className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-normal resize-y"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4 border-t border-slate-100">
               <div>
@@ -510,7 +668,16 @@ export default function AdminContactPage() {
               type="button"
               disabled={saving}
               onClick={() => saveSection("contact_info", {
-                hqTitle, hqAddress, hubTitle, hubAddress, telephone, email, workingHours, gatewayText, gatewayStatus
+                locations,
+                hqTitle: locations[0]?.title || hqTitle,
+                hqAddress: locations[0]?.address || hqAddress,
+                hubTitle: locations[1]?.title || hubTitle,
+                hubAddress: locations[1]?.address || hubAddress,
+                telephone,
+                email,
+                workingHours,
+                gatewayText,
+                gatewayStatus
               }, "Office Addresses & Channels")}
               className="w-full sm:w-auto px-6 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm shadow-xs cursor-pointer transition-colors disabled:opacity-50"
             >

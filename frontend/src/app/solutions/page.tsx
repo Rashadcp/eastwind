@@ -42,6 +42,14 @@ interface SolutionsPageConfig {
   heroTagline: string;
   heroTitle: string;
   heroDescription: string;
+  applicationsHeroBgImage?: string;
+  applicationsHeroTagline?: string;
+  applicationsHeroTitle?: string;
+  applicationsHeroDescription?: string;
+  servicesHeroBgImage?: string;
+  servicesHeroTagline?: string;
+  servicesHeroTitle?: string;
+  servicesHeroDescription?: string;
   industriesTagline: string;
   industriesTitle: string;
   industriesDesc: string;
@@ -189,6 +197,14 @@ const defaultPageConfig: SolutionsPageConfig = {
   heroTagline: "ENGINEERED SAFETY & INDUSTRIAL INFRASTRUCTURE",
   heroTitle: "MIDDLE EAST SAFETY SOLUTIONS",
   heroDescription: "Eastwind Arabia supplies high-compliance fire fighting, respiratory protection, wireless gas detection, and process instrumentation modules across Saudi Arabia and the GCC.",
+  applicationsHeroBgImage: "/products/default-wireless-gas-detection.png",
+  applicationsHeroTagline: "ADVANCED TECHNICAL APPLICATIONS",
+  applicationsHeroTitle: "TECHNICAL APPLICATIONS PORTFOLIO",
+  applicationsHeroDescription: "Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities.",
+  servicesHeroBgImage: "/products/default-process-instrumentation.png",
+  servicesHeroTagline: "FIELD & ENGINEERING SERVICES",
+  servicesHeroTitle: "SPECIALIZED ENGINEERING SERVICES",
+  servicesHeroDescription: "Full lifecycle support, commissioning, functional safety assessments, and rapid calibration coverage across primary operating facilities.",
   industriesTagline: "Operating Environments",
   industriesTitle: "Solutions By Operating Industry",
   industriesDesc: "Industrial sectors feature highly specific chemical, thermal, and spatial risks. We build multi-layered mitigation loops engineered to perform reliably inside harsh conditions.",
@@ -689,6 +705,14 @@ function SolutionsPageContent() {
     el.scrollBy({ left: -260, behavior: "smooth" });
   };
 
+  const handleCategorySwitch = (cat: "solutions" | "applications" | "services") => {
+    setMainCategory(cat);
+    const newUrl = cat === "solutions" ? "/solutions" : `/solutions?type=${cat}`;
+    if (typeof window !== "undefined") {
+      window.history.pushState(null, "", newUrl);
+    }
+  };
+
   useEffect(() => {
     const typeParam = searchParams.get("type");
     if (typeParam === "services" || typeParam === "service") {
@@ -699,6 +723,22 @@ function SolutionsPageContent() {
       setMainCategory("solutions");
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const t = params.get("type");
+      if (t === "services" || t === "service") {
+        setMainCategory("services");
+      } else if (t === "applications" || t === "application") {
+        setMainCategory("applications");
+      } else {
+        setMainCategory("solutions");
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
   const [hoveredSolution, setHoveredSolution] = useState<string | null>(null);
   const [solutionsList, setSolutionsList] = useState<any[]>([]);
   const [servicesList, setServicesList] = useState<any[]>(DEFAULT_SERVICES);
@@ -743,6 +783,14 @@ function SolutionsPageContent() {
             heroTagline: data.heroTagline !== undefined ? data.heroTagline : defaultPageConfig.heroTagline,
             heroTitle: data.heroTitle !== undefined ? data.heroTitle : defaultPageConfig.heroTitle,
             heroDescription: data.heroDescription !== undefined ? data.heroDescription : defaultPageConfig.heroDescription,
+            applicationsHeroBgImage: data.applicationsHeroBgImage !== undefined ? data.applicationsHeroBgImage : defaultPageConfig.applicationsHeroBgImage,
+            applicationsHeroTagline: data.applicationsHeroTagline !== undefined ? data.applicationsHeroTagline : defaultPageConfig.applicationsHeroTagline,
+            applicationsHeroTitle: data.applicationsHeroTitle !== undefined ? data.applicationsHeroTitle : defaultPageConfig.applicationsHeroTitle,
+            applicationsHeroDescription: data.applicationsHeroDescription !== undefined ? data.applicationsHeroDescription : defaultPageConfig.applicationsHeroDescription,
+            servicesHeroBgImage: data.servicesHeroBgImage !== undefined ? data.servicesHeroBgImage : defaultPageConfig.servicesHeroBgImage,
+            servicesHeroTagline: data.servicesHeroTagline !== undefined ? data.servicesHeroTagline : defaultPageConfig.servicesHeroTagline,
+            servicesHeroTitle: data.servicesHeroTitle !== undefined ? data.servicesHeroTitle : defaultPageConfig.servicesHeroTitle,
+            servicesHeroDescription: data.servicesHeroDescription !== undefined ? data.servicesHeroDescription : defaultPageConfig.servicesHeroDescription,
             industriesTagline: data.industriesTagline !== undefined ? data.industriesTagline : defaultPageConfig.industriesTagline,
             industriesTitle: data.industriesTitle !== undefined ? data.industriesTitle : defaultPageConfig.industriesTitle,
             industriesDesc: data.industriesDesc !== undefined ? data.industriesDesc : defaultPageConfig.industriesDesc,
@@ -813,7 +861,12 @@ function SolutionsPageContent() {
         console.error("Failed to load solutions page configuration:", err);
       }
     }
+
     loadData();
+
+    const handleCacheCleared = () => loadData();
+    window.addEventListener("cms-cache-cleared", handleCacheCleared);
+    return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, [urlCat]);
 
   // Preload all industry tab images in background so tab switching is 100% instant (0ms delay)
@@ -892,6 +945,31 @@ function SolutionsPageContent() {
           })
         }));
 
+  const currentHero =
+    mainCategory === "applications"
+      ? {
+          image: pageConfig.applicationsHeroBgImage || defaultPageConfig.applicationsHeroBgImage || "/products/default-wireless-gas-detection.png",
+          tagline: pageConfig.applicationsHeroTagline || defaultPageConfig.applicationsHeroTagline || "ADVANCED TECHNICAL APPLICATIONS",
+          title: pageConfig.applicationsHeroTitle || defaultPageConfig.applicationsHeroTitle || "TECHNICAL APPLICATIONS PORTFOLIO",
+          description: pageConfig.applicationsHeroDescription || defaultPageConfig.applicationsHeroDescription || "Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities.",
+          fallback: "/products/default-wireless-gas-detection.png"
+        }
+      : mainCategory === "services"
+      ? {
+          image: pageConfig.servicesHeroBgImage || defaultPageConfig.servicesHeroBgImage || "/products/default-process-instrumentation.png",
+          tagline: pageConfig.servicesHeroTagline || defaultPageConfig.servicesHeroTagline || "FIELD & ENGINEERING SERVICES",
+          title: pageConfig.servicesHeroTitle || defaultPageConfig.servicesHeroTitle || "SPECIALIZED ENGINEERING SERVICES",
+          description: pageConfig.servicesHeroDescription || defaultPageConfig.servicesHeroDescription || "Full lifecycle support, commissioning, functional safety assessments, and rapid calibration coverage across primary operating facilities.",
+          fallback: "/products/default-process-instrumentation.png"
+        }
+      : {
+          image: pageConfig.heroBgImage || defaultPageConfig.heroBgImage || "/application.png",
+          tagline: pageConfig.heroTagline || defaultPageConfig.heroTagline || "ENGINEERED SAFETY & INDUSTRIAL INFRASTRUCTURE",
+          title: pageConfig.heroTitle || defaultPageConfig.heroTitle || "MIDDLE EAST SAFETY SOLUTIONS",
+          description: pageConfig.heroDescription || defaultPageConfig.heroDescription || "Eastwind Arabia supplies high-compliance fire fighting, respiratory protection, wireless gas detection, and process instrumentation modules across Saudi Arabia and the GCC.",
+          fallback: "/application.png"
+        };
+
   return (
     <>
       <Navbar />
@@ -906,12 +984,13 @@ function SolutionsPageContent() {
         {/* Dynamic Hero Section */}
         <section className="relative pt-[220px] pb-[160px] overflow-hidden border-b border-white/5 min-h-[600px] flex items-center bg-slate-950 w-full z-10">
           <img
-            src={formatImageUrl(pageConfig.heroBgImage, "/application.png")}
-            alt={pageConfig.heroTitle}
+            key={currentHero.image}
+            src={formatImageUrl(currentHero.image, currentHero.fallback)}
+            alt={currentHero.title}
             onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = "/application.png";
+              (e.currentTarget as HTMLImageElement).src = currentHero.fallback;
             }}
-            className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none brightness-[0.85] scale-101 z-0"
+            className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none brightness-[0.85] scale-101 z-0 transition-opacity duration-500"
           />
 
           <div className="absolute inset-0 bg-gradient-to-r from-[#080c14]/90 via-[#080c14]/65 to-[#080c14]/15 max-md:from-[#080c14]/90 max-md:to-[#080c14]/65 z-10" />
@@ -920,13 +999,13 @@ function SolutionsPageContent() {
           <div className="max-w-[1400px] w-full mx-auto px-10 max-sm:px-5 relative z-20">
             <div className="max-w-[750px] space-y-4">
               <span className="inline-block text-[#c22026] text-xs font-bold uppercase tracking-[0.25em]">
-                {pageConfig.heroTagline}
+                {currentHero.tagline}
               </span>
               <h1 className="text-[2.6rem] max-md:text-[2.1rem] max-sm:text-[1.8rem] leading-[1.15] uppercase font-extrabold tracking-tight text-white m-0">
-                {pageConfig.heroTitle}
+                {currentHero.title}
               </h1>
               <p className="text-[0.95rem] text-slate-200 leading-relaxed font-light m-0">
-                {pageConfig.heroDescription}
+                {currentHero.description}
               </p>
             </div>
           </div>
@@ -939,7 +1018,7 @@ function SolutionsPageContent() {
           <div className="flex items-center gap-10 border-b border-slate-200 mb-14 pb-1 max-sm:gap-6 flex-wrap">
             <button
               type="button"
-              onClick={() => setMainCategory("solutions")}
+              onClick={() => handleCategorySwitch("solutions")}
               className={`relative pb-3 font-extrabold tracking-tight transition-all duration-300 cursor-pointer text-[1.4rem] ${
                 mainCategory === "solutions"
                   ? "text-[#1e3e8f]"
@@ -958,7 +1037,7 @@ function SolutionsPageContent() {
 
             <button
               type="button"
-              onClick={() => setMainCategory("applications")}
+              onClick={() => handleCategorySwitch("applications")}
               className={`relative pb-3 font-extrabold tracking-tight transition-all duration-300 cursor-pointer text-[1.4rem] ${
                 mainCategory === "applications"
                   ? "text-[#c22026]"
@@ -977,7 +1056,7 @@ function SolutionsPageContent() {
 
             <button
               type="button"
-              onClick={() => setMainCategory("services")}
+              onClick={() => handleCategorySwitch("services")}
               className={`relative pb-3 font-extrabold tracking-tight transition-all duration-300 cursor-pointer text-[1.4rem] ${
                 mainCategory === "services"
                   ? "text-emerald-700"

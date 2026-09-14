@@ -456,7 +456,7 @@ export default function AdminFooterPage() {
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
-              <span>+ Add Location</span>
+              <span>Add Location</span>
             </button>
           </div>
 
@@ -465,17 +465,19 @@ export default function AdminFooterPage() {
             <input
               type="text"
               value={operationsTitle}
-              onChange={(e) => setOperationsTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-sm text-xs focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
-              placeholder="e.g. Operations"
+              onChange={(e) => {
+                setOperationsTitle(e.target.value);
+                setHasUnsavedChanges(true);
+              }}
+              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
             />
           </div>
 
-          {/* Dynamic Locations List */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-semibold text-slate-700">
-                Operational Office & Hub Locations ({locations.length})
+          {/* Dynamic Locations Cards List */}
+          <div className="space-y-4 pt-2">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                Operating Offices & Locations ({locations.length})
               </label>
             </div>
 
@@ -488,7 +490,7 @@ export default function AdminFooterPage() {
 
             {locations.length === 0 ? (
               <div className="p-6 border border-dashed border-slate-200 rounded-sm text-center text-xs text-slate-400 bg-slate-50/50">
-                No physical locations configured. Click &quot;+ Add Location&quot; above to add one.
+                No physical locations configured. Click &quot;Add Location&quot; above to add one.
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

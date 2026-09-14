@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { formatImageUrl } from "@/utils/image";
+import { invalidateCache } from "@/utils/apiCache";
 
 const ROUTE_LOCATION_MAP: Record<string, { path: string; label: string }> = {
   "/admin": { path: "/", label: "Home Page" },
@@ -69,7 +70,7 @@ export default function AdminLayout({
     setMobileSidebarOpen(false);
   }, [pathname]);
 
-  // Global fetch interceptor to catch any 401 Unauthorized API responses
+  // Global fetch interceptor to catch 401s and auto-invalidate frontend cache on admin mutations
   useEffect(() => {
     const originalFetch = window.fetch;
     window.fetch = async (...args) => {
@@ -81,6 +82,13 @@ export default function AdminLayout({
           localStorage.removeItem("admin_username");
           setIsAuthenticated(false);
           router.push("/admin/login");
+        } else if (response.ok) {
+          // If admin successfully executed a mutation (POST, PUT, DELETE, PATCH), invalidate frontend cache
+          const init = args[1] as RequestInit | undefined;
+          const method = (init?.method || "GET").toUpperCase();
+          if (["POST", "PUT", "DELETE", "PATCH"].includes(method)) {
+            invalidateCache();
+          }
         }
         return response;
       } catch (error) {
@@ -379,41 +387,55 @@ export default function AdminLayout({
           color: #94a3b8 !important;
         }
 
-        /* East Wind Royal Blue (#1e3e8f) Primary Action Elements - STRICT WHITE TEXT */
-        .admin-light-theme button[class*="bg-sky-"],
-        .admin-light-theme label[class*="bg-sky-"],
-        .admin-light-theme a[class*="bg-sky-"],
-        .admin-light-theme button[class*="bg-orange-600"],
-        .admin-light-theme button[class*="bg-orange-500"],
-        .admin-light-theme label[class*="bg-orange-600"],
-        .admin-light-theme label[class*="bg-orange-500"],
+        /* =========================================================================
+           GLOBAL ADMIN BUTTON SYSTEM - GUARANTEED HIGH CONTRAST & VISIBILITY
+           ========================================================================= */
+
+        /* 1. East Wind Royal Blue (#1e3e8f) Primary Action Elements - CRISP WHITE TEXT */
         .admin-light-theme button[class*="bg-[#1e3e8f]"],
-        .admin-light-theme a[class*="bg-[#1e3e8f]"] {
+        .admin-light-theme button[class*="bg-[#162f6d]"],
+        .admin-light-theme button[class*="bg-sky-"],
+        .admin-light-theme button[class*="bg-blue-600"],
+        .admin-light-theme button[class*="bg-blue-700"],
+        .admin-light-theme a[class*="bg-[#1e3e8f]"],
+        .admin-light-theme a[class*="bg-[#162f6d]"],
+        .admin-light-theme label[class*="bg-[#1e3e8f]"] {
           background-color: #1e3e8f !important;
           color: #ffffff !important;
           border-radius: 2px !important;
-          font-weight: 600 !important;
+          font-weight: 700 !important;
           border: 1px solid #1e3e8f !important;
         }
-        .admin-light-theme button[class*="bg-sky-"]:hover,
-        .admin-light-theme label[class*="bg-sky-"]:hover,
-        .admin-light-theme button[class*="bg-orange-600"]:hover,
-        .admin-light-theme button[class*="bg-orange-500"]:hover,
         .admin-light-theme button[class*="bg-[#1e3e8f]"]:hover,
-        .admin-light-theme a[class*="bg-[#1e3e8f]"]:hover {
+        .admin-light-theme button[class*="bg-[#162f6d]"]:hover,
+        .admin-light-theme a[class*="bg-[#1e3e8f]"]:hover,
+        .admin-light-theme a[class*="bg-[#162f6d]"]:hover {
           background-color: #162f6d !important;
           border-color: #162f6d !important;
           color: #ffffff !important;
         }
+        .admin-light-theme button[class*="bg-[#1e3e8f]"] *,
+        .admin-light-theme button[class*="bg-[#162f6d]"] *,
+        .admin-light-theme a[class*="bg-[#1e3e8f]"] *,
+        .admin-light-theme a[class*="bg-[#162f6d]"] *,
+        .admin-light-theme label[class*="bg-[#1e3e8f]"] * {
+          color: #ffffff !important;
+          fill: currentColor !important;
+          stroke: currentColor !important;
+        }
 
-        /* East Wind Crimson Red (#c22026) for Destructive Actions - STRICT WHITE TEXT */
+        /* 2. East Wind Crimson Red (#c22026) for Destructive Actions - CRISP WHITE TEXT */
         .admin-light-theme button[class*="bg-red-600"],
+        .admin-light-theme button[class*="bg-red-700"],
         .admin-light-theme button[class*="bg-rose-600"],
-        .admin-light-theme button[class*="bg-[#c22026]"] {
+        .admin-light-theme button[class*="bg-rose-700"],
+        .admin-light-theme button[class*="bg-[#c22026]"],
+        .admin-light-theme button[class*="bg-[#9e1a1f]"] {
           background-color: #c22026 !important;
           color: #ffffff !important;
           border-radius: 2px !important;
           border: 1px solid #c22026 !important;
+          font-weight: 700 !important;
         }
         .admin-light-theme button[class*="bg-red-600"]:hover,
         .admin-light-theme button[class*="bg-rose-600"]:hover,
@@ -422,22 +444,122 @@ export default function AdminLayout({
           border-color: #9e1a1f !important;
           color: #ffffff !important;
         }
+        .admin-light-theme button[class*="bg-red-600"] *,
+        .admin-light-theme button[class*="bg-rose-600"] *,
+        .admin-light-theme button[class*="bg-[#c22026]"] * {
+          color: #ffffff !important;
+          fill: currentColor !important;
+          stroke: currentColor !important;
+        }
 
-        /* Secondary & Ghost Buttons */
-        .admin-light-theme button[class*="bg-slate-8"],
-        .admin-light-theme button[class*="bg-slate-7"],
-        .admin-light-theme button[class*="bg-slate-100"] {
+        /* 3. Dark Slate Action Buttons - CRISP WHITE TEXT */
+        .admin-light-theme button[class*="bg-slate-900"],
+        .admin-light-theme button[class*="bg-slate-800"],
+        .admin-light-theme a[class*="bg-slate-900"],
+        .admin-light-theme a[class*="bg-slate-800"],
+        .admin-light-theme label[class*="bg-slate-900"],
+        .admin-light-theme label[class*="bg-slate-800"] {
+          background-color: #1e293b !important;
+          color: #ffffff !important;
+          border: 1px solid #1e293b !important;
+          border-radius: 2px !important;
+          font-weight: 700 !important;
+        }
+        .admin-light-theme button[class*="bg-slate-900"]:hover,
+        .admin-light-theme button[class*="bg-slate-800"]:hover {
+          background-color: #0f172a !important;
+          border-color: #0f172a !important;
+          color: #ffffff !important;
+        }
+        .admin-light-theme button[class*="bg-slate-900"] *,
+        .admin-light-theme button[class*="bg-slate-800"] * {
+          color: #ffffff !important;
+          fill: currentColor !important;
+          stroke: currentColor !important;
+        }
+
+        /* 4. Emerald Green Buttons - CRISP WHITE TEXT */
+        .admin-light-theme button[class*="bg-emerald-600"],
+        .admin-light-theme button[class*="bg-emerald-700"] {
+          background-color: #059669 !important;
+          color: #ffffff !important;
+          border: 1px solid #059669 !important;
+          border-radius: 2px !important;
+          font-weight: 700 !important;
+        }
+        .admin-light-theme button[class*="bg-emerald-600"] * {
+          color: #ffffff !important;
+        }
+
+        /* 5. Secondary, Ghost, Outline & Cancel Buttons: Pure White BG + BOLD JET BLACK TEXT */
+        .admin-light-theme button[class*="bg-white"]:not([class*="bg-[#"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]):not([class*="bg-red"]):not([class*="bg-rose"]):not([class*="bg-emerald"]),
+        .admin-light-theme button[class*="bg-slate-100"]:not([class*="bg-[#"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]):not([class*="bg-red"]):not([class*="bg-rose"]):not([class*="bg-emerald"]),
+        .admin-light-theme button[class*="bg-slate-50"]:not([class*="bg-[#"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]):not([class*="bg-red"]):not([class*="bg-rose"]):not([class*="bg-emerald"]),
+        .admin-light-theme button[class*="border-slate-"]:not([class*="bg-[#"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]):not([class*="bg-red"]):not([class*="bg-rose"]):not([class*="bg-emerald"]):not([class*="bg-blue-50"]):not([class*="bg-rose-50"]):not([class*="bg-emerald-50"]),
+        .admin-light-theme .fixed button:not([class*="bg-[#"]):not([class*="bg-red"]):not([class*="bg-rose"]):not([class*="bg-emerald"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]):not([class*="text-rose-"]) {
           background-color: #ffffff !important;
-          color: #334155 !important;
+          color: #000000 !important;
           border: 1px solid #cbd5e1 !important;
           border-radius: 2px !important;
+          font-weight: 700 !important;
         }
-        .admin-light-theme button[class*="bg-slate-8"]:hover,
-        .admin-light-theme button[class*="bg-slate-7"]:hover,
-        .admin-light-theme button[class*="bg-slate-100"]:hover {
-          background-color: #f8fafc !important;
+        .admin-light-theme button[class*="bg-white"]:hover,
+        .admin-light-theme button[class*="bg-slate-100"]:hover,
+        .admin-light-theme button[class*="bg-slate-50"]:hover {
+          background-color: #f1f5f9 !important;
           border-color: #94a3b8 !important;
-          color: #0f172a !important;
+          color: #000000 !important;
+        }
+        .admin-light-theme button[class*="bg-white"] *,
+        .admin-light-theme button[class*="bg-slate-100"] *,
+        .admin-light-theme button[class*="bg-slate-50"] * {
+          color: #000000 !important;
+        }
+
+        /* 6. Action Badge Pills in Data Tables (View / Edit / Delete) */
+        .admin-light-theme button[class*="bg-blue-50"] {
+          background-color: #eff6ff !important;
+          color: #1e3e8f !important;
+          border: 1px solid #bfdbfe !important;
+          font-weight: 700 !important;
+        }
+        .admin-light-theme button[class*="bg-blue-50"]:hover {
+          background-color: #1e3e8f !important;
+          color: #ffffff !important;
+          border-color: #1e3e8f !important;
+        }
+        .admin-light-theme button[class*="bg-blue-50"]:hover * {
+          color: #ffffff !important;
+        }
+
+        .admin-light-theme button[class*="bg-emerald-50"] {
+          background-color: #ecfdf5 !important;
+          color: #047857 !important;
+          border: 1px solid #a7f3d0 !important;
+          font-weight: 700 !important;
+        }
+        .admin-light-theme button[class*="bg-emerald-50"]:hover {
+          background-color: #059669 !important;
+          color: #ffffff !important;
+          border-color: #059669 !important;
+        }
+        .admin-light-theme button[class*="bg-emerald-50"]:hover * {
+          color: #ffffff !important;
+        }
+
+        .admin-light-theme button[class*="bg-rose-50"] {
+          background-color: #fff1f2 !important;
+          color: #c22026 !important;
+          border: 1px solid #fecdd3 !important;
+          font-weight: 700 !important;
+        }
+        .admin-light-theme button[class*="bg-rose-50"]:hover {
+          background-color: #c22026 !important;
+          color: #ffffff !important;
+          border-color: #c22026 !important;
+        }
+        .admin-light-theme button[class*="bg-rose-50"]:hover * {
+          color: #ffffff !important;
         }
 
         /* Subtle 2px radius override across all admin cards, modals, buttons, badges */
@@ -489,38 +611,7 @@ export default function AdminLayout({
           font-size: 13px !important;
         }
 
-        /* Text Contrast Rules: High Contrast Text by Background Tone */
-        /* 1. Buttons & Action Links with Dark/Brand backgrounds: Crisp White Text */
-        .admin-light-theme button[class*="bg-[#1e3e8f]"],
-        .admin-light-theme button[class*="bg-[#162f6d]"],
-        .admin-light-theme button[class*="bg-[#c22026]"],
-        .admin-light-theme button[class*="bg-[#9e1a1f]"],
-        .admin-light-theme button[class*="bg-red-600"],
-        .admin-light-theme button[class*="bg-rose-600"],
-        .admin-light-theme button[class*="bg-slate-900"],
-        .admin-light-theme button[class*="bg-slate-800"],
-        .admin-light-theme a[class*="bg-[#1e3e8f]"],
-        .admin-light-theme label[class*="bg-[#1e3e8f]"],
-        .admin-light-theme label[class*="bg-slate-900"],
-        .admin-light-theme div[class*="bg-black/"] {
-          color: #ffffff !important;
-        }
 
-        /* Direct text/icons inside dark buttons get white text, UNLESS it is an inner badge with light bg */
-        .admin-light-theme button[class*="bg-[#1e3e8f]"] > span:not([class*="bg-"]),
-        .admin-light-theme button[class*="bg-[#1e3e8f]"] > svg,
-        .admin-light-theme button[class*="bg-[#c22026]"] > span:not([class*="bg-"]),
-        .admin-light-theme button[class*="bg-[#c22026]"] > svg,
-        .admin-light-theme button[class*="bg-red-600"] > span:not([class*="bg-"]),
-        .admin-light-theme button[class*="bg-red-600"] > svg,
-        .admin-light-theme button[class*="bg-slate-900"] > span:not([class*="bg-"]),
-        .admin-light-theme button[class*="bg-slate-900"] > svg,
-        .admin-light-theme a[class*="bg-[#1e3e8f]"] > span:not([class*="bg-"]),
-        .admin-light-theme a[class*="bg-[#1e3e8f]"] > svg,
-        .admin-light-theme label[class*="bg-[#1e3e8f]"] > span:not([class*="bg-"]),
-        .admin-light-theme label[class*="bg-[#1e3e8f]"] > svg {
-          color: #ffffff !important;
-        }
 
         /* 2. Light & White Surfaces: NEVER USE WHITE TEXT HERE. High Contrast Dark Text Only! */
         .admin-light-theme [class*="bg-white"],
@@ -592,11 +683,82 @@ export default function AdminLayout({
           box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
         }
 
-        /* Modals & Dialogs */
-        .admin-light-theme div[class*="bg-black/60"] {
-          background-color: rgba(15, 23, 42, 0.45) !important;
+        /* High-Contrast Pure Black Text for All Modals & Form Labels */
+        .admin-light-theme label,
+        .admin-light-theme .fixed label,
+        .admin-light-theme [class*="fixed"] label {
+          color: #000000 !important;
+          font-weight: 700 !important;
         }
-        .admin-light-theme div[class*="bg-slate-950"] {
+
+        .admin-light-theme .fixed,
+        .admin-light-theme [class*="fixed"] {
+          color: #000000 !important;
+        }
+
+        .admin-light-theme .fixed h1,
+        .admin-light-theme .fixed h2,
+        .admin-light-theme .fixed h3,
+        .admin-light-theme .fixed h4,
+        .admin-light-theme .fixed h5,
+        .admin-light-theme .fixed h6,
+        .admin-light-theme [class*="fixed"] h1,
+        .admin-light-theme [class*="fixed"] h2,
+        .admin-light-theme [class*="fixed"] h3,
+        .admin-light-theme [class*="fixed"] h4,
+        .admin-light-theme [class*="fixed"] h5,
+        .admin-light-theme [class*="fixed"] h6 {
+          color: #000000 !important;
+          font-weight: 800 !important;
+        }
+
+        .admin-light-theme .fixed p,
+        .admin-light-theme [class*="fixed"] p {
+          color: #1e293b !important;
+        }
+
+        .admin-light-theme .fixed span:not(button *):not([class*="bg-"]):not([class*="text-[#1e3e8f]"]):not([class*="text-[#c22026]"]):not([class*="text-rose-"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-blue-"]),
+        .admin-light-theme [class*="fixed"] span:not(button *):not([class*="bg-"]):not([class*="text-[#1e3e8f]"]):not([class*="text-[#c22026]"]):not([class*="text-rose-"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-blue-"]) {
+          color: #000000 !important;
+        }
+
+        .admin-light-theme .fixed [class*="text-slate-400"]:not(button):not(button *),
+        .admin-light-theme [class*="fixed"] [class*="text-slate-400"]:not(button):not(button *),
+        .admin-light-theme .fixed [class*="text-slate-350"]:not(button):not(button *),
+        .admin-light-theme [class*="fixed"] [class*="text-slate-350"]:not(button):not(button *),
+        .admin-light-theme .fixed [class*="text-slate-500"]:not(button):not(button *),
+        .admin-light-theme [class*="fixed"] [class*="text-slate-500"]:not(button):not(button *) {
+          color: #000000 !important;
+        }
+
+        .admin-light-theme .fixed input,
+        .admin-light-theme .fixed select,
+        .admin-light-theme .fixed textarea,
+        .admin-light-theme [class*="fixed"] input,
+        .admin-light-theme [class*="fixed"] select,
+        .admin-light-theme [class*="fixed"] textarea {
+          color: #000000 !important;
+          background-color: #ffffff !important;
+          border: 1px solid #cbd5e1 !important;
+          font-weight: 500 !important;
+        }
+
+        .admin-light-theme .fixed input::placeholder,
+        .admin-light-theme .fixed textarea::placeholder,
+        .admin-light-theme [class*="fixed"] input::placeholder,
+        .admin-light-theme [class*="fixed"] textarea::placeholder {
+          color: #475569 !important;
+          opacity: 1 !important;
+        }
+
+        /* Modals & Dialogs */
+        .admin-light-theme div[class*="bg-black/60"],
+        .admin-light-theme div[class*="bg-black/75"],
+        .admin-light-theme div[class*="bg-black/"] {
+          background-color: rgba(15, 23, 42, 0.5) !important;
+        }
+        .admin-light-theme div[class*="bg-slate-950"],
+        .admin-light-theme div[class*="bg-slate-900"] {
           background-color: #ffffff !important;
           border-color: #cbd5e1 !important;
           border-radius: 2px !important;

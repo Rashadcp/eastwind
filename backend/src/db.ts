@@ -152,6 +152,14 @@ export interface ISolutionPage extends Document {
   heroTagline?: string;
   heroTitle?: string;
   heroDescription?: string;
+  applicationsHeroBgImage?: string;
+  applicationsHeroTagline?: string;
+  applicationsHeroTitle?: string;
+  applicationsHeroDescription?: string;
+  servicesHeroBgImage?: string;
+  servicesHeroTagline?: string;
+  servicesHeroTitle?: string;
+  servicesHeroDescription?: string;
   industriesTagline?: string;
   industriesTitle?: string;
   industriesDesc?: string;
@@ -249,9 +257,9 @@ const SolutionSchema = new Schema<ISolution>({
   id: { type: String, required: true, unique: true, index: true },
   title: { type: String, required: true },
   subLabel: { type: String, default: "" },
-  tagline: { type: String, required: true },
+  tagline: { type: String, default: "" },
   accent: { type: String, enum: ["blue", "orange"], default: "blue" },
-  description: { type: String, required: true },
+  description: { type: String, default: "" },
   detailedContent: { type: String, default: "" },
   features: { type: [String], default: [] },
   compliance: { type: [String], default: [] },
@@ -274,8 +282,8 @@ const ApplicationSchema = new Schema<IApplication>({
   id: { type: String, required: true, unique: true, index: true },
   title: { type: String, required: true },
   category: { type: String, default: "" },
-  tagline: { type: String, required: true },
-  overview: { type: String, required: true },
+  tagline: { type: String, default: "" },
+  overview: { type: String, default: "" },
   accentHex: { type: String, default: "#38bdf8" },
   capabilities: [{ title: String, body: String }],
   useCases: { type: [String], default: [] },
@@ -287,8 +295,8 @@ const ServiceSchema = new Schema<IService>({
   id: { type: String, required: true, unique: true, index: true },
   title: { type: String, required: true },
   category: { type: String, default: "" },
-  tagline: { type: String, required: true },
-  overview: { type: String, required: true },
+  tagline: { type: String, default: "" },
+  overview: { type: String, default: "" },
   accentHex: { type: String, default: "#10b981" },
   capabilities: [{ title: String, body: String }],
   deliverables: { type: [String], default: [] },
@@ -375,6 +383,14 @@ const SolutionPageSchema = new Schema<ISolutionPage>({
   heroTagline: { type: String },
   heroTitle: { type: String },
   heroDescription: { type: String },
+  applicationsHeroBgImage: { type: String },
+  applicationsHeroTagline: { type: String },
+  applicationsHeroTitle: { type: String },
+  applicationsHeroDescription: { type: String },
+  servicesHeroBgImage: { type: String },
+  servicesHeroTagline: { type: String },
+  servicesHeroTitle: { type: String },
+  servicesHeroDescription: { type: String },
   industriesTagline: { type: String },
   industriesTitle: { type: String },
   industriesDesc: { type: String },
@@ -405,7 +421,7 @@ const SolutionPageSchema = new Schema<ISolutionPage>({
   gatewayDesc: { type: String },
   solutionScopeOptions: [{ value: String, label: String }],
   submitButtonText: { type: String }
-});
+}, { strict: false });
 
 const BrandSchema = new Schema<IBrand>({
   id: { type: String, required: true, unique: true, index: true },
@@ -431,7 +447,7 @@ const SuccessStorySchema = new Schema<ISuccessStory>({
   title: { type: String, required: true },
   client: { type: String, required: true },
   category: { type: String, default: "Industrial Safety" },
-  summary: { type: String, required: true },
+  summary: { type: String, default: "" },
   challenge: { type: String, default: "" },
   solution: { type: String, default: "" },
   results: [{ label: String, value: String }],

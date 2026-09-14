@@ -8,7 +8,7 @@ interface CacheEntry<T> {
 const memoryCache = new Map<string, CacheEntry<any>>();
 const pendingRequests = new Map<string, Promise<any>>();
 
-const DEFAULT_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const DEFAULT_TTL_MS = 10 * 1000; // 10 seconds default TTL (avoids serving stale data after admin edits)
 
 /**
  * Cached API fetch with Stale-While-Revalidate and In-Flight Request Deduplication
@@ -19,13 +19,14 @@ export async function cachedFetch<T = any>(
     ttlMs?: number;
     fallback?: T;
     signal?: AbortSignal;
+    cache?: RequestCache;
   }
 ): Promise<T> {
   const ttl = options?.ttlMs ?? DEFAULT_TTL_MS;
   const now = Date.now();
   const cached = memoryCache.get(url);
 
-  // Return fresh cache immediately
+  // Return fresh cache immediately if within TTL
   if (cached && now - cached.timestamp < ttl) {
     return cached.data;
   }
@@ -40,13 +41,16 @@ export async function cachedFetch<T = any>(
     }
   }
 
-  // Perform the fetch
+  // Perform the fetch with no-store to ensure latest dynamic database content
   const fetchPromise = (async () => {
     try {
       const res = await fetch(url, {
         signal: options?.signal,
-        // Allow HTTP cache where supported
-        cache: "default",
+        cache: options?.cache ?? "no-store",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+        },
       });
 
       if (!res.ok) {
@@ -96,5 +100,8 @@ export function invalidateCache(url?: string): void {
     memoryCache.delete(url);
   } else {
     memoryCache.clear();
+  }
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("cms-cache-cleared", { detail: { url } }));
   }
 }

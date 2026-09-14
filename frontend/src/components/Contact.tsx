@@ -10,6 +10,7 @@ interface DropdownOption {
 }
 
 interface ContactInfoData {
+  locations?: { title: string; address: string }[];
   hqTitle: string;
   hqAddress: string;
   hubTitle: string;
@@ -32,6 +33,16 @@ interface HomeContactData {
 }
 
 const defaultContactInfo: ContactInfoData = {
+  locations: [
+    {
+      title: "Al Khobar Headquarters",
+      address: "King Faisal West Road, Bandariyah District,\nAl Khobar, Kingdom of Saudi Arabia",
+    },
+    {
+      title: "Riyadh Technology Hub",
+      address: "Olaya District, Riyadh,\nKingdom of Saudi Arabia",
+    },
+  ],
   hqTitle: "Al Khobar Headquarters",
   hqAddress: "King Faisal West Road, Bandariyah District,\nAl Khobar, Kingdom of Saudi Arabia",
   hubTitle: "Riyadh Technology Hub",
@@ -77,13 +88,14 @@ export default function Contact() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         const [infoRes, homeRes] = await Promise.all([
-          fetch(`${baseUrl}/api/contact-settings/contact_info`, { cache: "no-store" }),
-          fetch(`${baseUrl}/api/contact-settings/home_contact`, { cache: "no-store" })
+          fetch(`${baseUrl}/api/contact-settings/contact_info?t=${Date.now()}`, { cache: "no-store" }),
+          fetch(`${baseUrl}/api/contact-settings/home_contact?t=${Date.now()}`, { cache: "no-store" })
         ]);
 
         if (infoRes.ok) {
           const json = await infoRes.json();
           setContactInfo({
+            locations: Array.isArray(json.locations) && json.locations.length > 0 ? json.locations : undefined,
             hqTitle: json.hqTitle !== undefined ? json.hqTitle : defaultContactInfo.hqTitle,
             hqAddress: json.hqAddress !== undefined ? json.hqAddress : defaultContactInfo.hqAddress,
             hubTitle: json.hubTitle !== undefined ? json.hubTitle : defaultContactInfo.hubTitle,
@@ -114,6 +126,9 @@ export default function Contact() {
     };
 
     fetchContactSettings();
+    const handleCmsUpdate = () => fetchContactSettings();
+    window.addEventListener("cms-cache-cleared", handleCmsUpdate);
+    return () => window.removeEventListener("cms-cache-cleared", handleCmsUpdate);
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -185,49 +200,38 @@ export default function Contact() {
           >
             <div className="space-y-8">
               
-              {/* Al Khobar HQ */}
-              {(contactInfo.hqTitle?.trim() || contactInfo.hqAddress?.trim()) && (
-                <div className="flex gap-5 items-start group">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-slate-200/60 shadow-xs shrink-0 transition-all duration-300 group-hover:border-[#1e3e8f] group-hover:shadow-md">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3e8f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
+              {/* Dynamic Locations List */}
+              {(contactInfo.locations && contactInfo.locations.length > 0
+                ? contactInfo.locations
+                : [
+                    { title: contactInfo.hqTitle, address: contactInfo.hqAddress },
+                    { title: contactInfo.hubTitle, address: contactInfo.hubAddress }
+                  ]
+              ).filter(l => (l.title && l.title.trim()) || (l.address && l.address.trim())).map((loc, idx) => {
+                const isRed = idx % 2 === 1;
+                const strokeColor = isRed ? "#c22026" : "#1e3e8f";
+                const hoverBorderClass = isRed ? "group-hover:border-[#c22026]" : "group-hover:border-[#1e3e8f]";
+                return (
+                  <div key={idx} className="flex gap-5 items-start group">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-white border border-slate-200/60 shadow-xs shrink-0 transition-all duration-300 ${hoverBorderClass} group-hover:shadow-md`}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                    <div>
+                      {loc.title && (
+                        <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-1">{loc.title}</h4>
+                      )}
+                      {loc.address && (
+                        <p className="text-[0.88rem] text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
+                          {loc.address}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    {contactInfo.hqTitle && (
-                      <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-1">{contactInfo.hqTitle}</h4>
-                    )}
-                    {contactInfo.hqAddress && (
-                      <p className="text-[0.88rem] text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
-                        {contactInfo.hqAddress}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Riyadh Hub */}
-              {(contactInfo.hubTitle?.trim() || contactInfo.hubAddress?.trim()) && (
-                <div className="flex gap-5 items-start group">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-slate-200/60 shadow-xs shrink-0 transition-all duration-300 group-hover:border-[#c22026] group-hover:shadow-md">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c22026" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
-                  </div>
-                  <div>
-                    {contactInfo.hubTitle && (
-                      <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-1">{contactInfo.hubTitle}</h4>
-                    )}
-                    {contactInfo.hubAddress && (
-                      <p className="text-[0.88rem] text-slate-500 leading-relaxed font-light m-0 whitespace-pre-line">
-                        {contactInfo.hubAddress}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
+                );
+              })}
 
               {/* Phone & Email */}
               <div className="flex gap-5 items-start group">

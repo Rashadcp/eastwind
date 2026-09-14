@@ -43,6 +43,43 @@ export class AboutModel {
         { new: true, upsert: true }
       ).lean().exec();
     }
+    if (!item && id === "page") {
+      item = await AboutContent.findOneAndUpdate(
+        { id: "page" },
+        {
+          id: "page",
+          heroBgImage: "/about_hero_bg.png?v=3",
+          heroTagline: "Company Overview",
+          heroTitle: "Mission-Critical Safety Infrastructure",
+          heroDescription: "East Wind is a specialized safety solutions provider in Saudi Arabia, delivering the entire lifecycle of engineered projects.",
+          mandateBadge: "Operational Strength",
+          mandateTitle: "Our Core Safety Mandate",
+          mandateParagraph1: "East Wind operates with a core strength centered on implementing advanced, cyber-physical safety technologies to address high-risk industrial safety challenges. We take full regional ownership of engineered packages, ensuring that refinery control rooms, offshore platforms, and hazardous factories are protected against thermal, kinetic, and chemical events.",
+          mandateParagraph2: "By integrating smart IoT sensors, intrinsically safe Zone 1 mobile devices, and physics-informed neural network analytics, we help major industrial plants shift from reactive emergency firefighting to proactive, automated safety control loops. This unified approach drastically lowers client Total Cost of Ownership (TCO) while guaranteeing absolute safety compliance.",
+          facilityImage: "/analyzer_shelter.webp",
+          facilityCode: "SYS.FACILITY.IMG.01",
+          positioning: [
+            { title: "Regional Safety Leader", text: "Recognized as one of the region’s premier providers of high-end, complex industrial safety systems." },
+            { title: "HCIS Standard Authority", text: "Trusted engineering partner executing projects certified to SAF-01, SAF-12, and SASO directives." },
+            { title: "Lifecycle Ownership", text: "We take full responsibility from early conceptual hazard studies to system integration and lifetime support." }
+          ],
+          metrics: [
+            { value: "70%", label: "Technical Functions Weight", desc: "Applications engineering, hardware assembly projects, instrument service, and predictive AI loops.", accent: "#1e3e8f" },
+            { value: "10+", label: "Engineers & Technicians", desc: "Highly trained, certified local technical workforce executing complex regional deployments.", accent: "#c22026" },
+            { value: "KSA", label: "Central Integration Facilities", desc: "Based in Dammam, featuring engineering office rooms, assembly workshops, and calibration labs.", accent: "#1e3e8f" }
+          ],
+          disciplines: [
+            { title: "Project Management", desc: "Rigorous execution, delivery leadership, and interface coordination across multi-vendor networks.", accent: "#1e3e8f" },
+            { title: "QA/QC & Compliance", desc: "Assuring design safety factors, testing verification logs, and international standard conformance.", accent: "#c22026" },
+            { title: "Engineering & Integration", desc: "Multi-disciplinary CAD, functional safety design, hardware assembly, and instrument calibration.", accent: "#1e3e8f" }
+          ],
+          ctaTitle: "Partner With Regional Safety Engineering Leaders",
+          ctaDescription: "Engage with our Dammam engineering offices for FEED hazard reviews, equipment sizing packages, and turnkey execution.",
+          ctaButtonText: "Initiate Technical Scoping"
+        },
+        { new: true, upsert: true }
+      ).lean().exec();
+    }
     return (item as unknown) as IAboutContent | null;
   }
 

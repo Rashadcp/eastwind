@@ -114,7 +114,7 @@ export default function AdminBrandsPage() {
   const handleOpenEdit = (item: BrandItem) => {
     clearMessages();
     setIsEdit(true);
-    setFormId(item.id);
+    setFormId(item.id || (item as any)._id || "");
     setFormName(item.name);
     setFormTagline(item.tagline || "");
     setFormSolutionName(item.solutionName || "");
@@ -233,7 +233,7 @@ export default function AdminBrandsPage() {
     try {
       const token = localStorage.getItem("admin_token");
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const url = isEdit ? `${baseUrl}/api/brands/${formId}` : `${baseUrl}/api/brands`;
+      const url = isEdit ? `${baseUrl}/api/brands/${encodeURIComponent(formId)}` : `${baseUrl}/api/brands`;
       const method = isEdit ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -262,7 +262,7 @@ export default function AdminBrandsPage() {
     try {
       const token = localStorage.getItem("admin_token");
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const res = await fetch(`${baseUrl}/api/brands/${id}`, {
+      const res = await fetch(`${baseUrl}/api/brands/${encodeURIComponent(id)}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -444,7 +444,7 @@ export default function AdminBrandsPage() {
                   Edit Brand
                 </button>
                 <button
-                  onClick={() => setDeleteTarget(brand.id)}
+                  onClick={() => setDeleteTarget(brand.id || (brand as any)._id)}
                   className="px-2.5 py-1 bg-rose-50 hover:bg-[#c22026] hover:text-white text-[#c22026] text-xs font-semibold rounded-sm transition-colors border border-rose-200 cursor-pointer"
                 >
                   Delete

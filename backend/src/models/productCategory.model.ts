@@ -58,6 +58,30 @@ function syncToDatabaseJson(categories: any[]): void {
   }
 }
 
+function buildCatQuery(idOrName: string) {
+  const decoded = decodeURIComponent(idOrName).trim();
+  const raw = idOrName.trim();
+  const orConditions: any[] = [
+    { id: raw },
+    { id: decoded },
+    { name: raw },
+    { name: decoded },
+    { id: { $regex: new RegExp(`^${raw}$`, "i") } },
+    { id: { $regex: new RegExp(`^${decoded}$`, "i") } },
+    { name: { $regex: new RegExp(`^${raw}$`, "i") } },
+    { name: { $regex: new RegExp(`^${decoded}$`, "i") } }
+  ];
+
+  if (mongoose.Types.ObjectId.isValid(raw)) {
+    orConditions.push({ _id: new mongoose.Types.ObjectId(raw) });
+  }
+  if (mongoose.Types.ObjectId.isValid(decoded)) {
+    orConditions.push({ _id: new mongoose.Types.ObjectId(decoded) });
+  }
+
+  return { $or: orConditions };
+}
+
 export class ProductCategoryModel {
   /**
    * Fetch all categories sorted by order ascending.
@@ -152,9 +176,7 @@ export class ProductCategoryModel {
     const trimmedNew = newName.trim();
     if (!trimmedNew) throw new Error("New category name is required");
 
-    const category = await ProductCategory.findOne({
-      $or: [{ id: idOrName }, { name: idOrName }]
-    }).exec();
+    const category = await ProductCategory.findOne(buildCatQuery(idOrName)).exec();
 
     if (!category) {
       throw new Error("Category not found to update");
@@ -162,13 +184,22 @@ export class ProductCategoryModel {
 
     const oldName = category.name;
     category.name = trimmedNew;
-    category.id = slugify(trimmedNew);
+    // Keep immutable category id stable so foreign references and client state do not break
+    if (!category.id) {
+      category.id = slugify(trimmedNew);
+    }
     await category.save();
 
     // Update all matching products in the Product collection!
     await Product.updateMany(
-      { brand: { $regex: new RegExp(`^${oldName}$`, "i") } },
-      { $set: { brand: trimmedNew } }
+      {
+        $or: [
+          { category: oldName },
+          { category: { $regex: new RegExp(`^${oldName}$`, "i") } },
+          { brand: { $regex: new RegExp(`^${oldName}$`, "i") } }
+        ]
+      },
+      { $set: { category: trimmedNew, brand: trimmedNew } }
     );
 
     const all = await this.getAll();
@@ -183,9 +214,7 @@ export class ProductCategoryModel {
    * Delete a category from the list.
    */
   static async delete(idOrName: string): Promise<any> {
-    const deleted = await ProductCategory.findOneAndDelete({
-      $or: [{ id: idOrName }, { name: idOrName }]
-    }).lean().exec();
+    const deleted = await ProductCategory.findOneAndDelete(buildCatQuery(idOrName)).lean().exec();
 
     if (!deleted) {
       throw new Error("Category not found to delete");

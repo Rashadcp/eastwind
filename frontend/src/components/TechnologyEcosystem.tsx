@@ -168,44 +168,54 @@ const MASTER_BRAND_CATALOG: BrandPortfolioItem[] = [
 
 export default function TechnologyEcosystem() {
   const [brands, setBrands] = useState<BrandPortfolioItem[]>(MASTER_BRAND_CATALOG);
-  const [activeBrandId, setActiveBrandId] = useState<string>(MASTER_BRAND_CATALOG[0].id);
+  const [activeBrandId, setActiveBrandId] = useState<string>(MASTER_BRAND_CATALOG[0]?.id || "");
   const [activeSlideIndices, setActiveSlideIndices] = useState<Record<string, number>>({});
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
-  // Fetch dynamic brands from API and merge cleanly with master catalog
-  useEffect(() => {
-    async function fetchBrands() {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${baseUrl}/api/brands`);
-        if (res.ok) {
-          const apiBrands = await res.json();
-          if (Array.isArray(apiBrands)) {
-            if (apiBrands.length > 0) {
-              const mappedApiBrands: BrandPortfolioItem[] = apiBrands.map((b: any) => ({
-                id: b.id,
-                name: b.name,
-                tagline: b.solutionName || b.tagline || "Brand Products",
-                logoUrl: b.logoUrl || b.imageUrl || "",
-                accentTone: b.accent === "orange" ? "orange" : b.accent === "red" ? "red" : "blue",
-                products: (b.products || []).map((p: any) => ({
-                  id: p.id,
-                  name: p.name,
-                  imageUrl: p.imageUrl || "/products/default-fire-fighting-rescue.png"
-                }))
-              }));
+  // Fetch dynamic brands from API with cache-busting
+  const fetchBrands = async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const res = await fetch(`${baseUrl}/api/brands?t=${Date.now()}`, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+        },
+      });
+      if (res.ok) {
+        const apiBrands = await res.json();
+        if (Array.isArray(apiBrands) && apiBrands.length > 0) {
+          const mappedApiBrands: BrandPortfolioItem[] = apiBrands.map((b: any) => ({
+            id: b.id,
+            name: b.name,
+            tagline: b.solutionName || b.tagline || "Brand Products",
+            logoUrl: b.logoUrl || b.imageUrl || "",
+            accentTone: b.accent === "orange" ? "orange" : b.accent === "red" ? "red" : "blue",
+            products: (b.products || []).map((p: any) => ({
+              id: p.id,
+              name: p.name,
+              imageUrl: p.imageUrl || "/products/default-fire-fighting-rescue.png"
+            }))
+          }));
 
-              setBrands(mappedApiBrands);
-            } else {
-              setBrands([]);
-            }
-          }
+          setBrands(mappedApiBrands);
+          setActiveBrandId((prev) => {
+            return mappedApiBrands.some((b) => b.id === prev) ? prev : mappedApiBrands[0].id;
+          });
         }
-      } catch (err) {
-        console.error("Using master brand catalog fallback:", err);
       }
+    } catch (err) {
+      console.warn("Using master brand catalog fallback:", err);
     }
+  };
+
+  useEffect(() => {
     fetchBrands();
+
+    const handleCacheCleared = () => fetchBrands();
+    window.addEventListener("cms-cache-cleared", handleCacheCleared);
+    return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, []);
 
   const activeBrand = brands.find((b) => b.id === activeBrandId) || brands[0];

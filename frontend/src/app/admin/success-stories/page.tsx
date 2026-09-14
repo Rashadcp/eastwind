@@ -99,7 +99,7 @@ export default function AdminSuccessStoriesPage() {
   const handleOpenEditModal = (story: SuccessStoryItem) => {
     clearMessages();
     setIsEdit(true);
-    setFormId(story.id);
+    setFormId(story.id || (story as any)._id || "");
     setFormTitle(story.title);
     setFormClient(story.client);
     setFormCategory(story.category || "");
@@ -185,7 +185,7 @@ export default function AdminSuccessStoriesPage() {
         results: formResults,
       };
 
-      const url = isEdit ? `${baseUrl}/api/success-stories/${formId}` : `${baseUrl}/api/success-stories`;
+      const url = isEdit ? `${baseUrl}/api/success-stories/${encodeURIComponent(formId)}` : `${baseUrl}/api/success-stories`;
       const method = isEdit ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -213,7 +213,7 @@ export default function AdminSuccessStoriesPage() {
     try {
       const token = localStorage.getItem("admin_token");
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const res = await fetch(`${baseUrl}/api/success-stories/${id}`, {
+      const res = await fetch(`${baseUrl}/api/success-stories/${encodeURIComponent(id)}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -385,7 +385,7 @@ export default function AdminSuccessStoriesPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setDeleteTarget(story.id)}
+                    onClick={() => setDeleteTarget(story.id || (story as any)._id)}
                     className="px-2.5 py-1 text-xs font-semibold text-[#c22026] bg-rose-50 hover:bg-[#c22026] hover:text-white border border-rose-200 rounded-sm transition-colors cursor-pointer flex items-center gap-1"
                   >
                     <span>Delete</span>

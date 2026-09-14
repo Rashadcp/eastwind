@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import IndustrySolutions from "@/components/IndustrySolutions";
+import TechnologyEcosystem from "@/components/TechnologyEcosystem";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -27,7 +28,8 @@ export default function Home() {
         {/* 3. Premium Modular About Us Section */}
         <About />
 
-        {/* 6. Modern Interactive Contact & Quote Section */}
+
+        {/* 5. Modern Interactive Contact & Quote Section */}
         <Contact />
 
         {/* Global Interface Footer Information Panel */}

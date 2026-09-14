@@ -1169,7 +1169,13 @@ export default function IndustrySolutions() {
     async function loadDynamicApplications() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${baseUrl}/api/applications`);
+        const res = await fetch(`${baseUrl}/api/applications?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache"
+          }
+        });
         if (res.ok) {
           const list = await res.json();
           if (Array.isArray(list) && list.length > 0) {
@@ -1177,7 +1183,7 @@ export default function IndustrySolutions() {
               id: item.id || item._id,
               name: item.title || item.name,
               tagline: item.subLabel || item.tagline || "Technical Scope & Integration",
-              desc: item.description || item.summary || "Comprehensive industrial safety application.",
+              desc: item.overview || item.description || item.summary || "Comprehensive industrial safety application.",
               accent: item.accent === "orange" ? "#b45309" : "#1e3e8f",
               href: `/applications/${item.id || item._id}`
             }));
@@ -1189,6 +1195,10 @@ export default function IndustrySolutions() {
       }
     }
     loadDynamicApplications();
+
+    const handleCacheCleared = () => loadDynamicApplications();
+    window.addEventListener("cms-cache-cleared", handleCacheCleared);
+    return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, []);
 
   useEffect(() => {
@@ -1200,7 +1210,14 @@ export default function IndustrySolutions() {
         try {
           const controller1 = new AbortController();
           const timeoutId1 = setTimeout(() => controller1.abort(), 10000);
-          const prodsRes = await fetch(`${baseUrl}/api/products`, { signal: controller1.signal });
+          const prodsRes = await fetch(`${baseUrl}/api/products?t=${Date.now()}`, { 
+            signal: controller1.signal,
+            cache: "no-store",
+            headers: {
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+              "Pragma": "no-cache"
+            }
+          });
           clearTimeout(timeoutId1);
           if (prodsRes.ok) {
             productsCatalog = await prodsRes.json();
@@ -1215,7 +1232,14 @@ export default function IndustrySolutions() {
         try {
           const controller2 = new AbortController();
           const timeoutId2 = setTimeout(() => controller2.abort(), 10000);
-          const solPageRes = await fetch(`${baseUrl}/api/solutions-page`, { signal: controller2.signal });
+          const solPageRes = await fetch(`${baseUrl}/api/solutions-page?t=${Date.now()}`, { 
+            signal: controller2.signal,
+            cache: "no-store",
+            headers: {
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+              "Pragma": "no-cache"
+            }
+          });
           clearTimeout(timeoutId2);
           if (solPageRes.ok) {
             const data = await solPageRes.json();
@@ -1294,9 +1318,9 @@ export default function IndustrySolutions() {
                 category: ind.riskKicker || base.category,
                 imageTone: base.imageTone || "blue",
                 overview: [ind.description || base.overview[0]],
-                features: base.features,
+                features: (Array.isArray(ind.features) && ind.features.length > 0) ? ind.features : base.features,
                 applications: [ind.riskKicker || base.applications[0]],
-                benefits: base.benefits,
+                benefits: (Array.isArray(ind.benefits) && ind.benefits.length > 0) ? ind.benefits : base.benefits,
                 num: `0${idx + 1}`,
                 riskFactor: ind.riskKicker || base.riskFactor,
                 accent: ind.accent || base.accent,
@@ -1318,6 +1342,10 @@ export default function IndustrySolutions() {
       }
     }
     loadDynamicSolutions();
+
+    const handleCacheCleared = () => loadDynamicSolutions();
+    window.addEventListener("cms-cache-cleared", handleCacheCleared);
+    return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, []);
 
   const handleScrollToContact = (_item: PortfolioItem) => {

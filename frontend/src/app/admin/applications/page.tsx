@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatImageUrl } from "@/utils/image";
 
 export default function AdminApplicationsPage() {
   const [applications, setApplications] = useState<any[]>([]);
@@ -10,6 +11,14 @@ export default function AdminApplicationsPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const ITEMS_PER_PAGE = 10;
+
+  // Applications Page Hero Banner State
+  const [heroBgImage, setHeroBgImage] = useState<string>("/products/default-wireless-gas-detection.png");
+  const [heroTagline, setHeroTagline] = useState<string>("ADVANCED TECHNICAL APPLICATIONS");
+  const [heroTitle, setHeroTitle] = useState<string>("TECHNICAL APPLICATIONS PORTFOLIO");
+  const [heroDescription, setHeroDescription] = useState<string>("Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities.");
+  const [savingBanner, setSavingBanner] = useState<boolean>(false);
+  const [uploadingBanner, setUploadingBanner] = useState<boolean>(false);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -44,15 +53,101 @@ export default function AdminApplicationsPage() {
   const fetchApplications = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const res = await fetch(`${baseUrl}/api/applications`);
-      if (!res.ok) throw new Error("Failed to fetch applications");
-      const list = await res.json();
+      const [appRes, pageRes] = await Promise.all([
+        fetch(`${baseUrl}/api/applications`),
+        fetch(`${baseUrl}/api/solutions-page?t=${Date.now()}`)
+      ]);
+      if (!appRes.ok) throw new Error("Failed to fetch applications");
+      const list = await appRes.json();
       setApplications(list);
+
+      if (pageRes.ok) {
+        const pageData = await pageRes.json();
+        if (pageData.applicationsHeroBgImage) setHeroBgImage(pageData.applicationsHeroBgImage);
+        if (pageData.applicationsHeroTagline) setHeroTagline(pageData.applicationsHeroTagline);
+        if (pageData.applicationsHeroTitle) setHeroTitle(pageData.applicationsHeroTitle);
+        if (pageData.applicationsHeroDescription) setHeroDescription(pageData.applicationsHeroDescription);
+      }
     } catch (err: any) {
       console.error(err);
       setError("Failed to retrieve applications from database.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingBanner(true);
+    clearMessages();
+
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`${baseUrl}/api/upload`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (res.ok) {
+        const uploadData = await res.json();
+        if (uploadData.url) {
+          setHeroBgImage(uploadData.url);
+          setSuccess(`Hero image '${file.name}' uploaded successfully!`);
+          setUploadingBanner(false);
+          e.target.value = "";
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("Direct upload fallback:", err);
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target?.result) {
+        setHeroBgImage(event.target.result as string);
+        setSuccess(`Image processed.`);
+      }
+      setUploadingBanner(false);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  const handleSaveHeroBanner = async () => {
+    setSavingBanner(true);
+    clearMessages();
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const res = await fetch(`${baseUrl}/api/solutions-page`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          applicationsHeroBgImage: heroBgImage,
+          applicationsHeroTagline: heroTagline,
+          applicationsHeroTitle: heroTitle,
+          applicationsHeroDescription: heroDescription
+        })
+      });
+      if (!res.ok) throw new Error("Failed to save Applications Hero Banner");
+      setSuccess("Applications Page Hero Banner & Background Photo saved successfully!");
+    } catch (err: any) {
+      setError(err.message || "Failed to save Hero Banner");
+    } finally {
+      setSavingBanner(false);
     }
   };
 
@@ -88,7 +183,7 @@ export default function AdminApplicationsPage() {
   const handleOpenEdit = (item: any) => {
     clearMessages();
     setIsEdit(true);
-    setFormId(item.id);
+    setFormId(item.id || item._id || "");
     setFormTitle(item.title);
     setFormCategory(item.category || "");
     setFormTagline(item.tagline || "");
@@ -174,7 +269,7 @@ export default function AdminApplicationsPage() {
 
       let res;
       if (isEdit) {
-        res = await fetch(`${baseUrl}/api/applications/${payload.id}`, {
+        res = await fetch(`${baseUrl}/api/applications/${encodeURIComponent(payload.id)}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -206,14 +301,15 @@ export default function AdminApplicationsPage() {
   };
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
+    const target = (deleteTarget || "").trim();
+    if (!target) return;
     clearMessages();
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const token = localStorage.getItem("admin_token");
 
-      const res = await fetch(`${baseUrl}/api/applications/${deleteTarget}`, {
+      const res = await fetch(`${baseUrl}/api/applications/${encodeURIComponent(target)}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -278,6 +374,94 @@ export default function AdminApplicationsPage() {
         </div>
       )}
 
+      {/* 1. Applications Page Hero Banner & Background Photo */}
+      <div className="bg-white p-6 rounded-sm border border-slate-200 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div>
+            <h2 className="text-base font-bold text-slate-800 m-0">1. Applications Page Hero Banner & Background Photo</h2>
+            <p className="text-xs text-slate-500 mt-0.5 m-0">Customize hero banner background photo, headline title, tagline badge, and intro text for the Applications view.</p>
+          </div>
+          <button
+            type="button"
+            onClick={handleSaveHeroBanner}
+            disabled={savingBanner}
+            className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-xs shrink-0 self-start sm:self-auto"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{savingBanner ? "Saving..." : "Save Banner"}</span>
+          </button>
+        </div>
+        
+        {/* Hero Background Photo Preview & Uploader */}
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-700">Hero Background Image</label>
+          {heroBgImage && (
+            <div className="w-fit max-w-xl rounded-lg overflow-hidden border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+              <img
+                src={formatImageUrl(heroBgImage, "/products/default-wireless-gas-detection.png")}
+                alt="Applications Hero Background"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = "/products/default-wireless-gas-detection.png";
+                }}
+                className="h-48 sm:h-56 w-auto max-w-full rounded-lg object-contain block"
+              />
+            </div>
+          )}
+          <div className="flex gap-2 items-center text-xs max-w-xl">
+            <input
+              type="text"
+              value={heroBgImage}
+              onChange={(e) => setHeroBgImage(e.target.value)}
+              placeholder="Image URL or upload a file..."
+              className="w-full p-2.5 border border-slate-200 rounded-lg font-mono text-[11px]"
+            />
+            <label className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg cursor-pointer shrink-0">
+              {uploadingBanner ? "Uploading..." : "Upload Photo"}
+              <input type="file" accept="image/*" onChange={handleBannerUpload} className="hidden" />
+            </label>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div>
+            <label className="block font-bold text-slate-700 mb-1">Hero Tagline</label>
+            <input
+              type="text"
+              value={heroTagline}
+              onChange={(e) => setHeroTagline(e.target.value)}
+              className="w-full p-2.5 border border-slate-200 rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block font-bold text-slate-700 mb-1">Hero Title</label>
+            <input
+              type="text"
+              value={heroTitle}
+              onChange={(e) => setHeroTitle(e.target.value)}
+              className="w-full p-2.5 border border-slate-200 rounded-lg font-bold"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block font-bold text-slate-700 mb-1">Hero Description</label>
+          <textarea
+            rows={3}
+            value={heroDescription}
+            onChange={(e) => setHeroDescription(e.target.value)}
+            className="w-full p-2.5 border border-slate-200 rounded-sm text-xs"
+          />
+        </div>
+      </div>
+
+      <div className="border-t border-slate-200 pt-2">
+        <div className="mb-4">
+          <h2 className="text-base font-bold text-slate-800 m-0">2. Technical Applications Catalog ({totalItems} Items)</h2>
+          <p className="text-xs text-slate-500 mt-0.5 m-0">Manage individual application system cards, technical capabilities, metrics, and use cases.</p>
+        </div>
+      </div>
+
       {/* Search Input Bar */}
       <div className="relative max-w-md w-full">
         <span className="absolute left-3.5 top-2.5 text-slate-400">
@@ -341,7 +525,7 @@ export default function AdminApplicationsPage() {
                         Edit
                       </button>
                       <button
-                        onClick={() => setDeleteTarget(item.id)}
+                        onClick={() => setDeleteTarget(item.id || item._id)}
                         className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#c22026] bg-rose-50 hover:bg-[#c22026] hover:text-white transition-colors cursor-pointer border border-rose-200"
                       >
                         Delete
@@ -396,16 +580,17 @@ export default function AdminApplicationsPage() {
       {/* CRUD MODAL */}
       {showModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 w-full max-w-3xl rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-white border border-slate-200 w-full max-w-3xl rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh] text-slate-900">
             
             {/* Header */}
-            <div className="h-16 flex items-center justify-between px-8 border-b border-white/5 flex-shrink-0">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
+            <div className="h-16 flex items-center justify-between px-8 border-b border-slate-200 flex-shrink-0 bg-slate-50">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-950 m-0" style={{ color: "#000000" }}>
                 {isEdit ? `Edit Application: ${formTitle || formId}` : "Create New Application"}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 border border-white/5 text-slate-400 hover:text-white cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100 border border-slate-200 text-slate-600 hover:text-black cursor-pointer transition-colors"
+                title="Close"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -414,61 +599,65 @@ export default function AdminApplicationsPage() {
             </div>
 
             {/* Scrollable Form Content */}
-            <div className="flex-1 overflow-y-auto p-8">
+            <div className="flex-1 overflow-y-auto p-8 bg-white">
               <form id="application-form" onSubmit={handleSave} className="space-y-6">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Application Title *</label>
+                  <label className="text-[11px] font-bold font-mono uppercase tracking-wider text-black block pl-1" style={{ color: "#000000" }}>Application Title *</label>
                   <input
                     type="text"
                     required
                     placeholder="Enter visual title"
                     value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium"
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none transition-colors"
+                    style={{ color: "#000000" }}
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Category Classification *</label>
+                  <label className="text-[11px] font-bold font-mono uppercase tracking-wider text-black block pl-1" style={{ color: "#000000" }}>Category Classification *</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Safety Systems Integration"
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium"
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none transition-colors"
+                    style={{ color: "#000000" }}
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Tagline statement *</label>
+                  <label className="text-[11px] font-bold font-mono uppercase tracking-wider text-black block pl-1" style={{ color: "#000000" }}>Tagline statement *</label>
                   <input
                     type="text"
                     required
                     placeholder="Enter short tagline statement"
                     value={formTagline}
                     onChange={(e) => setFormTagline(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none transition-colors font-medium"
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none transition-colors"
+                    style={{ color: "#000000" }}
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Accent Hex Theme Color</label>
+                  <label className="text-[11px] font-bold font-mono uppercase tracking-wider text-black block pl-1" style={{ color: "#000000" }}>Accent Hex Theme Color</label>
                   <div className="flex gap-3">
                     <input
                       type="color"
                       value={formAccentHex}
                       onChange={(e) => setFormAccentHex(e.target.value)}
-                      className="w-12 h-10 bg-slate-900 border border-white/5 rounded-lg cursor-pointer"
+                      className="w-12 h-10 bg-white border border-slate-300 rounded-lg cursor-pointer"
                     />
                     <input
                       type="text"
                       placeholder="#38bdf8"
                       value={formAccentHex}
                       onChange={(e) => setFormAccentHex(e.target.value)}
-                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white placeholder-slate-650 focus:border-[#1e3e8f] focus:outline-none font-mono"
+                      className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-mono font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none"
+                      style={{ color: "#000000" }}
                     />
                   </div>
                 </div>
@@ -476,27 +665,29 @@ export default function AdminApplicationsPage() {
 
               {/* Overview */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Overview Summary *</label>
+                <label className="text-[11px] font-bold font-mono uppercase tracking-wider text-black block pl-1" style={{ color: "#000000" }}>Overview Summary *</label>
                 <textarea
                   rows={3}
                   required
                   placeholder="Enter detailed application overview"
                   value={formOverview}
                   onChange={(e) => setFormOverview(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none transition-colors"
+                  style={{ color: "#000000" }}
                 />
               </div>
 
               {/* Capabilities (Title and Body pairs) */}
-              <div className="space-y-3 pt-3 border-t border-white/5">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Key Operational Capabilities</span>
+              <div className="space-y-3 pt-3 border-t border-slate-200">
+                <span className="text-[11px] font-bold font-mono uppercase tracking-wider text-black block pl-1" style={{ color: "#000000" }}>Key Operational Capabilities</span>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <input
                     type="text"
                     placeholder="Capability Title"
                     value={capTitle}
                     onChange={(e) => setCapTitle(e.target.value)}
-                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none"
+                    className="px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none"
+                    style={{ color: "#000000" }}
                   />
                   <div className="md:col-span-2 flex gap-4">
                     <input
@@ -504,12 +695,14 @@ export default function AdminApplicationsPage() {
                       placeholder="Capability detailed description statement"
                       value={capBody}
                       onChange={(e) => setCapBody(e.target.value)}
-                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none"
+                      className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none"
+                      style={{ color: "#000000" }}
                     />
                     <button
                       type="button"
                       onClick={addCapability}
-                      className="px-5 py-3 rounded-lg bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer"
+                      className="px-5 py-3 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs transition-colors"
+                      style={{ color: "#ffffff", backgroundColor: "#1e3e8f" }}
                     >
                       Add
                     </button>
@@ -517,15 +710,15 @@ export default function AdminApplicationsPage() {
                 </div>
                 <div className="space-y-2">
                   {formCapabilities.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-start p-4 bg-white/[0.01] border border-white/5 rounded-xl">
+                    <div key={idx} className="flex justify-between items-start p-4 bg-slate-50 border border-slate-200 rounded-lg">
                       <div className="space-y-1">
-                        <span className="text-xs font-bold text-white block">{item.title}</span>
-                        <p className="text-[11px] text-slate-400 font-light leading-relaxed m-0">{item.body}</p>
+                        <span className="text-xs font-bold text-black block" style={{ color: "#000000" }}>{item.title}</span>
+                        <p className="text-[11px] text-slate-800 font-medium leading-relaxed m-0" style={{ color: "#1e293b" }}>{item.body}</p>
                       </div>
                       <button
                         type="button"
                         onClick={() => removeCapability(idx)}
-                        className="text-rose-500 hover:text-rose-455 font-bold uppercase text-[9px] tracking-wider cursor-pointer border-none bg-transparent"
+                        className="text-rose-600 hover:text-rose-700 font-bold uppercase text-[10px] tracking-wider cursor-pointer border-none bg-transparent"
                       >
                         Remove
                       </button>
@@ -535,32 +728,34 @@ export default function AdminApplicationsPage() {
               </div>
 
               {/* Use Cases (Bullet List) */}
-              <div className="space-y-3 pt-3 border-t border-white/5">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Primary Use Cases</span>
+              <div className="space-y-3 pt-3 border-t border-slate-200">
+                <span className="text-[11px] font-bold font-mono uppercase tracking-wider text-black block pl-1" style={{ color: "#000000" }}>Primary Use Cases</span>
                 <div className="flex gap-4">
                   <input
                     type="text"
                     placeholder="Enter operational scenario or use case"
                     value={useCaseInput}
                     onChange={(e) => setUseCaseInput(e.target.value)}
-                    className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f]"
+                    className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f]"
+                    style={{ color: "#000000" }}
                   />
                   <button
                     type="button"
                     onClick={addUseCase}
-                    className="px-5 py-3 rounded-lg bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer"
+                    className="px-5 py-3 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer shadow-xs transition-colors"
+                    style={{ color: "#ffffff", backgroundColor: "#1e3e8f" }}
                   >
                     Add
                   </button>
                 </div>
                 <ul className="flex flex-col gap-2 pl-0 list-none m-0">
                   {formUseCases.map((item, idx) => (
-                    <li key={idx} className="flex justify-between items-center px-4 py-3 bg-white/[0.01] border border-white/5 rounded-lg text-xs">
-                      <span className="text-slate-350 leading-relaxed font-light">{item}</span>
+                    <li key={idx} className="flex justify-between items-center px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                      <span className="text-black font-medium leading-relaxed" style={{ color: "#000000" }}>{item}</span>
                       <button
                         type="button"
                         onClick={() => removeUseCase(idx)}
-                        className="text-rose-500 hover:text-rose-400 font-bold uppercase text-[9px] tracking-wider cursor-pointer border-none bg-transparent"
+                        className="text-rose-600 hover:text-rose-700 font-bold uppercase text-[10px] tracking-wider cursor-pointer border-none bg-transparent"
                       >
                         Remove
                       </button>
@@ -570,15 +765,16 @@ export default function AdminApplicationsPage() {
               </div>
 
               {/* Metrics (Value and Label) */}
-              <div className="space-y-3 pt-3 border-t border-white/5">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block pl-1">Performance Metrics Grid</span>
+              <div className="space-y-3 pt-3 border-t border-slate-200">
+                <span className="text-[11px] font-bold font-mono uppercase tracking-wider text-black block pl-1" style={{ color: "#000000" }}>Performance Metrics Grid</span>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <input
                     type="text"
                     placeholder="Metric Value (e.g. 99.99%)"
                     value={metricValue}
                     onChange={(e) => setMetricValue(e.target.value)}
-                    className="px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none"
+                    className="px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none"
+                    style={{ color: "#000000" }}
                   />
                   <div className="md:col-span-2 flex gap-4">
                     <input
@@ -586,12 +782,14 @@ export default function AdminApplicationsPage() {
                       placeholder="Metric label (e.g. System Uptime SLA)"
                       value={metricLabel}
                       onChange={(e) => setMetricLabel(e.target.value)}
-                      className="flex-1 px-4 py-3 bg-slate-900 border border-white/5 rounded-lg text-xs text-white focus:border-[#1e3e8f] focus:outline-none"
+                      className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none"
+                      style={{ color: "#000000" }}
                     />
                     <button
                       type="button"
                       onClick={addMetric}
-                      className="px-5 py-3 rounded-lg bg-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-slate-700 cursor-pointer"
+                      className="px-5 py-3 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs transition-colors"
+                      style={{ color: "#ffffff", backgroundColor: "#1e3e8f" }}
                     >
                       Add
                     </button>
@@ -599,7 +797,7 @@ export default function AdminApplicationsPage() {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {formMetrics.map((item, idx) => (
-                    <div key={idx} className="p-4 bg-white/[0.01] border border-white/5 rounded-xl text-center space-y-2 relative group">
+                    <div key={idx} className="p-4 bg-slate-50 border border-slate-200 rounded-lg text-center space-y-2 relative group">
                       <button
                         type="button"
                         onClick={() => removeMetric(idx)}
@@ -610,7 +808,7 @@ export default function AdminApplicationsPage() {
                         </svg>
                       </button>
                       <span className="text-xl font-extrabold tracking-tight" style={{ color: formAccentHex }}>{item.value}</span>
-                      <span className="text-[9px] font-mono text-slate-450 block uppercase tracking-wider leading-relaxed">{item.label}</span>
+                      <span className="text-[10px] font-mono text-slate-800 font-bold block uppercase tracking-wider leading-relaxed" style={{ color: "#1e293b" }}>{item.label}</span>
                     </div>
                   ))}
                 </div>
@@ -620,11 +818,12 @@ export default function AdminApplicationsPage() {
             </div>
 
             {/* Fixed Footer */}
-            <div className="py-4 px-8 border-t border-white/5 flex justify-end gap-3 flex-shrink-0 bg-slate-950">
+            <div className="py-4 px-8 border-t border-slate-200 flex justify-end gap-3 flex-shrink-0 bg-slate-50">
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-6 py-2.5 rounded-lg text-slate-400 border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-6 py-2.5 rounded-lg text-black border border-slate-300 bg-white hover:bg-slate-100 text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors shadow-2xs"
+                style={{ color: "#000000", backgroundColor: "#ffffff" }}
               >
                 Cancel
               </button>
@@ -632,6 +831,7 @@ export default function AdminApplicationsPage() {
                 type="submit"
                 form="application-form"
                 className="px-8 py-2.5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-[#1e3e8f]/20"
+                style={{ color: "#ffffff", backgroundColor: "#1e3e8f" }}
               >
                 {isEdit ? "Update Application" : "Save Application"}
               </button>
@@ -644,28 +844,30 @@ export default function AdminApplicationsPage() {
       {/* Delete confirmation */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 p-8 rounded-xl w-full max-w-md text-center space-y-6">
+          <div className="bg-white border border-slate-200 p-8 rounded-xl w-full max-w-md text-center space-y-6 shadow-xl">
             <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-500 text-lg mx-auto">
               <svg className="w-6 h-6 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-bold text-white uppercase tracking-tight m-0">Confirm Delete Application</h3>
-              <p className="text-xs text-slate-400 leading-relaxed font-light m-0">
+              <h3 className="text-lg font-bold text-slate-900 uppercase tracking-tight m-0">Confirm Delete Application</h3>
+              <p className="text-xs text-slate-600 leading-relaxed font-normal m-0">
                 Are you sure you want to permanently delete application `{deleteTarget}`? This action cannot be undone.
               </p>
             </div>
             <div className="flex justify-center gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="px-5 py-2.5 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-5 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-black text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs transition-colors"
+                style={{ color: "#000000", backgroundColor: "#ffffff" }}
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="px-7 py-2.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-7 py-2.5 rounded-lg bg-[#c22026] hover:bg-[#9e1a1f] text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs transition-colors"
+                style={{ color: "#ffffff", backgroundColor: "#c22026" }}
               >
                 Delete Application
               </button>

@@ -147,8 +147,8 @@ export default async function AboutPage() {
 
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    const res = await fetch(`${baseUrl}/api/about/about_page`, {
-      next: { revalidate: 60 }
+    const res = await fetch(`${baseUrl}/api/about/about_page?t=${Date.now()}`, {
+      cache: "no-store"
     });
     if (res.ok) {
       const json = await res.json();

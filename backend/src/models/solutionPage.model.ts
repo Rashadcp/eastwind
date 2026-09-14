@@ -76,6 +76,18 @@ export class SolutionPageModel {
         { new: true, upsert: true }
       ).lean().exec();
     }
+    if (doc) {
+      const d = doc as any;
+      if (!d.applicationsHeroBgImage) d.applicationsHeroBgImage = "/products/default-wireless-gas-detection.png";
+      if (!d.applicationsHeroTagline) d.applicationsHeroTagline = "ADVANCED TECHNICAL APPLICATIONS";
+      if (!d.applicationsHeroTitle) d.applicationsHeroTitle = "TECHNICAL APPLICATIONS PORTFOLIO";
+      if (!d.applicationsHeroDescription) d.applicationsHeroDescription = "Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities.";
+
+      if (!d.servicesHeroBgImage) d.servicesHeroBgImage = "/products/default-process-instrumentation.png";
+      if (!d.servicesHeroTagline) d.servicesHeroTagline = "FIELD & ENGINEERING SERVICES";
+      if (!d.servicesHeroTitle) d.servicesHeroTitle = "SPECIALIZED ENGINEERING SERVICES";
+      if (!d.servicesHeroDescription) d.servicesHeroDescription = "Full lifecycle support, commissioning, functional safety assessments, and rapid calibration coverage across primary operating facilities.";
+    }
     return (doc as unknown) as ISolutionPage | null;
   }
 

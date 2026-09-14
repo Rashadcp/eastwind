@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import HeroModel from "../models/hero.model.js";
+import { invalidateCache } from "../utils/cache.js";
 
 export class HeroController {
   static async getHero(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -22,6 +23,7 @@ export class HeroController {
         { ...payload, id: "hero_settings" },
         { new: true, upsert: true }
       );
+      invalidateCache("hero");
       res.json(hero);
     } catch (error) {
       next(error);

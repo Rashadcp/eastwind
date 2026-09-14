@@ -31,8 +31,8 @@ const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 // 1. Fetch Product with backend API + static productsDb fallback
 async function getProduct(idOrSlug: string): Promise<ProductItem | null> {
   try {
-    const res = await fetch(`${baseUrl}/api/products/${encodeURIComponent(idOrSlug)}`, {
-      next: { revalidate: 60 },
+    const res = await fetch(`${baseUrl}/api/products/${encodeURIComponent(idOrSlug)}?t=${Date.now()}`, {
+      cache: "no-store",
     });
     if (res.ok) {
       const data = await res.json();
@@ -54,7 +54,7 @@ async function getProduct(idOrSlug: string): Promise<ProductItem | null> {
 // 2. Fetch all products for static generation
 async function getAllProducts(): Promise<ProductItem[]> {
   try {
-    const res = await fetch(`${baseUrl}/api/products`, { next: { revalidate: 60 } });
+    const res = await fetch(`${baseUrl}/api/products?t=${Date.now()}`, { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) return data;

@@ -45,7 +45,7 @@ export default function Hero() {
     async function loadHeroData() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const data = await cachedFetch<any>(`${baseUrl}/api/hero`, { fallback: null });
+        const data = await cachedFetch<any>(`${baseUrl}/api/hero?t=${Date.now()}`, { fallback: null, cache: "no-store" });
         if (data) {
           if (data.bannerImg !== undefined) setBannerImg(data.bannerImg);
           if (data.videoSrc !== undefined && (typeof window === "undefined" || window.innerWidth >= 768)) {
@@ -70,6 +70,10 @@ export default function Hero() {
       }
     }
     loadHeroData();
+
+    const handleCacheCleared = () => loadHeroData();
+    window.addEventListener("cms-cache-cleared", handleCacheCleared);
+    return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, []);
 
   // Rock-solid, mobile-optimized Apple-style scroll scrubbing

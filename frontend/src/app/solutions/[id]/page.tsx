@@ -418,8 +418,8 @@ function getSolutionImageUrl(imageUrl: string): string {
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions`, {
-      next: { revalidate: 60 }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions?t=${Date.now()}`, {
+      cache: "no-store"
     });
     if (!res.ok) return [];
     const list = await res.json();
@@ -442,8 +442,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   let product: ProductDetailsData | null = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions/${slug}`, {
-      next: { revalidate: 60 }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions/${slug}?t=${Date.now()}`, {
+      cache: "no-store"
     });
     if (res.ok) {
       product = await res.json();
@@ -517,8 +517,8 @@ export default async function ProductDetailPage({ params }: Props) {
   
   let product: ProductDetailsData | null = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions/${slug}`, {
-      next: { revalidate: 60 }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions/${slug}?t=${Date.now()}`, {
+      cache: "no-store"
     });
     if (res.ok) {
       product = await res.json();
@@ -547,8 +547,8 @@ export default async function ProductDetailPage({ params }: Props) {
 
   // Fetch dynamic custom sector items from /api/solutions-page if configured in Admin
   try {
-    const pageRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions-page`, {
-      next: { revalidate: 60 }
+    const pageRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions-page?t=${Date.now()}`, {
+      cache: "no-store"
     });
     if (pageRes.ok) {
       const pageData = await pageRes.json();
@@ -607,8 +607,8 @@ export default async function ProductDetailPage({ params }: Props) {
   // Fetch dynamic products catalog from API for related hardware
   let productsList: ProductItem[] = [];
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/products`, {
-      next: { revalidate: 60 }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/products?t=${Date.now()}`, {
+      cache: "no-store"
     });
     if (res.ok) {
       productsList = await res.json();

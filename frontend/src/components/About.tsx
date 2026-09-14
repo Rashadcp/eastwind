@@ -66,7 +66,13 @@ export default function About() {
           baseUrl = window.location.origin;
         }
 
-        const res = await fetch(`${baseUrl}/api/about/home`, { cache: "no-store" });
+        const res = await fetch(`${baseUrl}/api/about/home?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache"
+          }
+        });
         if (res.ok) {
           const json = await res.json();
           const validImg = json.imageUrl && json.imageUrl.trim() !== "" ? json.imageUrl : defaultData.imageUrl;
@@ -87,6 +93,10 @@ export default function About() {
     };
 
     fetchHomeAbout();
+
+    const handleCacheCleared = () => fetchHomeAbout();
+    window.addEventListener("cms-cache-cleared", handleCacheCleared);
+    return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, []);
 
   return (
