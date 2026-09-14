@@ -441,7 +441,7 @@ export default function AdminSeoPage() {
             <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
-            <span>+ Add New Page</span>
+            <span> Add New Page</span>
           </button>
 
           <button
