@@ -4929,15 +4929,6 @@
       "__v": 0,
       "createdAt": "2026-09-13T13:33:21.696Z",
       "updatedAt": "2026-09-13T13:33:21.696Z"
-    },
-    {
-      "_id": "6aa7912d5f1aee5976bc3203",
-      "id": "test-category-crud-renamed",
-      "name": "Test Category CRUD Renamed",
-      "order": 13,
-      "createdAt": "2026-09-14T06:16:13.674Z",
-      "updatedAt": "2026-09-14T06:16:13.804Z",
-      "__v": 0
     }
   ]
 }
