@@ -14,11 +14,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/about",
     "/contact",
     "/enquire",
+    "/privacy-policy",
   ].map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
-    priority: route === "" ? 1.0 : 0.8,
+    priority: route === "" ? 1.0 : (route === "/privacy-policy" ? 0.5 : 0.8),
   }));
 
   // Fetch Products
