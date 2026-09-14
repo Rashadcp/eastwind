@@ -34,7 +34,7 @@ interface FooterData {
 }
 
 const DEFAULT_FOOTER: FooterData = {
-  logoUrl: "/logo.png",
+  logoUrl: "/blue logo (3).png",
   tagline: "Sales, renting, and servicing of world-class safety products and engineered solutions for the Marine, Oil & Gas, Petrochemical, and Civil Defense sectors.",
   badgeText: "Certified Marine & Industrial Safety Partner",
   solutionsTitle: "Safety Solutions",
@@ -122,7 +122,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="w-full bg-white/80 backdrop-blur-3xl saturate-[160%] border-t border-white/90 rounded-none py-14 sm:py-16 px-6 sm:px-10 relative overflow-hidden mt-0 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.85),0_-20px_50px_-15px_rgba(15,23,42,0.05)] z-10">
+    <footer className="w-full bg-white/95 backdrop-blur-3xl border-t border-white/90 rounded-none py-14 sm:py-16 px-6 sm:px-10 relative overflow-hidden mt-0 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.85),0_-20px_50px_-15px_rgba(15,23,42,0.05)] z-10">
       {/* High-Tech Industrial Grid Backdrop Overlay */}
       <div className="industrial-grid absolute inset-0 opacity-[0.02] pointer-events-none z-0" />
 
@@ -142,11 +142,14 @@ export default function Footer() {
             footer.tagline && footer.tagline.trim() ? "h-10 mb-6" : "h-auto py-2"
           }`}>
             <img
-              src={formatImageUrl(footer.logoUrl, "/logo.png")}
+              src={formatImageUrl(footer.logoUrl, "/blue logo (3).png")}
               alt="East Wind"
               className={`${
                 footer.tagline && footer.tagline.trim() ? "h-10" : "h-12 sm:h-14"
               } w-auto object-contain`}
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = "/logo.png";
+              }}
             />
           </div>
           {footer.tagline && footer.tagline.trim() ? (
