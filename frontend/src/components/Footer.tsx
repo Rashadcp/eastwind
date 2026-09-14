@@ -56,15 +56,9 @@ const DEFAULT_FOOTER: FooterData = {
   telephone: "+966 570 833 214",
   email: "enquiry@eastwind.sa",
   copyright: `© ${new Date().getFullYear()} East Wind Safety. All rights reserved. Premium Safety Products & Solutions Integrator.`,
-  solutionsLinks: [
-    { name: "Oil & Gas Industry", href: "/solutions/oil-and-gas" },
-    { name: "Petrochemical Infrastructure", href: "/solutions/petrochemicals" },
-    { name: "Civil Defense & Military", href: "/solutions/civil-defense" },
-    { name: "Marine & Offshore Platforms", href: "/solutions/marine-offshore" },
-    { name: "Utility & Power Grids", href: "/solutions/utility-power" }
-  ],
+  solutionsLinks: [],
   bottomLinks: [
-    { name: "Privacy Policy", href: "/about" }
+    { name: "Privacy Policy", href: "/privacy-policy" }
   ]
 };
 
@@ -99,7 +93,7 @@ export default function Footer() {
             logoUrl: footerDoc?.logoUrl || "/logo.png",
             tagline: typeof footerDoc?.tagline === "string" ? footerDoc.tagline : DEFAULT_FOOTER.tagline,
             badgeText: typeof footerDoc?.badgeText === "string" ? footerDoc.badgeText : DEFAULT_FOOTER.badgeText,
-            solutionsTitle: typeof footerDoc?.solutionsTitle === "string" && footerDoc.solutionsTitle.trim() ? footerDoc.solutionsTitle : DEFAULT_FOOTER.solutionsTitle,
+            solutionsTitle: "",
             operationsTitle: typeof footerDoc?.operationsTitle === "string" && footerDoc.operationsTitle.trim() ? footerDoc.operationsTitle : DEFAULT_FOOTER.operationsTitle,
             locations: locs,
             hqTitle: locs[0]?.title || footerDoc?.hqTitle || contactDoc?.hqTitle || DEFAULT_FOOTER.hqTitle,
@@ -109,9 +103,7 @@ export default function Footer() {
             telephone: footerDoc?.telephone || contactDoc?.telephone || DEFAULT_FOOTER.telephone,
             email: footerDoc?.email || contactDoc?.email || DEFAULT_FOOTER.email,
             copyright: typeof footerDoc?.copyright === "string" ? footerDoc.copyright : DEFAULT_FOOTER.copyright,
-            solutionsLinks: Array.isArray(footerDoc?.solutionsLinks)
-              ? footerDoc.solutionsLinks
-              : DEFAULT_FOOTER.solutionsLinks,
+            solutionsLinks: [],
             bottomLinks: Array.isArray(footerDoc?.bottomLinks)
               ? footerDoc.bottomLinks
               : DEFAULT_FOOTER.bottomLinks
@@ -129,8 +121,6 @@ export default function Footer() {
     return () => window.removeEventListener("cms-cache-cleared", handleCacheCleared);
   }, []);
 
-  const hasSolutions = footer.solutionsLinks && footer.solutionsLinks.length > 0;
-
   return (
     <footer className="w-full bg-white/80 backdrop-blur-3xl saturate-[160%] border-t border-white/90 rounded-none py-14 sm:py-16 px-6 sm:px-10 relative overflow-hidden mt-0 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.85),0_-20px_50px_-15px_rgba(15,23,42,0.05)] z-10">
       {/* High-Tech Industrial Grid Backdrop Overlay */}
@@ -140,9 +130,9 @@ export default function Footer() {
         footer.tagline && footer.tagline.trim() ? "items-start" : "items-center"
       }`}>
         
-        {/* Column 1: Brand & Mission (4 or 5 cols) */}
+        {/* Column 1: Brand & Mission (5 cols) */}
         <div 
-          className={`${hasSolutions ? "lg:col-span-4" : "lg:col-span-5"} flex flex-col transition-all duration-300 ${
+          className={`lg:col-span-5 flex flex-col transition-all duration-300 ${
             footer.tagline && footer.tagline.trim()
               ? "justify-start items-start"
               : "justify-center items-center self-center my-auto text-center"
@@ -161,7 +151,7 @@ export default function Footer() {
           </div>
           {footer.tagline && footer.tagline.trim() ? (
             <p 
-              className="text-[0.92rem] text-slate-600 max-w-[420px] leading-relaxed m-0 font-normal"
+              className="text-[0.92rem] text-slate-600 max-w-[440px] leading-relaxed m-0 font-normal"
               style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
             >
               {footer.tagline}
@@ -169,36 +159,8 @@ export default function Footer() {
           ) : null}
         </div>
 
-        {/* Column 2: Safety Solutions Links (3 cols, if populated) */}
-        {hasSolutions && (
-          <div className="lg:col-span-3 flex flex-col justify-start">
-            <div className="h-10 flex items-center mb-6">
-              <span 
-                className="text-slate-900 uppercase text-[0.75rem] font-bold tracking-[0.25em]"
-                style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
-              >
-                {footer.solutionsTitle || "Safety Solutions"}
-              </span>
-            </div>
-            <ul className="flex flex-col gap-2.5 p-0 m-0 list-none">
-              {footer.solutionsLinks.map((link, idx) => (
-                <li key={idx} className="m-0 p-0">
-                  <Link
-                    href={link.href}
-                    className="group/sol inline-flex items-center text-slate-600 hover:text-[#1e3e8f] text-[0.85rem] font-normal transition-colors duration-200 no-underline"
-                    style={{ fontFamily: "var(--font-poppins), var(--font-sans), sans-serif" }}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/sol:bg-[#1e3e8f] mr-2 transition-colors duration-200 shrink-0" />
-                    <span>{link.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Column 3: Operations & Contact Info (5 or 7 cols) */}
-        <div className={`${hasSolutions ? "lg:col-span-5" : "lg:col-span-7"} flex flex-col justify-start`}>
+        {/* Column 2: Operations & Contact Info (7 cols) */}
+        <div className="lg:col-span-7 flex flex-col justify-start">
           <div className="h-10 flex items-center mb-6">
             <span 
               className="text-slate-900 uppercase text-[0.75rem] font-bold tracking-[0.25em]"

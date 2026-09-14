@@ -233,6 +233,26 @@ export interface IBrand extends Document {
   products: IBrandProduct[];
 }
 
+export interface IPrivacyPolicySection {
+  id?: string;
+  title: string;
+  content: string;
+  order?: number;
+}
+
+export interface IPrivacyPolicy extends Document {
+  id: string; // 'privacy_policy'
+  heroTitle?: string;
+  heroTagline?: string;
+  heroBgImage?: string;
+  effectiveDate?: string;
+  introText?: string;
+  sections?: IPrivacyPolicySection[];
+  contactEmail?: string;
+  contactPhone?: string;
+  contactAddress?: string;
+}
+
 // --- Mongoose Schemas ---
 
 const ProductSchema = new Schema<IProduct>({
@@ -468,6 +488,26 @@ export const ContactSettings = mongoose.models.ContactSettings || mongoose.model
 export const SolutionPage = mongoose.models.SolutionPage || mongoose.model<ISolutionPage>("SolutionPage", SolutionPageSchema);
 export const Brand = mongoose.models.Brand || mongoose.model<IBrand>("Brand", BrandSchema);
 export const SuccessStory = mongoose.models.SuccessStory || mongoose.model<ISuccessStory>("SuccessStory", SuccessStorySchema);
+
+const PrivacyPolicySchema = new Schema<IPrivacyPolicy>({
+  id: { type: String, required: true, unique: true, index: true },
+  heroTitle: { type: String, default: "Privacy Policy" },
+  heroTagline: { type: String, default: "Commitment to Data Protection & Regulatory Compliance" },
+  heroBgImage: { type: String, default: "/about_hero_bg.png?v=3" },
+  effectiveDate: { type: String, default: "September 14, 2026" },
+  introText: { type: String, default: "" },
+  sections: [{
+    id: String,
+    title: String,
+    content: String,
+    order: Number
+  }],
+  contactEmail: { type: String, default: "enquiry@eastwind.sa" },
+  contactPhone: { type: String, default: "+966 570 833 214" },
+  contactAddress: { type: String, default: "P14, 2nd Industrial City, Dammam, Kingdom of Saudi Arabia" }
+}, { timestamps: true });
+
+export const PrivacyPolicy = mongoose.models.PrivacyPolicy || mongoose.model<IPrivacyPolicy>("PrivacyPolicy", PrivacyPolicySchema);
 
 // --- Database Seeding logic ---
 

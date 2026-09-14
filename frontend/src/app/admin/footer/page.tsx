@@ -36,16 +36,10 @@ export default function AdminFooterPage() {
   const [copyright, setCopyright] = useState<string>(`© ${new Date().getFullYear()} East Wind Safety. All rights reserved. Premium Safety Products & Solutions Integrator.`);
 
   // Custom links
-  const [solutionsLinks, setSolutionsLinks] = useState<FooterLink[]>([
-    { name: "Oil & Gas Industry", href: "/solutions/oil-and-gas" },
-    { name: "Petrochemical Infrastructure", href: "/solutions/petrochemicals" },
-    { name: "Civil Defense & Military", href: "/solutions/civil-defense" },
-    { name: "Marine & Offshore Platforms", href: "/solutions/marine-offshore" },
-    { name: "Utility & Power Grids", href: "/solutions/utility-power" }
-  ]);
+  const [solutionsLinks, setSolutionsLinks] = useState<FooterLink[]>([]);
 
   const [bottomLinks, setBottomLinks] = useState<FooterLink[]>([
-    { name: "Privacy Policy", href: "/about" }
+    { name: "Privacy Policy", href: "/privacy-policy" }
   ]);
 
   // Input states for adding new links
