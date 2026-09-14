@@ -118,6 +118,8 @@ const jsonLdOrg = {
   sameAs: [],
 };
 
+import ScrollToTop from "@/components/ScrollToTop";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -133,6 +135,7 @@ export default function RootLayout({
       </head>
       {/* FIXED: Changed overflow-x-hidden to overflow-x-clip so child containers can lock into sticky position */}
       <body className="relative min-h-screen bg-[#080c14] overflow-x-clip w-full max-w-full">
+        <ScrollToTop />
         {children}
       </body>
     </html>

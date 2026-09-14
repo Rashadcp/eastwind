@@ -424,17 +424,22 @@ export default function Navbar() {
     </svg>
   );
 
+  const handleNavClick = () => {
+    setActiveDropdown(null);
+    setSolutionsExpanded(false);
+    setMobileMenuOpen(false);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+  };
+
   const renderDropdownLinks = (items: NavItem[]) => (
     <div className="flex flex-col gap-1">
       {items.map((item) => (
         <Link
           key={item.name}
           href={item.href}
-          onClick={() => {
-            setActiveDropdown(null);
-            setSolutionsExpanded(false);
-            setMobileMenuOpen(false);
-          }}
+          onClick={handleNavClick}
           className="group/item min-h-[34px] flex items-center justify-between gap-2.5 p-[7px_10px] rounded-xl text-slate-600 no-underline text-[0.78rem] font-bold leading-tight transition-all duration-300 hover:text-[#1e3e8f] hover:bg-slate-50 hover:translate-x-1"
         >
           <span>{item.name}</span>
@@ -466,7 +471,7 @@ export default function Navbar() {
               }`
         }`}
       >
-        <Link href="/" className="brand-link inline-flex items-center no-underline shrink-0">
+        <Link href="/" onClick={handleNavClick} className="brand-link inline-flex items-center no-underline shrink-0">
           <div className={`transition-all duration-300 ${
             showTransparent
               ? "bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-md"
@@ -487,6 +492,7 @@ export default function Navbar() {
         <nav className="desktop-nav hidden lg:flex items-center justify-center gap-1.5" aria-label="Primary navigation">
           <Link
             href="/"
+            onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
             }`}
@@ -497,6 +503,7 @@ export default function Navbar() {
 
           <Link
             href="/about"
+            onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
             }`}
@@ -508,6 +515,7 @@ export default function Navbar() {
           {/* Products Link Button */}
           <Link
             href="/products"
+            onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
             }`}
@@ -519,6 +527,7 @@ export default function Navbar() {
           {/* Solutions Link Button */}
           <Link
             href="/solutions"
+            onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
             }`}
@@ -530,6 +539,7 @@ export default function Navbar() {
           {/* Applications Link Button */}
           <Link
             href="/solutions?type=applications"
+            onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
             }`}
@@ -541,6 +551,7 @@ export default function Navbar() {
           {/* Single Direct Services Link Button */}
           <Link
             href="/solutions?type=services"
+            onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
             }`}
@@ -551,6 +562,7 @@ export default function Navbar() {
 
           <Link
             href="/contact"
+            onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
             }`}
@@ -589,14 +601,14 @@ export default function Navbar() {
           <div className="relative z-10 flex flex-col gap-2.5">
             <Link 
               href="/" 
-              onClick={() => setMobileMenuOpen(false)} 
+              onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Home
             </Link>
             <Link 
               href="/about" 
-              onClick={() => setMobileMenuOpen(false)} 
+              onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               About Us
@@ -605,7 +617,7 @@ export default function Navbar() {
             {/* Mobile Products Direct Link */}
             <Link 
               href="/products" 
-              onClick={() => setMobileMenuOpen(false)} 
+              onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Products
@@ -614,7 +626,7 @@ export default function Navbar() {
             {/* Mobile Solutions Direct Link */}
             <Link 
               href="/solutions" 
-              onClick={() => setMobileMenuOpen(false)} 
+              onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Solutions
@@ -623,7 +635,7 @@ export default function Navbar() {
             {/* Mobile Applications Direct Link */}
             <Link 
               href="/solutions?type=applications" 
-              onClick={() => setMobileMenuOpen(false)} 
+              onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Applications
@@ -632,7 +644,7 @@ export default function Navbar() {
             {/* Mobile Services Direct Link */}
             <Link 
               href="/solutions?type=services" 
-              onClick={() => setMobileMenuOpen(false)} 
+              onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Services & Consultancy
@@ -640,7 +652,7 @@ export default function Navbar() {
 
             <Link 
               href="/contact" 
-              onClick={() => setMobileMenuOpen(false)} 
+              onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
               Contact Us

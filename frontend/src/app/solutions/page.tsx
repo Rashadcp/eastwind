@@ -710,6 +710,7 @@ function SolutionsPageContent() {
     const newUrl = cat === "solutions" ? "/solutions" : `/solutions?type=${cat}`;
     if (typeof window !== "undefined") {
       window.history.pushState(null, "", newUrl);
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
   };
 
@@ -751,14 +752,9 @@ function SolutionsPageContent() {
         setActiveTab(matched);
       }
     }
-    if (urlCat) {
-      const timer = setTimeout(() => {
-        const el = document.getElementById("industry-solutions");
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 150);
-      return () => clearTimeout(timer);
+    // Always start at top of page on load/navigation
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
   }, [urlCat, pageConfig.industries]);
 
