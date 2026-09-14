@@ -29,3 +29,6 @@ frontend/public/uploads/*
 **/uploads/*
 !**/uploads/.gitkeep
 
+# Archives
+*.zip
+
