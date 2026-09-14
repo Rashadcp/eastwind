@@ -3,6 +3,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SuccessStoriesSection from "@/components/SuccessStoriesSection";
 
+export const dynamic = "force-dynamic";
+
 interface PositioningItem {
   title: string;
   text: string;
