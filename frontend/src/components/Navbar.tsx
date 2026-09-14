@@ -40,7 +40,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<AccordionKey | null>(null);
   const [solutionsExpanded, setSolutionsExpanded] = useState<boolean>(false);
-  const [logoUrl, setLogoUrl] = useState<string>("/logo.png");
+  const [logoUrl, setLogoUrl] = useState<string>("/blue logo (3).png");
   const navRef = useRef<HTMLElement>(null);
   
   const [mobileAccordions, setMobileAccordions] = useState<Record<AccordionKey, boolean>>({
@@ -345,41 +345,29 @@ export default function Navbar() {
     async function fetchNavbarData() {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-      // Fetch applications with real-time cache-busting
+      // Fetch applications with cachedFetch
       try {
-        const res = await fetch(`${baseUrl}/api/applications?t=${Date.now()}`, {
-          cache: "no-store",
-          headers: { "Cache-Control": "no-cache, no-store, must-revalidate" }
-        });
-        if (res.ok) {
-          const list = await res.json();
+        const list = await cachedFetch<any[]>(`${baseUrl}/api/applications`, { fallback: [] });
+        if (Array.isArray(list) && list.length > 0) {
           const mapped = list.map((item: any) => ({
             name: item.title,
             href: `/applications/${item.id}`,
           }));
-          if (mapped.length > 0) {
-            setApplicationsList(mapped);
-          }
+          setApplicationsList(mapped);
         }
       } catch (err) {
         console.error("Navbar failed to fetch applications:", err);
       }
 
-      // Fetch services with real-time cache-busting
+      // Fetch services with cachedFetch
       try {
-        const res = await fetch(`${baseUrl}/api/services?t=${Date.now()}`, {
-          cache: "no-store",
-          headers: { "Cache-Control": "no-cache, no-store, must-revalidate" }
-        });
-        if (res.ok) {
-          const list = await res.json();
+        const list = await cachedFetch<any[]>(`${baseUrl}/api/services`, { fallback: [] });
+        if (Array.isArray(list) && list.length > 0) {
           const mapped = list.map((item: any) => ({
             name: item.title,
             href: `/services/${item.id}`,
           }));
-          if (mapped.length > 0) {
-            setServicesList(mapped);
-          }
+          setServicesList(mapped);
         }
       } catch (err) {
         console.error("Navbar failed to fetch services:", err);
@@ -464,17 +452,17 @@ export default function Navbar() {
         className={`pointer-events-auto flex items-center justify-between gap-4 transition-all duration-300 relative ${
           showTransparent
             ? "w-full px-10 max-sm:px-5 py-5 bg-transparent shadow-none rounded-none backdrop-blur-none scale-100"
-            : `w-[calc(100%-48px)] max-sm:w-[calc(100%-24px)] max-w-[1240px] px-6 rounded-full backdrop-blur-2xl ${
+            : `w-[calc(100%-48px)] max-sm:w-[calc(100%-24px)] max-w-[1240px] px-6 rounded-full backdrop-blur-xl ${
                 isScrolled
-                  ? "py-1.5 bg-white/85 saturate-[160%] shadow-[0_12px_36px_rgba(15,23,42,0.08)] scale-[0.985]"
-                  : "py-2.5 bg-white/80 saturate-[150%] shadow-[0_8px_30px_rgba(15,23,42,0.06)]"
+                  ? "py-1.5 bg-white/95 shadow-[0_12px_36px_rgba(15,23,42,0.08)] scale-[0.985]"
+                  : "py-2.5 bg-white/95 shadow-[0_8px_30px_rgba(15,23,42,0.06)]"
               }`
         }`}
       >
         <Link href="/" onClick={handleNavClick} className="brand-link inline-flex items-center no-underline shrink-0">
-          <div className={`transition-all duration-300 ${
+          <div className={`transition-all duration-300 px-2.5 py-1 rounded-xl ${
             showTransparent
-              ? "bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-md"
+              ? "bg-white/95 backdrop-blur-md shadow-md"
               : "bg-transparent"
           }`}>
             <img

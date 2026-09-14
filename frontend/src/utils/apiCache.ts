@@ -10,6 +10,23 @@ const pendingRequests = new Map<string, Promise<any>>();
 
 const DEFAULT_TTL_MS = 10 * 1000; // 10 seconds default TTL (avoids serving stale data after admin edits)
 
+function normalizeCacheKey(rawUrl: string): string {
+  try {
+    const isAbsolute = rawUrl.startsWith("http://") || rawUrl.startsWith("https://");
+    const u = new URL(rawUrl, "http://localhost");
+    u.searchParams.delete("t");
+    u.searchParams.delete("_");
+    u.searchParams.delete("timestamp");
+    if (isAbsolute) {
+      return u.toString();
+    }
+    const qs = u.searchParams.toString();
+    return u.pathname + (qs ? `?${qs}` : "");
+  } catch {
+    return rawUrl;
+  }
+}
+
 /**
  * Cached API fetch with Stale-While-Revalidate and In-Flight Request Deduplication
  */
@@ -22,9 +39,10 @@ export async function cachedFetch<T = any>(
     cache?: RequestCache;
   }
 ): Promise<T> {
+  const cacheKey = normalizeCacheKey(url);
   const ttl = options?.ttlMs ?? DEFAULT_TTL_MS;
   const now = Date.now();
-  const cached = memoryCache.get(url);
+  const cached = memoryCache.get(cacheKey);
 
   // Return fresh cache immediately if within TTL
   if (cached && now - cached.timestamp < ttl) {
@@ -32,9 +50,9 @@ export async function cachedFetch<T = any>(
   }
 
   // Deduplicate concurrent in-flight requests to the same URL
-  if (pendingRequests.has(url)) {
+  if (pendingRequests.has(cacheKey)) {
     try {
-      return await pendingRequests.get(url);
+      return await pendingRequests.get(cacheKey);
     } catch {
       if (cached) return cached.data;
       if (options?.fallback !== undefined) return options.fallback;
@@ -58,7 +76,7 @@ export async function cachedFetch<T = any>(
       }
 
       const data = await res.json();
-      memoryCache.set(url, { data, timestamp: Date.now() });
+      memoryCache.set(cacheKey, { data, timestamp: Date.now() });
       return data as T;
     } catch (err) {
       // If network fails or times out, return stale cache if available
@@ -70,11 +88,11 @@ export async function cachedFetch<T = any>(
       }
       throw err;
     } finally {
-      pendingRequests.delete(url);
+      pendingRequests.delete(cacheKey);
     }
   })();
 
-  pendingRequests.set(url, fetchPromise);
+  pendingRequests.set(cacheKey, fetchPromise);
 
   // If we have stale cache, return it immediately while the background request updates the cache (SWR)
   if (cached) {
@@ -88,7 +106,8 @@ export async function cachedFetch<T = any>(
  * Helper to get existing cached value without awaiting network
  */
 export function getCached<T>(url: string): T | null {
-  const entry = memoryCache.get(url);
+  const cacheKey = normalizeCacheKey(url);
+  const entry = memoryCache.get(cacheKey);
   return entry ? (entry.data as T) : null;
 }
 
@@ -97,7 +116,13 @@ export function getCached<T>(url: string): T | null {
  */
 export function invalidateCache(url?: string): void {
   if (url) {
-    memoryCache.delete(url);
+    const cacheKey = normalizeCacheKey(url);
+    memoryCache.delete(cacheKey);
+    for (const k of memoryCache.keys()) {
+      if (k.includes(url) || k.includes(cacheKey)) {
+        memoryCache.delete(k);
+      }
+    }
   } else {
     memoryCache.clear();
   }

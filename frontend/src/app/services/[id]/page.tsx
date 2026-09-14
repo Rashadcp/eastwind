@@ -289,12 +289,12 @@ export const servicesDb: Record<string, ServiceData> = {
   },
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services?t=${Date.now()}`, {
-      cache: "no-store"
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services`, {
+      next: { revalidate: 60 }
     });
     if (!res.ok) return [];
     const list = await res.json();
@@ -315,8 +315,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   let data: ServiceData | null = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services/${id}?t=${Date.now()}`, {
-      cache: "no-store"
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services/${id}`, {
+      next: { revalidate: 60 }
     });
     if (res.ok) {
       data = await res.json();
@@ -331,11 +331,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    keywords: data ? [data.title, data.category, "Safety Engineering Services KSA", "HCIS calibration", "East Wind Safety"] : [],
     openGraph: {
       title,
       description,
-      type: "website",
+      images: [{ url: "/service.png" }],
     },
     alternates: {
       canonical: `https://eastwindsafety.com/services/${id}`,
@@ -348,8 +347,8 @@ export default async function ServiceDetailPage({ params }: Props) {
   
   let data: ServiceData | null = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services/${id}?t=${Date.now()}`, {
-      cache: "no-store"
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services/${id}`, {
+      next: { revalidate: 60 }
     });
     if (res.ok) {
       data = await res.json();

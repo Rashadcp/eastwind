@@ -18,6 +18,20 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000).unref(); // .unref() prevents this timer from blocking Node from exiting
 
+function getNormalizedKey(req: Request): string {
+  const raw = req.originalUrl || req.url;
+  try {
+    const parsed = new URL(raw, "http://localhost");
+    parsed.searchParams.delete("t");
+    parsed.searchParams.delete("_");
+    parsed.searchParams.delete("timestamp");
+    const qs = parsed.searchParams.toString();
+    return parsed.pathname + (qs ? `?${qs}` : "");
+  } catch {
+    return raw;
+  }
+}
+
 /**
  * Express middleware to cache GET requests in-memory.
  */
@@ -28,7 +42,7 @@ export function cacheMiddleware(ttlMs = DEFAULT_TTL_MS) {
       return next();
     }
 
-    const key = req.originalUrl || req.url;
+    const key = getNormalizedKey(req);
     const cached = memoryCache.get(key);
 
     if (cached && Date.now() < cached.expiresAt) {

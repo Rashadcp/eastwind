@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SuccessStoriesSection from "@/components/SuccessStoriesSection";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface PositioningItem {
   title: string;
@@ -149,8 +149,8 @@ export default async function AboutPage() {
 
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    const res = await fetch(`${baseUrl}/api/about/about_page?t=${Date.now()}`, {
-      cache: "no-store"
+    const res = await fetch(`${baseUrl}/api/about/about_page`, {
+      next: { revalidate: 60 }
     });
     if (res.ok) {
       const json = await res.json();

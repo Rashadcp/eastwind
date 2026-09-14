@@ -9,8 +9,8 @@ import SolutionImage from "@/components/SolutionImage";
 import { productsDb as hardwareDb, ProductItem, getProductImageUrl } from "@/data/productsData";
 import { formatImageUrl } from "@/utils/image";
 
-// Force dynamic rendering to support real-time data fetching
-export const dynamic = "force-dynamic";
+// ISR caching with background revalidation every 60s
+export const revalidate = 60;
 export const dynamicParams = true;
 
 interface ProductDetailsData {
@@ -418,8 +418,8 @@ function getSolutionImageUrl(imageUrl: string): string {
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions?t=${Date.now()}`, {
-      cache: "no-store"
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions`, {
+      next: { revalidate: 60 }
     });
     if (!res.ok) return [];
     const list = await res.json();
@@ -442,8 +442,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   let product: ProductDetailsData | null = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions/${slug}?t=${Date.now()}`, {
-      cache: "no-store"
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions/${slug}`, {
+      next: { revalidate: 60 }
     });
     if (res.ok) {
       product = await res.json();
@@ -515,13 +515,26 @@ export default async function ProductDetailPage({ params }: Props) {
   const rawSlug = id || "";
   const slug = decodeURIComponent(rawSlug).toLowerCase().trim().replace(/[\s_]+/g, "-");
   
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
   let product: ProductDetailsData | null = null;
+  let pageData: any = null;
+  let productsList: ProductItem[] = [];
+
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions/${slug}?t=${Date.now()}`, {
-      cache: "no-store"
-    });
-    if (res.ok) {
-      product = await res.json();
+    const [solRes, pageRes, prodRes] = await Promise.allSettled([
+      fetch(`${apiUrl}/api/solutions/${slug}`, { next: { revalidate: 60 } }),
+      fetch(`${apiUrl}/api/solutions-page`, { next: { revalidate: 60 } }),
+      fetch(`${apiUrl}/api/products`, { next: { revalidate: 60 } }),
+    ]);
+
+    if (solRes.status === "fulfilled" && solRes.value.ok) {
+      product = await solRes.value.json();
+    }
+    if (pageRes.status === "fulfilled" && pageRes.value.ok) {
+      pageData = await pageRes.value.json();
+    }
+    if (prodRes.status === "fulfilled" && prodRes.value.ok) {
+      productsList = await prodRes.value.json();
     }
   } catch (error) {
     // fallback
@@ -545,37 +558,27 @@ export default async function ProductDetailPage({ params }: Props) {
     }
   }
 
-  // Fetch dynamic custom sector items from /api/solutions-page if configured in Admin
-  try {
-    const pageRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/solutions-page?t=${Date.now()}`, {
-      cache: "no-store"
+  // Apply custom sector items from pageData if configured in Admin
+  if (pageData && Array.isArray(pageData.industries)) {
+    const matchingInd = pageData.industries.find((ind: any) => {
+      const indId = (ind.id || "").toLowerCase();
+      const indName = (ind.name || "").toLowerCase();
+      return indId === slug || slug.includes(indId) || indName.includes(slug.replace(/-/g, " "));
     });
-    if (pageRes.ok) {
-      const pageData = await pageRes.json();
-      if (pageData && Array.isArray(pageData.industries)) {
-        const matchingInd = pageData.industries.find((ind: any) => {
-          const indId = (ind.id || "").toLowerCase();
-          const indName = (ind.name || "").toLowerCase();
-          return indId === slug || slug.includes(indId) || indName.includes(slug.replace(/-/g, " "));
-        });
-        if (matchingInd && Array.isArray(matchingInd.items) && matchingInd.items.length > 0) {
-          const customItems = matchingInd.items.flatMap((it: any) => {
-            if (typeof it === "string") return [it];
-            if (it && Array.isArray(it.items)) return it.items;
-            if (it && it.name) return [it.name];
-            return [];
-          });
-          if (customItems.length > 0 && product) {
-            product = {
-              ...product,
-              features: customItems,
-            };
-          }
-        }
+    if (matchingInd && Array.isArray(matchingInd.items) && matchingInd.items.length > 0) {
+      const customItems = matchingInd.items.flatMap((it: any) => {
+        if (typeof it === "string") return [it];
+        if (it && Array.isArray(it.items)) return it.items;
+        if (it && it.name) return [it.name];
+        return [];
+      });
+      if (customItems.length > 0 && product) {
+        product = {
+          ...product,
+          features: customItems,
+        };
       }
     }
-  } catch (e) {
-    // ignore
   }
 
   if (!product) {
@@ -603,19 +606,6 @@ export default async function ProductDetailPage({ params }: Props) {
   const isBlueAccent = product.accent === "blue";
   const brandColor = isBlueAccent ? "#1e3e8f" : "#c22026";
   const brandLightBg = isBlueAccent ? "#f4f7fc" : "#fffbeb";
-  
-  // Fetch dynamic products catalog from API for related hardware
-  let productsList: ProductItem[] = [];
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/products?t=${Date.now()}`, {
-      cache: "no-store"
-    });
-    if (res.ok) {
-      productsList = await res.json();
-    }
-  } catch (error) {
-    console.error("Failed to fetch products for related hardware:", error);
-  }
 
   // Filter related physical products contextually based on the active solution slug
   let relatedHardware: ProductItem[] = [];
