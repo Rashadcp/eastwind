@@ -33,10 +33,10 @@ const CORE_PAGE_KEYS = [
 ];
 
 const ROBOT_OPTIONS = [
-  { value: "index, follow", label: "Index, Follow (Recommended for public pages)" },
-  { value: "noindex, follow", label: "Noindex, Follow (Hide from search, follow links)" },
-  { value: "index, nofollow", label: "Index, Nofollow (Show in search, ignore links)" },
-  { value: "noindex, nofollow", label: "Noindex, Nofollow (Completely hidden & ignored)" }
+  { value: "index, follow", label: "Index, Follow (Recommended - Visible to Search Engines)" },
+  { value: "noindex, follow", label: "Noindex, Follow (Hide from search, follow internal links)" },
+  { value: "index, nofollow", label: "Index, Nofollow (Visible in search, ignore outbound links)" },
+  { value: "noindex, nofollow", label: "Noindex, Nofollow (Completely hidden from search engines)" }
 ];
 
 export default function AdminSeoPage() {
@@ -45,6 +45,7 @@ export default function AdminSeoPage() {
   const [formData, setFormData] = useState<SeoPageSetting | null>(null);
   const [originalData, setOriginalData] = useState<SeoPageSetting | null>(null);
 
+  const [activeTab, setActiveTab] = useState<"search" | "social" | "advanced">("search");
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
   const [uploadingOg, setUploadingOg] = useState<boolean>(false);
@@ -52,7 +53,7 @@ export default function AdminSeoPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // Add New Page Modal State
+  // Add Page Modal State
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [newPageName, setNewPageName] = useState<string>("");
   const [newPagePath, setNewPagePath] = useState<string>("");
@@ -81,7 +82,6 @@ export default function AdminSeoPage() {
       const data: SeoPageSetting[] = await res.json();
       setPages(data);
 
-      // Select initial page
       const current = data.find((p) => p.pageKey === selectedKey) || data[0];
       if (current) {
         setSelectedKey(current.pageKey);
@@ -103,7 +103,7 @@ export default function AdminSeoPage() {
   const handleSelectPage = (pageKey: string) => {
     if (hasUnsavedChanges) {
       const confirmSwitch = window.confirm(
-        "You have unsaved changes on the current page. Switching pages will discard them. Do you want to proceed?"
+        "You have unsaved changes. Switching pages will discard them. Do you want to proceed?"
       );
       if (!confirmSwitch) return;
     }
@@ -252,7 +252,7 @@ export default function AdminSeoPage() {
       setNewPagePath("");
       setNewPageTitle("");
       setNewPageDescription("");
-      setSuccess(`Custom page "${created.pageName}" added successfully!`);
+      setSuccess(`Page "${created.pageName}" created successfully!`);
     } catch (err: any) {
       console.error("Create page error:", err);
       setModalError(err.message || "Failed to create page");
@@ -350,70 +350,95 @@ export default function AdminSeoPage() {
 
   const isCorePage = formData ? CORE_PAGE_KEYS.includes(formData.pageKey) : false;
 
-  // Title & Description length indicators
   const titleLength = formData?.title?.length || 0;
   const descLength = formData?.description?.length || 0;
-
-  const getTitleBadge = (len: number) => {
-    if (len === 0) return { label: "Empty", color: "text-rose-600 bg-rose-50 border-rose-200" };
-    if (len >= 45 && len <= 65) return { label: "Optimal (45-65)", color: "text-emerald-700 bg-emerald-50 border-emerald-200" };
-    if (len < 45) return { label: "A bit short (<45)", color: "text-amber-700 bg-amber-50 border-amber-200" };
-    return { label: "May truncate (>65)", color: "text-rose-600 bg-rose-50 border-rose-200" };
-  };
-
-  const getDescBadge = (len: number) => {
-    if (len === 0) return { label: "Empty", color: "text-rose-600 bg-rose-50 border-rose-200" };
-    if (len >= 120 && len <= 160) return { label: "Optimal (120-160)", color: "text-emerald-700 bg-emerald-50 border-emerald-200" };
-    if (len < 120) return { label: "A bit short (<120)", color: "text-amber-700 bg-amber-50 border-amber-200" };
-    return { label: "May truncate (>160)", color: "text-rose-600 bg-rose-50 border-rose-200" };
-  };
-
-  const titleBadge = getTitleBadge(titleLength);
-  const descBadge = getDescBadge(descLength);
 
   if (loading) {
     return (
       <div className="py-24 text-center space-y-3">
         <div className="w-8 h-8 border-2 border-[#1e3e8f] border-t-transparent animate-spin mx-auto rounded-full" />
-        <p className="text-xs text-slate-500 font-medium">
-          Loading Meta SEO Settings & Configured Pages...
-        </p>
+        <p className="text-xs text-slate-500 font-medium">Loading Meta SEO Settings...</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6 pb-24 font-sans text-slate-800">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+      {/* Explicit Scoped CSS to enforce clean styling and protect against layout button overrides */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .seo-list-row {
+          background-color: #ffffff !important;
+          color: #1e293b !important;
+          border-left: 3px solid transparent !important;
+          transition: background-color 0.15s ease, border-color 0.15s ease !important;
+        }
+        .seo-list-row:hover {
+          background-color: #f8fafc !important;
+        }
+        .seo-list-row.is-active {
+          background-color: #f1f5f9 !important;
+          border-left: 3px solid #1e3e8f !important;
+        }
+        .seo-list-row .page-title {
+          color: #0f172a !important;
+          font-weight: 700 !important;
+        }
+        .seo-list-row.is-active .page-title {
+          color: #1e3e8f !important;
+        }
+        .seo-list-row .page-path {
+          color: #64748b !important;
+        }
+        .seo-chip-core {
+          background-color: #e2e8f0 !important;
+          color: #334155 !important;
+          border: 1px solid #cbd5e1 !important;
+        }
+        .seo-chip-custom {
+          background-color: #e0e7ff !important;
+          color: #1e3e8f !important;
+          border: 1px solid #c7d2fe !important;
+        }
+        .seo-chip-indexed {
+          background-color: #dcfce7 !important;
+          color: #15803d !important;
+          border: 1px solid #bbf7d0 !important;
+        }
+        .seo-chip-noindex {
+          background-color: #fee2e2 !important;
+          color: #b91c1c !important;
+          border: 1px solid #fecaca !important;
+        }
+      ` }} />
+
+      {/* Clean Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2 py-0.5 bg-blue-50 text-[#1e3e8f] border border-blue-200 text-[10px] font-bold rounded-xs uppercase tracking-wider">
-              Search Engine Optimization
+              SEO Management
             </span>
             <span className="text-xs text-slate-400">/</span>
-            <span className="text-xs font-semibold text-slate-600">
-              Meta Tags & OpenGraph
-            </span>
+            <span className="text-xs font-semibold text-slate-600">Page Meta Tags</span>
           </div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight m-0">
-            Meta SEO & Page Customization
+            Search Engine & Meta Optimization
           </h1>
-          <p className="text-xs text-slate-500 mt-1 m-0">
-            Customize search snippets, titles, social cards, canonical URLs, and add custom page metadata.
+          <p className="text-xs text-slate-500 mt-0.5 m-0">
+            Customize Google search appearance, OpenGraph social previews, and robots indexing directives for all site pages.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={() => {
               setModalError(null);
               setShowAddModal(true);
             }}
-            className="px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-xs rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-xs"
+            className="px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-xs"
           >
-            <svg className="w-4 h-4 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
             <span>+ Add New Page</span>
@@ -428,21 +453,21 @@ export default function AdminSeoPage() {
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
-            <span>{saving ? "Saving Changes..." : "Save Page SEO"}</span>
+            <span>{saving ? "Saving..." : "Save Changes"}</span>
           </button>
         </div>
       </div>
 
       {/* Notifications */}
       {error && (
-        <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-xs text-xs flex items-center justify-between">
+        <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 rounded-xs text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="p-1 text-rose-500 hover:text-rose-800 rounded-xs hover:bg-rose-100 cursor-pointer">
+          <button onClick={() => setError(null)} className="p-1 text-rose-500 hover:text-rose-800 rounded-xs cursor-pointer">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -451,14 +476,14 @@ export default function AdminSeoPage() {
       )}
 
       {success && (
-        <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xs text-xs flex items-center justify-between">
+        <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xs text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             <span>{success}</span>
           </div>
-          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-500 hover:text-emerald-800 rounded-xs hover:bg-emerald-100 cursor-pointer">
+          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-500 hover:text-emerald-800 rounded-xs cursor-pointer">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -466,19 +491,16 @@ export default function AdminSeoPage() {
         </div>
       )}
 
-      {/* Main Two-Column Layout */}
+      {/* Main Clean 2-Column Work Area */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Pages List (3 cols) */}
+        
+        {/* Left Column: Clean Page List (4 cols) */}
         <div className="lg:col-span-4 bg-white border border-slate-200 rounded-xs overflow-hidden shadow-xs">
-          <div className="p-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-              </svg>
-              <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider m-0">
-                Site Pages ({pages.length})
-              </h2>
-            </div>
+          {/* Header */}
+          <div className="p-3 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              Site Pages ({pages.length})
+            </span>
             <button
               type="button"
               onClick={() => {
@@ -487,18 +509,18 @@ export default function AdminSeoPage() {
               }}
               className="text-[11px] text-[#1e3e8f] hover:underline font-bold cursor-pointer"
             >
-              + New Page
+              + New
             </button>
           </div>
 
           {/* Search Box */}
-          <div className="p-2.5 border-b border-slate-100">
+          <div className="p-2.5 border-b border-slate-100 bg-white">
             <div className="relative">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search page or path..."
+                placeholder="Search page by name or path..."
                 className="w-full text-xs pl-7 pr-2.5 py-1.5 border border-slate-200 rounded-xs bg-white text-slate-800 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none"
               />
               <svg
@@ -513,54 +535,54 @@ export default function AdminSeoPage() {
             </div>
           </div>
 
-          {/* List of Pages */}
-          <div className="divide-y divide-slate-100 max-h-[620px] overflow-y-auto">
+          {/* Clean List Items (Divs with role=button to eliminate button CSS clashes) */}
+          <div className="divide-y divide-slate-100 max-h-[640px] overflow-y-auto">
             {filteredPages.map((page) => {
               const isSelected = page.pageKey === selectedKey;
               const isCore = CORE_PAGE_KEYS.includes(page.pageKey);
+              const isNoIndex = page.robots?.includes("noindex");
+
               return (
-                <button
+                <div
                   key={page.pageKey}
-                  type="button"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => handleSelectPage(page.pageKey)}
-                  className={`w-full text-left p-3 transition-colors cursor-pointer flex items-center justify-between gap-3 ${
-                    isSelected
-                      ? "bg-blue-50/70 border-l-4 border-l-[#1e3e8f]"
-                      : "hover:bg-slate-50 border-l-4 border-l-transparent"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleSelectPage(page.pageKey);
+                    }
+                  }}
+                  className={`seo-list-row p-3 cursor-pointer flex items-center justify-between gap-2 select-none ${
+                    isSelected ? "is-active" : ""
                   }`}
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
-                      <span className={`text-xs font-bold truncate ${isSelected ? "text-[#1e3e8f]" : "text-slate-800"}`}>
+                      <span className="page-title text-xs truncate">
                         {page.pageName}
                       </span>
-                      {isCore ? (
-                        <span className="text-[9px] px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded-xs border border-slate-200 font-medium">
-                          Core
-                        </span>
-                      ) : (
-                        <span className="text-[9px] px-1.5 py-0.2 bg-amber-50 text-amber-700 rounded-xs border border-amber-200 font-bold">
-                          Custom
-                        </span>
-                      )}
+                      <span
+                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded-xs uppercase tracking-tight shrink-0 ${
+                          isCore ? "seo-chip-core" : "seo-chip-custom"
+                        }`}
+                      >
+                        {isCore ? "Core" : "Custom"}
+                      </span>
                     </div>
-                    <div className="text-[11px] text-slate-400 font-mono truncate mt-0.5">
+                    <div className="page-path text-[11px] font-mono truncate mt-0.5">
                       {page.path}
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-end shrink-0">
-                    <span
-                      className={`text-[9px] px-1.5 py-0.5 rounded-xs font-semibold ${
-                        page.robots?.includes("noindex")
-                          ? "bg-rose-50 text-rose-700 border border-rose-200"
-                          : "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                      }`}
-                    >
-                      {page.robots?.includes("noindex") ? "Noindex" : "Indexed"}
-                    </span>
-                  </div>
-                </button>
+                  <span
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-xs shrink-0 ${
+                      isNoIndex ? "seo-chip-noindex" : "seo-chip-indexed"
+                    }`}
+                  >
+                    {isNoIndex ? "Noindex" : "Indexed"}
+                  </span>
+                </div>
               );
             })}
 
@@ -572,24 +594,37 @@ export default function AdminSeoPage() {
           </div>
         </div>
 
-        {/* Right Column: Editor & Live Previews (8 cols) */}
+        {/* Right Column: Clean Editor (8 cols) */}
         {formData ? (
-          <div className="lg:col-span-8 space-y-6">
-            {/* Page Title & Live SERP Card */}
-            <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="lg:col-span-8 space-y-4">
+            
+            {/* Selected Page Header & Tab Bar */}
+            <div className="bg-white border border-slate-200 rounded-xs p-4 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#1e3e8f]" />
-                  <h2 className="text-sm font-bold text-slate-900 tracking-tight m-0">
-                    Google Search Engine Snippet Preview
+                  <h2 className="text-base font-bold text-slate-900 tracking-tight m-0">
+                    {formData.pageName}
                   </h2>
+                  <span className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded-xs border border-slate-200">
+                    {formData.path}
+                  </span>
+                  {isCorePage ? (
+                    <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded-xs">
+                      Default Page
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-semibold text-[#1e3e8f] bg-blue-50 px-1.5 py-0.5 rounded-xs border border-blue-200">
+                      Custom Page
+                    </span>
+                  )}
                 </div>
-                <div className="flex items-center gap-2">
+
+                <div className="flex items-center gap-3">
                   <a
                     href={formData.path}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[11px] text-[#1e3e8f] hover:underline font-bold inline-flex items-center gap-1"
+                    className="text-xs font-semibold text-[#1e3e8f] hover:underline inline-flex items-center gap-1"
                   >
                     <span>View Public URL</span>
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -600,7 +635,7 @@ export default function AdminSeoPage() {
                     <button
                       type="button"
                       onClick={() => setShowDeleteModal(true)}
-                      className="text-[11px] text-rose-600 hover:text-rose-800 hover:underline font-bold cursor-pointer ml-2"
+                      className="text-xs text-rose-600 hover:text-rose-800 hover:underline font-semibold cursor-pointer"
                     >
                       Delete Page
                     </button>
@@ -608,325 +643,378 @@ export default function AdminSeoPage() {
                 </div>
               </div>
 
-              {/* SERP Preview Box */}
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xs font-sans">
-                <div className="flex items-center gap-2 mb-1 text-[12px] text-[#202124] leading-tight">
-                  <div className="w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-[9px] font-bold text-slate-700">
-                    E
-                  </div>
-                  <div className="flex items-center gap-1 text-[12px] text-slate-600 truncate">
-                    <span className="text-[#202124] font-medium">Eastwind Energy Arabia</span>
-                    <span>›</span>
-                    <span className="text-slate-500 font-mono text-[11px]">
-                      {formData.path === "/" ? "home" : formData.path.replace(/^\//, "")}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="text-[18px] text-[#1a0dab] hover:underline cursor-pointer leading-snug font-medium line-clamp-1">
-                  {formData.title || "Page Title goes here | Eastwind Safety Arabia"}
-                </div>
-
-                <div className="text-[13px] text-[#4d5156] leading-relaxed mt-1 line-clamp-2">
-                  {formData.description ||
-                    "Enter a meta description to see how this page will be displayed in Google search results across desktop and mobile devices."}
-                </div>
-              </div>
-
-              {/* Character Metrics Bar */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xs flex items-center justify-between text-xs">
-                  <div>
-                    <span className="font-semibold text-slate-700">Title Length: </span>
-                    <span className="font-mono text-slate-900 font-bold">{titleLength}</span>
-                    <span className="text-slate-400"> chars</span>
-                  </div>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-xs border font-semibold ${titleBadge.color}`}>
-                    {titleBadge.label}
-                  </span>
-                </div>
-
-                <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xs flex items-center justify-between text-xs">
-                  <div>
-                    <span className="font-semibold text-slate-700">Description Length: </span>
-                    <span className="font-mono text-slate-900 font-bold">{descLength}</span>
-                    <span className="text-slate-400"> chars</span>
-                  </div>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-xs border font-semibold ${descBadge.color}`}>
-                    {descBadge.label}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Core Meta Fields Form */}
-            <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
-              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider m-0 border-b border-slate-100 pb-2">
-                Core Search Engine Meta Fields
-              </h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Page Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pageName}
-                    disabled={isCorePage}
-                    onChange={(e) => handleInputChange("pageName", e.target.value)}
-                    className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 disabled:bg-slate-100 disabled:text-slate-500 focus:border-[#1e3e8f] focus:outline-none"
-                  />
-                  {isCorePage && (
-                    <span className="text-[10px] text-slate-400 mt-0.5 block">
-                      Core page key identifier is locked for routing safety.
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    URL Path
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.path}
-                    disabled={isCorePage}
-                    onChange={(e) => handleInputChange("path", e.target.value)}
-                    className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 disabled:bg-slate-100 disabled:text-slate-500 font-mono focus:border-[#1e3e8f] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <label className="block text-xs font-bold text-slate-700">
-                    Meta Title <span className="text-rose-500">*</span>
-                  </label>
-                  <span className="text-[11px] text-slate-400">
-                    Recommended: 50 – 60 characters
-                  </span>
-                </div>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => handleInputChange("title", e.target.value)}
-                  placeholder="Primary Keyword | Brand Name"
-                  className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <label className="block text-xs font-bold text-slate-700">
-                    Meta Description
-                  </label>
-                  <span className="text-[11px] text-slate-400">
-                    Recommended: 120 – 160 characters
-                  </span>
-                </div>
-                <textarea
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) => handleInputChange("description", e.target.value)}
-                  placeholder="Compelling summary of the page including target keywords and clear call to action..."
-                  className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Meta Keywords (comma-separated)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.keywords}
-                    onChange={(e) => handleInputChange("keywords", e.target.value)}
-                    placeholder="safety systems, ATEX, gas detector, KSA"
-                    className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Canonical URL
-                  </label>
-                  <input
-                    type="url"
-                    value={formData.canonicalUrl}
-                    onChange={(e) => handleInputChange("canonicalUrl", e.target.value)}
-                    placeholder="https://eastwindsafety.com/page"
-                    className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 font-mono focus:border-[#1e3e8f] focus:outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Social Sharing / OpenGraph Preview & Configuration */}
-            <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
-              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider m-0 border-b border-slate-100 pb-2">
-                Social Sharing & OpenGraph (OG) Protocol
-              </h2>
-
-              {/* Social Card Preview */}
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xs">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
-                  Social Card Preview (LinkedIn, Twitter / X, WhatsApp, Facebook)
-                </span>
-                <div className="max-w-md bg-white border border-slate-200 rounded-xs overflow-hidden shadow-xs">
-                  <div className="h-40 bg-slate-100 relative overflow-hidden flex items-center justify-center">
-                    {formData.ogImage ? (
-                      <img
-                        src={formatImageUrl(formData.ogImage)}
-                        alt="OG Preview"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/logo.png";
-                        }}
-                      />
-                    ) : (
-                      <span className="text-xs text-slate-400">No OG image selected</span>
-                    )}
-                  </div>
-                  <div className="p-3">
-                    <span className="text-[10px] text-slate-400 uppercase font-mono block">
-                      eastwindsafety.com
-                    </span>
-                    <h3 className="text-xs font-bold text-slate-900 line-clamp-1 mt-0.5 m-0">
-                      {formData.ogTitle || formData.title || "Page Title"}
-                    </h3>
-                    <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 m-0">
-                      {formData.ogDescription || formData.description || "Social description"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    OG Title (optional, defaults to Meta Title)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.ogTitle}
-                    onChange={(e) => handleInputChange("ogTitle", e.target.value)}
-                    placeholder="Custom social media title..."
-                    className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    OG Description (optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.ogDescription}
-                    onChange={(e) => handleInputChange("ogDescription", e.target.value)}
-                    placeholder="Custom social media preview description..."
-                    className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  OG Image URL / Upload
-                </label>
-                <div className="flex gap-2 items-center">
-                  <input
-                    type="text"
-                    value={formData.ogImage}
-                    onChange={(e) => handleInputChange("ogImage", e.target.value)}
-                    placeholder="/logo.png or https://example.com/image.jpg"
-                    className="flex-1 text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 font-mono focus:border-[#1e3e8f] focus:outline-none"
-                  />
-                  <label className="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-xs cursor-pointer shrink-0 transition-colors">
-                    <span>{uploadingOg ? "Uploading..." : "Upload Image"}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleUploadOgImage}
-                      disabled={uploadingOg}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-                <span className="text-[10px] text-slate-400 mt-1 block">
-                  Recommended aspect ratio: 1200x630 px (1.91:1) for crisp sharing previews.
-                </span>
-              </div>
-            </div>
-
-            {/* Robots & Advanced Directives */}
-            <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
-              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider m-0 border-b border-slate-100 pb-2">
-                Robots Directives & Indexing Control
-              </h2>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Robots Meta Tag Directive
-                </label>
-                <select
-                  value={formData.robots}
-                  onChange={(e) => handleInputChange("robots", e.target.value)}
-                  className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
+              {/* Clean Navigation Tabs */}
+              <div className="flex gap-1 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("search")}
+                  className={`px-3.5 py-1.5 text-xs font-bold rounded-xs cursor-pointer transition-colors ${
+                    activeTab === "search"
+                      ? "bg-[#1e3e8f] text-white"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
                 >
-                  {ROBOT_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-                <span className="text-[10px] text-slate-400 mt-1 block">
-                  Controls whether search engine bots index this specific page in web search results and crawl hyperlinks on it.
-                </span>
-              </div>
-
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <label className="block text-xs font-bold text-slate-700">
-                    Custom Structured Data (JSON-LD)
-                  </label>
-                  {jsonLdError ? (
-                    <span className="text-[11px] text-rose-600 font-bold">
-                      ⚠️ {jsonLdError}
-                    </span>
-                  ) : (
-                    <span className="text-[11px] text-slate-400">
-                      Optional schema.org JSON block
-                    </span>
-                  )}
-                </div>
-                <textarea
-                  rows={4}
-                  value={formData.structuredDataJson || ""}
-                  onChange={(e) => handleInputChange("structuredDataJson", e.target.value)}
-                  placeholder={`{\n  "@context": "https://schema.org",\n  "@type": "WebPage",\n  "name": "${formData.pageName}"\n}`}
-                  className="w-full text-xs font-mono px-3 py-2 border border-slate-300 rounded-xs bg-slate-50 text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
-                />
+                  1. Google Search (SERP)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("social")}
+                  className={`px-3.5 py-1.5 text-xs font-bold rounded-xs cursor-pointer transition-colors ${
+                    activeTab === "social"
+                      ? "bg-[#1e3e8f] text-white"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  2. Social Sharing (OG)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("advanced")}
+                  className={`px-3.5 py-1.5 text-xs font-bold rounded-xs cursor-pointer transition-colors ${
+                    activeTab === "advanced"
+                      ? "bg-[#1e3e8f] text-white"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  3. Indexing & Schema
+                </button>
               </div>
             </div>
 
-            {/* Bottom Action Bar */}
-            <div className="flex items-center justify-between bg-white border border-slate-200 rounded-xs p-4 shadow-xs">
-              <div className="flex items-center gap-2">
+            {/* TAB 1: Google Search Appearance */}
+            {activeTab === "search" && (
+              <div className="space-y-4">
+                {/* Clean Live Google SERP Box */}
+                <div className="bg-white border border-slate-200 rounded-xs p-4 shadow-xs">
+                  <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    Live Google Search Snippet Preview
+                  </div>
+                  
+                  <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xs">
+                    <div className="flex items-center gap-1.5 text-[12px] text-slate-600 mb-0.5 truncate">
+                      <div className="w-3.5 h-3.5 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-bold text-slate-700">
+                        E
+                      </div>
+                      <span className="text-slate-800 font-medium">Eastwind Energy Arabia</span>
+                      <span>›</span>
+                      <span className="text-slate-500 font-mono text-[11px]">
+                        {formData.path === "/" ? "home" : formData.path.replace(/^\//, "")}
+                      </span>
+                    </div>
+
+                    <div className="text-[16px] text-[#1a0dab] hover:underline cursor-pointer font-medium leading-snug line-clamp-1">
+                      {formData.title || "Page Title | Eastwind Safety Arabia"}
+                    </div>
+
+                    <div className="text-[12px] text-[#4d5156] leading-relaxed mt-1 line-clamp-2">
+                      {formData.description ||
+                        "Enter a meta description to see how this page will be displayed in Google search results."}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Meta Inputs Form */}
+                <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
+                  
+                  {/* Meta Title */}
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-xs font-bold text-slate-700">
+                        Meta Title <span className="text-rose-500">*</span>
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-mono text-slate-500">
+                          {titleLength} / 60 chars
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.2 rounded-xs ${
+                            titleLength >= 45 && titleLength <= 65
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                              : titleLength === 0
+                              ? "bg-rose-100 text-rose-800 border border-rose-200"
+                              : "bg-amber-100 text-amber-800 border border-amber-200"
+                          }`}
+                        >
+                          {titleLength >= 45 && titleLength <= 65
+                            ? "Optimal"
+                            : titleLength === 0
+                            ? "Empty"
+                            : titleLength < 45
+                            ? "Short"
+                            : "May Truncate"}
+                        </span>
+                      </div>
+                    </div>
+                    <input
+                      type="text"
+                      value={formData.title}
+                      onChange={(e) => handleInputChange("title", e.target.value)}
+                      placeholder="e.g. Industrial Safety Products | Eastwind Safety Arabia"
+                      className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
+                    />
+                  </div>
+
+                  {/* Meta Description */}
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-xs font-bold text-slate-700">
+                        Meta Description
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-mono text-slate-500">
+                          {descLength} / 160 chars
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.2 rounded-xs ${
+                            descLength >= 120 && descLength <= 160
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                              : descLength === 0
+                              ? "bg-rose-100 text-rose-800 border border-rose-200"
+                              : "bg-amber-100 text-amber-800 border border-amber-200"
+                          }`}
+                        >
+                          {descLength >= 120 && descLength <= 160
+                            ? "Optimal"
+                            : descLength === 0
+                            ? "Empty"
+                            : descLength < 120
+                            ? "Short"
+                            : "May Truncate"}
+                        </span>
+                      </div>
+                    </div>
+                    <textarea
+                      rows={3}
+                      value={formData.description}
+                      onChange={(e) => handleInputChange("description", e.target.value)}
+                      placeholder="Summary of page offerings, certified equipment, and technical solutions for search engines..."
+                      className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
+                    />
+                  </div>
+
+                  {/* Keywords & Canonical URL */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Meta Keywords (comma-separated)
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.keywords}
+                        onChange={(e) => handleInputChange("keywords", e.target.value)}
+                        placeholder="safety systems, ATEX, Saudi Arabia"
+                        className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Canonical URL
+                      </label>
+                      <input
+                        type="url"
+                        value={formData.canonicalUrl}
+                        onChange={(e) => handleInputChange("canonicalUrl", e.target.value)}
+                        placeholder="https://eastwindsafety.com/..."
+                        className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 font-mono focus:border-[#1e3e8f] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Page Name & Route (for custom pages) */}
+                  {!isCorePage && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">
+                          Custom Page Name
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.pageName}
+                          onChange={(e) => handleInputChange("pageName", e.target.value)}
+                          className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">
+                          Custom URL Path
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.path}
+                          onChange={(e) => handleInputChange("path", e.target.value)}
+                          className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 font-mono focus:border-[#1e3e8f] focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 2: Social Sharing (OpenGraph) */}
+            {activeTab === "social" && (
+              <div className="space-y-4">
+                {/* Social Card Preview */}
+                <div className="bg-white border border-slate-200 rounded-xs p-4 shadow-xs">
+                  <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    Social Card Preview (LinkedIn, WhatsApp, Facebook, X)
+                  </div>
+                  <div className="max-w-md bg-white border border-slate-200 rounded-xs overflow-hidden shadow-xs">
+                    <div className="h-36 bg-slate-100 relative overflow-hidden flex items-center justify-center">
+                      {formData.ogImage ? (
+                        <img
+                          src={formatImageUrl(formData.ogImage)}
+                          alt="OG Preview"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "/logo.png";
+                          }}
+                        />
+                      ) : (
+                        <span className="text-xs text-slate-400">No Image Specified</span>
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <span className="text-[10px] text-slate-400 uppercase font-mono block">
+                        eastwindsafety.com
+                      </span>
+                      <h3 className="text-xs font-bold text-slate-900 line-clamp-1 mt-0.5 m-0">
+                        {formData.ogTitle || formData.title || "Page Title"}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 m-0">
+                        {formData.ogDescription || formData.description || "Social description..."}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Social Form Fields */}
+                <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      OpenGraph Title (optional, defaults to Meta Title)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.ogTitle}
+                      onChange={(e) => handleInputChange("ogTitle", e.target.value)}
+                      placeholder="Title optimized for social sharing feeds..."
+                      className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      OpenGraph Description (optional, defaults to Meta Description)
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.ogDescription}
+                      onChange={(e) => handleInputChange("ogDescription", e.target.value)}
+                      placeholder="Short summary for social media shares..."
+                      className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      Social Card Image (OG Image)
+                    </label>
+                    <div className="flex gap-2 items-center">
+                      <input
+                        type="text"
+                        value={formData.ogImage}
+                        onChange={(e) => handleInputChange("ogImage", e.target.value)}
+                        placeholder="/logo.png or https://example.com/image.jpg"
+                        className="flex-1 text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 font-mono focus:border-[#1e3e8f] focus:outline-none"
+                      />
+                      <label className="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-xs cursor-pointer shrink-0 transition-colors">
+                        <span>{uploadingOg ? "Uploading..." : "Upload Image"}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleUploadOgImage}
+                          disabled={uploadingOg}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                    <span className="text-[10px] text-slate-400 mt-1 block">
+                      Recommended resolution: 1200 x 630 pixels (1.91:1 aspect ratio).
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: Advanced & Indexing */}
+            {activeTab === "advanced" && (
+              <div className="space-y-4">
+                <div className="bg-white border border-slate-200 rounded-xs p-5 shadow-xs space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      Robots Directive
+                    </label>
+                    <select
+                      value={formData.robots}
+                      onChange={(e) => handleInputChange("robots", e.target.value)}
+                      className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
+                    >
+                      {ROBOT_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="text-[10px] text-slate-400 mt-1 block">
+                      Directs search engine crawlers whether to index this page and follow its outbound links.
+                    </span>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-xs font-bold text-slate-700">
+                        Custom Structured Data (JSON-LD)
+                      </label>
+                      {jsonLdError ? (
+                        <span className="text-[11px] text-rose-600 font-bold">
+                          ⚠️ {jsonLdError}
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-slate-400">
+                          Optional schema.org JSON block
+                        </span>
+                      )}
+                    </div>
+                    <textarea
+                      rows={5}
+                      value={formData.structuredDataJson || ""}
+                      onChange={(e) => handleInputChange("structuredDataJson", e.target.value)}
+                      placeholder={`{\n  "@context": "https://schema.org",\n  "@type": "WebPage",\n  "name": "${formData.pageName}"\n}`}
+                      className="w-full text-xs font-mono px-3 py-2 border border-slate-300 rounded-xs bg-slate-50 text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Clean Bottom Action Bar */}
+            <div className="flex items-center justify-between bg-white border border-slate-200 rounded-xs p-3.5 shadow-xs">
+              <div>
                 {hasUnsavedChanges ? (
-                  <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded-xs inline-flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-xs inline-flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                    Unsaved changes on this page
+                    Unsaved changes
                   </span>
                 ) : (
-                  <span className="text-xs font-semibold text-slate-500">
-                    All SEO parameters are synchronized.
+                  <span className="text-xs text-slate-500">
+                    All parameters up to date.
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <button
                   type="button"
                   disabled={!hasUnsavedChanges || saving}
@@ -936,24 +1024,25 @@ export default function AdminSeoPage() {
                       setJsonLdError(null);
                     }
                   }}
-                  className="px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs rounded-xs transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="px-3.5 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs rounded-xs transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  Reset Changes
+                  Discard
                 </button>
 
                 <button
                   type="button"
                   disabled={saving || !hasUnsavedChanges}
                   onClick={handleSave}
-                  className="px-5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-xs transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-xs"
+                  className="px-4 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-xs transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-xs"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>{saving ? "Saving Changes..." : "Save Page SEO"}</span>
+                  <span>{saving ? "Saving..." : "Save Page SEO"}</span>
                 </button>
               </div>
             </div>
+
           </div>
         ) : (
           <div className="lg:col-span-8 bg-white border border-slate-200 rounded-xs p-12 text-center text-slate-400">
@@ -1009,7 +1098,7 @@ export default function AdminSeoPage() {
                       setNewPagePath(`/${slug}`);
                     }
                   }}
-                  placeholder="e.g. Careers, Technical Whitepapers, Quality Standards"
+                  placeholder="e.g. Careers, Quality Standards, Certifications"
                   className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
                 />
               </div>
@@ -1023,7 +1112,7 @@ export default function AdminSeoPage() {
                   required
                   value={newPagePath}
                   onChange={(e) => setNewPagePath(e.target.value)}
-                  placeholder="e.g. /careers or /whitepapers"
+                  placeholder="e.g. /careers or /certifications"
                   className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 font-mono focus:border-[#1e3e8f] focus:outline-none"
                 />
               </div>
@@ -1036,7 +1125,7 @@ export default function AdminSeoPage() {
                   type="text"
                   value={newPageTitle}
                   onChange={(e) => setNewPageTitle(e.target.value)}
-                  placeholder="e.g. Careers & Job Openings | Eastwind Safety Arabia"
+                  placeholder="e.g. Certifications & Standards | Eastwind Safety Arabia"
                   className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none"
                 />
               </div>
@@ -1049,7 +1138,7 @@ export default function AdminSeoPage() {
                   rows={3}
                   value={newPageDescription}
                   onChange={(e) => setNewPageDescription(e.target.value)}
-                  placeholder="Brief summary for search engine snippet..."
+                  placeholder="Brief summary for Google search engine snippet..."
                   className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 focus:border-[#1e3e8f] focus:outline-none resize-none"
                 />
               </div>
@@ -1067,7 +1156,7 @@ export default function AdminSeoPage() {
                   disabled={creatingPage}
                   className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-xs transition-colors cursor-pointer disabled:opacity-50"
                 >
-                  {creatingPage ? "Creating Page..." : "Create Page SEO"}
+                  {creatingPage ? "Creating..." : "Create Page"}
                 </button>
               </div>
             </form>
@@ -1094,7 +1183,7 @@ export default function AdminSeoPage() {
                 <strong className="text-slate-900">"{formData.pageName}"</strong> ({formData.path})?
               </p>
               <p className="text-xs text-slate-500 m-0">
-                This action cannot be undone. Custom meta tags for this route will be permanently removed.
+                This action cannot be undone. Custom meta tags for this route will be removed.
               </p>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
