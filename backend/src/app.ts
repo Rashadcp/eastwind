@@ -23,6 +23,7 @@ import successStoriesRouter from "./routes/successStories.js";
 import heroRouter from "./routes/hero.js";
 import productCategoriesRouter from "./routes/productCategories.js";
 import privacyPolicyRouter from "./routes/privacyPolicy.js";
+import seoRouter from "./routes/seo.js";
 import { EnquiryController } from "./controllers/enquiry.controller.js";
 import { ContactSettingsModel } from "./models/contact.model.js";
 
@@ -77,6 +78,7 @@ const routes: [string, any][] = [
   ["hero", heroRouter],
   ["product-categories", productCategoriesRouter],
   ["privacy-policy", privacyPolicyRouter],
+  ["seo", seoRouter],
 ];
 
 // Add cache middleware to resource routes

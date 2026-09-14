@@ -8,6 +8,7 @@ interface DashboardStats {
   solutions: number;
   applications: number;
   services: number;
+  seoPages: number;
 }
 
 export default function AdminDashboardPage() {
@@ -15,7 +16,8 @@ export default function AdminDashboardPage() {
     products: 0,
     solutions: 0,
     applications: 0,
-    services: 0
+    services: 0,
+    seoPages: 0
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,11 +28,12 @@ export default function AdminDashboardPage() {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         
         // Fetch all listings in parallel
-        const [prodRes, solRes, appRes, serRes] = await Promise.all([
+        const [prodRes, solRes, appRes, serRes, seoRes] = await Promise.all([
           fetch(`${baseUrl}/api/products`),
           fetch(`${baseUrl}/api/solutions`),
           fetch(`${baseUrl}/api/applications`),
-          fetch(`${baseUrl}/api/services`)
+          fetch(`${baseUrl}/api/services`),
+          fetch(`${baseUrl}/api/seo`).catch(() => null)
         ]);
 
         if (!prodRes.ok || !solRes.ok || !appRes.ok || !serRes.ok) {
@@ -44,11 +47,20 @@ export default function AdminDashboardPage() {
           serRes.json()
         ]);
 
+        let seoCount = 8;
+        if (seoRes && seoRes.ok) {
+          try {
+            const seoList = await seoRes.json();
+            if (Array.isArray(seoList)) seoCount = seoList.length;
+          } catch (e) {}
+        }
+
         setStats({
           products: prods.length,
           solutions: sols.length,
           applications: apps.length,
-          services: sers.length
+          services: sers.length,
+          seoPages: seoCount
         });
       } catch (err: any) {
         console.error("Dashboard stats load error:", err);
@@ -159,6 +171,36 @@ export default function AdminDashboardPage() {
             </Link>
           </div>
         ))}
+      </div>
+
+      {/* SEO & Site Optimization Quick Banner */}
+      <div className="bg-white border border-slate-200 p-6 rounded-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1 max-w-2xl">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-[#1e3e8f] border border-blue-200 px-2 py-0.5 rounded-sm">
+              Search Visibility & Indexing
+            </span>
+            <span className="text-xs font-semibold text-slate-500">
+              {stats.seoPages} Pages Configured
+            </span>
+          </div>
+          <h3 className="text-base font-bold text-slate-900 tracking-tight m-0">
+            Meta SEO & OpenGraph Management
+          </h3>
+          <p className="text-xs text-slate-600 m-0">
+            Customize search snippets, titles, social sharing previews, canonical URLs, and add custom landing page metadata.
+          </p>
+        </div>
+
+        <Link
+          href="/admin/seo"
+          className="px-4 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold rounded-sm transition-colors cursor-pointer no-underline flex items-center gap-2 shrink-0 self-start sm:self-auto"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+          <span>Configure Meta SEO</span>
+        </Link>
       </div>
     </div>
   );
