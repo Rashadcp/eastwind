@@ -70,7 +70,7 @@ export class SolutionPageModel {
           heroTitle: "MIDDLE EAST SAFETY SOLUTIONS",
           heroDescription: "Eastwind Arabia supplies high-compliance fire fighting, respiratory protection, wireless gas detection, and process instrumentation modules across Saudi Arabia and the GCC.",
           industriesTitle: "Solutions by Industry",
-          industriesDesc: "We adapt our core capabilities to the specific compliance and threat profiles of primary infrastructure sectors.",
+          industriesDesc: "",
           industries: DEFAULT_INDUSTRIES
         },
         { new: true, upsert: true }
@@ -80,8 +80,8 @@ export class SolutionPageModel {
       const d = doc as any;
       if (!d.applicationsHeroBgImage) d.applicationsHeroBgImage = "/products/default-wireless-gas-detection.png";
       if (!d.applicationsHeroTagline) d.applicationsHeroTagline = "ADVANCED TECHNICAL APPLICATIONS";
-      if (!d.applicationsHeroTitle) d.applicationsHeroTitle = "TECHNICAL APPLICATIONS PORTFOLIO";
-      if (!d.applicationsHeroDescription) d.applicationsHeroDescription = "Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities.";
+      if (!d.applicationsHeroTitle) d.applicationsHeroTitle = "";
+      if (!d.applicationsHeroDescription) d.applicationsHeroDescription = "";
 
       if (!d.servicesHeroBgImage) d.servicesHeroBgImage = "/products/default-process-instrumentation.png";
       if (!d.servicesHeroTagline) d.servicesHeroTagline = "FIELD & ENGINEERING SERVICES";

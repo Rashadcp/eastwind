@@ -6,6 +6,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Check } from "lucide-react";
+import { formatImageUrl } from "@/utils/image";
 
 interface DropdownOption {
   value: string;
@@ -68,7 +69,7 @@ const defaultContactPage: ContactPageData = {
   communicationsTitle: "Our Offices",
   communicationsDesc: "Our regional engineering offices, workshops, and corporate headquarters.",
   formSubHeaderTagline: "Get In Touch",
-  formSubHeaderTitle: "Send Us a Message",
+  formSubHeaderTitle: "Request a Consultation",
   marketSegments: [
     { value: "oil-gas", label: "Onshore / Offshore Oil & Gas" },
     { value: "petrochemical", label: "Petrochemical Infrastructure" },
@@ -156,7 +157,7 @@ export default function ContactPage() {
         {/* ── SECTION 1: BRIGHT INDUSTRIAL SPLASH HERO BANNER ── */}
         <div className="relative w-full overflow-hidden bg-slate-950 min-h-[40vh] pt-36 pb-20 flex items-center z-10 border-b border-slate-900 shrink-0">
           <img
-            src={contactPage.heroBgImage}
+            src={formatImageUrl(contactPage.heroBgImage, "/contact_hero.png")}
             alt={contactPage.heroTitle}
             className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none brightness-[0.45] scale-101"
           />
@@ -265,19 +266,19 @@ export default function ContactPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="border-b border-slate-200/80 pb-4">
                     <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest m-0">{contactPage.formSubHeaderTagline || "Get In Touch"}</h3>
-                    <p className="text-lg font-bold text-slate-900 pt-0.5 m-0">{contactPage.formSubHeaderTitle || "Send Us a Message"}</p>
+                    <p className="text-lg font-bold text-slate-900 pt-0.5 m-0">{contactPage.formSubHeaderTitle || "Request a Consultation"}</p>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {/* Name */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600 block">Full Name</label>
+                      <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600 block">Your Name</label>
                       <input
                         type="text"
                         required
                         value={formState.name}
                         onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                        placeholder="Name"
+                        placeholder="Your Name"
                         className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:border-[#1e3e8f] focus:outline-hidden transition-colors font-medium text-slate-800"
                       />
                     </div>
@@ -311,7 +312,7 @@ export default function ContactPage() {
 
                     {/* Sector Selection */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600 block">Industry / Sector</label>
+                      <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600 block">Industry</label>
                       <select
                         value={formState.sector}
                         onChange={(e) => setFormState({ ...formState, sector: e.target.value })}
@@ -329,13 +330,13 @@ export default function ContactPage() {
 
                   {/* Project Scope / Message */}
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600 block">Message / Project Details</label>
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600 block">How Can We Help?</label>
                     <textarea
                       required
                       rows={3}
                       value={formState.scope}
                       onChange={(e) => setFormState({ ...formState, scope: e.target.value })}
-                      placeholder="Tell us about your project requirements or questions..."
+                      placeholder="How can we help you? Describe your requirements or questions..."
                       className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:border-[#1e3e8f] focus:outline-hidden transition-colors font-medium text-slate-800 resize-none leading-relaxed"
                     />
                   </div>

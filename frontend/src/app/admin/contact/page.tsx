@@ -14,7 +14,7 @@ export interface ContactLocation {
 }
 
 export default function AdminContactPage() {
-  const [activeTab, setActiveTab] = useState<"info" | "home" | "contact_page" | "enquiry_page">("info");
+  const [activeTab, setActiveTab] = useState<"contact_page" | "info" | "home" | "enquiry_page">("contact_page");
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -199,15 +199,16 @@ export default function AdminContactPage() {
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const token = localStorage.getItem("admin_token");
+      const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : null;
 
       const formData = new FormData();
+      formData.append("file", file);
       formData.append("image", file);
 
       const res = await fetch(`${baseUrl}/api/upload`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: token ? `Bearer ${token}` : ""
         },
         body: formData
       });
@@ -215,8 +216,9 @@ export default function AdminContactPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Image upload failed");
 
-      setter(data.imageUrl);
-      setSuccess(`Image file '${file.name}' uploaded successfully.`);
+      const uploadedUrl = data.imageUrl || data.url || (data.filename ? `/uploads/${data.filename}` : "");
+      setter(uploadedUrl);
+      setSuccess(`Image '${file.name}' uploaded successfully. Remember to save changes.`);
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to upload image file.");
@@ -386,7 +388,7 @@ export default function AdminContactPage() {
         <div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight">Contact & Enquiry Management</h1>
           <p className="text-xs text-slate-500 mt-1">
-            Centrally manage office location addresses, direct contact channels, and form dropdown selection options across Home, Contact, and Enquiry pages.
+            Configure contact page hero banner & photo, inquiry form, regional offices, and dedicated enquiry forms.
           </p>
         </div>
 
@@ -394,12 +396,20 @@ export default function AdminContactPage() {
           {/* Tab Selector */}
           <div className="flex items-center gap-1 bg-slate-100 p-1 border border-slate-200 rounded-sm self-start md:self-auto flex-wrap">
             <button
+              onClick={() => { setActiveTab("contact_page"); clearMessages(); }}
+              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "contact_page" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Contact Page (Hero & Form)
+            </button>
+            <button
               onClick={() => { setActiveTab("info"); clearMessages(); }}
               className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === "info" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Office Locations
+              Office Locations & Channels
             </button>
             <button
               onClick={() => { setActiveTab("home"); clearMessages(); }}
@@ -407,15 +417,7 @@ export default function AdminContactPage() {
                 activeTab === "home" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Home Contact
-            </button>
-            <button
-              onClick={() => { setActiveTab("contact_page"); clearMessages(); }}
-              className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "contact_page" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Contact Page
+              Home Contact Section
             </button>
             <button
               onClick={() => { setActiveTab("enquiry_page"); clearMessages(); }}
@@ -423,7 +425,7 @@ export default function AdminContactPage() {
                 activeTab === "enquiry_page" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Enquiry Page
+              Enquiry Page (/enquire)
             </button>
           </div>
 
@@ -473,9 +475,26 @@ export default function AdminContactPage() {
         </div>
       )}
 
-      {/* TAB 1: OFFICE ADDRESSES & CHANNELS */}
+      {/* TAB: OFFICE ADDRESSES & CHANNELS */}
       {activeTab === "info" && (
         <div className="space-y-6">
+          {/* Quick link banner to Contact Page Hero */}
+          <div className="p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-sm text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2 text-slate-700">
+              <svg className="w-4 h-4 text-[#1e3e8f] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Looking to customize the <strong>Contact Page Hero Banner & Background Photo</strong> or <strong>Inquiry Form</strong>?</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => { setActiveTab("contact_page"); clearMessages(); }}
+              className="px-3 py-1.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-[11px] rounded-sm transition-colors cursor-pointer shrink-0 shadow-2xs"
+            >
+              Go to Contact Page (Hero & Form) &rarr;
+            </button>
+          </div>
+
           <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div>
@@ -838,53 +857,76 @@ export default function AdminContactPage() {
         </div>
       )}
 
-      {/* TAB 3: DEDICATED CONTACT PAGE */}
+      {/* TAB: DEDICATED CONTACT PAGE (HERO & INQUIRY FORM) */}
       {activeTab === "contact_page" && (
         <div className="space-y-6">
-          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3">
-              Contact Page Hero Header & Form Titles
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Section 1: Contact Page Hero Banner & Background Photo */}
+          <div className="bg-white p-6 rounded-sm border border-slate-200 shadow-xs space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Tagline Badge</label>
-                <input
-                  type="text"
-                  value={pageHeroTagline}
-                  onChange={(e) => setPageHeroTagline(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
-                />
+                <h2 className="text-base font-bold text-slate-800 m-0 flex items-center gap-2">
+                  <span>1. Contact Page Hero Banner & Background Photo</span>
+                  <span className="px-2 py-0.5 bg-blue-50 text-[#1e3e8f] text-[10px] font-bold rounded-full border border-blue-200/60 uppercase">
+                    Live Banner
+                  </span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5 m-0">
+                  Upload the hero banner background image and configure headline title and intro text for the public Contact page (/contact).
+                </p>
               </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Title</label>
-                <input
-                  type="text"
-                  value={pageHeroTitle}
-                  onChange={(e) => setPageHeroTitle(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
-                />
-              </div>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => saveSection("contact_page", {
+                  heroBgImage: pageHeroBgImage,
+                  heroTagline: pageHeroTagline,
+                  heroTitle: pageHeroTitle,
+                  heroDescription: pageHeroDescription,
+                  communicationsTagline: pageCommsTagline,
+                  communicationsTitle: pageCommsTitle,
+                  communicationsDesc: pageCommsDesc,
+                  formSubHeaderTagline: pageFormTagline,
+                  formSubHeaderTitle: pageFormTitle,
+                  marketSegments: pageMarketSegments,
+                  submitButtonText: pageSubmitBtn,
+                  successTitle: pageSuccessTitle,
+                  successMessage: pageSuccessMessage,
+                }, "Contact Page Hero Banner")}
+                className="px-4 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-semibold text-xs rounded-sm transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-xs shrink-0 self-start sm:self-auto"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{saving ? "Saving..." : "Save Hero Banner"}</span>
+              </button>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Description Paragraph</label>
-              <textarea
-                rows={2}
-                value={pageHeroDescription}
-                onChange={(e) => setPageHeroDescription(e.target.value)}
-                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
-              />
-            </div>
+            {/* Hero Background Image Preview & Uploader */}
+            <div className="space-y-3">
+              <label className="block text-xs font-bold text-slate-700">Hero Background Photo</label>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Background Image Path or URL</label>
-              <div className="flex gap-2">
+              {/* Hero Background Photo Preview */}
+              {pageHeroBgImage && (
+                <div className="w-fit max-w-2xl rounded-lg overflow-hidden border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+                  <img
+                    src={formatImageUrl(pageHeroBgImage, "/contact_hero.png")}
+                    alt="Contact Hero Background"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "/contact_hero.png";
+                    }}
+                    className="h-44 sm:h-52 w-auto max-w-full rounded-md object-contain block"
+                  />
+                </div>
+              )}
+
+              {/* Upload controls */}
+              <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center text-xs max-w-2xl">
                 <input
                   type="text"
                   value={pageHeroBgImage}
                   onChange={(e) => setPageHeroBgImage(e.target.value)}
-                  className="flex-1 px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
+                  placeholder="e.g. /contact_hero.png or upload a new photo"
+                  className="flex-1 p-2.5 border border-slate-200 rounded-sm font-mono text-xs focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900"
                 />
                 <input
                   type="file"
@@ -895,30 +937,52 @@ export default function AdminContactPage() {
                 />
                 <label
                   htmlFor="contact-hero-upload"
-                  className="px-3.5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white rounded-sm text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1.5 transition-colors"
+                  className="px-4 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold rounded-sm cursor-pointer shrink-0 flex items-center justify-center gap-1.5 transition-colors shadow-xs"
                 >
-                  {uploadingField === "heroBgImage" ? "Uploading..." : "Upload File"}
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  </svg>
+                  <span>{uploadingField === "heroBgImage" ? "Uploading..." : "Upload Photo"}</span>
                 </label>
               </div>
-
-              {/* Contact Hero Background Image Preview */}
-              {pageHeroBgImage && pageHeroBgImage.trim() !== "" && (
-                <div className="mt-3 w-fit max-w-xl rounded-sm border border-slate-200 bg-slate-50 p-1.5">
-                  <img
-                    src={formatImageUrl(pageHeroBgImage)}
-                    alt="Contact Hero Preview"
-                    onError={(e) => {
-                      const el = e.currentTarget as HTMLImageElement;
-                      el.style.display = "none";
-                    }}
-                    className="h-36 sm:h-44 w-auto max-w-full rounded-sm object-contain block"
-                  />
-                </div>
-              )}
+              <p className="text-[11px] text-slate-400">
+                Recommended size: 1920×600 or higher (WebP, PNG, JPG). Dark or industrial images work best for text contrast.
+              </p>
             </div>
 
+            {/* Headline Title */}
+            <div className="pt-3 border-t border-slate-100">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Headline Title</label>
+              <input
+                type="text"
+                value={pageHeroTitle}
+                onChange={(e) => setPageHeroTitle(e.target.value)}
+                placeholder="e.g. Connect With Our Engineers"
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-bold"
+              />
+            </div>
+
+            {/* Description Paragraph */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Hero Description Paragraph</label>
+              <textarea
+                rows={3}
+                value={pageHeroDescription}
+                onChange={(e) => setPageHeroDescription(e.target.value)}
+                placeholder="e.g. Initiate technical scoping, request custom hardware estimations..."
+                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 leading-relaxed"
+              />
+            </div>
+          </div>
+
+          {/* Section 2: Operations Hubs & Inquiry Form Settings */}
+          <div className="bg-white p-6 border border-slate-200 rounded-sm space-y-5 shadow-xs">
+            <h2 className="text-base font-bold text-slate-800 border-b border-slate-100 pb-3 m-0">
+              2. Operations Hubs & Inquiry Form Copy
+            </h2>
+
             {/* Left Side: Operations Hubs Section Header */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-slate-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-1">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">Operations Hubs Section Title</label>
                 <input

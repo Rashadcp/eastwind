@@ -3934,8 +3934,8 @@
       "id": "contact_page",
       "heroBgImage": "/contact_hero.png",
       "heroTagline": "Global Procurement Channels",
-      "heroTitle": "Connect With Our Engineers",
-      "heroDescription": "Initiate technical scoping, request custom hardware estimations, or schedule compliance architecture audits with our Dammam team.",
+      "heroTitle": "Speak With Our Engineering Team",
+      "heroDescription": "Discuss your safety, technical, and project requirements with our Dammam engineering team.",
       "communicationsTagline": "Communications Log",
       "communicationsTitle": "Primary Operation Hubs",
       "communicationsDesc": "Direct routing channels across our regional estimating centers, specialized equipment workshop cells, and corporate headquarters.",
@@ -4012,7 +4012,7 @@
       "heroDescription": "Eastwind Arabia supplies high-compliance fire fighting, respiratory protection, wireless gas detection, and process instrumentation modules across Saudi Arabia and the GCC.",
       "industriesTagline": "Operating Environments",
       "industriesTitle": "Solutions By Operating Industry",
-      "industriesDesc": "Industrial sectors feature highly specific chemical, thermal, and spatial risks. We build multi-layered mitigation loops engineered to perform reliably inside harsh conditions.",
+      "industriesDesc": "",
       "industries": [
         {
           "id": "oil-gas",

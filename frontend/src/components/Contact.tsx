@@ -289,11 +289,11 @@ export default function Contact() {
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="flex flex-col gap-2">
-                      <label className="text-[9px] font-mono uppercase tracking-widest text-slate-500 font-bold">Full Name</label>
+                      <label className="text-[9px] font-mono uppercase tracking-widest text-slate-500 font-bold">Your Name</label>
                       <input
                         type="text"
                         required
-                        placeholder="Name"
+                        placeholder="Your Name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="w-full min-h-[46px] px-4 rounded-xl bg-white border border-slate-200 text-slate-800 font-sans text-xs focus:outline-none focus:border-[#1e3e8f] focus:ring-1 focus:ring-[#1e3e8f] transition-all"
@@ -313,7 +313,7 @@ export default function Contact() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="text-[9px] font-mono uppercase tracking-widest text-slate-500 font-bold">Operational Sector</label>
+                    <label className="text-[9px] font-mono uppercase tracking-widest text-slate-500 font-bold">Industry</label>
                     <div className="relative">
                       <select
                         required
@@ -333,7 +333,7 @@ export default function Contact() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="text-[9px] font-mono uppercase tracking-widest text-slate-500 font-bold">Project Scope & Details</label>
+                    <label className="text-[9px] font-mono uppercase tracking-widest text-slate-500 font-bold">How Can We Help?</label>
                     <textarea
                       rows={4}
                       required

@@ -200,14 +200,14 @@ const defaultPageConfig: SolutionsPageConfig = {
   applicationsHeroBgImage: "/products/default-wireless-gas-detection.png",
   applicationsHeroTagline: "ADVANCED TECHNICAL APPLICATIONS",
   applicationsHeroTitle: "TECHNICAL APPLICATIONS PORTFOLIO",
-  applicationsHeroDescription: "Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities.",
+  applicationsHeroDescription: "",
   servicesHeroBgImage: "/products/default-process-instrumentation.png",
   servicesHeroTagline: "FIELD & ENGINEERING SERVICES",
   servicesHeroTitle: "SPECIALIZED ENGINEERING SERVICES",
   servicesHeroDescription: "Full lifecycle support, commissioning, functional safety assessments, and rapid calibration coverage across primary operating facilities.",
   industriesTagline: "Operating Environments",
   industriesTitle: "Solutions By Operating Industry",
-  industriesDesc: "Industrial sectors feature highly specific chemical, thermal, and spatial risks. We build multi-layered mitigation loops engineered to perform reliably inside harsh conditions.",
+  industriesDesc: "",
   industries: [
     {
       id: "oil-gas",
@@ -947,7 +947,7 @@ function SolutionsPageContent() {
           image: pageConfig.applicationsHeroBgImage || defaultPageConfig.applicationsHeroBgImage || "/products/default-wireless-gas-detection.png",
           tagline: pageConfig.applicationsHeroTagline || defaultPageConfig.applicationsHeroTagline || "ADVANCED TECHNICAL APPLICATIONS",
           title: pageConfig.applicationsHeroTitle || defaultPageConfig.applicationsHeroTitle || "TECHNICAL APPLICATIONS PORTFOLIO",
-          description: pageConfig.applicationsHeroDescription || defaultPageConfig.applicationsHeroDescription || "Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities.",
+          description: pageConfig.applicationsHeroDescription || defaultPageConfig.applicationsHeroDescription || "",
           fallback: "/products/default-wireless-gas-detection.png"
         }
       : mainCategory === "services"
@@ -1080,13 +1080,6 @@ function SolutionsPageContent() {
                   : pageConfig.industriesTitle}
               </h2>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed max-w-md">
-              {mainCategory === "services"
-                ? "Turnkey engineering design, hazardous area compliance auditing, F&G mapping simulations, and field commissioning support for high-hazard industrial facilities."
-                : mainCategory === "applications"
-                ? "Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities."
-                : pageConfig.industriesDesc}
-            </p>
           </div>
 
           {mainCategory === "services" ? (

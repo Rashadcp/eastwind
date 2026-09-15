@@ -1163,7 +1163,7 @@ export default function IndustrySolutions() {
   const [mainTab, setMainTab] = useState<"solutions" | "applications">("solutions");
   const [applicationsList, setApplicationsList] = useState(defaultApplicationsList);
   const [sectionTitle, setSectionTitle] = useState("Solutions & Applications");
-  const [sectionDesc, setSectionDesc] = useState("We adapt our core capabilities to the specific compliance and threat profiles of primary infrastructure sectors.");
+  const [sectionDesc, setSectionDesc] = useState("");
 
   useEffect(() => {
     async function loadDynamicApplications() {
@@ -1415,11 +1415,7 @@ export default function IndustrySolutions() {
     <InteractivePortfolioSection
       sectionId="solutions"
       sectionTitle={sectionTitle}
-      sectionDesc={
-        mainTab === "applications"
-          ? "Explore our core technical application frameworks designed to engineer continuous safety and operational intelligence across hazardous facilities."
-          : sectionDesc
-      }
+      sectionDesc={sectionDesc}
       topTabControl={topTabControl}
       customContent={mainTab === "applications" ? applicationsGrid : null}
       items={industries}
