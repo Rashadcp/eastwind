@@ -1,3 +1,5 @@
+import path from "path";
+import fs from "fs";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -56,6 +58,37 @@ const staticUploadOptions = {
 };
 app.use("/uploads", express.static(UPLOAD_DIR, staticUploadOptions));
 app.use("/api/uploads", express.static(UPLOAD_DIR, staticUploadOptions));
+
+// Optional fallback for syncing media assets from an external origin if configured via environment variable (REMOTE_MEDIA_ORIGIN)
+const remoteUploadFallback = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  try {
+    const filename = req.path.replace(/^\/+/, "");
+    if (!filename || filename.includes("..")) return next();
+    const localFilePath = path.resolve(UPLOAD_DIR, filename);
+
+    if (fs.existsSync(localFilePath)) {
+      return res.sendFile(localFilePath);
+    }
+
+    const remoteOrigin = (process.env.REMOTE_MEDIA_ORIGIN || "").trim().replace(/\/+$/, "");
+    if (remoteOrigin) {
+      const remoteUrl = `${remoteOrigin}/uploads/${encodeURIComponent(filename)}`;
+      const remoteRes = await fetch(remoteUrl);
+      if (remoteRes.ok && remoteRes.body) {
+        const contentType = remoteRes.headers.get("content-type") || "image/webp";
+        const buffer = Buffer.from(await remoteRes.arrayBuffer());
+        fs.writeFileSync(localFilePath, buffer);
+        res.setHeader("Content-Type", contentType);
+        return res.sendFile(localFilePath);
+      }
+    }
+  } catch (err) {
+    // ignore
+  }
+  next();
+};
+app.use("/uploads", remoteUploadFallback);
+app.use("/api/uploads", remoteUploadFallback);
 
 // Health check endpoint
 app.get("/health", (req, res) => {

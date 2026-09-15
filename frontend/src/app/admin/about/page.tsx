@@ -27,6 +27,46 @@ interface DisciplineItem {
   accent: string;
 }
 
+function AdminImagePreview({
+  src,
+  alt,
+  className = "h-36 sm:h-44 w-auto max-w-full rounded-sm object-contain block",
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) {
+  const [loadError, setLoadError] = useState(false);
+
+  useEffect(() => {
+    setLoadError(false);
+  }, [src]);
+
+  if (!src || !src.trim()) return null;
+
+  if (loadError) {
+    return (
+      <div className="mt-3 flex items-center gap-2 px-3 py-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-sm w-fit max-w-md">
+        <svg className="w-4 h-4 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <span className="truncate">Image file not found ({src})</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-3 w-fit max-w-xl rounded-sm border border-slate-200 bg-slate-50 p-1.5 shadow-2xs">
+      <img
+        src={formatImageUrl(src)}
+        alt={alt}
+        onError={() => setLoadError(true)}
+        className={className}
+      />
+    </div>
+  );
+}
+
 export default function AdminAboutPage() {
   const [activeTab, setActiveTab] = useState<"home" | "about_page">("home");
   const [loading, setLoading] = useState<boolean>(true);
@@ -524,19 +564,7 @@ export default function AdminAboutPage() {
                   </label>
                 </div>
                 {/* Home Image Preview */}
-                {homeImage && homeImage.trim() !== "" && (
-                  <div className="mt-3 w-fit max-w-xl rounded-sm border border-slate-200 bg-slate-50 p-1.5">
-                    <img
-                      src={formatImageUrl(homeImage)}
-                      alt="Home About Preview"
-                      onError={(e) => {
-                        const el = e.currentTarget as HTMLImageElement;
-                        el.style.display = "none";
-                      }}
-                      className="h-36 sm:h-44 w-auto max-w-full rounded-sm object-contain block"
-                    />
-                  </div>
-                )}
+                <AdminImagePreview src={homeImage} alt="Home About Preview" />
               </div>
             </div>
 
@@ -778,19 +806,7 @@ export default function AdminAboutPage() {
               </div>
 
               {/* Hero Image Preview */}
-              {pageHeroBgImage && pageHeroBgImage.trim() !== "" && (
-                <div className="mt-3 w-fit max-w-xl rounded-sm border border-slate-200 bg-slate-50 p-1.5">
-                  <img
-                    src={formatImageUrl(pageHeroBgImage)}
-                    alt="About Hero Background Preview"
-                    onError={(e) => {
-                      const el = e.currentTarget as HTMLImageElement;
-                      el.style.display = "none";
-                    }}
-                    className="h-36 sm:h-44 w-auto max-w-full rounded-sm object-contain block"
-                  />
-                </div>
-              )}
+              <AdminImagePreview src={pageHeroBgImage} alt="About Hero Background Preview" />
             </div>
           </div>
 
@@ -871,19 +887,7 @@ export default function AdminAboutPage() {
                 </div>
 
                 {/* Facility Image Preview */}
-                {pageFacilityImage && pageFacilityImage.trim() !== "" && (
-                  <div className="mt-3 w-fit max-w-xl rounded-sm border border-slate-200 bg-slate-50 p-1.5">
-                    <img
-                      src={formatImageUrl(pageFacilityImage)}
-                      alt="Facility Showcase Preview"
-                      onError={(e) => {
-                        const el = e.currentTarget as HTMLImageElement;
-                        el.style.display = "none";
-                      }}
-                      className="h-36 sm:h-44 w-auto max-w-full rounded-sm object-contain block"
-                    />
-                  </div>
-                )}
+                <AdminImagePreview src={pageFacilityImage} alt="Facility Showcase Preview" />
               </div>
 
               <div>

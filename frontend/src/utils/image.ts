@@ -25,7 +25,7 @@ export function formatImageUrl(
       try {
         const parsed = new URL(trimmed);
         if (
-          (parsed.hostname === window.location.hostname || parsed.hostname.includes("royalwish.in")) &&
+          parsed.hostname === window.location.hostname &&
           parsed.pathname.startsWith("/uploads/")
         ) {
           return `${window.location.origin}/api${parsed.pathname}${parsed.search}`;
