@@ -45,6 +45,7 @@ export interface ISolution extends Document {
     description: string;
     phase: string;
   }[];
+  order?: number;
 }
 
 export interface IApplication extends Document {
@@ -295,7 +296,8 @@ const SolutionSchema = new Schema<ISolution>({
     title: String,
     description: String,
     phase: String
-  }]
+  }],
+  order: { type: Number, default: 0 }
 });
 
 const ApplicationSchema = new Schema<IApplication>({
@@ -561,6 +563,24 @@ export async function seedDatabase(): Promise<void> {
         - ${counts.brands} Brands Portfolio`);
       if (counts.products === 0) {
         await syncBrandProductsToProductsCollection();
+      }
+      try {
+        const missingOrderSolutions = await Solution.countDocuments({ order: { $exists: false } });
+        if (missingOrderSolutions > 0) {
+          const allSols = await Solution.find({}).exec();
+          const bulkOps = allSols.map((s, idx) => ({
+            updateOne: {
+              filter: { _id: s._id },
+              update: { $set: { order: typeof s.order === "number" ? s.order : idx } }
+            }
+          }));
+          if (bulkOps.length > 0) {
+            await Solution.bulkWrite(bulkOps);
+            console.log(`Backfilled order field for ${bulkOps.length} solutions in MongoDB.`);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not backfill solution order in MongoDB:", err);
       }
       return;
     }

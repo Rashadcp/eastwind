@@ -908,7 +908,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 0
     },
     {
       "id": "xshielder",
@@ -958,7 +959,8 @@
         "Petrochemical Refineries",
         "Gas Separator Plants"
       ],
-      "imageUrl": "/hazardous_mobility.webp"
+      "imageUrl": "/hazardous_mobility.webp",
+      "order": 1
     },
     {
       "id": "tridiagonal",
@@ -1008,7 +1010,8 @@
         "Refinement Centrifuges",
         "Power Turbines"
       ],
-      "imageUrl": "/predictive_intelligence.webp"
+      "imageUrl": "/predictive_intelligence.webp",
+      "order": 2
     },
     {
       "id": "oneseven",
@@ -1058,7 +1061,8 @@
         "Loading Gantry Protection",
         "Emergency Response Fleets"
       ],
-      "imageUrl": "/emergency_response.webp"
+      "imageUrl": "/emergency_response.webp",
+      "order": 3
     },
     {
       "id": "nardi",
@@ -1108,7 +1112,8 @@
         "Marine Vessel Engine Rooms",
         "Fire Brigade Stations"
       ],
-      "imageUrl": "/hazardous_mobility.webp"
+      "imageUrl": "/hazardous_mobility.webp",
+      "order": 4
     },
     {
       "id": "tgr",
@@ -1158,7 +1163,8 @@
         "Analyser Shelter Protection",
         "Bulk Storage Tank Foundations"
       ],
-      "imageUrl": "/critical_infrastructure.webp"
+      "imageUrl": "/critical_infrastructure.webp",
+      "order": 5
     },
     {
       "id": "oil-and-gas",
@@ -1216,7 +1222,8 @@
         "Desert Pipeline Nodes",
         "Petrochemical Tank Farms"
       ],
-      "imageUrl": "/predictive_intelligence.webp"
+      "imageUrl": "/predictive_intelligence.webp",
+      "order": 6
     },
     {
       "id": "petrochemicals",
@@ -1268,7 +1275,8 @@
         "Chemical Storage Hubs",
         "Substation E-Houses"
       ],
-      "imageUrl": "/industrial_digitalization.webp"
+      "imageUrl": "/industrial_digitalization.webp",
+      "order": 7
     },
     {
       "id": "civil-defense",
@@ -1320,7 +1328,8 @@
         "Hazmat Mitigation Teams",
         "National Security Borders"
       ],
-      "imageUrl": "/emergency_vehicle.webp"
+      "imageUrl": "/emergency_vehicle.webp",
+      "order": 8
     },
     {
       "id": "marine-offshore",
@@ -1375,7 +1384,8 @@
         "Subsea Diving Operations",
         "Coast Guard Fleets"
       ],
-      "imageUrl": "/thermal_ehouse.webp"
+      "imageUrl": "/thermal_ehouse.webp",
+      "order": 9
     },
     {
       "id": "utility-power",
@@ -1425,7 +1435,8 @@
         "Desalination Facilities",
         "Municipal Water Networks"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 10
     },
     {
       "id": "air-purified-respirators",
@@ -1474,7 +1485,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 11
     },
     {
       "id": "breathing-air-compressor",
@@ -1523,7 +1535,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 12
     },
     {
       "id": "calibration-gases",
@@ -1572,7 +1585,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 13
     },
     {
       "id": "chemical-protective-suits",
@@ -1621,7 +1635,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 14
     },
     {
       "id": "detergents-and-disinfectants",
@@ -1670,7 +1685,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 15
     },
     {
       "id": "diving-equipments",
@@ -1719,7 +1735,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 16
     },
     {
       "id": "drug-alcohol-monitoring",
@@ -1768,7 +1785,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 17
     },
     {
       "id": "emergency-escape-breathing-device",
@@ -1817,7 +1835,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 18
     },
     {
       "id": "gas-detection",
@@ -1866,7 +1885,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 19
     },
     {
       "id": "personal-protection",
@@ -1915,7 +1935,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 20
     },
     {
       "id": "self-contained-breathing-apparatus",
@@ -1964,7 +1985,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 21
     },
     {
       "id": "thermal-imaging-camera",
@@ -2013,7 +2035,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 22
     },
     {
       "id": "environmental-analysers",
@@ -2062,7 +2085,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 23
     },
     {
       "id": "protective-eye-wears",
@@ -2111,7 +2135,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 24
     },
     {
       "id": "helmets-for-fire-brigades",
@@ -2160,7 +2185,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 25
     },
     {
       "id": "test-equipment-workshop-software",
@@ -2209,7 +2235,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 26
     },
     {
       "id": "rescue-tool-kit",
@@ -2258,7 +2285,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 27
     },
     {
       "id": "fire-service",
@@ -2307,7 +2335,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 28
     },
     {
       "id": "marine",
@@ -2356,7 +2385,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 29
     },
     {
       "id": "others",
@@ -2405,7 +2435,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 30
     },
     {
       "id": "testing-maintenance",
@@ -2454,7 +2485,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 31
     },
     {
       "id": "calibration",
@@ -2503,7 +2535,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 32
     },
     {
       "id": "marine-instruments-repair",
@@ -2552,7 +2585,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 33
     },
     {
       "id": "temporary-refuge-shelters",
@@ -2601,7 +2635,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 34
     },
     {
       "id": "fire-simulators",
@@ -2650,7 +2685,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 35
     },
     {
       "id": "breathing-air-cascade-systems",
@@ -2699,7 +2735,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 36
     },
     {
       "id": "fire-gas-systems",
@@ -2748,7 +2785,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 37
     },
     {
       "id": "diving-chambers",
@@ -2797,7 +2835,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 38
     },
     {
       "id": "oxygen-boosters-breathing-air-supply",
@@ -2846,7 +2885,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 39
     },
     {
       "id": "flow-metering-skids",
@@ -2895,7 +2935,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 40
     },
     {
       "id": "chemical-injection-skids",
@@ -2944,7 +2985,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 41
     },
     {
       "id": "hipps",
@@ -2993,7 +3035,8 @@
         "Offshore Platforms",
         "Chemical Storage Terminals"
       ],
-      "imageUrl": "/wireless_monitoring.webp"
+      "imageUrl": "/wireless_monitoring.webp",
+      "order": 42
     }
   ],
   "applications": [

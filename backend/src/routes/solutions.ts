@@ -6,6 +6,7 @@ import { requireAdmin } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.get("/", SolutionController.getAll);
+router.put("/reorder", requireAdmin, SolutionController.reorder);
 router.get("/:id", SolutionController.getById);
 router.post("/", requireAdmin, validateSolution, SolutionController.create);
 router.put("/:id", requireAdmin, SolutionController.update);

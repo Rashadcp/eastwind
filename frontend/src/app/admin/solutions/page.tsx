@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { formatImageUrl } from "@/utils/image";
 
 interface SolutionItem {
@@ -26,6 +26,7 @@ interface SolutionItem {
     description: string;
     phase: string;
   }[];
+  order?: number;
 }
 
 interface IndustryItem {
@@ -148,8 +149,17 @@ export default function UnifiedAdminSolutionsPage() {
   const [formDescription, setFormDescription] = useState<string>("");
   const [formDetailedContent, setFormDetailedContent] = useState<string>("");
   const [formImageUrl, setFormImageUrl] = useState<string>("");
+  const [formOrder, setFormOrder] = useState<number | string>("");
   const [uploading, setUploading] = useState<boolean>(false);
   const [savingItem, setSavingItem] = useState<boolean>(false);
+
+  // Reordering states
+  const [hasPendingOrderChanges, setHasPendingOrderChanges] = useState<boolean>(false);
+  const [savingOrder, setSavingOrder] = useState<boolean>(false);
+  const [showOrderModal, setShowOrderModal] = useState<boolean>(false);
+  const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+  const isLocalReorderRef = useRef<boolean>(false);
 
   // Integration Process Form State
   const [formIntegrationTagline, setFormIntegrationTagline] = useState<string>("Lifecycle Sequence");
@@ -298,13 +308,104 @@ export default function UnifiedAdminSolutionsPage() {
   const fetchSolutions = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const res = await fetch(`${baseUrl}/api/solutions`);
+      const res = await fetch(`${baseUrl}/api/solutions?t=${Date.now()}`);
       if (!res.ok) throw new Error("Failed to fetch solutions");
       const list = await res.json();
-      setSolutions(list);
+      const sorted = Array.isArray(list)
+        ? [...list].sort((a: any, b: any) => (a.order ?? 99999) - (b.order ?? 99999))
+        : [];
+      setSolutions(sorted);
+      setHasPendingOrderChanges(false);
     } catch (err: any) {
       console.error(err);
       setError("Failed to retrieve solution items.");
+    }
+  };
+
+  const handleReorderPositions = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+    if (fromIndex >= solutions.length || toIndex >= solutions.length) return;
+
+    const copy = [...solutions];
+    const [moved] = copy.splice(fromIndex, 1);
+    copy.splice(toIndex, 0, moved);
+
+    const updated = copy.map((item, idx) => ({ ...item, order: idx }));
+
+    isLocalReorderRef.current = true;
+    setSolutions(updated);
+    setHasPendingOrderChanges(true);
+  };
+
+  const handleMoveSolution = (index: number, direction: "up" | "down") => {
+    const newIdx = direction === "up" ? index - 1 : index + 1;
+    handleReorderPositions(index, newIdx);
+  };
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIdx(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverIdx !== index) {
+      setDragOverIdx(index);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedIdx !== null && draggedIdx !== dropIndex) {
+      handleReorderPositions(draggedIdx, dropIndex);
+    }
+    setDraggedIdx(null);
+    setDragOverIdx(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIdx(null);
+    setDragOverIdx(null);
+  };
+
+  const handleSaveOrder = async (overrideList?: any[]) => {
+    const list = overrideList || solutions;
+    if (list.length === 0) return;
+    try {
+      setSavingOrder(true);
+      clearMessages();
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+
+      const payload = list.map((item, idx) => ({
+        id: item.id || item._id,
+        order: idx
+      }));
+
+      const res = await fetch(`${baseUrl}/api/solutions/reorder`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to save solution ordering sequence.");
+      }
+
+      setHasPendingOrderChanges(false);
+      setSuccess(`Solution sequence order saved successfully! (${payload.length} items)`);
+      setSolutions(list.map((s, idx) => ({ ...s, order: idx })));
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to save solution sequence order.");
+    } finally {
+      setSavingOrder(false);
     }
   };
 
@@ -385,6 +486,7 @@ export default function UnifiedAdminSolutionsPage() {
     setFormDescription("");
     setFormDetailedContent("");
     setFormImageUrl("");
+    setFormOrder(solutions.length + 1);
     setFormIntegrationTagline("");
     setFormIntegrationTitle("");
     setFormIntegrationDescription("");
@@ -422,6 +524,8 @@ export default function UnifiedAdminSolutionsPage() {
     setFormDescription(item.description || "");
     setFormDetailedContent(item.detailedContent || "");
     setFormImageUrl(item.imageUrl || "");
+    const itemIdx = solutions.findIndex((s) => s.id === item.id);
+    setFormOrder(typeof item.order === "number" ? item.order + 1 : itemIdx !== -1 ? itemIdx + 1 : "");
     setFormIntegrationTagline(item.integrationTagline || "");
     setFormIntegrationTitle(item.integrationTitle || "");
     setFormIntegrationDescription(item.integrationDescription || "");
@@ -472,6 +576,8 @@ export default function UnifiedAdminSolutionsPage() {
         cleanImageUrl = await sanitizeImage(cleanImageUrl, token, baseUrl);
       }
 
+      const parsedOrder = formOrder !== "" && !isNaN(Number(formOrder)) ? Math.max(0, Number(formOrder) - 1) : undefined;
+
       const payload = {
         id: generatedId,
         title: formTitle.trim(),
@@ -484,7 +590,8 @@ export default function UnifiedAdminSolutionsPage() {
         integrationTagline: formIntegrationTagline.trim(),
         integrationTitle: formIntegrationTitle.trim(),
         integrationDescription: formIntegrationDescription.trim(),
-        integrationSteps: formIntegrationSteps
+        integrationSteps: formIntegrationSteps,
+        ...(parsedOrder !== undefined ? { order: parsedOrder } : {})
       };
 
       const url = isEdit ? `${baseUrl}/api/solutions/${encodeURIComponent(generatedId)}` : `${baseUrl}/api/solutions`;
@@ -1000,7 +1107,8 @@ export default function UnifiedAdminSolutionsPage() {
                 </button>
               )}
             </div>
-            <div className="flex items-center gap-3">
+
+            <div className="flex items-center gap-2.5 flex-wrap justify-end">
               {searchQuery && (
                 <span className="text-xs text-[#1e3e8f] font-semibold bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200">
                   Filtering: &ldquo;{searchQuery}&rdquo;
@@ -1009,6 +1117,45 @@ export default function UnifiedAdminSolutionsPage() {
               <span className="text-xs text-slate-500 font-medium">
                 Showing {filteredSolutions.length} of {solutions.length} items
               </span>
+
+              {/* Quick Reorder Modal Button */}
+              <button
+                type="button"
+                onClick={() => setShowOrderModal(true)}
+                className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-[#1e3e8f] rounded-sm text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                title="Open drag-and-drop solutions ordering modal"
+              >
+                <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                </svg>
+                <span>Reorder ({solutions.length})</span>
+              </button>
+
+              {hasPendingOrderChanges && (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleSaveOrder()}
+                    disabled={savingOrder}
+                    className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-sm text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 shadow-xs"
+                    title="Save reordered positions to database"
+                  >
+                    <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>{savingOrder ? "Saving..." : "Save Order"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => fetchSolutions()}
+                    disabled={savingOrder}
+                    className="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-600 border border-slate-300 rounded-sm text-xs font-medium transition-colors cursor-pointer shadow-2xs"
+                    title="Reset unsaved reordering"
+                  >
+                    Reset
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -1028,99 +1175,180 @@ export default function UnifiedAdminSolutionsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredSolutions.map((item: any) => (
-                <div key={item.id} className="bg-white border border-slate-200 rounded-sm overflow-hidden flex flex-col justify-between group hover:border-[#1e3e8f] transition-colors">
-                  {/* Photo Display Banner */}
-                  <div className="h-40 bg-slate-100 border-b border-slate-200 relative overflow-hidden flex items-center justify-center p-2">
-                    {item.imageUrl && item.imageUrl.trim() !== "" ? (
-                      <img
-                        key={item.imageUrl}
-                        src={formatImageUrl(item.imageUrl)}
-                        alt={item.title}
-                        onError={(e) => {
-                          const el = e.currentTarget as HTMLImageElement;
-                          el.style.display = "none";
-                          if (el.nextElementSibling) {
-                            (el.nextElementSibling as HTMLElement).style.display = "flex";
-                          }
-                        }}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    ) : null}
-                    <div
-                      style={{ display: item.imageUrl && item.imageUrl.trim() !== "" ? "none" : "flex" }}
-                      className="flex flex-col items-center justify-center text-center p-4 space-y-1 text-slate-500"
-                    >
-                      <svg className="w-7 h-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      <span className="text-[11px] font-mono font-medium text-slate-500">No Image Found</span>
-                    </div>
-                    <span className="absolute top-2.5 left-2.5 text-[11px] font-mono font-bold uppercase text-[#1e3e8f] bg-white border border-slate-300 px-2.5 py-0.5 rounded-sm shadow-2xs z-10">
-                      {item.id}
-                    </span>
-                  </div>
+              {filteredSolutions.map((item: any) => {
+                const itemIndex = solutions.findIndex((s) => s.id === item.id);
+                const displaySeq = itemIndex !== -1 ? itemIndex + 1 : (typeof item.order === "number" ? item.order + 1 : 1);
+                const canMoveUp = itemIndex > 0 && !savingOrder;
+                const canMoveDown = itemIndex !== -1 && itemIndex < solutions.length - 1 && !savingOrder;
+                const isDragging = draggedIdx === itemIndex;
+                const isDragOver = dragOverIdx === itemIndex && draggedIdx !== itemIndex;
 
-                  <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-                    <div className="space-y-1.5">
-                      <h3 className="text-sm font-bold text-slate-900 leading-snug m-0">{item.title}</h3>
-                      <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed m-0">{item.description}</p>
+                return (
+                  <div
+                    key={item.id}
+                    draggable={!searchQuery && !savingOrder && itemIndex !== -1}
+                    onDragStart={(e) => itemIndex !== -1 && handleDragStart(e, itemIndex)}
+                    onDragOver={(e) => itemIndex !== -1 && handleDragOver(e, itemIndex)}
+                    onDrop={(e) => itemIndex !== -1 && handleDrop(e, itemIndex)}
+                    onDragEnd={handleDragEnd}
+                    className={`bg-white border rounded-sm overflow-hidden flex flex-col justify-between group transition-all ${
+                      isDragging
+                        ? "opacity-35 border-dashed border-[#1e3e8f] bg-blue-50/50 scale-[0.98]"
+                        : isDragOver
+                        ? "border-2 border-[#1e3e8f] bg-blue-50/40 shadow-md"
+                        : "border-slate-200 hover:border-[#1e3e8f] hover:shadow-xs"
+                    }`}
+                  >
+                    {/* Photo Display Banner */}
+                    <div className="h-40 bg-slate-100 border-b border-slate-200 relative overflow-hidden flex items-center justify-center p-2">
+                      {item.imageUrl && item.imageUrl.trim() !== "" ? (
+                        <img
+                          key={item.imageUrl}
+                          src={formatImageUrl(item.imageUrl)}
+                          alt={item.title}
+                          onError={(e) => {
+                            const el = e.currentTarget as HTMLImageElement;
+                            el.style.display = "none";
+                            if (el.nextElementSibling) {
+                              (el.nextElementSibling as HTMLElement).style.display = "flex";
+                            }
+                          }}
+                          className="max-h-full max-w-full object-contain pointer-events-none"
+                        />
+                      ) : null}
+                      <div
+                        style={{ display: item.imageUrl && item.imageUrl.trim() !== "" ? "none" : "flex" }}
+                        className="flex flex-col items-center justify-center text-center p-4 space-y-1 text-slate-500 pointer-events-none"
+                      >
+                        <svg className="w-7 h-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span className="text-[11px] font-mono font-medium text-slate-500">No Image Found</span>
+                      </div>
+
+                      {/* Top Left: ID Badge */}
+                      <span className="absolute top-2.5 left-2.5 text-[11px] font-mono font-bold uppercase text-[#1e3e8f] bg-white border border-slate-300 px-2.5 py-0.5 rounded-sm shadow-2xs z-10">
+                        {item.id}
+                      </span>
+
+                      {/* Top Right: Order Sequence Badge + Move Controls */}
+                      <div className="absolute top-2.5 right-2.5 flex items-center gap-1 z-10 bg-white/95 backdrop-blur-xs p-1 rounded-sm border border-slate-300 shadow-2xs">
+                        {/* Drag Handle */}
+                        <div
+                          title={searchQuery ? "Clear search filter to reorder" : "Drag card to change order position"}
+                          className={`p-1 text-slate-400 hover:text-[#1e3e8f] rounded transition-colors ${
+                            searchQuery ? "opacity-30 cursor-not-allowed" : "cursor-grab active:cursor-grabbing"
+                          }`}
+                        >
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="8" cy="6" r="2" />
+                            <circle cx="16" cy="6" r="2" />
+                            <circle cx="8" cy="12" r="2" />
+                            <circle cx="16" cy="12" r="2" />
+                            <circle cx="8" cy="18" r="2" />
+                            <circle cx="16" cy="18" r="2" />
+                          </svg>
+                        </div>
+
+                        <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[#1e3e8f] font-mono text-[11px] font-bold border border-blue-200">
+                          #{displaySeq}
+                        </span>
+
+                        {/* Move Up button */}
+                        <button
+                          type="button"
+                          disabled={!canMoveUp}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMoveSolution(itemIndex, "up");
+                          }}
+                          className="p-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-200 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                          title="Move Up in order"
+                        >
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                          </svg>
+                        </button>
+
+                        {/* Move Down button */}
+                        <button
+                          type="button"
+                          disabled={!canMoveDown}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMoveSolution(itemIndex, "down");
+                          }}
+                          className="p-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-200 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                          title="Move Down in order"
+                        >
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
 
-                    {/* ACTION BUTTONS: LIVE PAGE, VIEW, EDIT, DELETE */}
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-1.5 flex-wrap">
-                      <a
-                        href={`/solutions/${item.id}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-300 hover:bg-slate-100 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
-                        title="Open public page for this solution"
-                      >
-                        <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                        <span>Live Page</span>
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() => setViewItem(item)}
-                        className="px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-300 hover:bg-slate-100 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
-                        title="View details"
-                      >
-                        <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                        <span>View</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleOpenEdit(item)}
-                        className="px-2.5 py-1 text-xs font-semibold text-[#1e3e8f] hover:text-[#162f6d] bg-blue-50/60 hover:bg-blue-100 border border-blue-200 hover:border-blue-400 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
-                        title="Edit solution item"
-                        style={{ color: "#1e3e8f" }}
-                      >
-                        <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: "#1e3e8f" }}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        <span style={{ color: "#1e3e8f" }}>Edit</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDeleteTarget(item.id || (item as any)._id)}
-                        className="px-2.5 py-1 text-xs font-semibold text-[#c22026] hover:text-red-900 bg-rose-50/60 hover:bg-rose-100 border border-rose-200 hover:border-rose-400 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
-                        title="Delete solution item"
-                        style={{ color: "#c22026" }}
-                      >
-                        <svg className="w-3.5 h-3.5 text-[#c22026]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: "#c22026" }}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        <span style={{ color: "#c22026" }}>Delete</span>
-                      </button>
+                    <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <h3 className="text-sm font-bold text-slate-900 leading-snug m-0">{item.title}</h3>
+                        <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed m-0">{item.description}</p>
+                      </div>
+
+                      {/* ACTION BUTTONS: LIVE PAGE, VIEW, EDIT, DELETE */}
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-1.5 flex-wrap">
+                        <a
+                          href={`/solutions/${item.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-300 hover:bg-slate-100 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                          title="Open public page for this solution"
+                        >
+                          <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          <span>Live Page</span>
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => setViewItem(item)}
+                          className="px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-300 hover:bg-slate-100 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                          title="View details"
+                        >
+                          <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          <span>View</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(item)}
+                          className="px-2.5 py-1 text-xs font-semibold text-[#1e3e8f] hover:text-[#162f6d] bg-blue-50/60 hover:bg-blue-100 border border-blue-200 hover:border-blue-400 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                          title="Edit solution item"
+                          style={{ color: "#1e3e8f" }}
+                        >
+                          <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: "#1e3e8f" }}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                          <span style={{ color: "#1e3e8f" }}>Edit</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteTarget(item.id || (item as any)._id)}
+                          className="px-2.5 py-1 text-xs font-semibold text-[#c22026] hover:text-red-900 bg-rose-50/60 hover:bg-rose-100 border border-rose-200 hover:border-rose-400 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                          title="Delete solution item"
+                          style={{ color: "#c22026" }}
+                        >
+                          <svg className="w-3.5 h-3.5 text-[#c22026]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: "#c22026" }}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          <span style={{ color: "#c22026" }}>Delete</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -1743,6 +1971,176 @@ export default function UnifiedAdminSolutionsPage() {
         </div>
       )}
 
+      {/* REORDER SOLUTIONS MODAL */}
+      {showOrderModal && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowOrderModal(false);
+          }}
+          className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200"
+        >
+          <div className="bg-white border border-slate-200 rounded-xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+            {/* Modal Header */}
+            <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#1e3e8f] font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                    Display Sequence
+                  </span>
+                  {hasPendingOrderChanges && (
+                    <span className="text-[10px] font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                      Unsaved Changes
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-base font-bold text-slate-900 mt-1 m-0">
+                  Reorder Solutions Catalog
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5 m-0">
+                  Drag rows with the <strong className="text-[#1e3e8f]">⋮⋮</strong> handle or click <strong className="text-slate-700">▲ ▼</strong> to set the public catalog sequence.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowOrderModal(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white border border-slate-300 text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer transition-colors shadow-2xs"
+                title="Close"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Body: Scrollable list */}
+            <div className="p-5 overflow-y-auto space-y-2 flex-1 bg-slate-50/50">
+              {solutions.length === 0 ? (
+                <div className="text-center py-12 text-slate-400 text-xs font-mono">
+                  No solutions available to reorder.
+                </div>
+              ) : (
+                solutions.map((item, idx) => {
+                  const isDragging = draggedIdx === idx;
+                  const isDragOver = dragOverIdx === idx && draggedIdx !== idx;
+
+                  return (
+                    <div
+                      key={item.id}
+                      draggable={!savingOrder}
+                      onDragStart={(e) => handleDragStart(e, idx)}
+                      onDragOver={(e) => handleDragOver(e, idx)}
+                      onDrop={(e) => handleDrop(e, idx)}
+                      onDragEnd={handleDragEnd}
+                      className={`flex items-center justify-between gap-3 p-3 rounded-lg border transition-all ${
+                        isDragging
+                          ? "opacity-35 bg-blue-50 border-dashed border-[#1e3e8f]"
+                          : isDragOver
+                          ? "border-t-2 border-t-[#1e3e8f] bg-blue-50/80 shadow-xs"
+                          : "bg-white hover:bg-slate-50/80 border-slate-200"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        {/* Drag Grip Handle */}
+                        <div
+                          className="cursor-grab active:cursor-grabbing p-1.5 -ml-1 text-slate-400 hover:text-[#1e3e8f] hover:bg-blue-50 rounded-lg transition-colors shrink-0"
+                          title="Drag to change order"
+                        >
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="8" cy="6" r="2" />
+                            <circle cx="16" cy="6" r="2" />
+                            <circle cx="8" cy="12" r="2" />
+                            <circle cx="16" cy="12" r="2" />
+                            <circle cx="8" cy="18" r="2" />
+                            <circle cx="16" cy="18" r="2" />
+                          </svg>
+                        </div>
+
+                        <span className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-[#1e3e8f] font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                          #{idx + 1}
+                        </span>
+
+                        {/* Thumbnail */}
+                        <div className="w-10 h-10 rounded bg-slate-100 border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+                          {item.imageUrl && item.imageUrl.trim() !== "" ? (
+                            <img
+                              src={formatImageUrl(item.imageUrl)}
+                              alt={item.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-[9px] font-mono text-slate-400">N/A</span>
+                          )}
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-slate-900 truncate m-0">
+                            {item.title}
+                          </p>
+                          <p className="text-[11px] font-mono text-slate-500 truncate m-0 mt-0.5">
+                            {item.id}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Up / Down buttons */}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button
+                          type="button"
+                          disabled={idx === 0 || savingOrder}
+                          onClick={() => handleMoveSolution(idx, "up")}
+                          className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                          title="Move Up"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          disabled={idx === solutions.length - 1 || savingOrder}
+                          onClick={() => handleMoveSolution(idx, "down")}
+                          className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                          title="Move Down"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 px-6 border-t border-slate-200 flex items-center justify-between bg-white shrink-0">
+              <span className="text-xs text-slate-500 font-mono">
+                {solutions.length} solutions in catalog
+              </span>
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowOrderModal(false)}
+                  className="px-4 py-2 border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-sm cursor-pointer transition-colors shadow-2xs"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  disabled={savingOrder || solutions.length === 0}
+                  onClick={() => handleSaveOrder()}
+                  className="px-5 py-2 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase rounded-sm cursor-pointer transition-colors shadow-xs flex items-center gap-1.5 disabled:opacity-50 font-mono"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{savingOrder ? "Saving..." : "Save Order"}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* CREATE / EDIT MODAL FOR TAB 1 ITEM */}
       {showModal && (
         <div
@@ -1785,9 +2183,24 @@ export default function UnifiedAdminSolutionsPage() {
                 </div>
               )}
               <form id="solution-item-form" onSubmit={handleSaveSolutionItem} className="space-y-5 text-xs">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Solution Title *</label>
-                  <input type="text" required value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="e.g. Fire & Gas Detection Systems" className="w-full p-2.5 border rounded-lg font-bold" />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="sm:col-span-2">
+                    <label className="block font-bold text-slate-700 mb-1">Solution Title *</label>
+                    <input type="text" required value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="e.g. Fire & Gas Detection Systems" className="w-full p-2.5 border rounded-lg font-bold" />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1" title="Display position sequence (1 = first)">
+                      Display Order #
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      value={formOrder}
+                      onChange={(e) => setFormOrder(e.target.value)}
+                      placeholder={`Position (1-${solutions.length + 1})`}
+                      className="w-full p-2.5 border rounded-lg font-mono text-xs"
+                    />
+                  </div>
                 </div>
 
                 {/* Solution Item Photo with Upload & Preview */}

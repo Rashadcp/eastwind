@@ -35,6 +35,9 @@ export class SolutionController {
 
   static async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      if (req.params.id === "reorder") {
+        return SolutionController.reorder(req, res, next);
+      }
       const updated = await SolutionModel.update(req.params.id, req.body);
       if (!updated) {
         res.status(404).json({ error: "Solution not found to update" });
@@ -54,6 +57,20 @@ export class SolutionController {
         return;
       }
       res.json(deleted);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async reorder(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const items = Array.isArray(req.body) ? req.body : req.body?.items;
+      if (!Array.isArray(items)) {
+        res.status(400).json({ error: "Invalid payload: array of items required" });
+        return;
+      }
+      await SolutionModel.reorder(items);
+      res.json({ success: true, count: items.length });
     } catch (error) {
       next(error);
     }
