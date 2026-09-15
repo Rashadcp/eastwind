@@ -380,33 +380,37 @@ export default function AdminSolutionsPage() {
           {/* Tab Switcher */}
           <div className="flex items-center gap-1 bg-slate-100 p-1 border border-slate-200 rounded-sm flex-wrap">
             <button
+              type="button"
               onClick={() => { setActiveTab("hero_industries"); clearMessages(); }}
               className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "hero_industries" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+                activeTab === "hero_industries" ? "bg-[#c22026] text-white shadow-xs border border-[#c22026] font-bold" : "text-slate-700 hover:text-slate-900 hover:bg-white/70"
               }`}
             >
               Hero & Industries
             </button>
             <button
+              type="button"
               onClick={() => { setActiveTab("capabilities"); clearMessages(); }}
               className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "capabilities" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+                activeTab === "capabilities" ? "bg-[#c22026] text-white shadow-xs border border-[#c22026] font-bold" : "text-slate-700 hover:text-slate-900 hover:bg-white/70"
               }`}
             >
               Core Capabilities
             </button>
             <button
+              type="button"
               onClick={() => { setActiveTab("partners"); clearMessages(); }}
               className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "partners" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+                activeTab === "partners" ? "bg-[#c22026] text-white shadow-xs border border-[#c22026] font-bold" : "text-slate-700 hover:text-slate-900 hover:bg-white/70"
               }`}
             >
               Partner Brands
             </button>
             <button
+              type="button"
               onClick={() => { setActiveTab("gateway"); clearMessages(); }}
               className={`px-3 py-1.5 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "gateway" ? "bg-white text-[#1e3e8f] shadow-xs border border-slate-200" : "text-slate-600 hover:text-slate-900"
+                activeTab === "gateway" ? "bg-[#c22026] text-white shadow-xs border border-[#c22026] font-bold" : "text-slate-700 hover:text-slate-900 hover:bg-white/70"
               }`}
             >
               Enquiry Gateway

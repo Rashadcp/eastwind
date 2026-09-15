@@ -293,7 +293,7 @@ export default function Contact() {
                       <input
                         type="text"
                         required
-                        placeholder="Site Engineer Name"
+                        placeholder="Name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="w-full min-h-[46px] px-4 rounded-xl bg-white border border-slate-200 text-slate-800 font-sans text-xs focus:outline-none focus:border-[#1e3e8f] focus:ring-1 focus:ring-[#1e3e8f] transition-all"

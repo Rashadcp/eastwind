@@ -1,7 +1,26 @@
 import { Request, Response, NextFunction } from "express";
 import { ProductModel } from "../models/product.model.js";
+import { ProductPageModel } from "../models/productPage.model.js";
 
 export class ProductController {
+  static async getPageSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const settings = await ProductPageModel.get();
+      res.json(settings);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updatePageSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { title } = req.body;
+      const updated = await ProductPageModel.update(title);
+      res.json(updated);
+    } catch (error) {
+      next(error);
+    }
+  }
   static async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const items = await ProductModel.getAll();

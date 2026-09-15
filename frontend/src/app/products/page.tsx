@@ -174,6 +174,7 @@ function ProductsCatalogContent() {
   });
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [pageTitle, setPageTitle] = useState<string>("Industrial Safety & Hazardous Systems");
 
   // Enquiry Form State inside Modal
   const [enquireName, setEnquireName] = useState<string>("");
@@ -269,6 +270,18 @@ function ProductsCatalogContent() {
           }
         } catch (catErr) {
           // ignore error and fallback to default order
+        }
+        // 4. Fetch Products Page Settings (editable page title)
+        try {
+          const settingsRes = await fetch(`${baseUrl}/api/products/page-settings?t=${Date.now()}`, { cache: "no-store" });
+          if (settingsRes.ok) {
+            const settingsData = await settingsRes.json();
+            if (settingsData && settingsData.title) {
+              setPageTitle(settingsData.title);
+            }
+          }
+        } catch (settingsErr) {
+          // ignore error and fallback to default title
         }
       } catch (err) {
         console.warn("Background product refresh warning:", err);
@@ -559,7 +572,7 @@ function ProductsCatalogContent() {
         <section className="max-w-[1400px] mx-auto px-10 max-sm:px-5 mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Industrial Safety & Hazardous Systems
+              {pageTitle}
             </h1>
 
             {(selectedBrand !== "All" || selectedCategory !== "All" || searchQuery) && (
@@ -900,7 +913,7 @@ function ProductsCatalogContent() {
                   <button
                     type="button"
                     onClick={() => setSelectedProduct(null)}
-                    className="px-4 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-900 hover:text-white text-slate-700 text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shadow-2xs"
+                    className="px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 hover:text-slate-900 text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer shadow-2xs"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Back to Products</span>
@@ -1001,47 +1014,47 @@ function ProductsCatalogContent() {
                       <button
                         type="button"
                         onClick={() => handleDownloadDatasheet(selectedProduct)}
-                        className="p-3 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 hover:border-slate-900 rounded-xl flex items-center justify-between group transition-all duration-200 cursor-pointer text-left"
+                        className="p-3 bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-blue-300 rounded-xl flex items-center justify-between group transition-all duration-200 cursor-pointer text-left shadow-2xs"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                          <span className="w-8 h-8 rounded-lg bg-blue-50 text-[#1e3e8f] group-hover:bg-[#1e3e8f] group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors border border-blue-200">
                             <FileText className="w-4 h-4" />
                           </span>
                           <div>
-                            <div className="text-xs font-extrabold text-slate-900 group-hover:text-white transition-colors">
+                            <div className="text-xs font-extrabold text-slate-900 group-hover:text-[#1e3e8f] transition-colors">
                               Download Technical Datasheet
                             </div>
-                            <div className="text-[10px] text-slate-400 font-mono">
+                            <div className="text-[10px] text-slate-500 font-mono">
                               {selectedProduct.datasheetName && selectedProduct.datasheetName.trim() !== ""
                                 ? `${(selectedProduct.datasheetName.split(".").pop() || "PDF").toUpperCase()} • ${selectedProduct.datasheetName}`
                                 : "PDF • Complete Parameter Specs"}
                             </div>
                           </div>
                         </div>
-                        <Download className="w-3.5 h-3.5 text-blue-600 group-hover:text-white transition-colors" />
+                        <Download className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1e3e8f] transition-colors" />
                       </button>
 
                       <button
                         type="button"
                         onClick={() => handleDownloadWhitePaper(selectedProduct)}
-                        className="p-3 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 hover:border-slate-900 rounded-xl flex items-center justify-between group transition-all duration-200 cursor-pointer text-left"
+                        className="p-3 bg-white hover:bg-rose-50/60 border border-slate-200 hover:border-rose-300 rounded-xl flex items-center justify-between group transition-all duration-200 cursor-pointer text-left shadow-2xs"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="w-8 h-8 rounded-lg bg-red-100 text-[#c22026] group-hover:bg-[#c22026] group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                          <span className="w-8 h-8 rounded-lg bg-rose-50 text-[#c22026] group-hover:bg-[#c22026] group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors border border-rose-200">
                             <FileCode className="w-4 h-4" />
                           </span>
                           <div>
-                            <div className="text-xs font-extrabold text-slate-900 group-hover:text-white transition-colors">
+                            <div className="text-xs font-extrabold text-slate-900 group-hover:text-[#c22026] transition-colors">
                               Download Safety White Paper
                             </div>
-                            <div className="text-[10px] text-slate-400 font-mono">
+                            <div className="text-[10px] text-slate-500 font-mono">
                               {selectedProduct.whitepaperName && selectedProduct.whitepaperName.trim() !== ""
                                 ? `${(selectedProduct.whitepaperName.split(".").pop() || "PDF").toUpperCase()} • ${selectedProduct.whitepaperName}`
                                 : "PDF • Deployment & Compliance"}
                             </div>
                           </div>
                         </div>
-                        <Download className="w-3.5 h-3.5 text-[#c22026] group-hover:text-white transition-colors" />
+                        <Download className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#c22026] transition-colors" />
                       </button>
                     </div>
 
@@ -1202,7 +1215,7 @@ function ProductsCatalogContent() {
                         <input
                           type="text"
                           required
-                          placeholder="e.g. Abdullah Al-Mansoor"
+                          placeholder="Name"
                           value={enquireName}
                           onChange={(e) => setEnquireName(e.target.value)}
                           className="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 font-medium bg-slate-50/50"
@@ -1223,7 +1236,7 @@ function ProductsCatalogContent() {
                         <label className="block text-slate-600 font-bold mb-1">Company / Facility</label>
                         <input
                           type="text"
-                          placeholder="e.g. Petrochemical Refinery"
+                          placeholder="Company Name"
                           value={enquireCompany}
                           onChange={(e) => setEnquireCompany(e.target.value)}
                           className="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 font-medium bg-slate-50/50"

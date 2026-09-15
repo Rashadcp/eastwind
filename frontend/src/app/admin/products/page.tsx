@@ -11,6 +11,8 @@ export default function AdminProductsPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [productsPageTitle, setProductsPageTitle] = useState<string>("Industrial Safety & Hazardous Systems");
+  const [savingPageTitle, setSavingPageTitle] = useState<boolean>(false);
 
   // Drag and drop state for products and categories
   const [draggedProductIdx, setDraggedProductIdx] = useState<number | null>(null);
@@ -214,9 +216,63 @@ export default function AdminProductsPage() {
     });
   };
 
+  const fetchPageTitle = async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const res = await fetch(`${baseUrl}/api/products/page-settings?t=${Date.now()}`, { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.title) {
+          setProductsPageTitle(data.title);
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load products page title in admin:", e);
+    }
+  };
+
+  const handleSavePageTitle = async () => {
+    clearMessages();
+    const trimmed = productsPageTitle.trim();
+    if (!trimmed) {
+      setError("Products page title cannot be blank.");
+      return;
+    }
+
+    try {
+      setSavingPageTitle(true);
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const res = await fetch(`${baseUrl}/api/products/page-settings`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ title: trimmed })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to update products page title.");
+      }
+
+      setSuccess("Products page title updated successfully!");
+      if (data && data.title) {
+        setProductsPageTitle(data.title);
+      }
+    } catch (err: any) {
+      console.error("Error saving products page title:", err);
+      setError(err.message || "Failed to update products page title.");
+    } finally {
+      setSavingPageTitle(false);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
+    fetchPageTitle();
   }, []);
 
   const handleOpenCategoryManager = () => {
@@ -1034,6 +1090,55 @@ export default function AdminProductsPage() {
         </div>
       )}
 
+      {/* Products Page Title Config Card */}
+      <div className="bg-white border border-slate-200 rounded-sm p-4 sm:p-5 shadow-2xs">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <svg className="w-4 h-4 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                Products Page Main Title
+              </label>
+            </div>
+            <p className="text-[11px] text-slate-500 mb-2.5">
+              Edit the headline displayed at the top of the public products catalog page (/products).
+            </p>
+            <input
+              type="text"
+              value={productsPageTitle}
+              onChange={(e) => setProductsPageTitle(e.target.value)}
+              placeholder="e.g. Industrial Safety & Hazardous Systems"
+              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-sm focus:border-[#1e3e8f] focus:outline-none bg-white text-slate-900 font-semibold shadow-2xs"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleSavePageTitle}
+            disabled={savingPageTitle}
+            className="flex items-center justify-center gap-2 py-2.5 px-5 rounded-sm bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer border border-[#1e3e8f] disabled:opacity-50 shrink-0 h-[38px]"
+          >
+            {savingPageTitle ? (
+              <>
+                <svg className="w-3.5 h-3.5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Save Title</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
       {/* Search & Filter Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full">
         {/* Search Input Bar */}
@@ -1176,9 +1281,8 @@ export default function AdminProductsPage() {
                               type="button"
                               disabled={!canMoveUp}
                               onClick={() => handleMoveProduct(itemOrderIdx, "up")}
-                              className="p-1.5 rounded-lg bg-white hover:bg-[#1e3e8f] hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                              className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                               title="Move Up"
-                              style={{ color: "#334155" }}
                             >
                               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
@@ -1188,9 +1292,8 @@ export default function AdminProductsPage() {
                               type="button"
                               disabled={!canMoveDown}
                               onClick={() => handleMoveProduct(itemOrderIdx, "down")}
-                              className="p-1.5 rounded-lg bg-white hover:bg-[#1e3e8f] hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                              className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-300 shadow-2xs disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                               title="Move Down"
-                              style={{ color: "#334155" }}
                             >
                               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -1206,20 +1309,25 @@ export default function AdminProductsPage() {
                       </td>
                     <td className="px-5 py-3.5 text-right flex items-center justify-end gap-2">
                       <button
+                        type="button"
                         onClick={() => setViewItem(item)}
-                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer border border-emerald-200"
+                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-emerald-800 hover:text-emerald-950 bg-white hover:bg-emerald-50 transition-colors cursor-pointer border border-emerald-200 hover:border-emerald-300 shadow-2xs"
                       >
                         View
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleOpenEdit(item)}
-                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#1e3e8f] bg-blue-50 hover:bg-[#1e3e8f] hover:text-white transition-colors cursor-pointer border border-blue-200"
+                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#1e3e8f] hover:text-blue-900 bg-white hover:bg-blue-50 transition-colors cursor-pointer border border-blue-200 hover:border-blue-300 shadow-2xs"
+                        style={{ color: "#1e3e8f" }}
                       >
                         Edit
                       </button>
                       <button
+                        type="button"
                         onClick={() => setDeleteTarget(item.id || (item as any)._id)}
-                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#c22026] bg-rose-50 hover:bg-[#c22026] hover:text-white transition-colors cursor-pointer border border-rose-200"
+                        className="py-1 px-2.5 rounded-sm text-xs font-semibold text-[#c22026] hover:text-red-900 bg-white hover:bg-rose-50 transition-colors cursor-pointer border border-rose-200 hover:border-rose-300 shadow-2xs"
+                        style={{ color: "#c22026" }}
                       >
                         Delete
                       </button>
@@ -1938,10 +2046,12 @@ export default function AdminProductsPage() {
                 Product Details: {viewItem.id}
               </h3>
               <button
+                type="button"
                 onClick={() => setViewItem(null)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-400 hover:text-slate-700 cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white border border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer transition-colors shadow-2xs"
+                title="Close"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -2056,9 +2166,12 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 rounded-lg bg-[#1e3e8f] text-white hover:bg-[#162f6d] text-xs font-bold uppercase tracking-wider cursor-pointer transition-all shadow-md shadow-[#1e3e8f]/20"
+                className="px-5 py-2 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 text-xs font-semibold uppercase tracking-wider cursor-pointer transition-colors shadow-2xs flex items-center gap-1.5"
               >
-                Close View
+                <span>Close View</span>
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 
@@ -2085,15 +2198,16 @@ export default function AdminProductsPage() {
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => {
                   setShowCategoryModal(false);
                   setEditingCatId(null);
                   setCatDeleteTarget(null);
                 }}
-                className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-200 cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white border border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer transition-colors shadow-2xs"
                 title="Close"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -2192,7 +2306,7 @@ export default function AdminProductsPage() {
                             onClick={() => handleMoveCategory(idx, "up")}
                             disabled={isFirst || savingCategories}
                             className={`p-1 rounded bg-slate-100 border border-slate-200 transition-colors ${
-                              isFirst || savingCategories ? "opacity-25 cursor-not-allowed text-slate-300" : "hover:bg-[#1e3e8f] hover:text-white hover:border-[#1e3e8f] cursor-pointer"
+                              isFirst || savingCategories ? "opacity-25 cursor-not-allowed text-slate-300" : "hover:bg-slate-200 hover:text-slate-950 hover:border-slate-300 cursor-pointer"
                             }`}
                             title="Move Up"
                             style={{ color: isFirst || savingCategories ? "#cbd5e1" : "#334155" }}
@@ -2206,7 +2320,7 @@ export default function AdminProductsPage() {
                             onClick={() => handleMoveCategory(idx, "down")}
                             disabled={isLast || savingCategories}
                             className={`p-1 rounded bg-slate-100 border border-slate-200 transition-colors ${
-                              isLast || savingCategories ? "opacity-25 cursor-not-allowed text-slate-300" : "hover:bg-[#1e3e8f] hover:text-white hover:border-[#1e3e8f] cursor-pointer"
+                              isLast || savingCategories ? "opacity-25 cursor-not-allowed text-slate-300" : "hover:bg-slate-200 hover:text-slate-950 hover:border-slate-300 cursor-pointer"
                             }`}
                             title="Move Down"
                             style={{ color: isLast || savingCategories ? "#cbd5e1" : "#334155" }}
@@ -2417,10 +2531,10 @@ export default function AdminProductsPage() {
               <button
                 type="button"
                 onClick={() => setShowProductOrderModal(false)}
-                className="text-slate-400 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white border border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer transition-colors shadow-2xs"
                 title="Close"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -2496,9 +2610,8 @@ export default function AdminProductsPage() {
                           type="button"
                           disabled={idx === 0 || savingProductOrder}
                           onClick={() => handleMoveProduct(idx, "up")}
-                          className="p-2 rounded-lg bg-white hover:bg-[#1e3e8f] hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                          className="p-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
                           title="Move Up"
-                          style={{ color: "#334155" }}
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
@@ -2508,9 +2621,8 @@ export default function AdminProductsPage() {
                           type="button"
                           disabled={idx === orderedCategoryProducts.length - 1 || savingProductOrder}
                           onClick={() => handleMoveProduct(idx, "down")}
-                          className="p-2 rounded-lg bg-white hover:bg-[#1e3e8f] hover:text-white text-slate-700 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
+                          className="p-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-300 shadow-2xs disabled:opacity-25 disabled:pointer-events-none transition-colors cursor-pointer"
                           title="Move Down"
-                          style={{ color: "#334155" }}
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />

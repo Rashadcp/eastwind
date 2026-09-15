@@ -367,9 +367,9 @@ export default function AdminSuccessStoriesPage() {
                 <button
                   type="button"
                   onClick={() => setViewStory(story)}
-                  className="px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50 rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                  className="px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-300 hover:bg-slate-100 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
                 >
-                  <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
@@ -379,16 +379,18 @@ export default function AdminSuccessStoriesPage() {
                   <button
                     type="button"
                     onClick={() => handleOpenEditModal(story)}
-                    className="px-2.5 py-1 text-xs font-semibold text-[#1e3e8f] bg-blue-50 hover:bg-[#1e3e8f] hover:text-white border border-blue-200 rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                    className="px-2.5 py-1 text-xs font-semibold text-[#1e3e8f] hover:text-[#162f6d] bg-blue-50/60 hover:bg-blue-100 border border-blue-200 hover:border-blue-400 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                    style={{ color: "#1e3e8f" }}
                   >
-                    <span>Edit</span>
+                    <span style={{ color: "#1e3e8f" }}>Edit</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setDeleteTarget(story.id || (story as any)._id)}
-                    className="px-2.5 py-1 text-xs font-semibold text-[#c22026] bg-rose-50 hover:bg-[#c22026] hover:text-white border border-rose-200 rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                    className="px-2.5 py-1 text-xs font-semibold text-[#c22026] hover:text-red-900 bg-rose-50/60 hover:bg-rose-100 border border-rose-200 hover:border-rose-400 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                    style={{ color: "#c22026" }}
                   >
-                    <span>Delete</span>
+                    <span style={{ color: "#c22026" }}>Delete</span>
                   </button>
                 </div>
               </div>
@@ -415,10 +417,12 @@ export default function AdminSuccessStoriesPage() {
                 <p className="text-xs text-slate-500 m-0 mt-0.5">Configure client case study details, measured results, and cover photo.</p>
               </div>
               <button
+                type="button"
                 onClick={() => setShowModal(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white border border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer transition-colors shadow-2xs"
+                title="Close"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -628,10 +632,12 @@ export default function AdminSuccessStoriesPage() {
                 {viewStory.category} ({viewStory.year || "2025"})
               </span>
               <button
+                type="button"
                 onClick={() => setViewStory(null)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white border border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer transition-colors shadow-2xs"
+                title="Close"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -673,10 +679,10 @@ export default function AdminSuccessStoriesPage() {
               <button
                 type="button"
                 onClick={() => setViewStory(null)}
-                className="px-6 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
+                className="px-5 py-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 font-semibold text-xs rounded-lg shadow-2xs cursor-pointer transition-colors flex items-center gap-1.5"
               >
                 <span>Close Details</span>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>

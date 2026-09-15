@@ -944,26 +944,28 @@ export default function UnifiedAdminSolutionsPage() {
       {/* TAB NAVIGATION */}
       <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-sm w-fit border border-slate-200">
         <button
+          type="button"
           onClick={() => setActiveTab("catalog")}
           className={`px-3.5 py-1.5 text-xs font-semibold rounded-sm transition-colors cursor-pointer flex items-center gap-2 ${
             activeTab === "catalog"
-              ? "bg-white text-[#1e3e8f] border border-slate-200 font-bold"
-              : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+              ? "bg-[#c22026] text-white border border-[#c22026] font-bold shadow-xs"
+              : "text-slate-700 hover:text-slate-900 hover:bg-white/70 border border-transparent"
           }`}
         >
           <span>Manage Solution Items</span>
           <span className={`px-1.5 py-0.2 rounded-sm text-[10px] font-mono font-bold ${
-            activeTab === "catalog" ? "bg-blue-100 text-[#1e3e8f]" : "bg-slate-200 text-slate-600"
+            activeTab === "catalog" ? "bg-white/20 text-white" : "bg-slate-200 text-slate-700"
           }`}>
             {solutions.length}
           </span>
         </button>
         <button
+          type="button"
           onClick={() => setActiveTab("page_layout")}
           className={`px-3.5 py-1.5 text-xs font-semibold rounded-sm transition-colors cursor-pointer ${
             activeTab === "page_layout"
-              ? "bg-white text-[#1e3e8f] border border-slate-200 font-bold"
-              : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+              ? "bg-[#c22026] text-white border border-[#c22026] font-bold shadow-xs"
+              : "text-slate-700 hover:text-slate-900 hover:bg-white/70 border border-transparent"
           }`}
         >
           Manage Solutions Page Banners & Layout
@@ -1065,40 +1067,55 @@ export default function UnifiedAdminSolutionsPage() {
                       <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed m-0">{item.description}</p>
                     </div>
 
-                    {/* ACTION BUTTONS: VIEW, EDIT, DELETE */}
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-1.5">
+                    {/* ACTION BUTTONS: LIVE PAGE, VIEW, EDIT, DELETE */}
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-1.5 flex-wrap">
                       <a
                         href={`/solutions/${item.id}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-2 py-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50 rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                        className="px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-300 hover:bg-slate-100 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
                         title="Open public page for this solution"
                       >
-                        <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
                         <span>Live Page</span>
                       </a>
                       <button
+                        type="button"
                         onClick={() => setViewItem(item)}
-                        className="px-2.5 py-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                        className="px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-300 hover:bg-slate-100 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
                         title="View details"
                       >
+                        <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
                         <span>View</span>
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleOpenEdit(item)}
-                        className="px-2.5 py-1 text-xs font-semibold text-[#1e3e8f] bg-blue-50 hover:bg-[#1e3e8f] hover:text-white border border-blue-200 rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                        className="px-2.5 py-1 text-xs font-semibold text-[#1e3e8f] hover:text-[#162f6d] bg-blue-50/60 hover:bg-blue-100 border border-blue-200 hover:border-blue-400 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
                         title="Edit solution item"
+                        style={{ color: "#1e3e8f" }}
                       >
-                        <span>Edit</span>
+                        <svg className="w-3.5 h-3.5 text-[#1e3e8f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: "#1e3e8f" }}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        <span style={{ color: "#1e3e8f" }}>Edit</span>
                       </button>
                       <button
+                        type="button"
                         onClick={() => setDeleteTarget(item.id || (item as any)._id)}
-                        className="px-2.5 py-1 text-xs font-semibold text-[#c22026] bg-rose-50 hover:bg-[#c22026] hover:text-white border border-rose-200 rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                        className="px-2.5 py-1 text-xs font-semibold text-[#c22026] hover:text-red-900 bg-rose-50/60 hover:bg-rose-100 border border-rose-200 hover:border-rose-400 rounded-sm transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
                         title="Delete solution item"
+                        style={{ color: "#c22026" }}
                       >
-                        <span>Delete</span>
+                        <svg className="w-3.5 h-3.5 text-[#c22026]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" style={{ color: "#c22026" }}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        <span style={{ color: "#c22026" }}>Delete</span>
                       </button>
                     </div>
                   </div>
@@ -1744,10 +1761,10 @@ export default function UnifiedAdminSolutionsPage() {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-900 hover:text-white text-slate-700 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+                className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 hover:text-slate-900 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
               >
                 <span>Close</span>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -1967,10 +1984,11 @@ export default function UnifiedAdminSolutionsPage() {
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-3.5 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 hover:border-slate-400 text-slate-800 text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 hover:text-slate-900 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                title="Close"
               >
                 <span>Close</span>
-                <svg className="w-4 h-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -2058,24 +2076,37 @@ export default function UnifiedAdminSolutionsPage() {
 
             {/* Fixed Footer */}
             <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50/70 flex items-center justify-between shrink-0">
-              <a
-                href={`/solutions/${viewItem.id}`}
-                target="_blank"
-                rel="noreferrer"
-                className="px-4 py-2 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold text-xs rounded-lg shadow-2xs cursor-pointer transition-all flex items-center gap-1.5"
-              >
-                <span>Open Live Page</span>
-                <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
+              <div className="flex items-center gap-2">
+                <a
+                  href={`/solutions/${viewItem.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-4 py-2 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold text-xs rounded-lg shadow-2xs cursor-pointer transition-all flex items-center gap-1.5"
+                >
+                  <span>Open Live Page</span>
+                  <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const it = viewItem;
+                    setViewItem(null);
+                    handleOpenEdit(it);
+                  }}
+                  className="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-bold text-xs rounded-lg shadow-2xs cursor-pointer transition-all flex items-center gap-1.5"
+                >
+                  <span>Edit Solution</span>
+                </button>
+              </div>
               <button
                 type="button"
                 onClick={() => setViewItem(null)}
-                className="px-6 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all flex items-center gap-2"
+                className="px-5 py-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 font-semibold text-xs rounded-lg shadow-2xs cursor-pointer transition-colors flex items-center gap-1.5"
               >
                 <span>Close Details</span>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>

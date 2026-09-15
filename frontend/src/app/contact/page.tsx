@@ -154,7 +154,7 @@ export default function ContactPage() {
       <main className="min-h-screen bg-white text-slate-800 antialiased flex flex-col w-full overflow-x-hidden">
         
         {/* ── SECTION 1: BRIGHT INDUSTRIAL SPLASH HERO BANNER ── */}
-        <div className="relative w-full overflow-hidden bg-slate-950 min-h-[50vh] pt-[250px] pb-32 flex items-center z-10 border-b border-slate-900 shrink-0">
+        <div className="relative w-full overflow-hidden bg-slate-950 min-h-[40vh] pt-36 pb-20 flex items-center z-10 border-b border-slate-900 shrink-0">
           <img
             src={contactPage.heroBgImage}
             alt={contactPage.heroTitle}
@@ -244,7 +244,7 @@ export default function ContactPage() {
             </div>
 
             {/* Right Box: Contact / Inquiry Form */}
-            <div className="lg:col-span-7 bg-[#f8fafc] border border-slate-200/60 p-8 md:p-10 rounded-2xl shadow-2xs">
+            <div id="contact-form" className="lg:col-span-7 bg-[#f8fafc] border border-slate-200/60 p-8 md:p-10 rounded-2xl shadow-2xs scroll-mt-28">
               {submitted ? (
                 <div className="py-12 text-center space-y-4">
                   <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto shadow-xs">
@@ -277,7 +277,7 @@ export default function ContactPage() {
                         required
                         value={formState.name}
                         onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                        placeholder="John Doe"
+                        placeholder="Name"
                         className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:border-[#1e3e8f] focus:outline-hidden transition-colors font-medium text-slate-800"
                       />
                     </div>
@@ -289,7 +289,7 @@ export default function ContactPage() {
                         required
                         value={formState.company}
                         onChange={(e) => setFormState({ ...formState, company: e.target.value })}
-                        placeholder="e.g. Saudi Aramco / SABIC"
+                        placeholder="Company Name"
                         className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:border-[#1e3e8f] focus:outline-hidden transition-colors font-medium text-slate-800"
                       />
                     </div>

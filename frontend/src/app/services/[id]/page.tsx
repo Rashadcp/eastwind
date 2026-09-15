@@ -485,29 +485,25 @@ export default async function ServiceDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* CTA Integration Row — Returned to pure white setup to seamlessly dock into the light translucent footer bounds */}
-        <div className="w-full bg-white pt-12 pb-24">
+        {/* CTA Contact Our Team Row */}
+        <div className="w-full bg-white pt-12 pb-24 border-t border-slate-100">
           <div className="max-w-[1240px] mx-auto px-6">
-            <div className="relative overflow-hidden rounded-2xl p-8 md:p-12" style={{ background: `linear-gradient(135deg, #0f172a 0%, ${data.accentHex}cc 100%)` }}>
-              <div className="absolute inset-0 pointer-events-none opacity-[0.06]" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
-              <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-                <div>
-                  <h2 className="text-2xl font-bold text-white tracking-tight leading-snug mb-1">
-                    Engage our {data.title} team
-                  </h2>
-                  <p className="text-white/60 text-sm font-light m-0">
-                    Our engineers will scope, plan, and deliver this service around your site&apos;s specific regulatory and operational requirements.
-                  </p>
-                </div>
+            <div className="p-8 sm:p-10 md:p-12 bg-[#f8fafc] border border-slate-200/90 rounded-[28px] md:rounded-[32px] flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-10 shadow-2xs">
+              <div className="max-w-2xl space-y-2.5">
+                <h2 className="text-xl sm:text-2xl md:text-[1.75rem] font-black uppercase text-slate-900 tracking-tight leading-snug m-0">
+                  Contact Our Team
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed m-0">
+                  Planning a new safety system, digitalization initiative, equipment package, or site upgrade? Speak with our engineering team to review your application, operating conditions, technical requirements, and project scope.
+                </p>
+              </div>
+              <div className="shrink-0 w-full sm:w-auto">
                 <Link
-                  href="/enquire"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[0.8rem] font-bold uppercase tracking-wider no-underline transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg flex-shrink-0"
-                  style={{ color: data.accentHex }}
+                  href="/contact#contact-form"
+                  className="w-full sm:w-auto py-4 px-8 text-xs font-bold uppercase tracking-wider text-white bg-[#c22026] hover:bg-[#1e3e8f] rounded-full inline-flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer no-underline text-center"
                 >
-                  Request Consultation
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 5l7 7-7 7" />
-                  </svg>
+                  <span>Contact</span>
+                  <span className="font-bold text-sm">→</span>
                 </Link>
               </div>
             </div>

@@ -189,7 +189,7 @@ function EnquiryFormContent() {
             <input
               type="text"
               required
-              placeholder="e.g. John Doe"
+              placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full h-12 px-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-[#c22026] transition-all focus:bg-white"

@@ -509,6 +509,18 @@ const PrivacyPolicySchema = new Schema<IPrivacyPolicy>({
 
 export const PrivacyPolicy = mongoose.models.PrivacyPolicy || mongoose.model<IPrivacyPolicy>("PrivacyPolicy", PrivacyPolicySchema);
 
+export interface IProductPage extends Document {
+  id: string;
+  title: string;
+}
+
+const ProductPageSchema = new Schema<IProductPage>({
+  id: { type: String, required: true, unique: true, index: true, default: "products_page" },
+  title: { type: String, default: "Industrial Safety & Hazardous Systems" }
+}, { timestamps: true });
+
+export const ProductPage = mongoose.models.ProductPage || mongoose.model<IProductPage>("ProductPage", ProductPageSchema);
+
 // --- Database Seeding logic ---
 
 export async function seedDatabase(): Promise<void> {
