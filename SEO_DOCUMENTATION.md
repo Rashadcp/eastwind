@@ -6,6 +6,7 @@
 ---
 
 ## Table of Contents
+0. [Non-Technical User's Guide: How to Understand & Manage SEO (Zero Coding)](#0-non-technical-users-guide-how-to-understand--manage-seo-zero-coding)
 1. [Executive Summary](#1-executive-summary)
 2. [SEO Architecture & Strategy](#2-seo-architecture--strategy)
 3. [Global Meta Tags & Open Graph Setup](#3-global-meta-tags--open-graph-setup)
@@ -16,6 +17,43 @@
 8. [Admin SEO Management Dashboard (`/admin/seo`)](#8-admin-seo-management-dashboard-adminseo)
 9. [Pre-Configured Core Page Metadata Catalog](#9-pre-configured-core-page-metadata-catalog)
 10. [Core Web Vitals & Technical Performance Checklist](#10-core-web-vitals--technical-performance-checklist)
+
+---
+
+## 0. Non-Technical User's Guide: How to Understand & Manage SEO (Zero Coding)
+
+If you are not a web developer, this section explains how search engine optimization works for your website and how you can update it directly from your web browser in 60 seconds without writing a single line of code.
+
+### 1. What is SEO in Simple Words?
+When someone in Saudi Arabia searches on Google for terms like *"ATEX gas detector Saudi Arabia"* or *"firefighting equipment Dammam"*, you want East Wind Safety to show up at the very top of Google results. 
+
+SEO (Search Engine Optimization) is how we set up the website so Google clearly understands who you are, what services you provide, and why your company should rank #1.
+
+### 2. The 3 Things You See on Google & Social Media:
+1. **The Title (Headline):** The blue clickable title that appears in Google search results (e.g. *"Industrial Safety Products & Certified Equipment | Eastwind Safety Arabia"*).
+2. **The Description (Summary):** The 2-sentence description underneath the blue title on Google explaining what the page offers.
+3. **The Social Share Card (Open Graph):** The preview image and title that automatically appears whenever you send a link on **WhatsApp**, **LinkedIn**, **Twitter/X**, or email.
+
+### 3. How to Change Any Page's Google Info in 1 Minute (Step-by-Step):
+You do not need a developer to change titles, descriptions, or WhatsApp images:
+1. Open your browser and go to: `https://yourdomain.com/admin/login`
+2. Log in with your admin username and password.
+3. On the left-side menu, click **"SEO"**.
+4. Select the page you want to update (e.g., *Home Page*, *About Us*, *Products*, *Solutions*).
+5. Edit the fields:
+   - **Page Title:** Type your headline (the bar shows green when it's the ideal length of 50–60 characters).
+   - **Meta Description:** Type your 2-sentence summary (the bar shows green at 150–160 characters).
+   - **Google Search Preview:** Watch the live preview box at the bottom — it shows you *exactly* how it will look on Google search!
+6. Want a custom image when sharing on WhatsApp or LinkedIn?
+   - Click the **"Social Media Cards"** tab.
+   - Upload your image (or paste an image link).
+   - You will see a live preview of the WhatsApp/LinkedIn share card immediately.
+7. Click **"Save Changes"**. Your changes go live instantly!
+
+### 4. How Google Finds All Your Products Automatically:
+- You have an automated **Sitemap** at: `https://yourdomain.com/sitemap.xml`
+- Every time you add a new product or service in the admin panel, the website automatically adds it to this list.
+- **To notify Google:** Open [Google Search Console](https://search.google.com/search-console), add your domain, and submit the link `https://yourdomain.com/sitemap.xml`. Google will automatically crawl and index all your products.
 
 ---
 

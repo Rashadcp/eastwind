@@ -6,6 +6,7 @@
 ---
 
 ## Table of Contents
+0. [Quick Plain-English Guide (For Non-Technical Users & Project Managers)](#0-quick-plain-english-guide-for-non-technical-users--project-managers)
 1. [Architecture Overview](#1-architecture-overview)
 2. [Server Prerequisites & Initial Setup](#2-server-prerequisites--initial-setup)
 3. [Database Configuration (MongoDB)](#3-database-configuration-mongodb)
@@ -17,6 +18,41 @@
 9. [Media & Uploads Handling](#9-media--uploads-handling)
 10. [Automated Redeployment Script](#10-automated-redeployment-script)
 11. [Troubleshooting & Maintenance Checklist](#11-troubleshooting--maintenance-checklist)
+
+---
+
+## 0. Quick Plain-English Guide (For Non-Technical Users & Project Managers)
+
+If you are not a programmer or DevOps engineer, this section explains everything you need to know in simple, non-technical language.
+
+### What is this website made of?
+Think of this website like a modern corporate building:
+1. **The Storefront (Frontend):** Built with **Next.js**. This is what your visitors see on their computer or mobile screen when they open your website.
+2. **The Kitchen / Staff Office (Backend):** Built with **Node.js & Express**. It handles background tasks like logging into the admin panel, uploading photos, compressing videos, and sending emails.
+3. **The Warehouse (Database):** Uses **MongoDB**. This is where your products, solutions, company addresses, and admin passwords are safe and stored.
+
+### What 3 things do you need to purchase/setup to host this?
+1. **A Domain Name** (e.g., `eastwindsafety.com` from GoDaddy, Namecheap, or any registrar).
+2. **A Cloud Virtual Server (VPS)**:
+   - We recommend an Ubuntu 22.04 server on **DigitalOcean**, **AWS EC2**, or **Linode** ($10–$20 per month, 2GB RAM minimum).
+3. **A Cloud Database**:
+   - Sign up for a free or paid database at **MongoDB Atlas** ([mongodb.com/atlas](https://www.mongodb.com/atlas)).
+
+### The 5 Simple Steps to Launch (In Plain English):
+1. **Get the Server & Database:** Create your Ubuntu server and your MongoDB database.
+2. **Put the Code on the Server:** Give this guide and `eastwind.zip` to your developer or sysadmin, or clone it from GitHub.
+3. **Set the Secret Keys:** Add your database address (`MONGO_URI`) and your domain name into the settings file (`.env`).
+4. **Start the Website:** Run the background manager (**PM2**) so the website stays running 24/7 even if the server restarts.
+5. **Connect Your Domain & Secure with SSL (The Green Padlock):** Point your domain's DNS to your server IP and run the free SSL command (**Certbot**) so visitors see `https://` with the secure lock icon.
+
+### How to Give This to a Freelancer or Developer:
+Simply hand them this `PRODUCTION_DEPLOYMENT_GUIDE.md` file and the `eastwind.zip` file. A junior or senior sysadmin can deploy this entire website in 15 to 30 minutes by following the exact commands below.
+
+### How to Access the Admin Dashboard:
+Once deployed, you can manage the website without touching any code:
+- **Login Address:** `https://yourdomain.com/admin/login`
+- **Default Username:** `admin`
+- **Default Password:** `admin123` *(Change this immediately via Admin Settings or the CLI script)*
 
 ---
 
