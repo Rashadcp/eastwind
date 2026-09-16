@@ -560,7 +560,7 @@ export default function AdminServicesPage() {
                       <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded border border-slate-200 bg-slate-100 overflow-hidden shrink-0">
                           <img
-                            src={formatImageUrl(item.heroImage || item.imageUrl || detailHeroBgImage, "/service.png")}
+                            src={formatImageUrl(item.heroImage || item.imageUrl, "/service.png")}
                             alt={item.title}
                             className="w-full h-full object-cover"
                             onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/service.png"; }}
