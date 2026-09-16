@@ -554,15 +554,9 @@ export async function seedDatabase(): Promise<void> {
     };
 
     const needsSeeding = 
-      counts.products === 0 || 
-      counts.solutions === 0 || 
-      counts.applications === 0 || 
-      counts.services === 0 || 
-      counts.admins === 0 ||
-      counts.about === 0 ||
-      counts.contactSettings === 0 ||
-      counts.solutionPage === 0 ||
-      counts.brands === 0;
+      counts.admins === 0 && 
+      counts.about === 0 && 
+      counts.contactSettings === 0;
 
     if (!needsSeeding) {
       console.log(`Database verification passed. MongoDB collections loaded.
@@ -575,7 +569,7 @@ export async function seedDatabase(): Promise<void> {
         - ${counts.contactSettings} Contact Settings Records
         - ${counts.solutionPage} Solutions Page Configuration
         - ${counts.brands} Brands Portfolio`);
-      if (counts.products === 0) {
+      if (counts.products === 0 && counts.brands > 0) {
         await syncBrandProductsToProductsCollection();
       }
       try {
