@@ -1,97 +1,39 @@
-# Production Deployment & Hosting Guide
-**Project:** East Wind Safety (Full-Stack Next.js & Node.js Platform)  
-**Version:** 1.0.0 Production Release  
-**Target Environment:** Linux VPS / Cloud VM (Ubuntu 22.04 LTS / Debian 12 / AWS EC2 / DigitalOcean / Linode)
+# East Wind Safety — Production Deployment Guide
+**Document Purpose:** Complete, step-by-step instructions for hosting the East Wind Safety platform on a production server.  
+**Target Environment:** Ubuntu 22.04 LTS / Debian 12 / Cloud VPS (DigitalOcean, AWS EC2, Linode, Azure)  
+**Production Domain:** `https://eastwindsafety.com`
 
 ---
 
-## Table of Contents
-0. [Quick Plain-English Guide (For Non-Technical Users & Project Managers)](#0-quick-plain-english-guide-for-non-technical-users--project-managers)
-1. [Architecture Overview](#1-architecture-overview)
-2. [Server Prerequisites & Initial Setup](#2-server-prerequisites--initial-setup)
-3. [Database Configuration (MongoDB)](#3-database-configuration-mongodb)
-4. [Environment Variables Setup](#4-environment-variables-setup)
-5. [Administrator Account Management](#5-administrator-account-management)
-6. [Project Deployment & Build Steps](#6-project-deployment--build-steps)
-7. [Process Management with PM2](#7-process-management-with-pm2)
-8. [Nginx Reverse Proxy & SSL Configuration](#8-nginx-reverse-proxy--ssl-configuration)
-9. [Media & Uploads Handling](#9-media--uploads-handling)
-10. [Automated Redeployment Script](#10-automated-redeployment-script)
-11. [Troubleshooting & Maintenance Checklist](#11-troubleshooting--maintenance-checklist)
+## 📌 Executive Summary (For Non-Technical Managers)
+
+> [!NOTE]
+> **What this system needs to run:**
+> 1. **A Domain Name** (e.g. `eastwindsafety.com` from GoDaddy, Namecheap, etc.)
+> 2. **A Cloud Server (VPS)**: Ubuntu 22.04 with at least 2 GB RAM ($10–$20/month on DigitalOcean, AWS, or Linode).
+> 3. **A Cloud Database**: Free or paid MongoDB Atlas cluster ([mongodb.com/atlas](https://www.mongodb.com/atlas)).
+
+### How to Hand This Off to a Developer or Sysadmin:
+Send them this single file (`PRODUCTION_DEPLOYMENT_GUIDE.md`) and the file **`eastwind.zip`**. Any web developer or Linux administrator can complete the deployment in under 30 minutes by following the numbered phases below.
+
+### How to Access the Admin Dashboard Once Deployed:
+* **Login URL:** `https://yourdomain.com/admin/login`
+* **Default Username:** `admin`
+* **Default Password:** `admin123` *(Change this immediately via Settings or Phase 4 below)*
 
 ---
 
-## 0. Quick Plain-English Guide (For Non-Technical Users & Project Managers)
-
-If you are not a programmer or DevOps engineer, this section explains everything you need to know in simple, non-technical language.
-
-### What is this website made of?
-Think of this website like a modern corporate building:
-1. **The Storefront (Frontend):** Built with **Next.js**. This is what your visitors see on their computer or mobile screen when they open your website.
-2. **The Kitchen / Staff Office (Backend):** Built with **Node.js & Express**. It handles background tasks like logging into the admin panel, uploading photos, compressing videos, and sending emails.
-3. **The Warehouse (Database):** Uses **MongoDB**. This is where your products, solutions, company addresses, and admin passwords are safe and stored.
-
-### What 3 things do you need to purchase/setup to host this?
-1. **A Domain Name** (e.g., `eastwindsafety.com` from GoDaddy, Namecheap, or any registrar).
-2. **A Cloud Virtual Server (VPS)**:
-   - We recommend an Ubuntu 22.04 server on **DigitalOcean**, **AWS EC2**, or **Linode** ($10–$20 per month, 2GB RAM minimum).
-3. **A Cloud Database**:
-   - Sign up for a free or paid database at **MongoDB Atlas** ([mongodb.com/atlas](https://www.mongodb.com/atlas)).
-
-### The 5 Simple Steps to Launch (In Plain English):
-1. **Get the Server & Database:** Create your Ubuntu server and your MongoDB database.
-2. **Put the Code on the Server:** Give this guide and `eastwind.zip` to your developer or sysadmin, or clone it from GitHub.
-3. **Set the Secret Keys:** Add your database address (`MONGO_URI`) and your domain name into the settings file (`.env`).
-4. **Start the Website:** Run the background manager (**PM2**) so the website stays running 24/7 even if the server restarts.
-5. **Connect Your Domain & Secure with SSL (The Green Padlock):** Point your domain's DNS to your server IP and run the free SSL command (**Certbot**) so visitors see `https://` with the secure lock icon.
-
-### How to Give This to a Freelancer or Developer:
-Simply hand them this `PRODUCTION_DEPLOYMENT_GUIDE.md` file and the `eastwind.zip` file. A junior or senior sysadmin can deploy this entire website in 15 to 30 minutes by following the exact commands below.
-
-### How to Access the Admin Dashboard & Set Your Password:
-Once deployed, you can manage the website and add products without touching any code:
-- **Login Address:** `https://yourdomain.com/admin/login`
-- **Default Username:** `admin`
-- **Default Password:** `admin123`
-
-#### How to Add a New Admin or Change the Password:
-* **Method 1 (From Web Browser — No Code):**
-  1. Open your browser and go to `https://yourdomain.com/admin/login`.
-  2. Log in with `admin` and `admin123`.
-  3. Click **Settings** in the left sidebar menu.
-  4. Under **"Change Password"**, type your current password and your new password, then click **Update**.
-
-* **Method 2 (From Server Terminal — One Quick Command):**
-  If you want to add a brand-new administrator account or reset a forgotten password directly on your server, simply run:
-  ```bash
-  cd /var/www/eastwind/backend
-  npm run create-admin <new_username> <new_password>
-  ```
-  *Examples:*
-  ```bash
-  # Create a new administrator account:
-  npm run create-admin superadmin "MyStr0ng!P@ssw0rd2026"
-
-  # Reset the existing admin's password:
-  npm run create-admin admin "BrandNewPassword123"
-  ```
-  *(The script automatically hashes the password using high-security PBKDF2 encryption and saves it straight to your MongoDB database).*
-
----
-
-## 1. Architecture Overview
-
-The platform consists of two decoupled services working seamlessly together:
+## 🏗️ Architecture at a Glance
 
 ```
-                  Internet (HTTPS: 443)
+                  Visitors (HTTPS: 443)
                            │
                     ┌──────▼──────┐
-                    │ Nginx Proxy │ (SSL Termination & Asset Caching)
+                    │ Nginx Proxy │ (SSL Termination & Caching)
                     └──────┬──────┘
              ┌─────────────┴─────────────┐
              │                           │
-  Location: /api, /uploads        Location: / (All other traffic)
+       /api, /uploads                    / (All website pages)
              │                           │
     ┌────────▼────────┐         ┌────────▼────────┐
     │ Express Backend │         │ Next.js Frontend│
@@ -103,30 +45,20 @@ The platform consists of two decoupled services working seamlessly together:
      └───────────────┘
 ```
 
-- **Frontend:** Next.js 14+ with App Router (SSR, SSG, dynamic routes), runs locally on `http://localhost:3000`.
-- **Backend:** Node.js (ES Modules, TypeScript, Express), runs locally on `http://localhost:5000`. Handles authentication, REST endpoints, media processing with Sharp and FFmpeg.
-- **Database:** MongoDB (MongoDB Atlas recommended or self-hosted).
-- **Process Manager:** PM2 managing both services with auto-restart, memory caps, and zero-downtime reloads via `ecosystem.config.cjs`.
-
 ---
 
-## 2. Server Prerequisites & Initial Setup
+## Phase 1: Server & Database Preparation
 
-Recommended Server Specs:
-- **CPU:** 2 vCPUs minimum (for video/image compression and Next.js building).
-- **RAM:** 2 GB minimum (4 GB recommended; if on 1–2 GB RAM, configure a 2 GB swapfile).
-- **Storage:** 25 GB+ SSD.
-
-### Step 2.1: Update Server Packages
-Connect to your server via SSH:
+### 1.1: Prepare Cloud Server
+Connect to your Ubuntu 22.04 server via SSH:
 ```bash
+# Update system packages
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y curl wget git build-essential nginx certbot python3-certbot-nginx ffmpeg
-```
 
-### Step 2.2: (Optional but Recommended) Add Swap Memory
-If your server has 1GB or 2GB RAM, creating a swapfile prevents Next.js compilation from running out of memory:
-```bash
+# Install essential dependencies
+sudo apt install -y curl wget git build-essential nginx certbot python3-certbot-nginx ffmpeg unzip
+
+# Add 2GB Swap space (Prevents memory exhaustion during Next.js builds)
 sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
@@ -134,255 +66,174 @@ sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
-### Step 2.3: Install Node.js (v20 LTS)
+### 1.2: Install Node.js v20 LTS & PM2
 ```bash
+# Install Node.js 20
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
-node -v # Should display v20.x.x
-npm -v  # Should display 10.x.x
-```
 
-### Step 2.4: Install PM2 Globally
-```bash
+# Install PM2 Process Manager globally
 sudo npm install -g pm2
 ```
 
----
-
-## 3. Database Configuration (MongoDB)
-
-You can use **MongoDB Atlas** (Cloud, free or dedicated tier, highly recommended) or install MongoDB locally on your VPS.
-
-### Option A: MongoDB Atlas (Recommended)
-1. Sign up at [mongodb.com/atlas](https://www.mongodb.com/cloud/atlas).
-2. Create a new Cluster (e.g. AWS Frankfurt / Bahrain / Mumbai depending on target audience).
-3. Create a Database User:
-   - Go to **Database Access** -> **Add New Database User**.
-   - Select Password authentication (e.g., username `eastwind_user`, strong password).
-4. Configure IP Access:
-   - Go to **Network Access** -> **Add IP Address**.
-   - Add your server's Public IP (or `0.0.0.0/0` with strong password protection).
-5. Get Connection URI:
-   - Click **Connect** -> **Drivers** -> Copy the connection string.
-   - Format:
-     ```
-     mongodb+srv://eastwind_user:<PASSWORD>@cluster0.xxxx.mongodb.net/eastwind?retryWrites=true&w=majority
-     ```
-
-### How Database Seeding Works:
-- The backend contains an automatic bootstrap routine in `backend/src/db.ts`.
-- **First Launch:** When the backend connects to MongoDB for the first time, it detects empty collections and automatically imports all initial products, solutions, services, applications, brands, about content, contact configurations, and the default admin from `backend/database.json`.
-- **Manual Force Re-seed:** If you ever need to reset the database to factory seed data:
-  ```bash
-  cd /var/www/eastwind/backend
-  npm run reseed
-  ```
+### 1.3: Obtain MongoDB Connection String
+1. Log into [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+2. Create or open your Cluster.
+3. Under **Database Access**, create a user (e.g. `eastwind_user`) with a strong password.
+4. Under **Network Access**, add your server's Public IP address (or `0.0.0.0/0`).
+5. Click **Connect** $\rightarrow$ **Drivers** and copy your URI:
+   ```
+   mongodb+srv://eastwind_user:<PASSWORD>@cluster0.xxxx.mongodb.net/eastwind?retryWrites=true&w=majority
+   ```
 
 ---
 
-## 4. Environment Variables Setup
+## Phase 2: Project Installation & Build
 
-### 4.1: Backend Environment (`backend/.env`)
-Create `/var/www/eastwind/backend/.env`:
+### 2.1: Extract Project Code
 ```bash
-nano /var/www/eastwind/backend/.env
-```
-Paste and fill in the following:
-```env
-# Server Port
-PORT=5000
-
-# Allowed CORS Origin (Your production domain)
-CORS_ORIGIN=https://eastwindsafety.com
-
-# Cryptographic Secret for Admin JWT Tokens (Use 64+ random characters)
-JWT_SECRET=c8f53a987d6e4b219034f8a123bc45de67890123456789abcdef0123456789ab
-
-# MongoDB Atlas Connection URI
-MONGO_URI=mongodb+srv://eastwind_user:YOUR_DB_PASSWORD@cluster0.xxxx.mongodb.net/eastwind?retryWrites=true&w=majority
-
-# Optional: Media Fallback origin
-# REMOTE_MEDIA_ORIGIN=https://eastwindsafety.com
-```
-
-> **Tip:** You can generate a random `JWT_SECRET` by running:
-> ```bash
-> node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-> ```
-
----
-
-### 4.2: Frontend Environment (`frontend/.env.production`)
-Create `/var/www/eastwind/frontend/.env.production`:
-```bash
-nano /var/www/eastwind/frontend/.env.production
-```
-Paste and configure:
-```env
-# URL for Backend API
-# Because Nginx proxies /api and /uploads to the backend, set this to your domain root:
-NEXT_PUBLIC_API_URL=https://eastwindsafety.com
-
-# Public Production Canonical Domain
-NEXT_PUBLIC_SITE_URL=https://eastwindsafety.com
-```
-
----
-
-## 5. Administrator Account Management
-
-### 5.1: Default Admin Credentials
-When the database is seeded from `database.json`, the initial account created is:
-- **Username:** `admin`
-- **Default Password:** `admin123`
-
-> [!CAUTION]
-> You must change this password immediately after the first login or via the CLI script below.
-
-### 5.2: Changing Admin Password from Web UI
-1. Navigate to `https://eastwindsafety.com/admin/login`.
-2. Login with current credentials.
-3. Access Admin Settings -> Change Password to update your password securely.
-
-### 5.3: Creating New Admins or Resetting Passwords via CLI
-A dedicated standalone tool has been built into the backend. You can create a new admin or reset an existing admin's password at any time directly from the server terminal:
-
-```bash
-cd /var/www/eastwind/backend
-npm run create-admin <username> <new_password>
-```
-
-**Examples:**
-- Create or update `superadmin`:
-  ```bash
-  npm run create-admin superadmin "MyStr0ng!P@ssw0rd2026"
-  ```
-- Reset default `admin` password:
-  ```bash
-  npm run create-admin admin "BrandNewSecurePassword123"
-  ```
-
-Under the hood, passwords are encrypted with **PBKDF2 SHA-512** (10,000 iterations) with an independent cryptographically secure salt.
-
----
-
-## 6. Project Deployment & Build Steps
-
-### Step 6.1: Place Project on Server
-Upload your `eastwind.zip` file or clone directly to `/var/www/eastwind`:
-```bash
+# Create target web directory
 sudo mkdir -p /var/www/eastwind
 sudo chown -R $USER:$USER /var/www/eastwind
 
-# If transferring eastwind.zip:
-sudo apt install -y unzip
-unzip eastwind.zip -d /var/www/eastwind
+# Transfer eastwind.zip to /var/www/eastwind and unzip
+cd /var/www/eastwind
+unzip eastwind.zip
+
+# Ensure uploads directory has correct write permissions
+mkdir -p /var/www/eastwind/backend/uploads
+chmod -R 775 /var/www/eastwind/backend/uploads
 ```
 
-### Step 6.2: Build Backend
+### 2.2: Build the Backend
 ```bash
 cd /var/www/eastwind/backend
 npm install --legacy-peer-deps
 npm run build
 ```
-This will compile TypeScript in `src/` to production JavaScript in `dist/`.
+*(Compiles TypeScript in `src/` to production JavaScript in `dist/`)*
 
-### Step 6.3: Build Frontend
+### 2.3: Build the Frontend
 ```bash
 cd /var/www/eastwind/frontend
 npm install --legacy-peer-deps
 npm run build
 ```
-This will compile the Next.js production build in `.next/`.
+*(Generates the optimized Next.js production build in `.next/`)*
 
-### Step 6.4: Ensure Uploads Directory Exists
+---
+
+## Phase 3: Environment Variables Configuration
+
+### 3.1: Backend Config (`/var/www/eastwind/backend/.env`)
+Create the file:
 ```bash
-mkdir -p /var/www/eastwind/backend/uploads
-chmod -R 775 /var/www/eastwind/backend/uploads
+nano /var/www/eastwind/backend/.env
+```
+Paste the following values:
+```env
+# Port & Domain
+PORT=5000
+CORS_ORIGIN=https://eastwindsafety.com
+
+# Cryptographic Secret for Admin JWT Sessions (64 random characters)
+JWT_SECRET=c8f53a987d6e4b219034f8a123bc45de67890123456789abcdef0123456789ab
+
+# MongoDB Atlas Connection URI
+MONGO_URI=mongodb+srv://eastwind_user:YOUR_DB_PASSWORD@cluster0.xxxx.mongodb.net/eastwind?retryWrites=true&w=majority
+```
+
+> [!TIP]
+> Generate a random `JWT_SECRET` anytime by running:
+> ```bash
+> node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+> ```
+
+### 3.2: Frontend Config (`/var/www/eastwind/frontend/.env.production`)
+Create the file:
+```bash
+nano /var/www/eastwind/frontend/.env.production
+```
+Paste:
+```env
+# Backend API URL (Proxied via Nginx root)
+NEXT_PUBLIC_API_URL=https://eastwindsafety.com
+
+# Canonical Public Website URL
+NEXT_PUBLIC_SITE_URL=https://eastwindsafety.com
 ```
 
 ---
 
-## 7. Process Management with PM2
+## Phase 4: Administrator Account Management
 
-The project root contains `ecosystem.config.cjs`, which defines and isolates both services:
+### Method A: From Your Web Browser (Easiest — No Code)
+1. Open `https://yourdomain.com/admin/login` in your browser.
+2. Log in using the default credentials:
+   - **Username:** `admin`
+   - **Password:** `admin123`
+3. Click **Settings** in the left sidebar menu.
+4. Enter your current password and your new secure password, then click **Update Password**.
 
-```javascript
-module.exports = {
-  apps: [
-    {
-      name: "eastwind-backend",
-      cwd: "./backend",
-      script: "dist/index.js",
-      instances: 1,
-      autorestart: true,
-      watch: false,
-      max_memory_restart: "400M",
-      env: {
-        NODE_ENV: "production",
-      },
-    },
-    {
-      name: "eastwind-frontend",
-      cwd: "./frontend",
-      script: "node_modules/next/dist/bin/next",
-      args: "start -p 3000",
-      instances: 1,
-      autorestart: true,
-      watch: false,
-      max_memory_restart: "600M",
-      env: {
-        NODE_ENV: "production",
-        PORT: 3000,
-      },
-    },
-  ],
-};
+### Method B: From the Server Terminal (CLI Tool)
+A dedicated management script is built directly into the backend. Run this on your server anytime:
+```bash
+cd /var/www/eastwind/backend
+npm run create-admin <username> <password>
 ```
 
-### Step 7.1: Start Applications
-From the project root (`/var/www/eastwind`):
+**Examples:**
+```bash
+# 1. Create a brand-new superadmin:
+npm run create-admin superadmin "SecureP@ssw0rd2026!"
+
+# 2. Reset a forgotten password for the default admin:
+npm run create-admin admin "BrandNewPassword123"
+```
+*(Passwords are encrypted with high-security PBKDF2 SHA-512 and saved straight into MongoDB)*.
+
+---
+
+## Phase 5: Process Management (PM2)
+
+Both backend and frontend services are configured in `ecosystem.config.cjs` with memory caps and auto-restarts.
+
+### 5.1: Start Both Services
+From `/var/www/eastwind`:
 ```bash
 cd /var/www/eastwind
 pm2 start ecosystem.config.cjs
 ```
 
-### Step 7.2: Verify Status
+### 5.2: Check Status & Live Logs
 ```bash
+# Verify both apps are 'online'
 pm2 status
-```
-Both `eastwind-backend` and `eastwind-frontend` should show status `online`.
 
-### Step 7.3: Check Logs
-```bash
+# View live system logs
 pm2 logs
-# Or inspect individually:
-pm2 logs eastwind-backend
-pm2 logs eastwind-frontend
 ```
 
-### Step 7.4: Enable Boot Persistence
-Configure PM2 to automatically resurrect services if the server reboots:
+### 5.3: Enable Auto-Start on Server Reboot
 ```bash
 pm2 save
 pm2 startup
-# (Copy-paste and run the command provided by `pm2 startup`)
+# (Copy and run the single command displayed by pm2 startup)
 ```
 
 ---
 
-## 8. Nginx Reverse Proxy & SSL Configuration
+## Phase 6: Nginx Reverse Proxy & SSL (HTTPS)
 
-### Step 8.1: Create Nginx Configuration
+### 6.1: Create Nginx Site Configuration
 Create `/etc/nginx/sites-available/eastwind`:
 ```bash
 sudo nano /etc/nginx/sites-available/eastwind
 ```
 
-Paste the following production-optimized configuration (replace `eastwindsafety.com` with your actual domain):
+Paste the following production configuration (replace `eastwindsafety.com` with your actual domain):
 
 ```nginx
-# Rate limiting zone for API protection
 limit_req_zone $binary_remote_addr zone=api_limit:10m rate=30r/s;
 
 server {
@@ -390,7 +241,7 @@ server {
     listen [::]:80;
     server_name eastwindsafety.com www.eastwindsafety.com;
 
-    # Allow large media / video / document uploads (up to 150MB)
+    # Allow up to 150MB for video and document uploads
     client_max_body_size 150M;
 
     # Gzip Compression
@@ -398,9 +249,9 @@ server {
     gzip_vary on;
     gzip_proxied any;
     gzip_comp_level 6;
-    gzip_types text/plain text/css text/xml application/json application/javascript application/rss+xml application/atom+xml image/svg+xml;
+    gzip_types text/plain text/css text/xml application/json application/javascript image/svg+xml;
 
-    # 1. Direct Static Uploads (High performance direct disk serving)
+    # 1. High-Performance Static Media Serving
     location /uploads/ {
         alias /var/www/eastwind/backend/uploads/;
         expires 30d;
@@ -411,14 +262,13 @@ server {
 
     location @backend_uploads {
         proxy_pass http://127.0.0.1:5000;
-        proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # 2. Backend API endpoints
+    # 2. Backend REST API Endpoints
     location /api/ {
         limit_req zone=api_limit burst=50 nodelay;
         proxy_pass http://127.0.0.1:5000;
@@ -429,21 +279,18 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
         proxy_read_timeout 120s;
     }
 
-    # 3. Next.js Static Cache
+    # 3. Next.js Static Asset Cache
     location /_next/static/ {
         proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
         expires 365d;
         add_header Cache-Control "public, max-age=31536000, immutable";
         access_log off;
     }
 
-    # 4. Frontend Next.js Web App
+    # 4. Next.js Frontend Application
     location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
@@ -453,12 +300,11 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
     }
 }
 ```
 
-### Step 8.2: Enable Site and Test Nginx
+### 6.2: Enable Site in Nginx
 ```bash
 sudo ln -sf /etc/nginx/sites-available/eastwind /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
@@ -466,76 +312,39 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-### Step 8.3: Install Free SSL Certificate via Let's Encrypt
-Make sure your DNS A-records for `eastwindsafety.com` and `www.eastwindsafety.com` point to your server IP, then run:
+### 6.3: Install Free SSL Certificate (Let's Encrypt)
+Make sure your domain's DNS A-records point to your server IP, then run:
 ```bash
 sudo certbot --nginx -d eastwindsafety.com -d www.eastwindsafety.com
 ```
-Follow prompts to enable HTTPS redirect. Certbot will automatically edit the Nginx configuration and configure auto-renewal via cron.
+*Certbot will automatically install the certificate, enable the HTTPS padlock, and configure automatic 90-day renewals.*
 
 ---
 
-## 9. Media & Uploads Handling
+## Phase 7: Ongoing Maintenance & Troubleshooting
 
-- **Images:** Scaled and compressed using Sharp directly inside the backend.
-- **Videos:** Automatically transcoded to web-optimized fast-start H.264 MP4 with FFmpeg.
-- **Documents:** PDF, DOCX, XLSX files are stored with unique timestamps in `/var/www/eastwind/backend/uploads/`.
-- **Backup:** Remember to back up the `/var/www/eastwind/backend/uploads/` directory alongside your MongoDB database.
+### 7.1: Automated 1-Command Redeployment
+Whenever you push code updates to GitHub, deploy them seamlessly on the server using `/var/www/eastwind/deploy.sh`:
 
----
-
-## 10. Automated Redeployment Script
-
-To make updating the production website fast and painless, create a file `/var/www/eastwind/deploy.sh`:
-
-```bash
-nano /var/www/eastwind/deploy.sh
-```
-Paste:
 ```bash
 #!/usr/bin/env bash
 set -e
-
-echo "=== Pulling latest changes from Git ==="
+cd /var/www/eastwind
 git pull origin main
 
-echo "=== Building Backend ==="
-cd backend
-npm install --legacy-peer-deps
-npm run build
-
-echo "=== Building Frontend ==="
-cd ../frontend
-npm install --legacy-peer-deps
-npm run build
-
-echo "=== Reloading PM2 Processes ==="
-cd ..
-pm2 reload ecosystem.config.cjs
-
-echo "=== Deployment Completed Successfully ==="
+cd backend && npm install --legacy-peer-deps && npm run build
+cd ../frontend && npm install --legacy-peer-deps && npm run build
+cd .. && pm2 reload ecosystem.config.cjs
+echo "Deployment successful!"
 ```
 
-Make it executable:
-```bash
-chmod +x /var/www/eastwind/deploy.sh
-```
+### 7.2: Quick Troubleshooting Reference
 
-Whenever you push code changes to GitHub, deploy them on the server simply by running:
-```bash
-/var/www/eastwind/deploy.sh
-```
-
----
-
-## 11. Troubleshooting & Maintenance Checklist
-
-| Issue | Likely Cause | Solution |
+| Symptom | Cause | Solution |
 |---|---|---|
-| **502 Bad Gateway (Frontend)** | `eastwind-frontend` PM2 process is stopped or crashed | Run `pm2 logs eastwind-frontend` to see the error. Check if `.next/` build exists; if not, run `npm run build` in `frontend/`. |
-| **502 Bad Gateway (/api/*)** | `eastwind-backend` is stopped | Run `pm2 logs eastwind-backend`. Verify MongoDB connection string in `backend/.env`. |
-| **MongoDB connection timeout** | Server IP not whitelisted in MongoDB Atlas | Go to MongoDB Atlas -> Network Access -> Add Server's Public IP. |
-| **Uploads return 413 Entity Too Large** | Nginx default upload cap exceeded | Verify `client_max_body_size 150M;` is present in `/etc/nginx/sites-available/eastwind`. |
-| **Forgot Admin Password** | Locked out of admin panel | Run `npm run create-admin admin <new_password>` inside `/var/www/eastwind/backend`. |
-| **High CPU during video upload** | Video compression with FFmpeg | Normal during upload. Sharp concurrency is already constrained to 1 thread to protect server responsiveness. |
-| **CORS error on API calls** | Domain mismatch | Check `CORS_ORIGIN` in `backend/.env`. Ensure it matches the protocol and domain (e.g., `https://eastwindsafety.com` without trailing slash). |
+| **502 Bad Gateway (Website)** | Next.js frontend is stopped | Run `pm2 status`. Check logs: `pm2 logs eastwind-frontend`. Run `npm run build` in `frontend/`. |
+| **502 Bad Gateway (`/api/*`)** | Express backend is stopped | Check logs: `pm2 logs eastwind-backend`. Check `MONGO_URI` in `backend/.env`. |
+| **MongoDB connection timeout** | Server IP not whitelisted | In MongoDB Atlas $\rightarrow$ Network Access $\rightarrow$ Add server IP. |
+| **413 Request Entity Too Large** | Nginx upload limit exceeded | Ensure `client_max_body_size 150M;` is present in Nginx config. |
+| **Forgot Admin Password** | Locked out of admin | Run `npm run create-admin admin <new_password>` in `backend/`. |
+| **CORS Error in Browser** | Domain mismatch | Check `CORS_ORIGIN` in `backend/.env` (must match exact domain with `https://`). |
