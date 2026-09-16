@@ -286,7 +286,7 @@ export const applicationsDb: Record<string, ApplicationData> = {
   },
 };
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 export async function generateStaticParams() {
   try {
@@ -313,7 +313,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let data: ApplicationData | null = null;
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/applications/${id}`, {
-      next: { revalidate: 60 }
+      cache: "no-store"
     });
     if (res.ok) {
       data = await res.json();
@@ -344,18 +344,11 @@ export default async function ApplicationDetailPage({ params }: Props) {
   const { id } = await params;
   
   let data: ApplicationData | null = null;
-  let pageSettings: any = null;
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    const [appRes, pageRes] = await Promise.allSettled([
-      fetch(`${baseUrl}/api/applications/${id}`, { next: { revalidate: 60 } }),
-      fetch(`${baseUrl}/api/solutions-page`, { next: { revalidate: 60 } })
-    ]);
-    if (appRes.status === "fulfilled" && appRes.value.ok) {
-      data = await appRes.value.json();
-    }
-    if (pageRes.status === "fulfilled" && pageRes.value.ok) {
-      pageSettings = await pageRes.value.json();
+    const appRes = await fetch(`${baseUrl}/api/applications/${id}`, { cache: "no-store" });
+    if (appRes.ok) {
+      data = await appRes.json();
     }
   } catch (error) {
     console.error(`Failed to fetch application ${id}:`, error);
@@ -373,7 +366,7 @@ export default async function ApplicationDetailPage({ params }: Props) {
     );
   }
 
-  const heroImageSrc = data.heroImage || data.imageUrl || pageSettings?.applicationsDetailHeroBgImage || "/application.png";
+  const heroImageSrc = data.heroImage || data.imageUrl || "/application.png";
 
   return (
     <>

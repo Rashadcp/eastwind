@@ -4239,7 +4239,8 @@
           "label": "Specialised Field Services"
         }
       ],
-      "submitButtonText": "Submit Request"
+      "submitButtonText": "Submit Request",
+      "applicationsDetailHeroBgImage": "/uploads/1789523672953-csr.webp"
     }
   ],
   "brands": [

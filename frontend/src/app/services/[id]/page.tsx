@@ -292,7 +292,7 @@ export const servicesDb: Record<string, ServiceData> = {
   },
 };
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 export async function generateStaticParams() {
   try {
@@ -319,7 +319,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let data: ServiceData | null = null;
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services/${id}`, {
-      next: { revalidate: 60 }
+      cache: "no-store"
     });
     if (res.ok) {
       data = await res.json();
@@ -349,18 +349,11 @@ export default async function ServiceDetailPage({ params }: Props) {
   const { id } = await params;
   
   let data: ServiceData | null = null;
-  let pageSettings: any = null;
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    const [svcRes, pageRes] = await Promise.allSettled([
-      fetch(`${baseUrl}/api/services/${id}`, { next: { revalidate: 60 } }),
-      fetch(`${baseUrl}/api/solutions-page`, { next: { revalidate: 60 } })
-    ]);
-    if (svcRes.status === "fulfilled" && svcRes.value.ok) {
-      data = await svcRes.value.json();
-    }
-    if (pageRes.status === "fulfilled" && pageRes.value.ok) {
-      pageSettings = await pageRes.value.json();
+    const svcRes = await fetch(`${baseUrl}/api/services/${id}`, { cache: "no-store" });
+    if (svcRes.ok) {
+      data = await svcRes.json();
     }
   } catch (error) {
     console.error(`Failed to fetch service ${id}:`, error);
@@ -378,7 +371,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     );
   }
 
-  const heroImageSrc = data.heroImage || data.imageUrl || pageSettings?.servicesDetailHeroBgImage || "/service.png";
+  const heroImageSrc = data.heroImage || data.imageUrl || "/service.png";
 
   return (
     <>
