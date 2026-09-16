@@ -48,11 +48,34 @@ Think of this website like a modern corporate building:
 ### How to Give This to a Freelancer or Developer:
 Simply hand them this `PRODUCTION_DEPLOYMENT_GUIDE.md` file and the `eastwind.zip` file. A junior or senior sysadmin can deploy this entire website in 15 to 30 minutes by following the exact commands below.
 
-### How to Access the Admin Dashboard:
-Once deployed, you can manage the website without touching any code:
+### How to Access the Admin Dashboard & Set Your Password:
+Once deployed, you can manage the website and add products without touching any code:
 - **Login Address:** `https://yourdomain.com/admin/login`
 - **Default Username:** `admin`
-- **Default Password:** `admin123` *(Change this immediately via Admin Settings or the CLI script)*
+- **Default Password:** `admin123`
+
+#### How to Add a New Admin or Change the Password:
+* **Method 1 (From Web Browser — No Code):**
+  1. Open your browser and go to `https://yourdomain.com/admin/login`.
+  2. Log in with `admin` and `admin123`.
+  3. Click **Settings** in the left sidebar menu.
+  4. Under **"Change Password"**, type your current password and your new password, then click **Update**.
+
+* **Method 2 (From Server Terminal — One Quick Command):**
+  If you want to add a brand-new administrator account or reset a forgotten password directly on your server, simply run:
+  ```bash
+  cd /var/www/eastwind/backend
+  npm run create-admin <new_username> <new_password>
+  ```
+  *Examples:*
+  ```bash
+  # Create a new administrator account:
+  npm run create-admin superadmin "MyStr0ng!P@ssw0rd2026"
+
+  # Reset the existing admin's password:
+  npm run create-admin admin "BrandNewPassword123"
+  ```
+  *(The script automatically hashes the password using high-security PBKDF2 encryption and saves it straight to your MongoDB database).*
 
 ---
 
