@@ -55,6 +55,8 @@ export interface IApplication extends Document {
   tagline: string;
   overview: string;
   accentHex: string;
+  imageUrl?: string;
+  heroImage?: string;
   capabilities: { title: string; body: string }[];
   useCases: string[];
   metrics: { value: string; label: string }[];
@@ -68,6 +70,8 @@ export interface IService extends Document {
   tagline: string;
   overview: string;
   accentHex: string;
+  imageUrl?: string;
+  heroImage?: string;
   capabilities: { title: string; body: string }[];
   deliverables: string[];
   metrics: { value: string; label: string }[];
@@ -157,10 +161,13 @@ export interface ISolutionPage extends Document {
   applicationsHeroTagline?: string;
   applicationsHeroTitle?: string;
   applicationsHeroDescription?: string;
+  applicationsDetailHeroBgImage?: string;
   servicesHeroBgImage?: string;
   servicesHeroTagline?: string;
   servicesHeroTitle?: string;
   servicesHeroDescription?: string;
+  servicesDetailHeroBgImage?: string;
+  solutionsDetailHeroBgImage?: string;
   industriesTagline?: string;
   industriesTitle?: string;
   industriesDesc?: string;
@@ -307,11 +314,13 @@ const ApplicationSchema = new Schema<IApplication>({
   tagline: { type: String, default: "" },
   overview: { type: String, default: "" },
   accentHex: { type: String, default: "#38bdf8" },
+  imageUrl: { type: String },
+  heroImage: { type: String },
   capabilities: [{ title: String, body: String }],
   useCases: { type: [String], default: [] },
   metrics: [{ value: String, label: String }],
   relatedSolutions: [{ name: String, href: String }]
-});
+}, { strict: false });
 
 const ServiceSchema = new Schema<IService>({
   id: { type: String, required: true, unique: true, index: true },
@@ -320,11 +329,13 @@ const ServiceSchema = new Schema<IService>({
   tagline: { type: String, default: "" },
   overview: { type: String, default: "" },
   accentHex: { type: String, default: "#10b981" },
+  imageUrl: { type: String },
+  heroImage: { type: String },
   capabilities: [{ title: String, body: String }],
   deliverables: { type: [String], default: [] },
   metrics: [{ value: String, label: String }],
   relatedSolutions: [{ name: String, href: String }]
-});
+}, { strict: false });
 
 const AdminSchema = new Schema<IAdmin>({
   username: { type: String, required: true, unique: true, index: true },
@@ -409,10 +420,13 @@ const SolutionPageSchema = new Schema<ISolutionPage>({
   applicationsHeroTagline: { type: String },
   applicationsHeroTitle: { type: String },
   applicationsHeroDescription: { type: String },
+  applicationsDetailHeroBgImage: { type: String },
   servicesHeroBgImage: { type: String },
   servicesHeroTagline: { type: String },
   servicesHeroTitle: { type: String },
   servicesHeroDescription: { type: String },
+  servicesDetailHeroBgImage: { type: String },
+  solutionsDetailHeroBgImage: { type: String },
   industriesTagline: { type: String },
   industriesTitle: { type: String },
   industriesDesc: { type: String },

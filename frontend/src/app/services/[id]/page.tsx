@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { formatImageUrl } from "@/utils/image";
 
 export const dynamicParams = true;
 
@@ -11,6 +12,8 @@ interface ServiceData {
   tagline: string;
   overview: string;
   accentHex: string;
+  imageUrl?: string;
+  heroImage?: string;
   capabilities: { title: string; body: string }[];
   deliverables: string[];
   metrics: { value: string; label: string }[];
@@ -346,15 +349,25 @@ export default async function ServiceDetailPage({ params }: Props) {
   const { id } = await params;
   
   let data: ServiceData | null = null;
+  let pageSettings: any = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/services/${id}`, {
-      next: { revalidate: 60 }
-    });
-    if (res.ok) {
-      data = await res.json();
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const [svcRes, pageRes] = await Promise.allSettled([
+      fetch(`${baseUrl}/api/services/${id}`, { next: { revalidate: 60 } }),
+      fetch(`${baseUrl}/api/solutions-page`, { next: { revalidate: 60 } })
+    ]);
+    if (svcRes.status === "fulfilled" && svcRes.value.ok) {
+      data = await svcRes.value.json();
+    }
+    if (pageRes.status === "fulfilled" && pageRes.value.ok) {
+      pageSettings = await pageRes.value.json();
     }
   } catch (error) {
     console.error(`Failed to fetch service ${id}:`, error);
+  }
+
+  if (!data && servicesDb[id]) {
+    data = servicesDb[id];
   }
 
   if (!data) {
@@ -365,6 +378,8 @@ export default async function ServiceDetailPage({ params }: Props) {
     );
   }
 
+  const heroImageSrc = data.heroImage || data.imageUrl || pageSettings?.servicesDetailHeroBgImage || "/service.png";
+
   return (
     <>
       <Navbar />
@@ -373,7 +388,7 @@ export default async function ServiceDetailPage({ params }: Props) {
         {/* Hero Row */}
         <div className="w-full bg-slate-950 pt-[200px] pb-24 flex items-center border-b border-slate-900 relative">
           <img
-            src="/service.png"
+            src={formatImageUrl(heroImageSrc, "/service.png")}
             alt={data.title}
             className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none brightness-[0.65] scale-101"
           />

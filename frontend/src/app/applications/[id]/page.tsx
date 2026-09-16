@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { formatImageUrl } from "@/utils/image";
 
 export const dynamicParams = true;
 
@@ -11,6 +12,8 @@ interface ApplicationData {
   tagline: string;
   overview: string;
   accentHex: string;
+  imageUrl?: string;
+  heroImage?: string;
   capabilities: { title: string; body: string }[];
   useCases: string[];
   metrics: { value: string; label: string }[];
@@ -341,15 +344,25 @@ export default async function ApplicationDetailPage({ params }: Props) {
   const { id } = await params;
   
   let data: ApplicationData | null = null;
+  let pageSettings: any = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/applications/${id}`, {
-      next: { revalidate: 60 }
-    });
-    if (res.ok) {
-      data = await res.json();
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const [appRes, pageRes] = await Promise.allSettled([
+      fetch(`${baseUrl}/api/applications/${id}`, { next: { revalidate: 60 } }),
+      fetch(`${baseUrl}/api/solutions-page`, { next: { revalidate: 60 } })
+    ]);
+    if (appRes.status === "fulfilled" && appRes.value.ok) {
+      data = await appRes.value.json();
+    }
+    if (pageRes.status === "fulfilled" && pageRes.value.ok) {
+      pageSettings = await pageRes.value.json();
     }
   } catch (error) {
     console.error(`Failed to fetch application ${id}:`, error);
+  }
+
+  if (!data && applicationsDb[id]) {
+    data = applicationsDb[id];
   }
 
   if (!data) {
@@ -360,6 +373,8 @@ export default async function ApplicationDetailPage({ params }: Props) {
     );
   }
 
+  const heroImageSrc = data.heroImage || data.imageUrl || pageSettings?.applicationsDetailHeroBgImage || "/application.png";
+
   return (
     <>
       <Navbar />
@@ -368,7 +383,7 @@ export default async function ApplicationDetailPage({ params }: Props) {
         {/* Hero Row */}
         <div className="w-full bg-slate-950 pt-[200px] pb-24 flex items-center border-b border-slate-900 relative">
           <img
-            src="/application.png"
+            src={formatImageUrl(heroImageSrc, "/application.png")}
             alt={data.title}
             className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none brightness-[0.65] scale-101"
           />

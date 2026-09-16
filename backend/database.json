@@ -3099,7 +3099,9 @@
           "name": "Test Equipment Software",
           "href": "/solutions/test-equipment-workshop-software"
         }
-      ]
+      ],
+      "heroImage": "/industrial_digitalization.webp",
+      "imageUrl": "/industrial_digitalization.webp"
     },
     {
       "id": "wireless-data-acquisition",
@@ -3160,7 +3162,9 @@
           "name": "Flow Metering Skids",
           "href": "/solutions/flow-metering-skids"
         }
-      ]
+      ],
+      "heroImage": "/wireless_monitoring.webp",
+      "imageUrl": "/wireless_monitoring.webp"
     },
     {
       "id": "ai-predictive-analytics",
@@ -3221,7 +3225,9 @@
           "name": "MIMES Sensor Networks",
           "href": "/solutions/mimes"
         }
-      ]
+      ],
+      "heroImage": "/predictive_intelligence.webp",
+      "imageUrl": "/predictive_intelligence.webp"
     },
     {
       "id": "fire-rescue-systems",
@@ -3282,7 +3288,9 @@
           "name": "Thermal Imaging Cameras",
           "href": "/solutions/thermal-imaging-camera"
         }
-      ]
+      ],
+      "heroImage": "/emergency_response.webp",
+      "imageUrl": "/emergency_response.webp"
     },
     {
       "id": "explosion-proof-mobility",
@@ -3343,7 +3351,9 @@
           "name": "Test Equipment Software",
           "href": "/solutions/test-equipment-workshop-software"
         }
-      ]
+      ],
+      "heroImage": "/hazardous_mobility.webp",
+      "imageUrl": "/hazardous_mobility.webp"
     },
     {
       "id": "breathing-protection",
@@ -3404,7 +3414,9 @@
           "name": "Chemical Protective Suits",
           "href": "/solutions/chemical-protective-suits"
         }
-      ]
+      ],
+      "heroImage": "/critical_infrastructure.webp",
+      "imageUrl": "/critical_infrastructure.webp"
     }
   ],
   "services": [

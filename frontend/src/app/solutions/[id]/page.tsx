@@ -14,6 +14,7 @@ export const revalidate = 60;
 export const dynamicParams = true;
 
 interface ProductDetailsData {
+  heroImage?: string;
   title: string;
   subLabel: string;
   tagline: string;
@@ -698,7 +699,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
               <div className="lg:col-span-6 w-full flex items-center justify-center">
                 <div className="w-full relative aspect-4/3 sm:aspect-16/10 max-h-[440px] rounded-2xl overflow-hidden border border-slate-200/80 shadow-lg bg-slate-100 flex items-center justify-center group">
-                  <SolutionImage imageUrl={product.imageUrl} title={product.title} />
+                  <SolutionImage imageUrl={product.imageUrl || product.heroImage || pageData?.solutionsDetailHeroBgImage || "/application.png"} title={product.title} />
                 </div>
               </div>
 

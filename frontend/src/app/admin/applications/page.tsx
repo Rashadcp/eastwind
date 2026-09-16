@@ -50,6 +50,16 @@ export default function AdminApplicationsPage() {
   const [metricValue, setMetricValue] = useState<string>("");
   const [metricLabel, setMetricLabel] = useState<string>("");
 
+  // Detail Pages Hero Banner State (Section 2 - controls /applications/[id] detail hero)
+  const [detailHeroBgImage, setDetailHeroBgImage] = useState<string>("/application.png");
+  const [showDetailHeroModal, setShowDetailHeroModal] = useState<boolean>(false);
+  const [uploadingDetailBanner, setUploadingDetailBanner] = useState<boolean>(false);
+  const [savingDetailBanner, setSavingDetailBanner] = useState<boolean>(false);
+
+  // Individual Application Item Image State
+  const [formHeroImage, setFormHeroImage] = useState<string>("");
+  const [uploadingItemImage, setUploadingItemImage] = useState<boolean>(false);
+
   const fetchApplications = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -67,6 +77,7 @@ export default function AdminApplicationsPage() {
         if (pageData.applicationsHeroTagline) setHeroTagline(pageData.applicationsHeroTagline);
         if (pageData.applicationsHeroTitle) setHeroTitle(pageData.applicationsHeroTitle);
         if (pageData.applicationsHeroDescription) setHeroDescription(pageData.applicationsHeroDescription);
+        if (pageData.applicationsDetailHeroBgImage) setDetailHeroBgImage(pageData.applicationsDetailHeroBgImage);
       }
     } catch (err: any) {
       console.error(err);
@@ -151,6 +162,126 @@ export default function AdminApplicationsPage() {
     }
   };
 
+  const handleDetailBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingDetailBanner(true);
+    clearMessages();
+
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`${baseUrl}/api/upload`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (res.ok) {
+        const uploadData = await res.json();
+        if (uploadData.url) {
+          setDetailHeroBgImage(uploadData.url);
+          setSuccess(`Detail page hero photo '${file.name}' uploaded! Click Save to apply.`);
+          setUploadingDetailBanner(false);
+          e.target.value = "";
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("Detail banner direct upload fallback:", err);
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target?.result) {
+        setDetailHeroBgImage(event.target.result as string);
+        setSuccess(`Image processed. Click Save to apply.`);
+      }
+      setUploadingDetailBanner(false);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  const handleSaveDetailHeroBanner = async () => {
+    setSavingDetailBanner(true);
+    clearMessages();
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const res = await fetch(`${baseUrl}/api/solutions-page`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          applicationsDetailHeroBgImage: detailHeroBgImage
+        })
+      });
+      if (!res.ok) throw new Error("Failed to save Detail Pages Hero Photo");
+      setSuccess("Application Detail Pages Hero Photo saved successfully! Live on all application detail pages.");
+      setShowDetailHeroModal(false);
+    } catch (err: any) {
+      setError(err.message || "Failed to save Detail Hero Photo");
+    } finally {
+      setSavingDetailBanner(false);
+    }
+  };
+
+  const handleItemImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingItemImage(true);
+    clearMessages();
+
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("admin_token");
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`${baseUrl}/api/upload`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (res.ok) {
+        const uploadData = await res.json();
+        if (uploadData.url) {
+          setFormHeroImage(uploadData.url);
+          setSuccess(`Application cover photo '${file.name}' uploaded!`);
+          setUploadingItemImage(false);
+          e.target.value = "";
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("Item photo upload fallback:", err);
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target?.result) {
+        setFormHeroImage(event.target.result as string);
+        setSuccess(`Image processed.`);
+      }
+      setUploadingItemImage(false);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
   useEffect(() => {
     fetchApplications();
   }, []);
@@ -169,6 +300,7 @@ export default function AdminApplicationsPage() {
     setFormTagline("");
     setFormOverview("");
     setFormAccentHex("#38bdf8");
+    setFormHeroImage("");
     setFormCapabilities([]);
     setFormUseCases([]);
     setFormMetrics([]);
@@ -189,6 +321,7 @@ export default function AdminApplicationsPage() {
     setFormTagline(item.tagline || "");
     setFormOverview(item.overview || "");
     setFormAccentHex(item.accentHex || "#38bdf8");
+    setFormHeroImage(item.heroImage || item.imageUrl || "");
     setFormCapabilities(item.capabilities || []);
     setFormUseCases(item.useCases || []);
     setFormMetrics(item.metrics || []);
@@ -257,6 +390,8 @@ export default function AdminApplicationsPage() {
       tagline: formTagline.trim(),
       overview: formOverview.trim(),
       accentHex: formAccentHex,
+      heroImage: formHeroImage.trim(),
+      imageUrl: formHeroImage.trim(),
       capabilities: formCapabilities,
       useCases: formUseCases,
       metrics: formMetrics,
@@ -456,9 +591,37 @@ export default function AdminApplicationsPage() {
       </div>
 
       <div className="border-t border-slate-200 pt-2">
-        <div className="mb-4">
-          <h2 className="text-base font-bold text-slate-800 m-0">2. Technical Applications Catalog ({totalItems} Items)</h2>
-          <p className="text-xs text-slate-500 mt-0.5 m-0">Manage individual application system cards, technical capabilities, metrics, and use cases.</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-base font-bold text-slate-800 m-0">2. Technical Applications Catalog ({totalItems} Items)</h2>
+            <p className="text-xs text-slate-500 mt-0.5 m-0">Manage individual application system cards, technical capabilities, metrics, and use cases.</p>
+          </div>
+
+          {/* Upload Detail Hero Photo Button (The Marked Red Box) */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowDetailHeroModal(true)}
+              className="px-4 py-2.5 bg-white hover:bg-slate-50 border-2 border-slate-300 hover:border-[#1e3e8f] text-slate-800 hover:text-[#1e3e8f] rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-2.5 shadow-2xs group"
+              title="Upload & customize the hero background photo used across application detail pages (/applications/[id])"
+            >
+              <div className="w-6 h-6 rounded overflow-hidden border border-slate-300 bg-slate-100 shrink-0 relative">
+                <img
+                  src={formatImageUrl(detailHeroBgImage, "/application.png")}
+                  alt="Detail Hero Thumbnail"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/application.png"; }}
+                />
+              </div>
+              <div className="text-left leading-tight">
+                <span className="block text-slate-900 group-hover:text-[#1e3e8f] font-bold">Upload Detail Hero Photo</span>
+                <span className="text-[10px] text-slate-500 font-normal">Controls /applications/[id] hero</span>
+              </div>
+              <svg className="w-4 h-4 text-[#1e3e8f] group-hover:scale-115 transition-transform shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -503,7 +666,19 @@ export default function AdminApplicationsPage() {
               <tbody className="divide-y divide-slate-100 font-sans">
                 {paginatedApplications.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-5 py-3.5 text-xs font-semibold text-slate-900 max-w-xs truncate">{item.title}</td>
+                    <td className="px-5 py-3.5 text-xs font-semibold text-slate-900 max-w-xs">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded border border-slate-200 bg-slate-100 overflow-hidden shrink-0">
+                          <img
+                            src={formatImageUrl(item.heroImage || item.imageUrl || detailHeroBgImage, "/application.png")}
+                            alt={item.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/application.png"; }}
+                          />
+                        </div>
+                        <span className="truncate font-semibold">{item.title}</span>
+                      </div>
+                    </td>
                     <td className="px-5 py-3.5 text-xs text-slate-600">{item.category}</td>
                     <td className="px-5 py-3.5 text-xs">
                       <div className="flex items-center gap-2 font-mono text-[11px] text-slate-700">
@@ -681,6 +856,43 @@ export default function AdminApplicationsPage() {
                   className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none transition-colors"
                   style={{ color: "#000000" }}
                 />
+              </div>
+
+              {/* Application Specific Hero / Cover Image */}
+              <div className="space-y-2 pt-3 border-t border-slate-200">
+                <label className="text-[11px] font-bold font-mono uppercase tracking-wider text-black block pl-1" style={{ color: "#000000" }}>
+                  Application Hero / Cover Image (Optional Override)
+                </label>
+                <p className="text-[11px] text-slate-500 m-0 pl-1">
+                  Assign a unique hero image for this specific application detail page. If left blank, it falls back to the default detail hero photo.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                  {formHeroImage && (
+                    <div className="w-16 h-12 rounded-lg border border-slate-300 overflow-hidden bg-slate-100 shrink-0 shadow-2xs">
+                      <img
+                        src={formatImageUrl(formHeroImage, "/application.png")}
+                        alt="Cover preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/application.png"; }}
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="text"
+                    placeholder="Image URL or upload file (/hazardous_mobility.webp, /uploads/...)"
+                    value={formHeroImage}
+                    onChange={(e) => setFormHeroImage(e.target.value)}
+                    className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded-lg text-xs text-black font-mono font-semibold placeholder-slate-500 focus:border-[#1e3e8f] focus:outline-none"
+                    style={{ color: "#000000" }}
+                  />
+                  <label className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg cursor-pointer shrink-0 transition-colors border border-slate-300 flex items-center gap-1.5 shadow-2xs">
+                    <svg className="w-4 h-4 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    <span>{uploadingItemImage ? "Uploading..." : "Upload Photo"}</span>
+                    <input type="file" accept="image/*" onChange={handleItemImageUpload} className="hidden" />
+                  </label>
+                </div>
               </div>
 
               {/* Capabilities (Title and Body pairs) */}
@@ -1017,6 +1229,147 @@ export default function AdminApplicationsPage() {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* Detail Pages Hero Photo Modal */}
+      {showDetailHeroModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
+          <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+            {/* Modal Header */}
+            <div className="h-16 flex items-center justify-between px-6 border-b border-slate-200 bg-slate-50 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-[#1e3e8f]/10 text-[#1e3e8f] flex items-center justify-center font-bold">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 m-0">Application Detail Pages Hero Banner</h3>
+                  <p className="text-[11px] text-slate-500 m-0">Configure the top hero cover photo shown across all application detail pages (/applications/[id])</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowDetailHeroModal(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white border border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer transition-colors shadow-2xs"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-5">
+              {/* Live Preview of Detail Page Hero */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-2">Live Detail Page Banner Preview</label>
+                <div className="relative w-full h-56 rounded-xl overflow-hidden border border-slate-300 bg-slate-950 shadow-inner flex items-center">
+                  <img
+                    src={formatImageUrl(detailHeroBgImage, "/application.png")}
+                    alt="Detail Page Hero Preview"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "/application.png";
+                    }}
+                    className="absolute inset-0 w-full h-full object-cover object-center brightness-[0.65]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#080c14]/90 via-[#080c14]/65 to-transparent z-10" />
+                  <div className="relative z-20 px-6 py-4 max-w-lg space-y-2">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#38bdf8] block">Zone 1 Mobile Digitization</span>
+                    <h4 className="text-xl font-extrabold uppercase text-white tracking-tight leading-tight m-0">
+                      EXPLOSION-PROOF MOBILITY
+                    </h4>
+                    <p className="text-xs text-white/80 line-clamp-2 m-0">
+                      ATEX Zone 1 validated intrinsically safe communication terminals for explosive atmospheres.
+                    </p>
+                    <div className="flex items-center gap-4 pt-2 border-t border-white/15">
+                      <div>
+                        <div className="text-sm font-extrabold text-[#b45309]">Zone 1</div>
+                        <div className="text-[9px] text-white/60">Atmospheric Safety</div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-extrabold text-[#b45309]">-60%</div>
+                        <div className="text-[9px] text-white/60">Submission Time</div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-extrabold text-[#b45309]">IP68</div>
+                        <div className="text-[9px] text-white/60">Ingress Protection</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1.5">This preview demonstrates how the hero image renders with dark gradients and dynamic title typography on the live site.</p>
+              </div>
+
+              {/* Upload or Enter URL */}
+              <div className="space-y-2 pt-2 border-t border-slate-100">
+                <label className="block text-xs font-bold text-slate-700">Detail Hero Photo Source</label>
+                <div className="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center">
+                  <input
+                    type="text"
+                    value={detailHeroBgImage}
+                    onChange={(e) => setDetailHeroBgImage(e.target.value)}
+                    placeholder="Image URL or upload a file (/application.png, /uploads/..., etc.)"
+                    className="flex-1 px-3.5 py-2.5 border border-slate-300 rounded-lg font-mono text-xs text-slate-900 placeholder-slate-400 focus:border-[#1e3e8f] focus:outline-none"
+                  />
+                  <label className="px-4 py-2.5 bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold rounded-lg cursor-pointer shrink-0 flex items-center justify-center gap-2 transition-colors shadow-xs">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    <span>{uploadingDetailBanner ? "Uploading..." : "Upload New Photo"}</span>
+                    <input type="file" accept="image/*" onChange={handleDetailBannerUpload} className="hidden" />
+                  </label>
+                </div>
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setDetailHeroBgImage("/application.png")}
+                    className="text-[11px] text-slate-600 hover:text-[#1e3e8f] underline cursor-pointer"
+                  >
+                    Reset to default (/application.png)
+                  </button>
+                  <span className="text-slate-300">|</span>
+                  <button
+                    type="button"
+                    onClick={() => setDetailHeroBgImage("/hazardous_mobility.webp")}
+                    className="text-[11px] text-slate-600 hover:text-[#1e3e8f] underline cursor-pointer"
+                  >
+                    Use hazardous mobility photo (/hazardous_mobility.webp)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="h-16 flex items-center justify-between px-6 border-t border-slate-200 bg-slate-50 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowDetailHeroModal(false)}
+                className="px-4 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold cursor-pointer transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveDetailHeroBanner}
+                disabled={savingDetailBanner || uploadingDetailBanner}
+                className="px-5 py-2.5 rounded-lg bg-[#1e3e8f] hover:bg-[#162f6d] text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-md transition-all disabled:opacity-50 flex items-center gap-2"
+              >
+                {savingDetailBanner ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Saving...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Save Detail Hero Photo</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -1,6 +1,8 @@
 import { SolutionPage, ISolutionPage } from "../db.js";
 import { sanitizeObjectImages } from "../utils/imageStorage.js";
 import { invalidateCache } from "../utils/cache.js";
+import { DB_FILE } from "../config.js";
+import fs from "fs";
 
 const DEFAULT_INDUSTRIES = [
   {
@@ -82,11 +84,15 @@ export class SolutionPageModel {
       if (!d.applicationsHeroTagline) d.applicationsHeroTagline = "ADVANCED TECHNICAL APPLICATIONS";
       if (!d.applicationsHeroTitle) d.applicationsHeroTitle = "";
       if (!d.applicationsHeroDescription) d.applicationsHeroDescription = "";
+      if (!d.applicationsDetailHeroBgImage) d.applicationsDetailHeroBgImage = "/application.png";
 
       if (!d.servicesHeroBgImage) d.servicesHeroBgImage = "/products/default-process-instrumentation.png";
       if (!d.servicesHeroTagline) d.servicesHeroTagline = "FIELD & ENGINEERING SERVICES";
       if (!d.servicesHeroTitle) d.servicesHeroTitle = "SPECIALIZED ENGINEERING SERVICES";
       if (!d.servicesHeroDescription) d.servicesHeroDescription = "Full lifecycle support, commissioning, functional safety assessments, and rapid calibration coverage across primary operating facilities.";
+      if (!d.servicesDetailHeroBgImage) d.servicesDetailHeroBgImage = "/service.png";
+
+      if (!d.solutionsDetailHeroBgImage) d.solutionsDetailHeroBgImage = "/application.png";
     }
     return (doc as unknown) as ISolutionPage | null;
   }
@@ -102,6 +108,24 @@ export class SolutionPageModel {
       { ...sanitized, id: "solutions_page" },
       { new: true, upsert: true }
     ).lean().exec();
+
+    try {
+      if (fs.existsSync(DB_FILE)) {
+        const fileData = fs.readFileSync(DB_FILE, "utf8");
+        const json = JSON.parse(fileData);
+        if (!json.solutions_page) json.solutions_page = [];
+        const idx = json.solutions_page.findIndex((p: any) => p.id === "solutions_page");
+        if (idx >= 0) {
+          json.solutions_page[idx] = { ...json.solutions_page[idx], ...sanitized };
+        } else {
+          json.solutions_page.push({ id: "solutions_page", ...sanitized });
+        }
+        fs.writeFileSync(DB_FILE, JSON.stringify(json, null, 2), "utf8");
+      }
+    } catch (e) {
+      console.error("Failed to sync solutions_page to database.json:", e);
+    }
+
     invalidateCache("solutions-page");
     return (doc as unknown) as ISolutionPage | null;
   }
