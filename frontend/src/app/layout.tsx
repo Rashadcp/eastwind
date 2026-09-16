@@ -126,15 +126,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakarta.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${plusJakarta.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
         />
       </head>
       {/* FIXED: Changed overflow-x-hidden to overflow-x-clip so child containers can lock into sticky position */}
-      <body className="relative min-h-screen bg-[#080c14] overflow-x-clip w-full max-w-full">
+      <body className="relative min-h-screen bg-[#080c14] overflow-x-clip w-full max-w-full" suppressHydrationWarning>
         <ScrollToTop />
         {children}
       </body>
