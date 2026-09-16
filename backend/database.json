@@ -3796,8 +3796,8 @@
   "admin": [
     {
       "username": "admin",
-      "passwordHash": "5670844eca72a109c3e980599405f04eade799c792475e02ce7f98e49d94ca3ee0a44f7bd344daa40e592d7cc2bcd285ce107ab35bc687478f7259734cc3f800",
-      "salt": "0cb312f7707a67cc6d7b6890376779ea"
+      "passwordHash": "ac62cec6f1040b7bdc9c41b98752e94c4dae03055f194e7e77c89b492801f6bb11751afc3527287a3d1ef0e135ea156be8749828628147f2b12b69ba165a3d5c",
+      "salt": "ae01e30e475c0159e51717e9b7bc0b9a"
     }
   ],
   "about": [
