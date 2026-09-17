@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatImageUrl } from "@/utils/image";
+import { cachedFetch } from "@/utils/apiCache";
 
 export interface BrandProductItem {
   id: string;
@@ -172,19 +173,12 @@ export default function TechnologyEcosystem() {
   const [activeSlideIndices, setActiveSlideIndices] = useState<Record<string, number>>({});
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
-  // Fetch dynamic brands from API with cache-busting
+  // Fetch dynamic brands using the shared short-lived cache.
   const fetchBrands = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const res = await fetch(`${baseUrl}/api/brands?t=${Date.now()}`, {
-        cache: "no-store",
-        headers: {
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          "Pragma": "no-cache",
-        },
-      });
-      if (res.ok) {
-        const apiBrands = await res.json();
+      const apiBrands = await cachedFetch<any[]>(`${baseUrl}/api/brands`, { fallback: [] });
+      if (apiBrands.length) {
         if (Array.isArray(apiBrands) && apiBrands.length > 0) {
           const mappedApiBrands: BrandPortfolioItem[] = apiBrands.map((b: any) => ({
             id: b.id,

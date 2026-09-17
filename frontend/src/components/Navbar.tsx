@@ -122,21 +122,13 @@ export default function Navbar() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         
-        // 1. Fetch products catalog with real-time cache-busting
-        let productsCatalog = await cachedFetch<any[]>(`${baseUrl}/api/products?t=${Date.now()}`, {
-          fallback: productsDb,
-          cache: "no-store",
-        });
+        let productsCatalog = await cachedFetch<any[]>(`${baseUrl}/api/products`, { fallback: productsDb });
 
         if (!Array.isArray(productsCatalog) || productsCatalog.length === 0) {
           productsCatalog = productsDb;
         }
 
-        // 2. Fetch solutions page configuration with real-time cache-busting
-        const data = await cachedFetch<any>(`${baseUrl}/api/solutions-page?t=${Date.now()}`, {
-          fallback: null,
-          cache: "no-store",
-        });
+        const data = await cachedFetch<any>(`${baseUrl}/api/solutions-page`, { fallback: null });
 
         if (data && Array.isArray(data.industries) && data.industries.length > 0) {
             const dynamicCategories: SolutionCategory[] = data.industries.map((ind: any) => {
@@ -374,7 +366,7 @@ export default function Navbar() {
       }
       // Fetch footer / contact settings data to get unified logoUrl
       try {
-        const settings = await cachedFetch<any[]>(`${baseUrl}/api/contact-settings?t=${Date.now()}`, { fallback: [], cache: "no-store" });
+        const settings = await cachedFetch<any[]>(`${baseUrl}/api/contact-settings`, { fallback: [] });
         if (Array.isArray(settings)) {
           const footerDoc = settings.find((item: any) => item.id === "footer");
           if (footerDoc && footerDoc.logoUrl) {
@@ -427,6 +419,7 @@ export default function Navbar() {
         <Link
           key={item.name}
           href={item.href}
+          prefetch={true}
           onClick={handleNavClick}
           className="group/item min-h-[34px] flex items-center justify-between gap-2.5 p-[7px_10px] rounded-xl text-slate-600 no-underline text-[0.78rem] font-bold leading-tight transition-all duration-300 hover:text-[#1e3e8f] hover:bg-slate-50 hover:translate-x-1"
         >
@@ -459,7 +452,7 @@ export default function Navbar() {
               }`
         }`}
       >
-        <Link href="/" onClick={handleNavClick} className="brand-link inline-flex items-center no-underline shrink-0">
+        <Link href="/" prefetch={true} onClick={handleNavClick} className="brand-link inline-flex items-center no-underline shrink-0">
           <div className={`transition-all duration-300 px-2.5 py-1 rounded-xl ${
             showTransparent
               ? "bg-white/95 backdrop-blur-md shadow-md"
@@ -480,6 +473,7 @@ export default function Navbar() {
         <nav className="desktop-nav hidden lg:flex items-center justify-center gap-1.5" aria-label="Primary navigation">
           <Link
             href="/"
+            prefetch={true}
             onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
@@ -491,6 +485,7 @@ export default function Navbar() {
 
           <Link
             href="/about"
+            prefetch={true}
             onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
@@ -503,6 +498,7 @@ export default function Navbar() {
           {/* Products Link Button */}
           <Link
             href="/products"
+            prefetch={true}
             onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
@@ -515,6 +511,7 @@ export default function Navbar() {
           {/* Solutions Link Button */}
           <Link
             href="/solutions"
+            prefetch={true}
             onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
@@ -527,6 +524,7 @@ export default function Navbar() {
           {/* Applications Link Button */}
           <Link
             href="/solutions?type=applications"
+            prefetch={true}
             onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
@@ -539,6 +537,7 @@ export default function Navbar() {
           {/* Single Direct Services Link Button */}
           <Link
             href="/solutions?type=services"
+            prefetch={true}
             onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
@@ -550,6 +549,7 @@ export default function Navbar() {
 
           <Link
             href="/contact"
+            prefetch={true}
             onClick={handleNavClick}
             className={`nav-link relative group/nav px-3.5 py-2 text-[0.76rem] font-extrabold uppercase no-underline tracking-wider rounded-full transition-all duration-200 ${
               showTransparent ? "text-white/90 hover:text-white hover:bg-white/10" : "text-slate-700 hover:text-[#1e3e8f] hover:bg-slate-100"
@@ -589,6 +589,7 @@ export default function Navbar() {
           <div className="relative z-10 flex flex-col gap-2.5">
             <Link 
               href="/" 
+              prefetch={true}
               onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
@@ -596,6 +597,7 @@ export default function Navbar() {
             </Link>
             <Link 
               href="/about" 
+              prefetch={true}
               onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
@@ -605,6 +607,7 @@ export default function Navbar() {
             {/* Mobile Products Direct Link */}
             <Link 
               href="/products" 
+              prefetch={true}
               onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
@@ -614,6 +617,7 @@ export default function Navbar() {
             {/* Mobile Solutions Direct Link */}
             <Link 
               href="/solutions" 
+              prefetch={true}
               onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
@@ -623,6 +627,7 @@ export default function Navbar() {
             {/* Mobile Applications Direct Link */}
             <Link 
               href="/solutions?type=applications" 
+              prefetch={true}
               onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
@@ -632,6 +637,7 @@ export default function Navbar() {
             {/* Mobile Services Direct Link */}
             <Link 
               href="/solutions?type=services" 
+              prefetch={true}
               onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >
@@ -640,6 +646,7 @@ export default function Navbar() {
 
             <Link 
               href="/contact" 
+              prefetch={true}
               onClick={handleNavClick} 
               className="w-full min-h-[44px] flex items-center justify-between px-4 rounded-xl bg-slate-50/70 text-slate-800 text-[0.88rem] font-bold no-underline"
             >

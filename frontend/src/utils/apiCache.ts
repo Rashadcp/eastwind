@@ -8,7 +8,9 @@ interface CacheEntry<T> {
 const memoryCache = new Map<string, CacheEntry<any>>();
 const pendingRequests = new Map<string, Promise<any>>();
 
-const DEFAULT_TTL_MS = 10 * 1000; // 10 seconds default TTL (avoids serving stale data after admin edits)
+// Public CMS content changes infrequently. This prevents repeat requests while
+// visitors navigate between pages or reopen menus.
+const DEFAULT_TTL_MS = 60 * 1000;
 
 function normalizeCacheKey(rawUrl: string): string {
   try {
@@ -59,16 +61,13 @@ export async function cachedFetch<T = any>(
     }
   }
 
-  // Perform the fetch with no-store to ensure latest dynamic database content
+  // Use normal HTTP caching for public CMS data. Admin saves explicitly
+  // invalidate this client cache, so every page view need not bypass caches.
   const fetchPromise = (async () => {
     try {
       const res = await fetch(url, {
         signal: options?.signal,
-        cache: options?.cache ?? "no-store",
-        headers: {
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          "Pragma": "no-cache",
-        },
+        cache: options?.cache ?? "default",
       });
 
       if (!res.ok) {

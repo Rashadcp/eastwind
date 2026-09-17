@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import InteractivePortfolioSection, { PortfolioItem } from "./InteractivePortfolioSection";
 import { productsDb } from "@/data/productsData";
 import { Layers } from "lucide-react";
+import { cachedFetch } from "@/utils/apiCache";
 
 interface IndustryItem extends PortfolioItem {
   num: string;
@@ -1169,15 +1170,8 @@ export default function IndustrySolutions() {
     async function loadDynamicApplications() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${baseUrl}/api/applications?t=${Date.now()}`, {
-          cache: "no-store",
-          headers: {
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Pragma": "no-cache"
-          }
-        });
-        if (res.ok) {
-          const list = await res.json();
+        const list = await cachedFetch<any[]>(`${baseUrl}/api/applications`, { fallback: [] });
+        if (list.length) {
           if (Array.isArray(list) && list.length > 0) {
             const mapped = list.map((item: any) => ({
               id: item.id || item._id,
@@ -1210,18 +1204,8 @@ export default function IndustrySolutions() {
         try {
           const controller1 = new AbortController();
           const timeoutId1 = setTimeout(() => controller1.abort(), 10000);
-          const prodsRes = await fetch(`${baseUrl}/api/products?t=${Date.now()}`, { 
-            signal: controller1.signal,
-            cache: "no-store",
-            headers: {
-              "Cache-Control": "no-cache, no-store, must-revalidate",
-              "Pragma": "no-cache"
-            }
-          });
+          productsCatalog = await cachedFetch<any[]>(`${baseUrl}/api/products`, { signal: controller1.signal, fallback: [] });
           clearTimeout(timeoutId1);
-          if (prodsRes.ok) {
-            productsCatalog = await prodsRes.json();
-          }
         } catch (e) {
           console.warn("Failed or timed out fetching products for IndustrySolutions:", e);
         }
@@ -1232,17 +1216,9 @@ export default function IndustrySolutions() {
         try {
           const controller2 = new AbortController();
           const timeoutId2 = setTimeout(() => controller2.abort(), 10000);
-          const solPageRes = await fetch(`${baseUrl}/api/solutions-page?t=${Date.now()}`, { 
-            signal: controller2.signal,
-            cache: "no-store",
-            headers: {
-              "Cache-Control": "no-cache, no-store, must-revalidate",
-              "Pragma": "no-cache"
-            }
-          });
+          const data = await cachedFetch<any>(`${baseUrl}/api/solutions-page`, { signal: controller2.signal, fallback: null });
           clearTimeout(timeoutId2);
-          if (solPageRes.ok) {
-            const data = await solPageRes.json();
+          if (data) {
             if (data.industriesTitle) setSectionTitle(data.industriesTitle);
             if (data.industriesDesc) setSectionDesc(data.industriesDesc);
             if (data && Array.isArray(data.industries) && data.industries.length > 0) {

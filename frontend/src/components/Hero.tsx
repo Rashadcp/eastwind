@@ -15,6 +15,7 @@ export default function Hero() {
   const indicatorRef = useRef<HTMLDivElement>(null);
   const targetTimeRef = useRef<number>(0);
   const isSeekingRef = useRef<boolean>(false);
+  const animationFrameRef = useRef<number | null>(null);
 
   // Dynamic Captions State (Loaded purely from backend CMS)
   const [slide1Tagline, setSlide1Tagline] = useState<string>("");
@@ -45,7 +46,7 @@ export default function Hero() {
     async function loadHeroData() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const data = await cachedFetch<any>(`${baseUrl}/api/hero?t=${Date.now()}`, { fallback: null, cache: "no-store" });
+        const data = await cachedFetch<any>(`${baseUrl}/api/hero`, { fallback: null });
         if (data) {
           if (data.bannerImg !== undefined) setBannerImg(data.bannerImg);
           if (data.videoSrc !== undefined && (typeof window === "undefined" || window.innerWidth >= 768)) {
@@ -149,14 +150,20 @@ export default function Hero() {
       updateDOM(progress);
     };
 
-    // Smooth lerp loop with Apple-style fastSeek optimization
-    let animId: number;
-    const renderLoop = () => {
+    // Run only while a seek is needed. A permanent animation loop makes the
+    // page consume CPU/GPU even while it is completely idle.
+    const renderSeek = () => {
       const vid = videoRef.current;
       if (vid && !isNaN(vid.duration) && vid.duration > 0) {
         const diff = targetTimeRef.current - vid.currentTime;
         // Check if seek is pending to avoid overloading mobile decoder queue
-        if (Math.abs(diff) > 0.02 && !isSeekingRef.current && !vid.seeking) {
+        if (Math.abs(diff) > 0.02 && (isSeekingRef.current || vid.seeking)) {
+          // Wait for the browser decoder, then continue toward the newest
+          // scroll target without dropping the final scroll position.
+          animationFrameRef.current = requestAnimationFrame(renderSeek);
+          return;
+        }
+        if (Math.abs(diff) > 0.02) {
           const nextTime = vid.currentTime + diff * 0.32;
           try {
             if ("fastSeek" in vid && typeof (vid as any).fastSeek === "function") {
@@ -167,19 +174,31 @@ export default function Hero() {
           } catch {
             vid.currentTime = nextTime;
           }
+          animationFrameRef.current = requestAnimationFrame(renderSeek);
+          return;
         }
       }
-      animId = requestAnimationFrame(renderLoop);
+      animationFrameRef.current = null;
     };
 
-    animId = requestAnimationFrame(renderLoop);
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const scheduleSeek = () => {
+      if (animationFrameRef.current === null) {
+        animationFrameRef.current = requestAnimationFrame(renderSeek);
+      }
+    };
+
+    const onScroll = () => {
+      handleScroll();
+      scheduleSeek();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", handleScroll, { passive: true });
     handleScroll();
 
     return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("scroll", handleScroll);
+      if (animationFrameRef.current !== null) cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", handleScroll);
       video?.removeEventListener("seeking", onSeeking);
       video?.removeEventListener("seeked", onSeeked);
@@ -201,6 +220,7 @@ export default function Hero() {
             alt="Safety Arabia Hero Banner"
             className="w-full h-full object-cover object-center sm:object-right"
             loading="eager"
+            decoding="async"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = "/hero-section.webp";
             }}
@@ -218,7 +238,7 @@ export default function Hero() {
             src={formatImageUrl(videoSrc)}
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
             tabIndex={-1}
             className="w-full h-full object-cover scale-[1.03] select-none"
             onLoadedMetadata={() => {

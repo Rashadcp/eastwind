@@ -149,6 +149,17 @@ export interface IContactSettings extends Document {
   enquiryTitle?: string;
   enquiryDescription?: string;
   applicationPurposes?: { value: string; label: string }[];
+  enquiryRecipientEmail?: string;
+}
+
+export interface IEmailSettings extends Document {
+  id: string;
+  enquiryRecipientEmail?: string;
+  smtpHost?: string;
+  smtpPort?: number;
+  smtpSecure?: boolean;
+  smtpUser?: string;
+  smtpPasswordEncrypted?: string;
 }
 
 export interface ISolutionPage extends Document {
@@ -407,8 +418,19 @@ const ContactSettingsSchema = new Schema<IContactSettings>({
   enquiryTagline: { type: String },
   enquiryTitle: { type: String },
   enquiryDescription: { type: String },
-  applicationPurposes: [{ value: String, label: String }]
+  applicationPurposes: [{ value: String, label: String }],
+  enquiryRecipientEmail: { type: String }
 }, { strict: false });
+
+const EmailSettingsSchema = new Schema<IEmailSettings>({
+  id: { type: String, required: true, unique: true, default: "default" },
+  enquiryRecipientEmail: { type: String, default: "" },
+  smtpHost: { type: String, default: "smtp.gmail.com" },
+  smtpPort: { type: Number, default: 587 },
+  smtpSecure: { type: Boolean, default: false },
+  smtpUser: { type: String, default: "" },
+  smtpPasswordEncrypted: { type: String, default: "" }
+}, { timestamps: true });
 
 const SolutionPageSchema = new Schema<ISolutionPage>({
   id: { type: String, required: true, unique: true, index: true },
@@ -501,6 +523,7 @@ export const Service = mongoose.models.Service || mongoose.model<IService>("Serv
 export const Admin = mongoose.models.Admin || mongoose.model<IAdmin>("Admin", AdminSchema);
 export const AboutContent = mongoose.models.AboutContent || mongoose.model<IAboutContent>("AboutContent", AboutContentSchema);
 export const ContactSettings = mongoose.models.ContactSettings || mongoose.model<IContactSettings>("ContactSettings", ContactSettingsSchema);
+export const EmailSettings = (mongoose.models.EmailSettings as mongoose.Model<IEmailSettings>) || mongoose.model<IEmailSettings>("EmailSettings", EmailSettingsSchema);
 export const SolutionPage = mongoose.models.SolutionPage || mongoose.model<ISolutionPage>("SolutionPage", SolutionPageSchema);
 export const Brand = mongoose.models.Brand || mongoose.model<IBrand>("Brand", BrandSchema);
 export const SuccessStory = mongoose.models.SuccessStory || mongoose.model<ISuccessStory>("SuccessStory", SuccessStorySchema);

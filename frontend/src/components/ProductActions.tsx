@@ -10,6 +10,7 @@ interface ProductActionsProps {
 
 export default function ProductActions({ productTitle, accentColor, layout = "hero" }: ProductActionsProps) {
   const enquiryUrl = `/enquire?solution=${encodeURIComponent(productTitle)}`;
+  const contactUrl = `/contact?solution=${encodeURIComponent(productTitle)}#contact-form`;
 
   return (
     <>
@@ -22,12 +23,12 @@ export default function ProductActions({ productTitle, accentColor, layout = "he
           >
             Request Technical Quote
           </Link>
-          <a 
-            href="#contact" 
+          <Link
+            href={contactUrl}
             className="inline-flex items-center justify-center py-3 px-9 text-[0.8rem] font-semibold uppercase tracking-wider text-slate-700 bg-white/20 border border-slate-200 cursor-pointer transition-all duration-200 rounded-full hover:border-slate-400 hover:bg-slate-50 hover:-translate-y-[1px] w-auto max-sm:w-full"
           >
             Contact Sales
-          </a>
+          </Link>
         </div>
       ) : (
         <div className="flex gap-4 justify-center flex-wrap">

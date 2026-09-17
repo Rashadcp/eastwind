@@ -196,8 +196,7 @@ function ProductsCatalogContent() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-        // 1. Fetch Brands & their products with real-time cache-busting
-        const fetchedBrands = await cachedFetch<BrandItem[]>(`${baseUrl}/api/brands?t=${Date.now()}`, { fallback: [], cache: "no-store" });
+        const fetchedBrands = await cachedFetch<BrandItem[]>(`${baseUrl}/api/brands`, { fallback: [] });
         let allProds: ProductItem[] = [];
 
         if (Array.isArray(fetchedBrands) && fetchedBrands.length > 0) {
@@ -218,8 +217,7 @@ function ProductsCatalogContent() {
           });
         }
 
-        // 2. Fetch all products API as well (with real-time cache-busting)
-        const mainProds = await cachedFetch<any[]>(`${baseUrl}/api/products?t=${Date.now()}`, { fallback: [], cache: "no-store" });
+        const mainProds = await cachedFetch<any[]>(`${baseUrl}/api/products`, { fallback: [] });
         if (Array.isArray(mainProds)) {
           mainProds.forEach((mp) => {
             const sanitizedBrand = sanitizeCategory(mp.brand);

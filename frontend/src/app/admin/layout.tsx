@@ -308,7 +308,7 @@ export default function AdminLayout({
       )
     },
     {
-      name: "Update Password",
+      name: "Settings",
       href: "/admin/settings",
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -379,7 +379,11 @@ export default function AdminLayout({
         .admin-light-theme textarea {
           background-color: #ffffff !important;
           border: 1px solid #cbd5e1 !important;
-          color: #0f172a !important;
+          /* Prevent inherited muted text / browser autofill from making saved
+             admin values look faded. Placeholders stay deliberately lighter. */
+          color: #000000 !important;
+          -webkit-text-fill-color: #000000 !important;
+          opacity: 1 !important;
           border-radius: 2px !important;
           box-shadow: none !important;
         }
@@ -405,6 +409,8 @@ export default function AdminLayout({
         .admin-light-theme input::placeholder,
         .admin-light-theme textarea::placeholder {
           color: #94a3b8 !important;
+          -webkit-text-fill-color: #94a3b8 !important;
+          opacity: 1 !important;
         }
 
         /* =========================================================================

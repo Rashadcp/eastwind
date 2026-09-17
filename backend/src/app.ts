@@ -26,6 +26,7 @@ import heroRouter from "./routes/hero.js";
 import productCategoriesRouter from "./routes/productCategories.js";
 import privacyPolicyRouter from "./routes/privacyPolicy.js";
 import seoRouter from "./routes/seo.js";
+import emailSettingsRouter from "./routes/emailSettings.js";
 import { EnquiryController } from "./controllers/enquiry.controller.js";
 import { ContactSettingsModel } from "./models/contact.model.js";
 
@@ -125,6 +126,8 @@ app.use("/api/upload", uploadRouter);
 app.use("/upload", uploadRouter);
 app.use("/api/auth", authRouter);
 app.use("/auth", authRouter);
+app.use("/api/email-settings", emailSettingsRouter);
+app.use("/email-settings", emailSettingsRouter);
 
 app.post("/api/enquiry", EnquiryController.submitEnquiry);
 app.post("/enquiry", EnquiryController.submitEnquiry);

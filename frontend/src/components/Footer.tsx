@@ -70,8 +70,7 @@ export default function Footer() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-        // 1. Fetch dynamic contact settings and footer document with real-time cache-busting
-        const list = await cachedFetch<any[]>(`${baseUrl}/api/contact-settings?t=${Date.now()}`, { fallback: [], cache: "no-store" });
+        const list = await cachedFetch<any[]>(`${baseUrl}/api/contact-settings`, { fallback: [] });
         if (Array.isArray(list) && list.length > 0) {
           const footerDoc = list.find((item: any) => item.id === "footer");
           const contactDoc = list.find((item: any) => item.id === "contact_info");

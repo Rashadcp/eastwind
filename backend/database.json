@@ -1,6 +1,51 @@
 {
   "products": [],
-  "solutions": [],
+  "solutions": [
+    {
+      "id": "fire-and-gas",
+      "title": "fire and gas",
+      "subLabel": "",
+      "tagline": "",
+      "accent": "blue",
+      "description": "sdfdff",
+      "detailedContent": "",
+      "features": [],
+      "compliance": [],
+      "benefits": [],
+      "applications": [],
+      "imageUrl": "/uploads/1789626136237-TUBrandmark.webp",
+      "integrationTagline": "",
+      "integrationTitle": "",
+      "integrationDescription": "",
+      "integrationSteps": [
+        {
+          "stepNumber": "01",
+          "title": "",
+          "description": "",
+          "phase": "",
+          "_id": "6aab87242ca54dac0fbc4564"
+        },
+        {
+          "stepNumber": "02",
+          "title": "",
+          "description": "",
+          "phase": "",
+          "_id": "6aab87242ca54dac0fbc4565"
+        },
+        {
+          "stepNumber": "03",
+          "title": "",
+          "description": "",
+          "phase": "",
+          "_id": "6aab87242ca54dac0fbc4566"
+        }
+      ],
+      "order": 0,
+      "_id": "6aab87242ca54dac0fbc4563",
+      "specs": [],
+      "__v": 0
+    }
+  ],
   "applications": [],
   "services": [],
   "admin": [

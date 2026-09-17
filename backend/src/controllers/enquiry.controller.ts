@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import nodemailer from "nodemailer";
+import { EmailSettings } from "../db.js";
+import { decryptSmtpPassword } from "./emailSettings.controller.js";
 
 export class EnquiryController {
   /**
@@ -31,8 +33,9 @@ export class EnquiryController {
       console.log(`==================================================\n`);
 
       // Check if EMAIL_USER and EMAIL_PASS are configured
-      const emailUser = process.env.EMAIL_USER;
-      const emailPass = process.env.EMAIL_PASS;
+      const savedEmailSettings = await EmailSettings.findOne({ id: "default" }).lean().exec();
+      const emailUser = savedEmailSettings?.smtpUser || process.env.EMAIL_USER;
+      const emailPass = decryptSmtpPassword(savedEmailSettings?.smtpPasswordEncrypted) || process.env.EMAIL_PASS;
 
       if (!emailUser || !emailPass) {
         console.warn("[SMTP Warning] EMAIL_USER or EMAIL_PASS environment variables are missing.");
@@ -44,18 +47,25 @@ export class EnquiryController {
 
       // Setup transporter
       const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST || "smtp.gmail.com",
-        port: Number(process.env.EMAIL_PORT) || 587,
-        secure: process.env.EMAIL_SECURE === "true",
+        host: savedEmailSettings?.smtpHost || process.env.EMAIL_HOST || "smtp.gmail.com",
+        port: savedEmailSettings?.smtpPort || Number(process.env.EMAIL_PORT) || 587,
+        secure: savedEmailSettings?.smtpSecure ?? process.env.EMAIL_SECURE === "true",
         auth: {
           user: emailUser,
           pass: emailPass,
         },
       });
 
+      // The recipient is managed by an administrator. SMTP credentials remain
+      // server-only environment variables and are never exposed in the admin UI.
+      const configuredRecipient = String(savedEmailSettings?.enquiryRecipientEmail || "").trim();
+      const recipientEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(configuredRecipient)
+        ? configuredRecipient
+        : (process.env.ENQUIRY_RECIPIENT_EMAIL || "harik2021a@gmail.com");
+
       const mailOptions = {
         from: `"Eastwind Technical Enquiry" <${emailUser}>`,
-        to: "harik2021a@gmail.com",
+        to: recipientEmail,
         subject: `Eastwind Product Enquiry: ${formattedSolution}`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff;">
@@ -97,10 +107,10 @@ export class EnquiryController {
       // Send Mail and handle result explicitly
       try {
         const info = await transporter.sendMail(mailOptions);
-        console.log(`[SMTP Success] Email sent to harik2021a@gmail.com (Message ID: ${info.messageId})`);
+        console.log(`[SMTP Success] Email sent to ${recipientEmail} (Message ID: ${info.messageId})`);
         res.json({
           success: true,
-          message: "Enquiry submitted successfully and emailed to harik2021a@gmail.com."
+          message: "Enquiry submitted successfully and emailed to the configured recipient."
         });
       } catch (mailError: any) {
         console.error("[SMTP Error] Failed to dispatch email:", mailError);
