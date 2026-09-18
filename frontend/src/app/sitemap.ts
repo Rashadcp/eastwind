@@ -3,7 +3,7 @@ import { MetadataRoute } from "next";
 import { productsDb } from "@/data/productsData";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://eastwindsafety.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://eastwind.sa";
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   // Core static pages

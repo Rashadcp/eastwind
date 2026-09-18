@@ -43,8 +43,21 @@ app.use(helmet({
 app.use(compression());
 
 // 2. CORS and Body Parsing
+// Allow the public site origin(s) configured in CORS_ORIGIN. Multiple origins
+// can be supplied as a comma-separated list, e.g. www + non-www domains.
+const corsOrigins = CORS_ORIGIN.split(",")
+  .map((origin) => origin.trim().replace(/\/$/, ""))
+  .filter(Boolean);
+
 app.use(cors({
-  origin: CORS_ORIGIN,
+  origin(origin, callback) {
+    const normalizedOrigin = origin?.replace(/\/$/, "");
+    // Requests without an Origin header include server-to-server checks.
+    if (!normalizedOrigin || corsOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("Origin is not allowed by CORS"));
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));

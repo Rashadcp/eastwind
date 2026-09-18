@@ -340,7 +340,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [{ url: "/service.png" }],
     },
     alternates: {
-      canonical: `https://eastwindsafety.com/services/${id}`,
+      canonical: `https://eastwind.sa/services/${id}`,
     },
   };
 }

@@ -1,7 +1,7 @@
 # East Wind Safety — Production Deployment Guide
 **Document Purpose:** Complete, step-by-step instructions for hosting the East Wind Safety platform on a production server.  
 **Target Environment:** Ubuntu 22.04 LTS / Debian 12 / Cloud VPS (DigitalOcean, AWS EC2, Linode, Azure)  
-**Production Domain:** `https://eastwindsafety.com`
+**Production Domain:** `https://eastwind.sa`
 
 ---
 
@@ -9,7 +9,7 @@
 
 > [!NOTE]
 > **What this system needs to run:**
-> 1. **A Domain Name** (e.g. `eastwindsafety.com` from GoDaddy, Namecheap, etc.)
+> 1. **A Domain Name** (e.g. `eastwind.sa` from GoDaddy, Namecheap, etc.)
 > 2. **A Cloud Server (VPS)**: Ubuntu 22.04 with at least 2 GB RAM ($10–$20/month on DigitalOcean, AWS, or Linode).
 > 3. **A Cloud Database**: Free or paid MongoDB Atlas cluster ([mongodb.com/atlas](https://www.mongodb.com/atlas)).
 
@@ -134,7 +134,8 @@ Paste the following values:
 ```env
 # Port & Domain
 PORT=5000
-CORS_ORIGIN=https://eastwindsafety.com
+# Public frontend origin (no trailing slash).
+CORS_ORIGIN=https://eastwind.sa
 
 # Cryptographic Secret for Admin JWT Sessions (64 random characters)
 JWT_SECRET=c8f53a987d6e4b219034f8a123bc45de67890123456789abcdef0123456789ab
@@ -157,10 +158,14 @@ nano /var/www/eastwind/frontend/.env.production
 Paste:
 ```env
 # Backend API URL (Proxied via Nginx root)
-NEXT_PUBLIC_API_URL=https://eastwindsafety.com
+NEXT_PUBLIC_API_URL=https://eastwind.sa
+
+# Local backend address used by the Next.js server/rewrite proxy
+INTERNAL_BACKEND_URL=http://127.0.0.1:5000
+BACKEND_PORT=5000
 
 # Canonical Public Website URL
-NEXT_PUBLIC_SITE_URL=https://eastwindsafety.com
+NEXT_PUBLIC_SITE_URL=https://eastwind.sa
 ```
 
 ---
@@ -231,7 +236,7 @@ Create `/etc/nginx/sites-available/eastwind`:
 sudo nano /etc/nginx/sites-available/eastwind
 ```
 
-Paste the following production configuration (replace `eastwindsafety.com` with your actual domain):
+Paste the following production configuration (replace `eastwind.sa` with your actual domain):
 
 ```nginx
 limit_req_zone $binary_remote_addr zone=api_limit:10m rate=30r/s;
@@ -239,7 +244,7 @@ limit_req_zone $binary_remote_addr zone=api_limit:10m rate=30r/s;
 server {
     listen 80;
     listen [::]:80;
-    server_name eastwindsafety.com www.eastwindsafety.com;
+    server_name eastwind.sa www.eastwind.sa;
 
     # Allow up to 150MB for video and document uploads
     client_max_body_size 150M;
@@ -315,7 +320,7 @@ sudo systemctl reload nginx
 ### 6.3: Install Free SSL Certificate (Let's Encrypt)
 Make sure your domain's DNS A-records point to your server IP, then run:
 ```bash
-sudo certbot --nginx -d eastwindsafety.com -d www.eastwindsafety.com
+sudo certbot --nginx -d eastwind.sa -d www.eastwind.sa
 ```
 *Certbot will automatically install the certificate, enable the HTTPS padlock, and configure automatic 90-day renewals.*
 

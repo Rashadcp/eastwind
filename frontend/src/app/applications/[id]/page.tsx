@@ -335,7 +335,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
     },
     alternates: {
-      canonical: `https://eastwindsafety.com/applications/${id}`,
+      canonical: `https://eastwind.sa/applications/${id}`,
     },
   };
 }

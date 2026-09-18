@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://eastwindsafety.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://eastwind.sa";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

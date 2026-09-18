@@ -1,7 +1,7 @@
 # Search Engine Optimization (SEO) & Structured Data Documentation
 **Project:** East Wind Safety (Industrial Digitalization & Critical Safety Infrastructure)  
 **Platform:** Next.js 14+ (App Router) & Express/MongoDB Backend  
-**Canonical Domain:** `https://eastwindsafety.com`
+**Canonical Domain:** `https://eastwind.sa`
 
 ---
 
@@ -141,8 +141,8 @@ Injected globally into the `<head>` of every page:
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Eastwind Energy Arabia",
-  "url": "https://eastwindsafety.com",
-  "logo": "https://eastwindsafety.com/logo.png",
+  "url": "https://eastwind.sa",
+  "logo": "https://eastwind.sa/logo.png",
   "telephone": "+966 570 833 214",
   "email": "enquiry@eastwind.sa",
   "address": {
@@ -161,7 +161,7 @@ Rendered on every product detail page:
   "@context": "https://schema.org",
   "@type": "Product",
   "name": "Wireless Gas Detector X4000",
-  "image": "https://eastwindsafety.com/uploads/product_detector.png",
+  "image": "https://eastwind.sa/uploads/product_detector.png",
   "description": "ATEX Zone 1 certified multi-gas wireless detection unit...",
   "brand": {
     "@type": "Brand",
@@ -173,7 +173,7 @@ Rendered on every product detail page:
     "priceCurrency": "SAR",
     "price": "Contact for Quote",
     "availability": "https://schema.org/InStock",
-    "url": "https://eastwindsafety.com/products/wireless-gas-detector-x4000"
+    "url": "https://eastwind.sa/products/wireless-gas-detector-x4000"
   }
 }
 ```
@@ -196,14 +196,14 @@ Implemented via Next.js `generateMetadata()` in dynamic route templates:
 
 ### 5.2: Solution Pages (`frontend/src/app/solutions/[id]/page.tsx`)
 - Contextual metadata generation tailored to industrial sectors (e.g. Oil & Gas, Marine & Offshore, Civil Defense, Petrochemicals).
-- Canonical URL targeting: `https://eastwindsafety.com/solutions/{slug}`.
+- Canonical URL targeting: `https://eastwind.sa/solutions/{slug}`.
 
 ---
 
 ## 6. Dynamic XML Sitemap (`/sitemap.xml`)
 
 File: `frontend/src/app/sitemap.ts`  
-URL: `https://eastwindsafety.com/sitemap.xml`
+URL: `https://eastwind.sa/sitemap.xml`
 
 Next.js automatically compiles this into an XML document conforming to the official Sitemap Protocol. Whenever you add a new product or service in the admin panel, it is **automatically included in the sitemap without editing any files**.
 
@@ -211,24 +211,24 @@ Next.js automatically compiles this into an XML document conforming to the offic
 
 | URL Pattern | Source | Change Frequency | Priority |
 |---|---|---|---|
-| `https://eastwindsafety.com/` | Core Homepage | `weekly` | **1.0** (Highest) |
-| `https://eastwindsafety.com/products/{slug}` | MongoDB Products Collection | `weekly` | **0.9** |
-| `https://eastwindsafety.com/solutions/{id}` | MongoDB Solutions Collection | `monthly` | **0.85** |
-| `https://eastwindsafety.com/products` | Catalog Listing | `weekly` | **0.8** |
-| `https://eastwindsafety.com/solutions` | Solutions Listing | `weekly` | **0.8** |
-| `https://eastwindsafety.com/services/{id}` | MongoDB Services Collection | `monthly` | **0.8** |
-| `https://eastwindsafety.com/applications/{id}` | MongoDB Applications Collection | `monthly` | **0.8** |
-| `https://eastwindsafety.com/about` | Core Page | `weekly` | **0.8** |
-| `https://eastwindsafety.com/contact` | Core Page | `weekly` | **0.8** |
-| `https://eastwindsafety.com/enquire` | Core Page | `weekly` | **0.8** |
-| `https://eastwindsafety.com/privacy-policy` | Compliance Page | `weekly` | **0.5** |
+| `https://eastwind.sa/` | Core Homepage | `weekly` | **1.0** (Highest) |
+| `https://eastwind.sa/products/{slug}` | MongoDB Products Collection | `weekly` | **0.9** |
+| `https://eastwind.sa/solutions/{id}` | MongoDB Solutions Collection | `monthly` | **0.85** |
+| `https://eastwind.sa/products` | Catalog Listing | `weekly` | **0.8** |
+| `https://eastwind.sa/solutions` | Solutions Listing | `weekly` | **0.8** |
+| `https://eastwind.sa/services/{id}` | MongoDB Services Collection | `monthly` | **0.8** |
+| `https://eastwind.sa/applications/{id}` | MongoDB Applications Collection | `monthly` | **0.8** |
+| `https://eastwind.sa/about` | Core Page | `weekly` | **0.8** |
+| `https://eastwind.sa/contact` | Core Page | `weekly` | **0.8** |
+| `https://eastwind.sa/enquire` | Core Page | `weekly` | **0.8** |
+| `https://eastwind.sa/privacy-policy` | Compliance Page | `weekly` | **0.5** |
 
 ---
 
 ## 7. Robots Policy (`/robots.txt`)
 
 File: `frontend/src/app/robots.ts`  
-URL: `https://eastwindsafety.com/robots.txt`
+URL: `https://eastwind.sa/robots.txt`
 
 The robots configuration governs search bot crawling behavior:
 ```txt
@@ -237,7 +237,7 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://eastwindsafety.com/sitemap.xml
+Sitemap: https://eastwind.sa/sitemap.xml
 ```
 
 ### Strategic Reasons:

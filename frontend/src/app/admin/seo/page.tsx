@@ -217,7 +217,7 @@ export default function AdminSeoPage() {
           newPageDescription.trim() ||
           `${newPageName.trim()} - Industrial safety solutions and services in Saudi Arabia.`,
         keywords: `${newPageName.toLowerCase()}, safety, Saudi Arabia`,
-        canonicalUrl: `https://eastwindsafety.com${cleanPath || `/${generatedKey}`}`,
+        canonicalUrl: `https://eastwind.sa${cleanPath || `/${generatedKey}`}`,
         ogTitle:
           newPageTitle.trim() ||
           `${newPageName.trim()} | Eastwind Safety Arabia`,
@@ -811,7 +811,7 @@ export default function AdminSeoPage() {
                         type="url"
                         value={formData.canonicalUrl}
                         onChange={(e) => handleInputChange("canonicalUrl", e.target.value)}
-                        placeholder="https://eastwindsafety.com/..."
+                        placeholder="https://eastwind.sa/..."
                         className="w-full text-xs px-3 py-2 border border-slate-300 rounded-xs bg-white text-slate-800 font-mono focus:border-[#1e3e8f] focus:outline-none"
                       />
                     </div>
@@ -873,7 +873,7 @@ export default function AdminSeoPage() {
                     </div>
                     <div className="p-3">
                       <span className="text-[10px] text-slate-400 uppercase font-mono block">
-                        eastwindsafety.com
+                        eastwind.sa
                       </span>
                       <h3 className="text-xs font-bold text-slate-900 line-clamp-1 mt-0.5 m-0">
                         {formData.ogTitle || formData.title || "Page Title"}

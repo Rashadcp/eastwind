@@ -498,7 +498,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         {
           url: imageUrl.startsWith("http")
             ? imageUrl
-            : `https://eastwindsafety.com${imageUrl}`,
+            : `https://eastwind.sa${imageUrl}`,
           width: 800,
           height: 600,
           alt: product?.title || "Safety Solution",
@@ -506,7 +506,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ],
     },
     alternates: {
-      canonical: `https://eastwindsafety.com/solutions/${slug}`,
+      canonical: `https://eastwind.sa/solutions/${slug}`,
     },
   };
 }

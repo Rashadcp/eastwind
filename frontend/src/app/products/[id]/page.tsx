@@ -117,7 +117,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
       images: [
         {
-          url: imageUrl.startsWith("http") ? imageUrl : `https://eastwindsafety.com${imageUrl}`,
+          url: imageUrl.startsWith("http") ? imageUrl : `https://eastwind.sa${imageUrl}`,
           width: 800,
           height: 600,
           alt: product.name,
@@ -128,10 +128,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: [imageUrl.startsWith("http") ? imageUrl : `https://eastwindsafety.com${imageUrl}`],
+      images: [imageUrl.startsWith("http") ? imageUrl : `https://eastwind.sa${imageUrl}`],
     },
     alternates: {
-      canonical: `https://eastwindsafety.com/products/${product.slug || product.id}`,
+      canonical: `https://eastwind.sa/products/${product.slug || product.id}`,
     },
   };
 }
@@ -159,7 +159,7 @@ export default async function ProductDetailPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    image: imageUrl.startsWith("http") ? imageUrl : `https://eastwindsafety.com${imageUrl}`,
+    image: imageUrl.startsWith("http") ? imageUrl : `https://eastwind.sa${imageUrl}`,
     description: product.description,
     brand: {
       "@type": "Brand",
@@ -171,7 +171,7 @@ export default async function ProductDetailPage({ params }: Props) {
       priceCurrency: "SAR",
       price: "Contact for Quote",
       availability: "https://schema.org/InStock",
-      url: `https://eastwindsafety.com/products/${product.slug || product.id}`,
+      url: `https://eastwind.sa/products/${product.slug || product.id}`,
     },
   };
 
@@ -183,19 +183,19 @@ export default async function ProductDetailPage({ params }: Props) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://eastwindsafety.com",
+        item: "https://eastwind.sa",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Products",
-        item: "https://eastwindsafety.com/products",
+        item: "https://eastwind.sa/products",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: product.name,
-        item: `https://eastwindsafety.com/products/${product.slug || product.id}`,
+        item: `https://eastwind.sa/products/${product.slug || product.id}`,
       },
     ],
   };
